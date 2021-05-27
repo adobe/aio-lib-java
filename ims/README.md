@@ -19,8 +19,8 @@ This Java library will help you implement this JWT exchange token flow, to get a
 and start interacting with the many Adobe I/O API that support such authentication.
 
 What's left for you is to work your configuration: see 
-* our [sample config file](/src/test/resources/ims.properties).
 * our [Service Account Integration (JWT authentication flow) doc](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md), 
+* our [sample config file](./src/test/resources/ims.properties).
 
 #### your keystore 
 
