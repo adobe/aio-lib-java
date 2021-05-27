@@ -12,17 +12,25 @@
     governing permissions and limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.adobe.event</groupId>
-  <artifactId>java-sdk</artifactId>
+  <artifactId>java-sdk-parent</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>Adobe I/O Event Java SDK</name>
-  <description>Adobe I/O Event Java SDK</description>
+  <modules>
+    <module>core</module>
+    <module>ims</module>
+  </modules>
+
+
+  <name>Adobe I/O Events - Java SDK - Parent Project</name>
+  <description>Adobe I/O Events - Java SDK - Parent Project</description>
   <url>https://github.com/adobe/event-java-sdk</url>
 
   <licenses>
@@ -65,15 +73,87 @@
     </repository>
   </distributionManagement>
 
-
   <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>11</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
-    <jackson.version>2.10.0</jackson.version>
-    <javax-validation.version>1.1.0.Final</javax-validation.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <commons-text.version>1.6</commons-text.version>
+
+    <jjwt.version>0.11.2</jjwt.version>
+    <jackson.version>2.12.3</jackson.version>
+    <slf4j.version>1.7.13</slf4j.version>
+
+    <feign.version>11.2</feign.version>
+    <feign-form.version>3.8.0</feign-form.version>
+
   </properties>
+
+
+  <dependencyManagement>
+    <dependencies>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-text</artifactId>
+        <version>${commons-text.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-api</artifactId>
+        <version>${jjwt.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-impl</artifactId>
+        <version>${jjwt.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.jsonwebtoken</groupId>
+        <artifactId>jjwt-jackson</artifactId>
+        <version>${jjwt.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.github.openfeign</groupId>
+        <artifactId>feign-core</artifactId>
+        <version>${feign.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.openfeign</groupId>
+        <artifactId>feign-jackson</artifactId>
+        <version>${feign.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.openfeign</groupId>
+        <artifactId>feign-slf4j</artifactId>
+        <version>${feign.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.openfeign.form</groupId>
+        <artifactId>feign-form</artifactId>
+        <version>${feign-form.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-simple</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
 
   <build>
     <plugins>
@@ -101,7 +181,7 @@
           <artifactId>license-maven-plugin</artifactId>
           <version>3.0</version>
           <configuration>
-            <header>copyright_header.txt</header>
+            <header>${maven.multiModuleProjectDirectory}/copyright_header.txt</header>
             <excludes>
               <!-- Exclude third-party libs. -->
               <exclude>**/lib/**</exclude>
@@ -204,19 +284,19 @@
   </build>
 
   <profiles>
-  <profile>
-    <id>release</id>
-    <activation>
-      <activeByDefault>false</activeByDefault>
-    </activation>
-    <build>
-      <plugins>
-        <plugin>
-          <artifactId>maven-gpg-plugin</artifactId>
-        </plugin>
-      </plugins>
-    </build>
-  </profile>
+    <profile>
+      <id>release</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
 </project>

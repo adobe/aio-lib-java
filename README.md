@@ -1,5 +1,9 @@
-# `Adobe I/O Event` java-sdk
+# Adobe I/O Events - Java SDK
 
+## Modules
+
+* [core](./core) holds utilities used across the sdk
+* [ims](./ims) wraps http API endpoints exposed by [Adobe Identity Management System (IMS)](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
 
 ## Unit tests
 

@@ -2,3 +2,8 @@ target
 *.iml
 .idea/
 temp
+*secret*
+**/secret
+**/*secret*
+
+
