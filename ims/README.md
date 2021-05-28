@@ -18,35 +18,46 @@ token and must be signed with the private key that is associated with a public k
 This Java library will help you implement this JWT exchange token flow, to get a valid access token
 and start interacting with the many Adobe I/O API that support such authentication.
 
-What's left for you is to work your configuration: see 
-* our [Service Account Integration (JWT authentication flow) doc](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md), 
-* our [sample config file](./src/test/resources/ims.properties).
+#### Configurations
 
-#### your keystore 
+First, browse our [Service Account Integration (JWT authentication flow) doc](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md), 
+then load your `JWT authentication flow` configurations in this ims sdk, you can either: 
+* use a `.properties` file, see our [sample config file](./src/test/resources/ims.properties)
+* use system environment variables (containing the same entries as in the above sample config file)
+* use runtime `java.util.Properties` or `Map<String, String>` inputs
 
-This SDK expects you use a keystore to store your private/public certificates pair.
-Here is how you could create it:
- 
-Use openssl to Create an RSA private/public certificate
+##### Create and configure your public and private key
+
+First, use openssl to create an RSA private/public certificate pair
 
      openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout private.key -out certificate_pub.crt
 
-To create a keystore from the generated keys, run the following command:
+You then have 3 options to configure/use this privateKey:
+* Option 1: use a pcks8 file (using the `pkcs8_file_path` config)
+* Option 2: use base 64 encoded pcks8 key (using the `encoded_pkcs8` config) 
+* Option 3: use a keystore (using the `pkcs12_file_path`, `pkcs12_alias` and `pkcs12_password` config)
+
+For option 1, to convert your private key to a PKCS8 format, use the following command: 
+
+    openssl pkcs8 -topk8 -inform PEM -outform DER -in private.key -nocrypt > private.pkcs8.key
+
+For option 2, to base 64 encode it, use the following command: 
+
+    base64 private.pkcs8.key 
+    
+For option 3, Use the following commands to set the alias (as `myalias` here)  and a non-empty keystore password.
 
     cat private.key certificate_pub.crt > private-key-crt
-
-Use the following command to set the alias (as `myalias` here)  and a non-empty keystore password.
-
     openssl pkcs12 -export -in private-key-crt -out keystore.p12 -name myalias -noiter -nomaciter
 
 #### Local Test Drive
 
-      JwtTokenBuilder jwtTokenBuilder = JwtTokenBuilder.build(yourProperties);
+      JwtTokenBuilder jwtTokenBuilder = JwtTokenBuilder.build(); // using System environment variables
       AccessToken accessToken = ImsService.build(jwtTokenBuilder).getJwtExchangeAccessToken();
 
-* First you stuff your configurations in our JwtTokenBuilder
-* Second you use it on our IMS service wrapper to call the appropriate IMS endpoint, 
-to retrieve an access token using a jwt exchange token flow:
+Here 
+* First, we have the `JwtTokenBuilder` picking up your environment variables 
+* Second, we stuff it on our IMS service wrapper, and have this service retrieve an access token using a jwt exchange token flow
 
 Have a look at our [ImsServiceTestDrive](./src/test/java/com/adobe/ims/ImsServiceTestDrive.java)
 

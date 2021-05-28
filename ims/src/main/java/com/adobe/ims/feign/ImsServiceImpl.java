@@ -11,15 +11,15 @@
  */
 package com.adobe.ims.feign;
 
-import com.adobe.util.FeignUtil;
 import com.adobe.ims.AccessToken;
 import com.adobe.ims.ImsService;
 import com.adobe.ims.JwtTokenBuilder;
+import com.adobe.util.FeignUtil;
 
 public class ImsServiceImpl implements ImsService {
 
-  private ImsApi imsApi;
-  private JwtTokenBuilder jwtTokenBuilder;
+  private final ImsApi imsApi;
+  private final JwtTokenBuilder jwtTokenBuilder;
 
   private ImsServiceImpl(final JwtTokenBuilder jwtTokenBuilder) {
     this.jwtTokenBuilder = jwtTokenBuilder;
