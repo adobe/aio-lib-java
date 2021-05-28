@@ -12,30 +12,45 @@
 package com.adobe.util;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 
 public class FileUtil {
 
-  private FileUtil(){}
+  private FileUtil() {
+  }
 
-  public static Optional<Properties> readPropertiesFromFile(final String configFilePath) throws IOException {
-    if (StringUtils.isEmpty(configFilePath)){
-      return Optional.empty();
+  public static Map<String, String> getMapFromProperties(final Properties properties) {
+    Map<String, String> map = new HashMap<>();
+    for (final String name : properties.stringPropertyNames()) {
+      map.put(name, properties.getProperty(name));
     }
-    else {
+    return map;
+  }
+
+  public static Optional<Properties> readPropertiesFromFile(final String configFilePath)
+      throws IOException {
+    if (StringUtils.isEmpty(configFilePath)) {
+      return Optional.empty();
+    } else {
       try (InputStream in = new FileInputStream(configFilePath)) {
         return Optional.of(read(in));
+      } catch (FileNotFoundException e){
+        return Optional.empty();
       }
     }
   }
 
-  public static Properties readPropertiesFromClassPath(final String configClassPath) throws IOException {
-    try (InputStream in = FileUtil.class.getClassLoader().getResourceAsStream(configClassPath) ) {
-     return read(in);
+  public static Properties readPropertiesFromClassPath(final String configClassPath)
+      throws IOException {
+    try (InputStream in = FileUtil.class.getClassLoader().getResourceAsStream(configClassPath)) {
+      return read(in);
     }
   }
 

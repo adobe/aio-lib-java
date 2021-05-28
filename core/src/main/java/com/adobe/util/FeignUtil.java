@@ -34,11 +34,12 @@ public class FeignUtil {
   private static final ObjectMapper objectMapper = new ObjectMapper()
       .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-  private FeignUtil(){}
+  private FeignUtil() {
+  }
 
   /**
-   * @return the base Feign builder we want to reuse across the sdk
-   * with jackson decoder, logger and our global read and time out options
+   * @return the base Feign builder we want to reuse across the sdk with jackson decoder, logger and
+   * our global read and time out options
    */
   public static Feign.Builder getBaseBuilder() {
     return Feign.builder()
@@ -52,8 +53,8 @@ public class FeignUtil {
   }
 
   /**
-   * @return a Feign builder we want to reuse across the sdk
-   * with jackson encoder and decoder, logger and our global read and time out options
+   * @return a Feign builder we want to reuse across the sdk with jackson encoder and decoder,
+   * logger and our global read and time out options
    */
   public static Feign.Builder getDefaultBuilderWithJacksonEncoder() {
     return getBaseBuilder()
@@ -62,9 +63,8 @@ public class FeignUtil {
   }
 
   /**
-   * @return a Feign builder we want to reuse across the sdk
-   * with jackson decoder, logger and our global read and time out options,
-   * and form encoder
+   * @return a Feign builder we want to reuse across the sdk with jackson decoder, logger and our
+   * global read and time out options, and form encoder
    */
   public static Feign.Builder getBuilderWithFormEncoder() {
     return getBaseBuilder()

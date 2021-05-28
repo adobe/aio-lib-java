@@ -16,21 +16,23 @@ import org.slf4j.LoggerFactory;
 
 public class ImsServiceTestDrive {
 
-  private static Logger logger = LoggerFactory.getLogger(ImsServiceTestDrive.class);
+  private static final Logger logger = LoggerFactory.getLogger(ImsServiceTestDrive.class);
+
+  // use your own property file filePath or classpath and don't push back to git
+  private static final String DEFAULT_TEST_PROPERTIES = "ims.secret.properties";
 
   public static void main(String[] args) {
     try {
       JwtTokenBuilder jwtTokenBuilder =
-          JwtTokenBuilder.build((args != null && args.length > 0) ? args[0] : null);
+          JwtTokenBuilder.build((args != null && args.length > 0) ? args[0] : DEFAULT_TEST_PROPERTIES);
       logger.info("jwtToken: " + jwtTokenBuilder.getJwtToken());
       AccessToken accessToken = ImsService.build(jwtTokenBuilder).getJwtExchangeAccessToken();
       logger.info("accessToken: " + accessToken.getAccessToken());
       System.exit(0);
     } catch (Exception e) {
-      logger.error(e.getMessage(),e);
+      logger.error(e.getMessage(), e);
       System.exit(-1);
     }
   }
-
 
 }
