@@ -20,22 +20,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class AccessToken {
 
-  @JsonProperty("token_type")
-  private String tokenType;
-
+  /**
+   * The access_token itself
+   */
   @JsonProperty("access_token")
   private String accessToken;
 
+  /**
+   * the value in milliseconds when the token will expire.
+   */
   @JsonProperty("expires_in")
   private long expiresIn;
-
-  public String getTokenType() {
-    return tokenType;
-  }
-
-  public void setTokenType(String tokenType) {
-    this.tokenType = tokenType;
-  }
 
   public String getAccessToken() {
     return accessToken;
@@ -56,7 +51,6 @@ public class AccessToken {
   @Override
   public String toString() {
     return "AccessToken{" +
-        "tokenType='" + tokenType + '\'' +
         ", accessToken='**secret**'" +
         ", expiresIn=" + expiresIn +
         '}';

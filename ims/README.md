@@ -1,10 +1,10 @@
 
-## Adobe I/O Events - Java SDK - IMS Library
+# Adobe I/O Events - Java SDK - IMS Library
 
 This Java library wraps http API endpoints exposed by 
 [Adobe Identity Management System (IMS)](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
 
-### Service Account Integration (JWT authentication flow)
+## Service Account Integration (JWT authentication flow)
 
 A Service Account connection allows your application to call Adobe services on behalf of 
 the application itself or on behalf of an enterprise organization.
@@ -18,7 +18,7 @@ token and must be signed with the private key that is associated with a public k
 This Java library will help you implement this JWT exchange token flow, to get a valid access token
 and start interacting with the many Adobe I/O API that support such authentication.
 
-#### Test Drive
+### Test Drive
 
     JwtTokenBuilder jwtTokenBuilder = JwtTokenBuilder.build(); // [1]
     AccessToken accessToken = ImsServiceImpl.build(jwtTokenBuilder).getJwtExchangeAccessToken(); // [2]
@@ -29,16 +29,16 @@ and start interacting with the many Adobe I/O API that support such authenticati
 Have a look at our [ImsService `main()` Test Drive](./src/test/java/com/adobe/ims/ImsServiceTestDrive.java)
 
 
-#### Our reusable `OpenFeign` JWT (exchange token flow) Authentication `RequestInterceptor`
+### Our reusable `OpenFeign` JWT (exchange token flow) Authentication `RequestInterceptor`
 
 This lib also contains JWT (exchange token flow) Authentication `RequestInterceptor`: [JWTAuthInterceptor](./src/main/java/com/adobe/ims/feign/JWTAuthInterceptor.java) 
 It is a [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors).
 It can be leverage to add the authentication headers expected by many Adobe APIs, it will add
 * an `Authorization` header with a `Bearer` access token (generated from a JWT exchange flow)
- * renewing it only when expired or not present yet
+  * renewing it only when expired (after 24 hours) or when not present in memory yet
 * a `x-api-key` header matching your JWT token
 
-#### Configurations
+### Configurations
 
 First, browse our [Service Account Integration (JWT authentication flow) doc](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md), 
 then load your `JWT authentication flow` configurations in this ims sdk, you can either: 
@@ -46,7 +46,7 @@ then load your `JWT authentication flow` configurations in this ims sdk, you can
 * use system environment variables (containing the same entries as in the above sample config file)
 * use runtime `java.util.Properties` or `Map<String, String>` inputs
 
-##### Create and configure your public and private key
+#### Create and configure your public and private key
 
 First, use openssl to create an RSA private/public certificate pair
 
@@ -70,7 +70,7 @@ For option 3, Use the following commands to set the alias (as `myalias` here)  a
     cat private.key certificate_pub.crt > private-key-crt
     openssl pkcs12 -export -in private-key-crt -out keystore.p12 -name myalias -noiter -nomaciter
 
-#### your JWT token claim
+### your JWT token claim
  
 FYI, the JWT token will generate for you will contain the following claims:
 * `exp` - the expiration time. IMS allows a time skew of 30 seconds between the time specified and the IMS server time.
@@ -89,11 +89,11 @@ For this, it leverages a third-party open source library : [jjwt](https://github
 
 This Library is build with [maven](https://maven.apache.org/) (it also runs the unit tests):
 
-### Contributing
+## Contributing
 
 Contributions are welcomed! Read the [Contributing Guide](../.github/CONTRIBUTING.md) for more information.
 
-### Licensing
+## Licensing
 
 This project is licensed under the Apache V2 License. See [LICENSE](../LICENSE.md) for more information.
 

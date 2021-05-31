@@ -16,6 +16,7 @@ import static com.adobe.util.Constants.AUTHORIZATION_HEADER;
 import static com.adobe.util.Constants.BEARER_PREFIX;
 
 import com.adobe.ims.ImsService;
+import com.adobe.ims.JwtTokenBuilder;
 import com.adobe.ims.model.AccessToken;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -29,6 +30,9 @@ public class JWTAuthInterceptor implements RequestInterceptor {
   private final ImsService imsService;
   private final String apiKey;
 
+  public JWTAuthInterceptor(JwtTokenBuilder jwtTokenBuilder){
+   this(ImsServiceImpl.build(jwtTokenBuilder), jwtTokenBuilder.getApiKey());
+  }
 
   public JWTAuthInterceptor(final ImsService imsService, final String apiKey) {
     this.imsService = imsService;
@@ -58,7 +62,7 @@ public class JWTAuthInterceptor implements RequestInterceptor {
 
   private synchronized void updateAccessToken() {
     this.accessToken = imsService.getJwtExchangeAccessToken();
-    this.expirationTimeMillis = System.currentTimeMillis() + accessToken.getExpiresIn() * 1000;
+    this.expirationTimeMillis = System.currentTimeMillis() + accessToken.getExpiresIn();
     // throw RetryableException and implement Feign Retry ?
   }
 
