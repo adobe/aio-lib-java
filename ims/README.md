@@ -18,6 +18,26 @@ token and must be signed with the private key that is associated with a public k
 This Java library will help you implement this JWT exchange token flow, to get a valid access token
 and start interacting with the many Adobe I/O API that support such authentication.
 
+#### Test Drive
+
+    JwtTokenBuilder jwtTokenBuilder = JwtTokenBuilder.build(); // [1]
+    AccessToken accessToken = ImsServiceImpl.build(jwtTokenBuilder).getJwtExchangeAccessToken(); // [2]
+
+* [1] we instantiate a `JwtTokenBuilder` that configures itself reading our System environment variables 
+* [2] we stuff it on our IMS service wrapper, and have this service retrieve an access token using a jwt exchange token flow
+
+Have a look at our [ImsService `main()` Test Drive](./src/test/java/com/adobe/ims/ImsServiceTestDrive.java)
+
+
+#### Our reusable `OpenFeign` JWT (exchange token flow) Authentication `RequestInterceptor`
+
+This lib also contains JWT (exchange token flow) Authentication `RequestInterceptor`: [JWTAuthInterceptor](./src/main/java/com/adobe/ims/feign/JWTAuthInterceptor.java) 
+It is a [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors).
+It can be leverage to add the authentication headers expected by many Adobe APIs, it will add
+* an `Authorization` header with a `Bearer` access token (generated from a JWT exchange flow)
+ * renewing it only when expired or not present yet
+* a `x-api-key` header matching your JWT token
+
 #### Configurations
 
 First, browse our [Service Account Integration (JWT authentication flow) doc](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md), 
@@ -49,28 +69,6 @@ For option 3, Use the following commands to set the alias (as `myalias` here)  a
 
     cat private.key certificate_pub.crt > private-key-crt
     openssl pkcs12 -export -in private-key-crt -out keystore.p12 -name myalias -noiter -nomaciter
-
-#### Local Test Drive
-
-      JwtTokenBuilder jwtTokenBuilder = JwtTokenBuilder.build(); // using System environment variables
-      AccessToken accessToken = ImsServiceImpl.build(jwtTokenBuilder).getJwtExchangeAccessToken();
-
-Here 
-* First, we have the `JwtTokenBuilder` picking up your environment variables 
-* Second, we stuff it on our IMS service wrapper, and have this service retrieve an access token using a jwt exchange token flow
-
-Have a look at our [ImsServiceTestDrive](./src/test/java/com/adobe/ims/ImsServiceTestDrive.java)
-
-
-#### Our reusable `OpenFeign` `RequestInterceptor`
-
-This lib also contains [JWTAuthInterceptor](./src/main/java/com/adobe/ims/feign/JWTAuthInterceptor.java) 
-It is a [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors).
-It can be leverage to add the authentication headers expected by many Adobe APIs, it will add
-* an `Authorization` header with a `Bearer` access token (generated from a JWT exchange flow)
- * renewing it only when expired or not present yet
-* a `x-api-key` header matching your JWT token
-
 
 #### your JWT token claim
  
