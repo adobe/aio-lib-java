@@ -11,9 +11,9 @@
  */
 package com.adobe.ims.feign;
 
-import com.adobe.ims.model.AccessToken;
 import com.adobe.ims.ImsService;
 import com.adobe.ims.JwtTokenBuilder;
+import com.adobe.ims.model.AccessToken;
 import com.adobe.util.FeignUtil;
 
 public class ImsServiceImpl implements ImsService {
