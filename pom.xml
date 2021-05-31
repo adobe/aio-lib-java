@@ -19,7 +19,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.adobe.event</groupId>
-  <artifactId>java-sdk-parent</artifactId>
+  <artifactId>aio-lib-java-events</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 

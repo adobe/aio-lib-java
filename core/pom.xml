@@ -18,13 +18,13 @@
 
   <parent>
     <groupId>com.adobe.event</groupId>
-    <artifactId>java-sdk-parent</artifactId>
+    <artifactId>aio-lib-java-events</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>core</artifactId>
+  <artifactId>aio-lib-java-events-core</artifactId>
   <name>Adobe I/O Events - Core Library</name>
   <description>Adobe I/O Events - Java SDK - Core Library</description>
 
