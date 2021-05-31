@@ -61,6 +61,17 @@ Here
 
 Have a look at our [ImsServiceTestDrive](./src/test/java/com/adobe/ims/ImsServiceTestDrive.java)
 
+
+#### Our reusable `OpenFeign` `RequestInterceptor`
+
+This lib also contains [JWTAuthInterceptor](./src/main/java/com/adobe/ims/feign/JWTAuthInterceptor.java) 
+It is a [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors).
+It can be leverage to add the authentication headers expected by many Adobe APIs, it will add
+* an `Authorization` header with a `Bearer` access token (generated from a JWT exchange flow)
+ * renewing it only when expired or not present yet
+* a `x-api-key` header matching your JWT token
+
+
 #### your JWT token claim
  
 FYI, the JWT token will generate for you will contain the following claims:
