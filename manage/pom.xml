@@ -18,13 +18,13 @@
 
   <parent>
     <groupId>com.adobe.event</groupId>
-    <artifactId>java-sdk-parent</artifactId>
+    <artifactId>aio-lib-java-events</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>manage</artifactId>
+  <artifactId>aio-lib-java-events-management</artifactId>
   <name>Adobe I/O Events - Management Library</name>
   <description>Adobe I/O Events - Java SDK - Management Library</description>
 
@@ -32,7 +32,7 @@
 
     <dependency>
       <groupId>com.adobe.event</groupId>
-      <artifactId>core</artifactId>
+      <artifactId>aio-lib-java-events-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -43,7 +43,7 @@
     </dependency>
     <dependency>
       <groupId>com.adobe.event</groupId>
-      <artifactId>ims</artifactId>
+      <artifactId>aio-lib-java-events-ims</artifactId>
       <version>${project.version}</version>
     </dependency>
 

@@ -1,7 +1,7 @@
+# `aio-lib-java-events-core`
 
-## Adobe I/O Events - Java SDK - Core Library 
-
-This Java library wraps various core utilities used across the sdk
+`aio-lib-java-events-core` is Adobe I/O Events - Java SDK - Core Library. 
+This Java library holds various core utilities used across the other modules.
 
 ## Builds
 

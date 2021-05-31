@@ -1,6 +1,7 @@
 
-# Adobe I/O Events - Java SDK - IMS Library
+# `aio-lib-java-events-ims`
 
+`aio-lib-java-events-ims` is Adobe I/O Events - Java SDK - IMS Library.
 This Java library wraps http API endpoints exposed by 
 [Adobe Identity Management System (IMS)](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
 
