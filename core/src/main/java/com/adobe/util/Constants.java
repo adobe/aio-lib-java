@@ -9,13 +9,14 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.ims;
+package com.adobe.util;
 
+public class Constants {
 
-import com.adobe.ims.model.AccessToken;
+  public static final String AUTHORIZATION_HEADER = "Authorization";
+  public static final String BEARER_PREFIX = "Bearer ";
+  public static final String API_KEY_HEADER = "x-api-key";
 
-public interface ImsService {
-
-  AccessToken getJwtExchangeAccessToken();
+  private Constants() {}
 
 }

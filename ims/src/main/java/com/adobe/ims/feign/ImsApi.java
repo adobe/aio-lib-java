@@ -11,7 +11,7 @@
  */
 package com.adobe.ims.feign;
 
-import com.adobe.ims.AccessToken;
+import com.adobe.ims.model.AccessToken;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;

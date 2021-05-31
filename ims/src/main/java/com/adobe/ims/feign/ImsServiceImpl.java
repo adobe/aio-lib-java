@@ -11,7 +11,7 @@
  */
 package com.adobe.ims.feign;
 
-import com.adobe.ims.AccessToken;
+import com.adobe.ims.model.AccessToken;
 import com.adobe.ims.ImsService;
 import com.adobe.ims.JwtTokenBuilder;
 import com.adobe.util.FeignUtil;
@@ -21,14 +21,14 @@ public class ImsServiceImpl implements ImsService {
   private final ImsApi imsApi;
   private final JwtTokenBuilder jwtTokenBuilder;
 
+  public static ImsService build(final JwtTokenBuilder jwtTokenBuilder) {
+    return new ImsServiceImpl(jwtTokenBuilder);
+  }
+
   private ImsServiceImpl(final JwtTokenBuilder jwtTokenBuilder) {
     this.jwtTokenBuilder = jwtTokenBuilder;
     this.imsApi = FeignUtil.getBuilderWithFormEncoder()
         .target(ImsApi.class, jwtTokenBuilder.getImsUrl());
-  }
-
-  public static ImsService build(final JwtTokenBuilder jwtTokenBuilder) {
-    return new ImsServiceImpl(jwtTokenBuilder);
   }
 
   @Override
