@@ -1,10 +1,10 @@
 
-## Adobe I/O Events - Java SDK - Management Library
+# Adobe I/O Events - Java SDK - Management Library
 
 This Java library wraps http API endpoints exposed 
 by [`Adobe I/O Events` Provider and Registration APIs](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/api.md)
  
-#### ProviderService Test Drive
+## ProviderService Test Drive
 
     ProviderService providerService = ProviderServiceImpl.build(authInterceptor); //[1]
     Optional<Provider> provider = providerService.findById(providerId); //[2]

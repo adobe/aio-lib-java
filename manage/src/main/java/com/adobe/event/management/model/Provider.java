@@ -38,11 +38,6 @@ public class Provider {
   @JsonProperty("publisher")
   private String publisher = null;
 
-  public Provider id(String id) {
-    this.id = id;
-    return this;
-  }
-
   /**
    * The Id of this Events Provider
    *
@@ -56,11 +51,6 @@ public class Provider {
     this.id = id;
   }
 
-  public Provider label(String label) {
-    this.label = label;
-    return this;
-  }
-
   /**
    * The label of this Events Provider, as shown on the Adobe I/O console
    *
@@ -72,11 +62,6 @@ public class Provider {
 
   public void setLabel(String label) {
     this.label = label;
-  }
-
-  public Provider description(String description) {
-    this.description = description;
-    return this;
   }
 
   /**
@@ -103,11 +88,6 @@ public class Provider {
     return source;
   }
 
-  public Provider docsUrl(String docsUrl) {
-    this.docsUrl = docsUrl;
-    return this;
-  }
-
   /**
    * The documentation url of this Events Provider, as shown on the Adobe I/O console
    *
@@ -119,11 +99,6 @@ public class Provider {
 
   public void setDocsUrl(String docsUrl) {
     this.docsUrl = docsUrl;
-  }
-
-  public Provider publisher(String publisher) {
-    this.publisher = publisher;
-    return this;
   }
 
   /**

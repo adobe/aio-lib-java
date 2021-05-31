@@ -16,6 +16,7 @@ import com.adobe.event.management.model.Providers;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import java.util.Optional;
 
 @Headers("Accept: application/hal+json")
 public interface ProviderApi {
@@ -29,7 +30,7 @@ public interface ProviderApi {
    * @return the associated Adobe I/O Events Provider
    */
   @RequestLine("GET /events/providers/{id}")
-  Provider findById(@Param("id") String id);
+  Optional<Provider> findById(@Param("id") String id);
 
   /**
    * @param consumerOrgId The consumer organization Id used to look up the Adobe I/O Events
@@ -37,7 +38,7 @@ public interface ProviderApi {
    * @return Providers the Adobe I/O Events Providers entitled to the provided consumerOrgId
    */
   @RequestLine("GET /events/{consumerOrgId}/providers")
-  Providers findByConsumerOrgId(
+  Optional<Providers> findByConsumerOrgId(
       @Param("consumerOrgId") String consumerOrgId);
 
   /**
@@ -48,7 +49,7 @@ public interface ProviderApi {
    * @return the specific Adobe I/O Events Provider associated to the provided natural tripple key
    */
   @RequestLine("GET /events/{consumerOrgId}/providers?providerMetadataId={providerMetadataId}&instanceId={instanceId}")
-  Providers findBy(
+  Optional<Providers> findBy(
       @Param("consumerOrgId") String consumerOrgId,
       @Param("providerMetadataId") String providerMetadataId,
       @Param("instanceId") String instanceId);
