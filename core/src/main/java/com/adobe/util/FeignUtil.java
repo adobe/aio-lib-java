@@ -20,6 +20,7 @@ import feign.Request;
 import feign.form.FormEncoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
+import feign.optionals.OptionalDecoder;
 import feign.slf4j.Slf4jLogger;
 import java.util.concurrent.TimeUnit;
 
@@ -44,8 +45,9 @@ public class FeignUtil {
   public static Feign.Builder getBaseBuilder() {
     return Feign.builder()
         .logger(new Slf4jLogger())
-        .decoder(new JacksonDecoder(objectMapper))
-        //.errorDecoder(new YourErrorDecoderHere(decoder)) // showing this as a Feign doc
+        .decode404()
+        .decoder(new OptionalDecoder(new JacksonDecoder(objectMapper)))
+        //.errorDecoder(new YourErrorDecoderHere(decoder)) //
         .logger(new Logger.ErrorLogger())
         .logLevel(Level.FULL)
         .options(new Request.Options(DEFAULT_CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS,

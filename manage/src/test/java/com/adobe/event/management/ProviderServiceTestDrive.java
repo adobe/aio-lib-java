@@ -13,11 +13,8 @@ package com.adobe.event.management;
 
 import com.adobe.event.management.feign.ProviderServiceImpl;
 import com.adobe.event.management.model.Provider;
-import com.adobe.ims.ImsService;
 import com.adobe.ims.JwtTokenBuilder;
-import com.adobe.ims.feign.ImsServiceImpl;
 import com.adobe.ims.feign.JWTAuthInterceptor;
-import com.adobe.ims.model.AccessToken;
 import com.adobe.util.FileUtil;
 import java.util.List;
 import java.util.Optional;
@@ -40,25 +37,21 @@ public class ProviderServiceTestDrive {
       Properties prop =
           FileUtil.readPropertiesFromClassPath(
               (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
-      JwtTokenBuilder jwtTokenBuilder = JwtTokenBuilder.build(prop);
-      logger.info("jwtToken: {}", jwtTokenBuilder.getJwtToken());
 
-      ImsService imsService = ImsServiceImpl.build(jwtTokenBuilder);
-
-      AccessToken accessToken = imsService.getJwtExchangeAccessToken();
-      logger.info("accessToken: {}", accessToken.getAccessToken());
-
-      JWTAuthInterceptor jwtAuthInterceptor = new JWTAuthInterceptor(imsService,
-          jwtTokenBuilder.getApiKey());
+      JWTAuthInterceptor jwtAuthInterceptor = new JWTAuthInterceptor(JwtTokenBuilder.build(prop));
 
       ProviderService providerService = ProviderServiceImpl
           .build(jwtAuthInterceptor, prop.getProperty(API_URL));
+
       String consumerOrgId = prop.getProperty(CONSUMER_ORG_ID);
       List<Provider> providers = providerService.getProviders(consumerOrgId);
       logger.info("providers: {}", providers);
 
-      Optional<Provider> provider = providerService.findById(prop.getProperty(PROVIDER_ID));
-      logger.info("provider: {}", provider);
+      Optional<Provider> provider1 = providerService.findById(prop.getProperty(PROVIDER_ID));
+      logger.info("provider1: {}", provider1);
+
+      Optional<Provider> provider2 = providerService.findById("notfound");
+      logger.info("provider2: {}", provider2);
 
       System.exit(0);
     } catch (Exception e) {

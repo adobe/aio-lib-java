@@ -36,7 +36,6 @@ public class ProviderServiceImpl implements ProviderService {
   private ProviderServiceImpl(final RequestInterceptor authInterceptor, final String url) {
     this.providerApi = FeignUtil.getDefaultBuilderWithJacksonEncoder()
         .requestInterceptor(authInterceptor)
-        .decode404()
         .target(ProviderApi.class, url);
   }
 
@@ -45,9 +44,9 @@ public class ProviderServiceImpl implements ProviderService {
     if (StringUtils.isEmpty(consumerOrgId)) {
       throw new IllegalArgumentException("You must specify a non empty consumerOrgId");
     }
-    Providers providers = providerApi.findByConsumerOrgId(consumerOrgId);
-    if (providers != null && providers.getProviderCollection() != null) {
-      return providers.getProviderCollection().getProviders();
+    Optional<Providers> providers = providerApi.findByConsumerOrgId(consumerOrgId);
+    if (providers.isPresent() && providers.get().getProviderCollection() != null) {
+      return providers.get().getProviderCollection().getProviders();
     } else {
       return new ArrayList<>();
     }
@@ -55,7 +54,8 @@ public class ProviderServiceImpl implements ProviderService {
 
   @Override
   public Optional<Provider> findById(String id) {
-    return Optional.ofNullable(providerApi.findById(id));
+    Optional<Provider> provider = providerApi.findById(id);
+    return provider;
   }
 
   @Override
@@ -65,13 +65,14 @@ public class ProviderServiceImpl implements ProviderService {
       throw new IllegalArgumentException(
           "You must specify at least a non empty consumerOrgId and providerMetadataId");
     }
-    Providers providers = providerApi.findBy(consumerOrgId, providerMetadataId, instanceId);
-    if (providers != null && providers.getProviderCollection() != null
-        && providers.getProviderCollection().getProviders() != null) {
-      if (providers.getProviderCollection().getProviders().isEmpty()) {
+    Optional<Providers> providers = providerApi
+        .findBy(consumerOrgId, providerMetadataId, instanceId);
+    if (providers.isPresent() && providers.get().getProviderCollection() != null
+        && providers.get().getProviderCollection().getProviders() != null) {
+      if (providers.get().getProviderCollection().getProviders().isEmpty()) {
         return Optional.empty();
       } else {
-        return Optional.of(providers.getProviderCollection().getProviders().get(1));
+        return Optional.of(providers.get().getProviderCollection().getProviders().get(1));
         // there can only be one by API contract
       }
     } else {
