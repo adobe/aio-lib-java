@@ -32,7 +32,7 @@
 
   <name>Adobe I/O Events - Java SDK</name>
   <description>Adobe I/O Events - Java SDK - Parent Project</description>
-  <url>https://github.com/adobe/event-java-sdk</url>
+  <url>https://github.com/adobe/aio-lib-java-events</url>
 
   <licenses>
     <license>
@@ -57,9 +57,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/adobe/java-sdk.git</connection>
-    <developerConnection>scm:git:https://github.com/adobe/java-sdk.git</developerConnection>
-    <url>https://github.com/adobe/java-sdk/tree/master</url>
+    <connection>scm:git:https://github.com/adobe/aio-lib-java-events.git</connection>
+    <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-events.git</developerConnection>
+    <url>https://github.com/adobe/aio-lib-java-events/tree/master</url>
     <tag>HEAD</tag>
   </scm>
 
