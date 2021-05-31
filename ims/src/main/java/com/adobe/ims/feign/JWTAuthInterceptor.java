@@ -15,13 +15,13 @@ import static com.adobe.util.Constants.API_KEY_HEADER;
 import static com.adobe.util.Constants.AUTHORIZATION_HEADER;
 import static com.adobe.util.Constants.BEARER_PREFIX;
 
-import com.adobe.ims.model.AccessToken;
 import com.adobe.ims.ImsService;
+import com.adobe.ims.model.AccessToken;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.apache.commons.lang3.StringUtils;
 
-public class JWTAuthInterceptor implements RequestInterceptor  {
+public class JWTAuthInterceptor implements RequestInterceptor {
 
   private volatile Long expirationTimeMillis;
   private volatile AccessToken accessToken;
@@ -30,7 +30,7 @@ public class JWTAuthInterceptor implements RequestInterceptor  {
   private final String apiKey;
 
 
-  public JWTAuthInterceptor(final ImsService imsService, final String apiKey){
+  public JWTAuthInterceptor(final ImsService imsService, final String apiKey) {
     this.imsService = imsService;
     this.apiKey = apiKey;
   }
@@ -48,22 +48,21 @@ public class JWTAuthInterceptor implements RequestInterceptor  {
     if (getAccessToken() != null) {
       requestTemplate.header(AUTHORIZATION_HEADER, BEARER_PREFIX + getAccessToken());
     }
-    if (requestTemplate.headers().containsKey(API_KEY_HEADER)){
+    if (requestTemplate.headers().containsKey(API_KEY_HEADER)) {
       return;
-    }
-    else if (!StringUtils.isEmpty(apiKey)){
+    } else if (!StringUtils.isEmpty(apiKey)) {
       requestTemplate.header(API_KEY_HEADER, apiKey);
     }
 
   }
 
-  private synchronized void updateAccessToken(){
+  private synchronized void updateAccessToken() {
     this.accessToken = imsService.getJwtExchangeAccessToken();
     this.expirationTimeMillis = System.currentTimeMillis() + accessToken.getExpiresIn() * 1000;
     // throw RetryableException and implement Feign Retry ?
   }
 
-  private synchronized String getAccessToken(){
+  private synchronized String getAccessToken() {
     return this.accessToken.getAccessToken();
   }
 

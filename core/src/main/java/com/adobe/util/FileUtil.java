@@ -41,7 +41,7 @@ public class FileUtil {
     } else {
       try (InputStream in = new FileInputStream(configFilePath)) {
         return Optional.of(read(in));
-      } catch (FileNotFoundException e){
+      } catch (FileNotFoundException e) {
         return Optional.empty();
       }
     }

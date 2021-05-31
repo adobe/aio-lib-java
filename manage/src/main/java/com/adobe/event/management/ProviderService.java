@@ -9,15 +9,18 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.util;
+package com.adobe.event.management;
 
-public class Constants {
+import com.adobe.event.management.model.Provider;
+import java.util.List;
+import java.util.Optional;
 
-  public static final String AUTHORIZATION_HEADER = "Authorization";
-  public static final String BEARER_PREFIX = "Bearer ";
-  public static final String API_KEY_HEADER = "x-api-key";
+public interface ProviderService {
 
-  private Constants() {
-  }
+  List<Provider> getProviders(String consumerOrgId);
+
+  Optional<Provider> findById(String id);
+
+  Optional<Provider> findBy(String consumerOrgId, String providerMetadataId, String instanceId);
 
 }

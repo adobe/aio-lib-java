@@ -26,7 +26,8 @@ public class ImsServiceTestDrive {
   public static void main(String[] args) {
     try {
       JwtTokenBuilder jwtTokenBuilder =
-          JwtTokenBuilder.build((args != null && args.length > 0) ? args[0] : DEFAULT_TEST_PROPERTIES);
+          JwtTokenBuilder
+              .build((args != null && args.length > 0) ? args[0] : DEFAULT_TEST_PROPERTIES);
       logger.info("jwtToken: {}", jwtTokenBuilder.getJwtToken());
       AccessToken accessToken = ImsServiceImpl.build(jwtTokenBuilder).getJwtExchangeAccessToken();
       logger.info("accessToken: {}", accessToken.getAccessToken());

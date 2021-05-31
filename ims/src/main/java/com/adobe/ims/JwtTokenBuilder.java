@@ -56,8 +56,8 @@ public class JwtTokenBuilder {
   private static final String PKCS12_ALIAS = "pkcs12_alias";
 
   /**
-   * @param configPath will be used first to look on the file system and if not found in the
-   *                       class path
+   * @param configPath will be used first to look on the file system and if not found in the class
+   *                   path
    * @return a valid JwtTokenBuilder
    * @throws IOException if the file is not found
    */

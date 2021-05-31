@@ -26,10 +26,11 @@
   <modules>
     <module>core</module>
     <module>ims</module>
+    <module>manage</module>
   </modules>
 
 
-  <name>Adobe I/O Events - Java SDK - Parent Project</name>
+  <name>Adobe I/O Events - Java SDK</name>
   <description>Adobe I/O Events - Java SDK - Parent Project</description>
   <url>https://github.com/adobe/event-java-sdk</url>
 
