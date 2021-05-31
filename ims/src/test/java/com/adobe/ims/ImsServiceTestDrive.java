@@ -11,6 +11,8 @@
  */
 package com.adobe.ims;
 
+import com.adobe.ims.feign.ImsServiceImpl;
+import com.adobe.ims.model.AccessToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,9 +27,9 @@ public class ImsServiceTestDrive {
     try {
       JwtTokenBuilder jwtTokenBuilder =
           JwtTokenBuilder.build((args != null && args.length > 0) ? args[0] : DEFAULT_TEST_PROPERTIES);
-      logger.info("jwtToken: " + jwtTokenBuilder.getJwtToken());
-      AccessToken accessToken = ImsService.build(jwtTokenBuilder).getJwtExchangeAccessToken();
-      logger.info("accessToken: " + accessToken.getAccessToken());
+      logger.info("jwtToken: {}", jwtTokenBuilder.getJwtToken());
+      AccessToken accessToken = ImsServiceImpl.build(jwtTokenBuilder).getJwtExchangeAccessToken();
+      logger.info("accessToken: {}", accessToken.getAccessToken());
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

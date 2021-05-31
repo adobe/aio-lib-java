@@ -53,7 +53,7 @@ For option 3, Use the following commands to set the alias (as `myalias` here)  a
 #### Local Test Drive
 
       JwtTokenBuilder jwtTokenBuilder = JwtTokenBuilder.build(); // using System environment variables
-      AccessToken accessToken = ImsService.build(jwtTokenBuilder).getJwtExchangeAccessToken();
+      AccessToken accessToken = ImsServiceImpl.build(jwtTokenBuilder).getJwtExchangeAccessToken();
 
 Here 
 * First, we have the `JwtTokenBuilder` picking up your environment variables 
