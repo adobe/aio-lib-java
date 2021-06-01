@@ -11,27 +11,32 @@
  */
 package com.adobe.ims;
 
-import static com.adobe.util.FileUtil.getMapFromProperties;
-import static com.adobe.util.FileUtil.readPropertiesFromClassPath;
-import static com.adobe.util.FileUtil.readPropertiesFromFile;
-
-import com.adobe.util.KeyStoreUtil;
+import com.adobe.Workspace;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.io.IOException;
 import java.security.PrivateKey;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
-public class JwtTokenBuilder {
+/**
+ * FYI, the JWT token will generate for you will contain the following claims:
+ *
+ * `exp` - the expiration time. IMS allows a time skew of 30 seconds between the time specified and the IMS server time.
+ * `iss` - the issuer. It must be present, and it must be in the format: `org_ident@AdobeOrg` It represents the identity of the organization which issued the token, and it must be for an organization that has provided IMS with a valid certificate. 
+ * `sub` - the subject. It must be present and must be in the format: `user_ident@user_auth_src`. It represents the ident and authsrc of the technical account for which a certificate has been uploaded to IMS
+ * `aud` - the audience of the token. Must be only one entry, in the format: `ENDPOINT_URI/c/client_id`, where the client_id is the client id for which the access token will be issued. The `ENDPOINT_URI` must be a valid IMS endpoint (e.g. `https://ims-na1.adobelogin.com` for IMS production)
+ * `one or more metascopes claims`, in the format: `ENDPOINT_URI/s/SCOPE_CODE: true`, where the ENDPOINT_URI has the same meaning as for the audience, and the SCOPE_CODE is a valid meta-scope code that was granted to you when the certificate binding was created.
+ *
+ * Note that Optionally, the JWT can contain the following claims (not implemented here yet)
+ * `jti` - a unique identifier for the token. It is dependent on the setting being configured when the certificate binding was created, and if it is set as required it must have not been previously seen by the service, or the request will be reject
+ *
+ * It will also help you getting this signed with a `RSASSA-PKCS1-V1_5` Digital Signatures with `SHA-2` and a `RS256` The JWT algorithm/`alg` header value.
+ * For this, it leverages a third-party open source library : [jjwt](https://github.com/jwtk/jjwt)
+ */
+class JwtTokenBuilder {
 
   private final Map<String, Object> claims;
   private final PrivateKey privateKey;
-  private final String apiKey;
-  private final String imsUrl;
-  private final String clientSecret;
 
   private static final String ISS = "iss";
   private static final String EXP = "exp";
@@ -41,71 +46,20 @@ public class JwtTokenBuilder {
 
   private static final String AUD_SUFFIX = "/c/";
 
-  private static final String IMS_URL = "ims_url";
-  private static final String META_SCOPES = "meta_scopes";
-  private static final String ORG_ID = "ims_organization_id";
-  private static final String TECH_ID = "technical_account_id";
-  private static final String API_KEY = "api_key";
-  private static final String CLIENT_SECRET = "client_secret";
-
-  private static final String ENCODE_PKCS8_KEY = "encoded_pkcs8";
-  private static final String PKCS8_FILE_PATH = "pkcs8_file_path";
-
-  private static final String PKCS12_FILE_PATH = "pkcs12_file_path";
-  private static final String PKCS12_PASSWORD = "pkcs12_password";
-  private static final String PKCS12_ALIAS = "pkcs12_alias";
-
-  /**
-   * @param configPath will be used first to look on the file system and if not found in the class
-   *                   path
-   * @return a valid JwtTokenBuilder
-   * @throws IOException if the file is not found
-   */
-  public static JwtTokenBuilder build(final String configPath) throws IOException {
-    return build(readPropertiesFromFile(configPath)
-        .orElse(readPropertiesFromClassPath(configPath)));
+  public JwtTokenBuilder(final Workspace workspace) {
+    workspace.validateJwtCredentialConfig();
+    this.claims = getClaims(workspace);
+    this.privateKey = workspace.getPrivateKey();
   }
 
-  public static JwtTokenBuilder build(final Properties prop) {
-    return build(getMapFromProperties(prop));
-  }
-
-  /**
-   * @return a JwtTokenBuilder build using System.getenv();
-   */
-  public static JwtTokenBuilder build() {
-    return build(System.getenv());
-  }
-
-  public static JwtTokenBuilder build(final Map<String, String> imsConfig) {
-    return new JwtTokenBuilder(imsConfig);
-  }
-
-  private JwtTokenBuilder(final Map<String, String> imsConfig) {
-    Arrays.asList(IMS_URL, API_KEY, CLIENT_SECRET, ORG_ID, TECH_ID, META_SCOPES).stream().
-        forEach(expectedEntry -> validate(imsConfig, expectedEntry));
-    this.claims = getClaims(imsConfig);
-    this.privateKey = getPrivateKey(imsConfig);
-    this.imsUrl = imsConfig.get(IMS_URL);
-    this.apiKey = imsConfig.get(API_KEY);
-    this.clientSecret = imsConfig.get(CLIENT_SECRET);
-  }
-
-  private static void validate(final Map<String, String> imsConfig, String key) {
-    if (!imsConfig.containsKey(key)) {
-      throw new IllegalArgumentException("JwtTokenBuilder configuration is missing " + key);
-    }
-  }
-
-  private static Map<String, Object> getClaims(final Map<String, String> imsConfig) {
+  private static Map<String, Object> getClaims(final Workspace workspace) {
     Map<String, Object> claims = new HashMap<String, Object>();
-    claims.put(ISS, imsConfig.get(ORG_ID));
-    claims.put(SUB, imsConfig.get(TECH_ID));
-    claims.put(AUD, imsConfig.get(IMS_URL) + AUD_SUFFIX + imsConfig.get(API_KEY));
+    claims.put(ISS, workspace.getImsOrgId());
+    claims.put(SUB, workspace.getTechnicalAccountId());
+    claims.put(AUD, workspace.getImsUrl() + AUD_SUFFIX + workspace.getApiKey());
 
-    String[] metascopes = imsConfig.get(META_SCOPES).split(",");
-    for (String metascope : metascopes) {
-      claims.put(imsConfig.get(IMS_URL) + metascope, true);
+    for (String metascope : workspace.getMetascopes()) {
+      claims.put(workspace.getImsUrl() + metascope, true);
     }
 
     long iat = System.currentTimeMillis() / 1000L;
@@ -114,44 +68,10 @@ public class JwtTokenBuilder {
     return claims;
   }
 
-  private static PrivateKey getPrivateKey(final Map<String, String> imsConfig) {
-    try {
-      if (imsConfig.containsKey(ENCODE_PKCS8_KEY)) {
-        return KeyStoreUtil.getPrivateKeyFromEncodedPkcs8(imsConfig.get(ENCODE_PKCS8_KEY));
-      } else if (imsConfig.containsKey(PKCS8_FILE_PATH)) {
-        return KeyStoreUtil.getPrivateKeyFromPkcs8File(imsConfig.get(PKCS8_FILE_PATH));
-      } else if (imsConfig.containsKey(PKCS12_FILE_PATH) && imsConfig.containsKey(PKCS12_PASSWORD)
-          && imsConfig.containsKey(PKCS12_ALIAS)) {
-        return KeyStoreUtil.getPrivateKeyFromPkcs12File(
-            imsConfig.get(PKCS12_FILE_PATH), imsConfig.get(PKCS12_ALIAS),
-            imsConfig.get(PKCS12_PASSWORD));
-      } else {
-        throw new IllegalArgumentException(
-            "JwtTokenBuilder is missing a valid (pkcs8 or pkcs12) Private Key configuration");
-      }
-    } catch (Exception e) {
-      throw new RuntimeException(
-          "Invalid JwtTokenBuilder (pkcs8 or pkcs12) Private Key configuration. "
-              + "" + e.getMessage(), e);
-    }
-  }
-
-  public String getJwtToken() {
+  public String build() {
     String jwt = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.RS256, privateKey)
         .compact();
     return jwt;
-  }
-
-  public String getApiKey() {
-    return apiKey;
-  }
-
-  public String getImsUrl() {
-    return imsUrl;
-  }
-
-  public String getClientSecret() {
-    return clientSecret;
   }
 
 }

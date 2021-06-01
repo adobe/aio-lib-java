@@ -16,6 +16,7 @@ public class Constants {
   public static final String AUTHORIZATION_HEADER = "Authorization";
   public static final String BEARER_PREFIX = "Bearer ";
   public static final String API_KEY_HEADER = "x-api-key";
+  public static final String IMS_URL = "https://ims-na1.adobelogin.com";
 
   private Constants() {
   }

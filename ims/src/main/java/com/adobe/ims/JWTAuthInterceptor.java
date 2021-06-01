@@ -9,14 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.ims.feign;
+package com.adobe.ims;
 
 import static com.adobe.util.Constants.API_KEY_HEADER;
 import static com.adobe.util.Constants.AUTHORIZATION_HEADER;
 import static com.adobe.util.Constants.BEARER_PREFIX;
 
-import com.adobe.ims.ImsService;
-import com.adobe.ims.JwtTokenBuilder;
+import com.adobe.Workspace;
 import com.adobe.ims.model.AccessToken;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -30,17 +29,22 @@ public class JWTAuthInterceptor implements RequestInterceptor {
   private final ImsService imsService;
   private final String apiKey;
 
-  public JWTAuthInterceptor(JwtTokenBuilder jwtTokenBuilder){
-   this(ImsServiceImpl.build(jwtTokenBuilder), jwtTokenBuilder.getApiKey());
-  }
-
-  public JWTAuthInterceptor(final ImsService imsService, final String apiKey) {
+  private JWTAuthInterceptor(final ImsService imsService, final String apiKey) {
     this.imsService = imsService;
     this.apiKey = apiKey;
   }
 
   @Override
   public void apply(RequestTemplate requestTemplate) {
+    applyAuthorization(requestTemplate);
+    if (requestTemplate.headers().containsKey(API_KEY_HEADER)) {
+      return;
+    } else if (!StringUtils.isEmpty(apiKey)) {
+      requestTemplate.header(API_KEY_HEADER, apiKey);
+    }
+  }
+
+  private void applyAuthorization(RequestTemplate requestTemplate){
     // If the request already have an authorization
     if (requestTemplate.headers().containsKey(AUTHORIZATION_HEADER)) {
       return;
@@ -52,12 +56,6 @@ public class JWTAuthInterceptor implements RequestInterceptor {
     if (getAccessToken() != null) {
       requestTemplate.header(AUTHORIZATION_HEADER, BEARER_PREFIX + getAccessToken());
     }
-    if (requestTemplate.headers().containsKey(API_KEY_HEADER)) {
-      return;
-    } else if (!StringUtils.isEmpty(apiKey)) {
-      requestTemplate.header(API_KEY_HEADER, apiKey);
-    }
-
   }
 
   private synchronized void updateAccessToken() {
@@ -68,6 +66,39 @@ public class JWTAuthInterceptor implements RequestInterceptor {
 
   private synchronized String getAccessToken() {
     return this.accessToken.getAccessToken();
+  }
+
+  public static Builder builder(){
+    return new Builder();
+  }
+
+  public static class Builder {
+
+    private ImsService imsService;
+    private String apiKey;
+
+    private Builder(){
+    }
+
+    public Builder workspace(Workspace workspace){
+      this.imsService = ImsService.builder().workspace(workspace).build();
+      this.apiKey = workspace.getApiKey();
+      return this;
+    }
+
+    public Builder imsService(ImsService imsService){
+      this.imsService = imsService;
+      return this;
+    }
+
+    public Builder apiKey(String apiKey){
+      this.apiKey = apiKey;
+      return this;
+    }
+
+    public JWTAuthInterceptor build(){
+      return new JWTAuthInterceptor(imsService,apiKey);
+    }
   }
 
 }

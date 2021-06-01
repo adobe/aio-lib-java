@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.ims.feign;
+package com.adobe.ims.api;
 
 import com.adobe.ims.model.AccessToken;
 import feign.Headers;

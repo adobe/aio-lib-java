@@ -21,31 +21,32 @@ and start interacting with the many Adobe I/O API that support such authenticati
 
 ### Test Drive
 
-    JwtTokenBuilder jwtTokenBuilder = JwtTokenBuilder.build(); // [1]
-    AccessToken accessToken = ImsServiceImpl.build(jwtTokenBuilder).getJwtExchangeAccessToken(); // [2]
+    PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build(); // [1]
+    Workspace workspace = Workspace.builder()
+        .systemEnv()
+        .privateKey(privateKey)
+        .build(); // [2]
+    ImsService imsService = ImsService.builder().workspace(workspace).build(); // [3]
 
-* [1] we instantiate a `JwtTokenBuilder` that configures itself reading our System environment variables 
-* [2] we stuff it on our IMS service wrapper, and have this service retrieve an access token using a jwt exchange token flow
+    AccessToken accessToken = imsService.getJwtExchangeAccessToken(); // [4]
 
+    // [1] Build your PrivateKey looking up the key indicated by you System Environment variables
+    // [2] build your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace)
+    //     looking up other System Environment variables. 
+    //     Note that our fluent workspace and private Key builders offers many ways to have your workspace configured,
+    //     we are showing here the most concise
+    // [3] build the Ims Service wrapper and have it use this workspace context
+    // [4] use this service to retrieve an access token using a jwt exchange token flow
+       
+                      
 Have a look at our [ImsService `main()` Test Drive](./src/test/java/com/adobe/ims/ImsServiceTestDrive.java)
-
-
-### Our reusable `OpenFeign` JWT (exchange token flow) Authentication `RequestInterceptor`
-
-This lib also contains JWT (exchange token flow) Authentication `RequestInterceptor`: [JWTAuthInterceptor](./src/main/java/com/adobe/ims/feign/JWTAuthInterceptor.java) 
-It is a [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors).
-It can be leverage to add the authentication headers expected by many Adobe APIs, it will add
-* an `Authorization` header with a `Bearer` access token (generated from a JWT exchange flow)
-  * renewing it only when expired (after 24 hours) or when not present in memory yet
-* a `x-api-key` header matching your JWT token
 
 ### Configurations
 
-First, browse our [Service Account Integration (JWT authentication flow) doc](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md), 
-then load your `JWT authentication flow` configurations in this ims sdk, you can either: 
-* use a `.properties` file, see our [sample config file](./src/test/resources/ims.properties)
-* use system environment variables (containing the same entries as in the above sample config file)
-* use runtime `java.util.Properties` or `Map<String, String>` inputs
+Browse our [Service Account Integration (JWT authentication flow) doc](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md), 
+our fluent workspace builder offers many ways to have your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace) configured.
+To get you started quickly you could use a `.properties` file, 
+see our [sample config file](./src/test/resources/workspace.properties)
 
 #### Create and configure your public and private key
 
@@ -53,10 +54,11 @@ First, use openssl to create an RSA private/public certificate pair
 
      openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout private.key -out certificate_pub.crt
 
-You then have 3 options to configure/use this privateKey:
-* Option 1: use a pcks8 file (using the `pkcs8_file_path` config)
-* Option 2: use base 64 encoded pcks8 key (using the `encoded_pkcs8` config) 
-* Option 3: use a keystore (using the `pkcs12_file_path`, `pkcs12_alias` and `pkcs12_password` config)
+Our [`PrivateKeyBuilder`](./src/main/java/com/adobe/util/PrivateKeyBuilder.java) 
+offer 3 options to configure/use this privateKey:
+* Option 1: use a pcks8 file
+* Option 2: use a base 64 encoded pcks8 key
+* Option 3: use a keystore 
 
 For option 1, to convert your private key to a PKCS8 format, use the following command: 
 
@@ -71,20 +73,14 @@ For option 3, Use the following commands to set the alias (as `myalias` here)  a
     cat private.key certificate_pub.crt > private-key-crt
     openssl pkcs12 -export -in private-key-crt -out keystore.p12 -name myalias -noiter -nomaciter
 
-### your JWT token claim
- 
-FYI, the JWT token will generate for you will contain the following claims:
-* `exp` - the expiration time. IMS allows a time skew of 30 seconds between the time specified and the IMS server time.
-* `iss` - the issuer. It must be present, and it must be in the format: `org_ident@AdobeOrg` It represents the identity of the organization which issued the token, and it must be for an organization that has provided IMS with a valid certificate. 
-* `sub` - the subject. It must be present and must be in the format: `user_ident@user_auth_src`. It represents the ident and authsrc of the technical account for which a certificate has been uploaded to IMS
-* `aud` - the audience of the token. Must be only one entry, in the format: `ENDPOINT_URI/c/client_id`, where the client_id is the client id for which the access token will be issued. The `ENDPOINT_URI` must be a valid IMS endpoint (e.g. `https://ims-na1.adobelogin.com` for IMS production)
-* `one or more metascopes claims`, in the format: `ENDPOINT_URI/s/SCOPE_CODE: true`, where the ENDPOINT_URI has the same meaning as for the audience, and the SCOPE_CODE is a valid meta-scope code that was granted to you when the certificate binding was created.
+### Our reusable `OpenFeign` JWT (exchange token flow) Authentication `RequestInterceptor`
 
-Note that Optionally, the JWT can contain the following claims (not implemented here yet)
-* `jti` - a unique identifier for the token. It is dependent on the setting being configured when the certificate binding was created, and if it is set as required it must have not been previously seen by the service, or the request will be reject
-
-It will also help you getting this signed with a `RSASSA-PKCS1-V1_5` Digital Signatures with `SHA-2` and a `RS256` The JWT algorithm/`alg` header value.
-For this, it leverages a third-party open source library : [jjwt](https://github.com/jwtk/jjwt)
+This lib also contains JWT (exchange token flow) Authentication `RequestInterceptor`: [JWTAuthInterceptor](src/main/java/com/adobe/ims/api/JWTAuthInterceptor.java) 
+It is a [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors).
+It can be leverage to add the authentication headers expected by many Adobe APIs, it will add
+* an `Authorization` header with a `Bearer` access token (generated from a JWT exchange flow)
+  * renewing it only when expired (after 24 hours) or when not present in memory yet
+* a `x-api-key` header matching your JWT token
 
 ## Builds
 

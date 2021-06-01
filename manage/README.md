@@ -7,15 +7,19 @@ by [`Adobe I/O Events` Provider and Registration APIs](https://www.adobe.io/apis
  
 ## ProviderService Test Drive
 
-    ProviderService providerService = ProviderServiceImpl.build(authInterceptor); //[1]
-    Optional<Provider> provider = providerService.findById(providerId); //[2]
-      
-* [1] build your ProviderService by passing a OpenFeign Authentication Request Interceptor
-* [2] have this service retrieve one of your event provider by passing a provider id.
+    ProviderService providerService = ProviderService.builder()
+        .authInterceptor(authInterceptor) // [1]
+        .consumerOrgId(workspace.getConsumerOrgId()) // [2]
+        .build(); //
+    Optional<Provider> provider = providerService.findById("someProviderId"); //[3]
 
-The above assumes the [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors) adds
-* an `Authorization` header with a valid `Bearer` access token 
-* a `x-api-key` header associated with the above token
+ * [1] build your ProviderService by passing a OpenFeign Authentication Request Interceptor
+       This [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors)
+       duty is to add :
+      * an `Authorization` header with a valid `Bearer` access token
+      * and a `x-api-key` header associated with the above token
+ * [2] set the consumerOrgId workspace context expected by the ProviderService
+ * [3] have this service retrieve one of your event provider by passing a provider id.
 
 Note our [ims](../ims) library provides such interceptors.
 Have a look at out [ProviderService `main()` Test Drive](./src/test/java/com/adobe/event/management/ProviderServiceTestDrive.java)

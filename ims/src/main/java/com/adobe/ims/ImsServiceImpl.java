@@ -9,32 +9,29 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.ims.feign;
+package com.adobe.ims;
 
-import com.adobe.ims.ImsService;
-import com.adobe.ims.JwtTokenBuilder;
+import com.adobe.Workspace;
+import com.adobe.ims.api.ImsApi;
 import com.adobe.ims.model.AccessToken;
 import com.adobe.util.FeignUtil;
 
-public class ImsServiceImpl implements ImsService {
+class ImsServiceImpl implements ImsService {
 
   private final ImsApi imsApi;
-  private final JwtTokenBuilder jwtTokenBuilder;
+  private final Workspace workspace;
 
-  public static ImsService build(final JwtTokenBuilder jwtTokenBuilder) {
-    return new ImsServiceImpl(jwtTokenBuilder);
-  }
-
-  private ImsServiceImpl(final JwtTokenBuilder jwtTokenBuilder) {
-    this.jwtTokenBuilder = jwtTokenBuilder;
+  ImsServiceImpl(final Workspace workspace) {
+    this.workspace = workspace;
     this.imsApi = FeignUtil.getBuilderWithFormEncoder()
-        .target(ImsApi.class, jwtTokenBuilder.getImsUrl());
+        .target(ImsApi.class, workspace.getImsUrl());
   }
 
   @Override
   public AccessToken getJwtExchangeAccessToken() {
-    return imsApi.getAccessToken(jwtTokenBuilder.getApiKey(),
-        jwtTokenBuilder.getClientSecret(), jwtTokenBuilder.getJwtToken());
+    workspace.validateJwtCredentialConfig();
+    return imsApi.getAccessToken(workspace.getApiKey(),
+        workspace.getClientSecret(), new JwtTokenBuilder(workspace).build());
   }
 
 }

@@ -12,10 +12,30 @@
 package com.adobe.ims;
 
 
+import com.adobe.Workspace;
 import com.adobe.ims.model.AccessToken;
 
 public interface ImsService {
 
   AccessToken getJwtExchangeAccessToken();
 
+  static Builder builder(){
+    return new Builder();
+  }
+
+  class Builder {
+    private Workspace workspace;
+
+    public Builder(){
+    }
+
+    public Builder workspace(Workspace workspace){
+      this.workspace = workspace;
+      return this;
+    }
+
+    public ImsService build(){
+      return new ImsServiceImpl(this.workspace);
+    }
+  }
 }
