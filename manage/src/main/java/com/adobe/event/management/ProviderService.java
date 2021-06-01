@@ -11,16 +11,49 @@
  */
 package com.adobe.event.management;
 
+import com.adobe.event.management.api.ProviderApi;
 import com.adobe.event.management.model.Provider;
+import feign.RequestInterceptor;
 import java.util.List;
 import java.util.Optional;
 
 public interface ProviderService {
 
-  List<Provider> getProviders(String consumerOrgId);
+  List<Provider> getProviders();
 
   Optional<Provider> findById(String id);
 
-  Optional<Provider> findBy(String consumerOrgId, String providerMetadataId, String instanceId);
+  Optional<Provider> findBy(String providerMetadataId, String instanceId);
 
+  static Builder builder(){
+    return new Builder();
+  }
+
+  class Builder {
+    private RequestInterceptor authInterceptor;
+    private String consumerOrgId;
+    private String url = ProviderApi.DEFAULT_URL;
+
+    public Builder(){
+    }
+
+    public Builder authInterceptor(RequestInterceptor authInterceptor){
+      this.authInterceptor = authInterceptor;
+      return this;
+    }
+
+    public Builder consumerOrgId(String consumerOrgId){
+      this.consumerOrgId = consumerOrgId;
+      return this;
+    }
+
+    public Builder url(String url){
+      this.url = url;
+      return this;
+    }
+
+    public ProviderService build(){
+      return new ProviderServiceImpl(authInterceptor, consumerOrgId, url);
+    }
+  }
 }

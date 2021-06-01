@@ -9,9 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.event.management.feign;
+package com.adobe.event.management;
 
-import com.adobe.event.management.ProviderService;
+import com.adobe.event.management.api.ProviderApi;
 import com.adobe.event.management.model.Provider;
 import com.adobe.event.management.model.Providers;
 import com.adobe.util.FeignUtil;
@@ -21,29 +21,30 @@ import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
-public class ProviderServiceImpl implements ProviderService {
+class ProviderServiceImpl implements ProviderService {
 
   private final ProviderApi providerApi;
+  private final String consumerOrgId;
 
-  public static ProviderService build(final RequestInterceptor authInterceptor) {
-    return build(authInterceptor, ProviderApi.DEFAULT_URL);
-  }
-
-  public static ProviderService build(final RequestInterceptor authInterceptor, final String url) {
-    return new ProviderServiceImpl(authInterceptor, url);
-  }
-
-  private ProviderServiceImpl(final RequestInterceptor authInterceptor, final String url) {
+  ProviderServiceImpl(final RequestInterceptor authInterceptor,
+      final String consumerOrgId, final String url) {
+    if (authInterceptor==null){
+      throw new IllegalArgumentException("ProviderService is missing a authentication interceptor");
+    }
+    if (StringUtils.isEmpty(url)){
+      throw new IllegalArgumentException("ProviderService is missing a base api url");
+    }
+    if (StringUtils.isEmpty(consumerOrgId)){
+      throw new IllegalArgumentException("ProviderService is missing a consumerOrgId context");
+    }
     this.providerApi = FeignUtil.getDefaultBuilderWithJacksonEncoder()
         .requestInterceptor(authInterceptor)
         .target(ProviderApi.class, url);
+    this.consumerOrgId = consumerOrgId;
   }
 
   @Override
-  public List<Provider> getProviders(String consumerOrgId) {
-    if (StringUtils.isEmpty(consumerOrgId)) {
-      throw new IllegalArgumentException("You must specify a non empty consumerOrgId");
-    }
+  public List<Provider> getProviders() {
     Optional<Providers> providers = providerApi.findByConsumerOrgId(consumerOrgId);
     if (providers.isPresent() && providers.get().getProviderCollection() != null) {
       return providers.get().getProviderCollection().getProviders();
@@ -54,12 +55,11 @@ public class ProviderServiceImpl implements ProviderService {
 
   @Override
   public Optional<Provider> findById(String id) {
-    Optional<Provider> provider = providerApi.findById(id);
-    return provider;
+    return providerApi.findById(id);
   }
 
   @Override
-  public Optional<Provider> findBy(String consumerOrgId, String providerMetadataId,
+  public Optional<Provider> findBy(String providerMetadataId,
       String instanceId) {
     if (StringUtils.isEmpty(providerMetadataId) || StringUtils.isEmpty(consumerOrgId)) {
       throw new IllegalArgumentException(
