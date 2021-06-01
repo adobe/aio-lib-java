@@ -19,22 +19,23 @@ public interface ImsService {
 
   AccessToken getJwtExchangeAccessToken();
 
-  static Builder builder(){
+  static Builder builder() {
     return new Builder();
   }
 
   class Builder {
+
     private Workspace workspace;
 
-    public Builder(){
+    public Builder() {
     }
 
-    public Builder workspace(Workspace workspace){
+    public Builder workspace(Workspace workspace) {
       this.workspace = workspace;
       return this;
     }
 
-    public ImsService build(){
+    public ImsService build() {
       return new ImsServiceImpl(this.workspace);
     }
   }

@@ -1,3 +1,14 @@
+/*
+ * Copyright 2017 Adobe. All rights reserved.
+ * This file is licensed to you under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License. You may obtain a copy
+ * of the License at http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under
+ * the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+ * OF ANY KIND, either express or implied. See the License for the specific language
+ * governing permissions and limitations under the License.
+ */
 package com.adobe.util;
 
 import static com.adobe.util.FileUtil.getMapFromProperties;
@@ -22,45 +33,43 @@ public class PrivateKeyBuilder {
   private Map<String, String> configMap;
   private String encodePkcs8Key;
 
-  public PrivateKeyBuilder(){
+  public PrivateKeyBuilder() {
   }
 
-  public PrivateKeyBuilder systemEnv(){
+  public PrivateKeyBuilder systemEnv() {
     this.configMap = System.getenv();
     return this;
   }
 
   /**
-   * will first look on the file system,
-   * if not found, in the classpath
+   * will first look on the file system, if not found, in the classpath
    */
   public PrivateKeyBuilder configPath(String configPath) throws IOException {
     this.configMap = getMapFromProperties(
-         readPropertiesFromFile(configPath)
-        .orElse(readPropertiesFromClassPath(configPath)));
+        readPropertiesFromFile(configPath)
+            .orElse(readPropertiesFromClassPath(configPath)));
     return this;
   }
 
-  public PrivateKeyBuilder properties(Properties properties)  {
+  public PrivateKeyBuilder properties(Properties properties) {
     this.configMap = getMapFromProperties(properties);
     return this;
   }
 
-  public PrivateKeyBuilder encodePkcs8Key(String encodePkcs8Key)  {
+  public PrivateKeyBuilder encodePkcs8Key(String encodePkcs8Key) {
     this.encodePkcs8Key = encodePkcs8Key;
     return this;
   }
 
-  public PrivateKey build(){
-    if (!StringUtils.isEmpty(encodePkcs8Key)){
+  public PrivateKey build() {
+    if (!StringUtils.isEmpty(encodePkcs8Key)) {
       try {
         return KeyStoreUtil.getPrivateKeyFromEncodedPkcs8(encodePkcs8Key);
+      } catch (Exception e) {
+        throw new RuntimeException(
+            "Invalid encoded pkcs8 Private Key configuration. "
+                + "" + e.getMessage(), e);
       }
-      catch (Exception e) {
-          throw new RuntimeException(
-              "Invalid encoded pkcs8 Private Key configuration. "
-                  + "" + e.getMessage(), e);
-        }
     } else {
       return getPrivateKey(this.configMap);
     }
@@ -87,7 +96,6 @@ public class PrivateKeyBuilder {
               + "" + e.getMessage(), e);
     }
   }
-
 
 
 }

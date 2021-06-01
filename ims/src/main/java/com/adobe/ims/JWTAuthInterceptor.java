@@ -44,7 +44,7 @@ public class JWTAuthInterceptor implements RequestInterceptor {
     }
   }
 
-  private void applyAuthorization(RequestTemplate requestTemplate){
+  private void applyAuthorization(RequestTemplate requestTemplate) {
     // If the request already have an authorization
     if (requestTemplate.headers().containsKey(AUTHORIZATION_HEADER)) {
       return;
@@ -68,7 +68,7 @@ public class JWTAuthInterceptor implements RequestInterceptor {
     return this.accessToken.getAccessToken();
   }
 
-  public static Builder builder(){
+  public static Builder builder() {
     return new Builder();
   }
 
@@ -77,27 +77,27 @@ public class JWTAuthInterceptor implements RequestInterceptor {
     private ImsService imsService;
     private String apiKey;
 
-    private Builder(){
+    private Builder() {
     }
 
-    public Builder workspace(Workspace workspace){
+    public Builder workspace(Workspace workspace) {
       this.imsService = ImsService.builder().workspace(workspace).build();
       this.apiKey = workspace.getApiKey();
       return this;
     }
 
-    public Builder imsService(ImsService imsService){
+    public Builder imsService(ImsService imsService) {
       this.imsService = imsService;
       return this;
     }
 
-    public Builder apiKey(String apiKey){
+    public Builder apiKey(String apiKey) {
       this.apiKey = apiKey;
       return this;
     }
 
-    public JWTAuthInterceptor build(){
-      return new JWTAuthInterceptor(imsService,apiKey);
+    public JWTAuthInterceptor build() {
+      return new JWTAuthInterceptor(imsService, apiKey);
     }
   }
 

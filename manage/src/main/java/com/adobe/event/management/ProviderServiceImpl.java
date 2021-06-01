@@ -28,13 +28,13 @@ class ProviderServiceImpl implements ProviderService {
 
   ProviderServiceImpl(final RequestInterceptor authInterceptor,
       final String consumerOrgId, final String url) {
-    if (authInterceptor==null){
+    if (authInterceptor == null) {
       throw new IllegalArgumentException("ProviderService is missing a authentication interceptor");
     }
-    if (StringUtils.isEmpty(url)){
+    if (StringUtils.isEmpty(url)) {
       throw new IllegalArgumentException("ProviderService is missing a base api url");
     }
-    if (StringUtils.isEmpty(consumerOrgId)){
+    if (StringUtils.isEmpty(consumerOrgId)) {
       throw new IllegalArgumentException("ProviderService is missing a consumerOrgId context");
     }
     this.providerApi = FeignUtil.getDefaultBuilderWithJacksonEncoder()

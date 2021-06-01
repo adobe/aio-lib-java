@@ -55,9 +55,8 @@ public class ImsServiceTestDrive {
   }
 
   /**
-   * use your own property file filePath or classpath.
-   * WARNING: don't push back to github as it contains many secrets.
-   * We do provide a sample/template workspace.properties file in the
+   * use your own property file filePath or classpath. WARNING: don't push back to github as it
+   * contains many secrets. We do provide a sample/template workspace.properties file in the
    * ./src/test/resources folder
    */
   private static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
