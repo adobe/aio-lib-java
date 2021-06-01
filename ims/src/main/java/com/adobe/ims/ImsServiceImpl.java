@@ -11,31 +11,27 @@
  */
 package com.adobe.ims;
 
-
 import com.adobe.Workspace;
+import com.adobe.ims.api.ImsApi;
 import com.adobe.ims.model.AccessToken;
+import com.adobe.util.FeignUtil;
 
-public interface ImsService {
+class ImsServiceImpl implements ImsService {
 
-  AccessToken getJwtExchangeAccessToken();
+  private final ImsApi imsApi;
+  private final Workspace workspace;
 
-  static Builder builder(){
-    return new Builder();
+  ImsServiceImpl(final Workspace workspace) {
+    this.workspace = workspace;
+    this.imsApi = FeignUtil.getBuilderWithFormEncoder()
+        .target(ImsApi.class, workspace.getImsUrl());
   }
 
-  class Builder {
-    private Workspace workspace;
-
-    public Builder(){
-    }
-
-    public Builder workspace(Workspace workspace){
-      this.workspace = workspace;
-      return this;
-    }
-
-    public ImsService build(){
-      return new ImsServiceImpl(this.workspace);
-    }
+  @Override
+  public AccessToken getJwtExchangeAccessToken() {
+    workspace.validateJwtCredentialConfig();
+    return imsApi.getAccessToken(workspace.getApiKey(),
+        workspace.getClientSecret(), new JwtTokenBuilder(workspace).build());
   }
+
 }

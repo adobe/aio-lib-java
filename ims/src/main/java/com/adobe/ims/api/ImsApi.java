@@ -9,33 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.ims;
+package com.adobe.ims.api;
 
-
-import com.adobe.Workspace;
 import com.adobe.ims.model.AccessToken;
+import feign.Headers;
+import feign.Param;
+import feign.RequestLine;
 
-public interface ImsService {
+public interface ImsApi {
 
-  AccessToken getJwtExchangeAccessToken();
-
-  static Builder builder(){
-    return new Builder();
-  }
-
-  class Builder {
-    private Workspace workspace;
-
-    public Builder(){
-    }
-
-    public Builder workspace(Workspace workspace){
-      this.workspace = workspace;
-      return this;
-    }
-
-    public ImsService build(){
-      return new ImsServiceImpl(this.workspace);
-    }
-  }
+  @RequestLine("POST /ims/exchange/jwt")
+  @Headers("Content-Type: application/x-www-form-urlencoded")
+  AccessToken getAccessToken(
+      @Param("client_id") String clientId,
+      @Param("client_secret") String clientSecret,
+      @Param("jwt_token") String jwtToken);
 }
