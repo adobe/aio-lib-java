@@ -13,9 +13,7 @@ package com.adobe.event.management;
 
 import com.adobe.Workspace;
 import com.adobe.event.management.model.Provider;
-import com.adobe.ims.ImsService;
 import com.adobe.ims.JWTAuthInterceptor;
-import com.adobe.ims.model.AccessToken;
 import com.adobe.util.FileUtil;
 import com.adobe.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
@@ -36,50 +34,9 @@ public class ProviderServiceTestDrive {
   private static final String CONSUMER_ORG_ID = "consumer_org_id";
   public static final String PROVIDER_ID = "provider_id";
 
-  public static void runTheReadmeFile() {
-    PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build(); // [1]
-    Workspace workspace = Workspace.builder()
-        .systemEnv()
-        .privateKey(privateKey)
-        .build(); // [2]
-    ImsService imsService = ImsService.builder().workspace(workspace).build(); // [3]
-
-    // [1] Build your PrivateKey looking up the key indicated by you System Environment variables
-    // [2] build your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace)
-    //     looking up other System Environment variables.
-    //     Note that our fluent workspace and private Key builders offers many ways to have your workspace configured,
-    //     we are showing here the most concise
-    // [3] build the Ims Service wrapper and have it use this workspace context
-
-     RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
-        .workspace(workspace)
-        .build();
-
-    ProviderService providerService = ProviderService.builder()
-        .authInterceptor(authInterceptor) // [1]
-        .consumerOrgId(workspace.getConsumerOrgId()) // [2]
-        .build(); //
-    Optional<Provider> provider = providerService.findById("someProviderId"); //[3]
-
-   /*
-
-   [1] build your ProviderService by passing a OpenFeign Authentication Request Interceptor
-       This [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors)
-       duty is to add :
-      * an `Authorization` header with a valid `Bearer` access token
-      * and a `x-api-key` header associated with the above token
-
-   [2] set the consumerOrgId workspace context expected by the ProviderService
-   [3] have this service retrieve one of your event provider by passing a provider id.
-
-    */
-
-  }
-
   /**
-   * use your own property file filePath or classpath.
-   * WARNING: don't push back to github as it contains many secrets.
-   * We do provide a sample/template workspace.properties file in the
+   * use your own property file filePath or classpath. WARNING: don't push back to github as it
+   * contains many secrets. We do provide a sample/template workspace.properties file in the
    * ./src/test/resources folder
    */
   private static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
@@ -103,10 +60,25 @@ public class ProviderServiceTestDrive {
           .build();
 
       ProviderService providerService = ProviderService.builder()
-          .authInterceptor(authInterceptor)
-          .consumerOrgId(workspace.getConsumerOrgId())
-          .url(prop.getProperty(API_URL))
-          .build();
+          .authInterceptor(authInterceptor) // [1]
+          .consumerOrgId(workspace.getConsumerOrgId()) // [2]
+          .url(prop.getProperty(API_URL)) // you can omit this if you target prod
+          .build(); //
+      Optional<Provider> provider = providerService.findById("someProviderId"); //[3]
+      logger.info("someProvider: {}", provider);
+
+   /*
+
+   [1] build your ProviderService by passing a OpenFeign Authentication Request Interceptor
+       This [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors)
+       duty is to add :
+      * an `Authorization` header with a valid `Bearer` access token
+      * and a `x-api-key` header associated with the above token
+
+   [2] set the consumerOrgId workspace context expected by the ProviderService
+   [3] have this service retrieve one of your event provider by passing a provider id.
+
+    */
 
       List<Provider> providers = providerService.getProviders();
       logger.info("providers: {}", providers);
@@ -123,7 +95,6 @@ public class ProviderServiceTestDrive {
       System.exit(-1);
     }
   }
-
 
 
 }
