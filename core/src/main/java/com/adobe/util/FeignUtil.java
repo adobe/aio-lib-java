@@ -47,9 +47,9 @@ public class FeignUtil {
         .logger(new Slf4jLogger())
         .decode404()
         .decoder(new OptionalDecoder(new JacksonDecoder(objectMapper)))
-        //.errorDecoder(new YourErrorDecoderHere(decoder)) //
+        //.errorDecoder(new YourErrorDecoderHere(decoder)) // todo add upstream requestId in the log
         .logger(new Logger.ErrorLogger())
-        .logLevel(Level.FULL)
+        .logLevel(Level.NONE) // tune this when debugging
         .options(new Request.Options(DEFAULT_CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS,
             DEFAULT_READ_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, true));
   }
