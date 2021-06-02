@@ -1,7 +1,5 @@
 # `aio-lib-java` 
 
-`aio-lib-java` is the Adobe I/O Events - Java SDK
-
 ## Modules
 
 * [`aio-lib-java-core`](./core) holds the core `Adobe Developer Console` workspace builders and other utilities used across the other libraries
