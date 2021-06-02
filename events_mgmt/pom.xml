@@ -24,7 +24,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>aio-lib-java-events-management</artifactId>
+  <artifactId>aio-lib-java-events-mgmt</artifactId>
   <name>Adobe I/O - Events Management Library</name>
   <description>Adobe I/O - Java SDK - Events Management Library</description>
 

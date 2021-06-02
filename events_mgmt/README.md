@@ -1,7 +1,7 @@
 
-# `aio-lib-java-events-management`
+# `aio-lib-java-events-mgmt`
 
-`aio-lib-java-events-management` is Adobe I/O Events - Java SDK - Management Library.
+`aio-lib-java-events-mgmt` is Adobe I/O - Java SDK - Events Management Library.
 This Java library wraps http API endpoints exposed 
 by [`Adobe I/O Events` Provider and Registration APIs](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/api.md)
  
