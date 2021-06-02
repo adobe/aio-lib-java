@@ -2,7 +2,7 @@
 
 ## Modules
 
-* [`aio-lib-java-core`](./core) holds the core `Adobe Developer Console` workspace builders and other utilities used across the other libraries
+* [`aio-lib-java-core`](./core) holds the core models, builders, utilities used across the other libraries
 * [`aio-lib-java-ims`](./ims) wraps http API endpoints exposed by [Adobe Identity Management System (IMS)](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
 * [`aio-lib-java-events-management`](./manage) wraps http API endpoints exposed by [Adobe I/O Events Provider and Registration APIs](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/api.md)
 
