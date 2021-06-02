@@ -17,22 +17,22 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <groupId>com.adobe.event</groupId>
-    <artifactId>aio-lib-java-events</artifactId>
+    <groupId>com.adobe</groupId>
+    <artifactId>aio-lib-java</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>aio-lib-java-events-management</artifactId>
-  <name>Adobe I/O Events - Management Library</name>
-  <description>Adobe I/O Events - Java SDK - Management Library</description>
+  <name>Adobe I/O - Events Management Library</name>
+  <description>Adobe I/O - Java SDK - Events Management Library</description>
 
   <dependencies>
 
     <dependency>
-      <groupId>com.adobe.event</groupId>
-      <artifactId>aio-lib-java-events-core</artifactId>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
@@ -42,8 +42,8 @@
       <artifactId>slf4j-simple</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.adobe.event</groupId>
-      <artifactId>aio-lib-java-events-ims</artifactId>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-ims</artifactId>
       <version>${project.version}</version>
     </dependency>
 

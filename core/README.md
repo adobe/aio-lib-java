@@ -1,7 +1,12 @@
-# `aio-lib-java-events-core`
+# `aio-lib-java-core`
 
-`aio-lib-java-events-core` is Adobe I/O Events - Java SDK - Core Library. 
+`aio-lib-java-core` is Adobe I/O  - Java SDK - Core Library. 
 This Java library holds various core utilities used across the other modules.
+It also holds the core `Adobe Developer Console` Workspace Builder.
+
+## Workspace
+
+todo : add docs and code samples
 
 ## Builds
 

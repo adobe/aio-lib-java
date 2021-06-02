@@ -18,20 +18,20 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.adobe.event</groupId>
-  <artifactId>aio-lib-java-events</artifactId>
+  <groupId>com.adobe</groupId>
+  <artifactId>aio-lib-java</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
     <module>core</module>
     <module>ims</module>
-    <module>manage</module>
+    <module>events_mgmt</module>
   </modules>
 
 
-  <name>Adobe I/O Events - Java SDK</name>
-  <description>Adobe I/O Events - Java SDK - Parent Project</description>
+  <name>Adobe I/O - Java SDK</name>
+  <description>Adobe I/O - Java SDK - Parent Project</description>
   <url>https://github.com/adobe/aio-lib-java-events</url>
 
   <licenses>

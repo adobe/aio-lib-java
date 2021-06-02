@@ -17,22 +17,22 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <groupId>com.adobe.event</groupId>
-    <artifactId>aio-lib-java-events</artifactId>
+    <groupId>com.adobe</groupId>
+    <artifactId>aio-lib-java</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>aio-lib-java-events-ims</artifactId>
-  <name>Adobe I/O Events - IMS Library</name>
+  <artifactId>aio-lib-java-ims</artifactId>
+  <name>Adobe I/O - IMS Library</name>
   <description>Adobe I/O Events - Java SDK - IMS Library</description>
 
   <dependencies>
 
     <dependency>
-      <groupId>com.adobe.event</groupId>
-      <artifactId>aio-lib-java-events-core</artifactId>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-core</artifactId>
       <version>${project.version}</version>
     </dependency>
 
