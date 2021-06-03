@@ -43,9 +43,6 @@
 - [ ] I have updated the documentation accordingly.
 - [ ] I have read the **CONTRIBUTING** document.
 - [ ] I have added tests to cover my changes.
-- [ ] All new and existing tests passed.
-- [ ] the Maven local build completes: `mvn install` completes i.e. the build is successful 
-- [ ] the OSGI Maven local build completes: `mvn -f pom-bundle.xml clean install` completes i.e. the OSGI build is successful 
 
 
 
