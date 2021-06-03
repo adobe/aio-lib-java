@@ -22,4 +22,3 @@ Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING
 
 This project is licensed under the Apache V2 License. See [LICENSE](LICENSE.md) for more information.
 
-
