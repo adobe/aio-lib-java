@@ -1,4 +1,4 @@
-# `aio-lib-java` 
+# `aio-lib-java` moved to https://github.com/adobe/aio-lib-java 
 
 ## Modules
 
