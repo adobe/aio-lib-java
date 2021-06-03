@@ -2,17 +2,14 @@
 
 ## Modules
 
-* [`aio-lib-java-core`](./core) holds the core models, builders, utilities used across the other libraries
-* [`aio-lib-java-ims`](./ims) wraps http API endpoints exposed by [Adobe Identity Management System (IMS)](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
-* [`aio-lib-java-events-mgmt`](./events_mgmt) wraps http API endpoints exposed by [Adobe I/O Events Provider and Registration APIs](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/api.md)
+* [`aio-lib-java-core`](./core)  holds the core models, builders, utilities used across the other libraries below,
+* [`aio-lib-java-ims`](./ims) is a library wrapping a subset of [Adobe Identity Management System (IMS) API](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
+* [`aio-lib-java-events-mgmt`](./events_mgmt) is a library wrapping [Adobe I/O Events Provider and Registration API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/api.md)
 
-## Unit tests
-
-Have a look at our [JUnit](https://junit.org/) tests (in our various modules `./src/test` folders) 
 
 ## Builds
 
-This Library is associated with [maven](https://maven.apache.org/) builds (they also run the unit tests):
+This project is a [maven](https://maven.apache.org/) multi-module project.
 
 ### Contributing
 
