@@ -11,8 +11,51 @@
  */
 package com.adobe;
 
+import com.adobe.util.Constants;
+import com.adobe.util.FileUtil;
+import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 public class WorkspaceTest {
 
-  //TODO
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+
+  private static final String TEST_PROPERTIES = "workspace.properties";
+  private static final String TEST_VALUE = "changeMe";
+
+  private static Workspace properties() throws IOException {
+    return Workspace.builder()
+        .properties(FileUtil.readPropertiesFromClassPath(TEST_PROPERTIES))
+        .build();
+  }
+
+  @Test
+  public void testProperties() throws IOException {
+    Workspace workspace = properties();
+    Assert.assertEquals(Constants.IMS_URL, workspace.getImsUrl());
+    Assert.assertEquals(TEST_VALUE, workspace.getApiKey());
+    Assert.assertEquals(TEST_VALUE, workspace.getClientSecret());
+    Assert.assertEquals(TEST_VALUE, workspace.getApiKey());
+    Assert.assertEquals(TEST_VALUE, workspace.getCredentialId());
+    Assert.assertEquals(TEST_VALUE, workspace.getClientSecret());
+    Assert.assertEquals(TEST_VALUE, workspace.getConsumerOrgId());
+    Assert.assertEquals(TEST_VALUE, workspace.getImsOrgId());
+    Assert.assertEquals(TEST_VALUE, workspace.getTechnicalAccountId());
+    Assert.assertEquals(TEST_VALUE, workspace.getMetascopes().iterator().next());
+    Assert.assertEquals(null, workspace.getPrivateKey());
+  }
+
+  @Test
+  public void testValidateJwtCredentialConfig() throws IOException {
+    Workspace workspace = properties();
+    expectedEx.expect(IllegalArgumentException.class);
+    expectedEx.expectMessage("Your `Worskpace` should contain a privateKey");
+    workspace.validateJwtCredentialConfig();
+
+  }
 
 }
