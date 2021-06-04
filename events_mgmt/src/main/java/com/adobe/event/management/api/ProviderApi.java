@@ -21,16 +21,14 @@ import java.util.Optional;
 @Headers("Accept: application/hal+json")
 public interface ProviderApi {
 
-  String DEFAULT_URL = "https://api.adobe.io";
-
-  //TODO use https://github.com/OpenFeign/feign-annotation-error-decoder
 
   /**
    * @param id The provider uuid
    * @return the associated Adobe I/O Events Provider
    */
-  @RequestLine("GET /events/providers/{id}")
-  Optional<Provider> findById(@Param("id") String id);
+  @RequestLine("GET /events/providers/{id}?eventmetadata={eventmetadata}")
+  Optional<Provider> findById(@Param("id") String id,
+      @Param("eventmetadata") Boolean eventmetadata);
 
   /**
    * @param consumerOrgId The consumer organization Id used to look up the Adobe I/O Events

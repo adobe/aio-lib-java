@@ -16,6 +16,7 @@ import com.adobe.event.management.model.RegistrationInputModel;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
+import java.util.Optional;
 
 @Headers("Accept: application/json")
 public interface RegistrationApi {
@@ -23,22 +24,43 @@ public interface RegistrationApi {
   /**
    * Creates a Webhook or a Journal registration
    *
+   * @param imsOrgId      your Ims Org Id
    * @param consumerOrgId Your consumer organization Id
-   * @param integrationId The integration Id associated with your project/workspace
+   * @param credentialId  The integration Id associated with your project/workspace
    * @param body          your Registration Input
-   * @param xImsOrgId     (optional)
    * @return Registration
    */
-  @RequestLine("POST /organizations/{consumerOrgId}/integrations/{integrationId}/registrations")
+  @RequestLine("POST /events/organizations/{consumerOrgId}/integrations/{credentialId}/registrations")
   @Headers({
       "Content-Type: application/json",
-      "x-ims-org-id: {xImsOrgId}",
+      "x-ims-org-id: {imsOrgId}",
   })
-  Registration createRegistration(
+  Optional<Registration> createRegistration(
+      @Param("imsOrgId") String imsOrgId,
       @Param("consumerOrgId") String consumerOrgId,
-      @Param("integrationId") String integrationId,
-      RegistrationInputModel body,
-      @Param("xImsOrgId") String xImsOrgId); // todo test without
+      @Param("credentialId") String credentialId,
+      RegistrationInputModel body
+  );
 
+  /**
+   * GET a registration
+   *
+   * @param imsOrgId       your Ims Org Id
+   * @param consumerOrgId  Your consumer organization Id
+   * @param credentialId   The integration Id associated with your project/workspace
+   * @param registrationId The Registration Id
+   * @return Registration
+   */
+  @RequestLine("GET /events/organizations/{consumerOrgId}/integrations/{credentialId}/registrations/{registrationId}")
+  @Headers({
+      "Content-Type: application/json",
+      "x-ims-org-id: {imsOrgId}",
+  })
+  Optional<Registration> findById(
+      @Param("imsOrgId") String imsOrgId,
+      @Param("consumerOrgId") String consumerOrgId,
+      @Param("credentialId") String credentialId,
+      @Param("registrationId") String registrationId
+  );
 
 }

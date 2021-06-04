@@ -38,13 +38,8 @@ public class Providers {
     return providerCollection;
   }
 
-  public void setProviderCollection(ProviderCollection _embedded) {
-    this.providerCollection = _embedded;
-  }
-
   public Providers() {
   }
-
 
   @Override
   public boolean equals(Object o) {
