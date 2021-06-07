@@ -22,8 +22,11 @@ public interface RegistrationService {
 
   Optional<Registration> findById(String registrationId);
 
+  void delete(String registrationId);
+
   Optional<Registration> createRegistration(
       RegistrationInputModel.Builder registrationInputModelBuilder);
+
 
   static Builder builder() {
     return new Builder();

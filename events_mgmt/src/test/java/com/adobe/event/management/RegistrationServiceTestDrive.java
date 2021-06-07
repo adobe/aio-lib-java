@@ -35,7 +35,6 @@ public class RegistrationServiceTestDrive {
 
   public static final String PROVIDER_ID = "provider_id";
   public static final String EVENT_CODE = "event_code";
-  public static final String REGISTRATION_ID = "registration_id";
 
   /**
    * use your own property file filePath or classpath. WARNING: don't push back to github as it
@@ -70,12 +69,7 @@ public class RegistrationServiceTestDrive {
           .build(); //
       Optional<Registration> registration =
           registrationService.findById("someRegistrationId"); // [3]
-
       logger.info("someRegistration: {}", registration);
-
-      Optional<Registration> registration1 =
-          registrationService.findById(prop.getProperty(REGISTRATION_ID));
-      logger.info("someRegistration: {}", registration1);
 
       Optional<Registration> created = registrationService.createRegistration(
           RegistrationInputModel.builder()
@@ -83,9 +77,13 @@ public class RegistrationServiceTestDrive {
               .name("aio-lib-java registration name")
               .addEventsOfInterests(EventsOfInterest.builder()
                   .setEventCode(prop.getProperty(EVENT_CODE))
-                  .setProviderId(prop.getProperty(PROVIDER_ID)).build()) // [3]
+                  .setProviderId(prop.getProperty(PROVIDER_ID)).build())
       );
-      logger.info("created: {}", created);
+      String createdId = created.get().getRegistrationId();
+      logger.info("found created: {}", createdId);
+      registrationService.delete(createdId);
+
+
 
       System.exit(0);
     } catch (Exception e) {

@@ -35,7 +35,7 @@ public interface RegistrationApi {
       "Content-Type: application/json",
       "x-ims-org-id: {imsOrgId}",
   })
-  Optional<Registration> createRegistration(
+  Optional<Registration> post(
       @Param("imsOrgId") String imsOrgId,
       @Param("consumerOrgId") String consumerOrgId,
       @Param("credentialId") String credentialId,
@@ -56,11 +56,32 @@ public interface RegistrationApi {
       "Content-Type: application/json",
       "x-ims-org-id: {imsOrgId}",
   })
-  Optional<Registration> findById(
+  Optional<Registration> get(
       @Param("imsOrgId") String imsOrgId,
       @Param("consumerOrgId") String consumerOrgId,
       @Param("credentialId") String credentialId,
       @Param("registrationId") String registrationId
   );
+
+  /**
+   * DELETE a registration
+   *
+   * @param imsOrgId       your Ims Org Id
+   * @param consumerOrgId  Your consumer organization Id
+   * @param credentialId   The integration Id associated with your project/workspace
+   * @param registrationId The Registration Id
+   */
+  @RequestLine("DELETE /events/organizations/{consumerOrgId}/integrations/{credentialId}/registrations/{registrationId}")
+  @Headers({
+      "Content-Type: application/json",
+      "x-ims-org-id: {imsOrgId}",
+  })
+  void delete(
+      @Param("imsOrgId") String imsOrgId,
+      @Param("consumerOrgId") String consumerOrgId,
+      @Param("credentialId") String credentialId,
+      @Param("registrationId") String registrationId
+  );
+
 
 }

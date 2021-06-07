@@ -43,23 +43,31 @@ class RegistrationServiceImpl implements RegistrationService {
     this.workspace = workspace;
   }
 
+  @Override
+  public Optional<Registration> findById(String registrationId) {
+    if (StringUtils.isEmpty(registrationId)) {
+      throw new IllegalArgumentException("registrationId cannot be null or empty");
+    }
+    return registrationApi.get(workspace.getImsOrgId(), workspace.getConsumerOrgId(),
+        workspace.getCredentialId(), registrationId);
+  }
+
+  @Override
+  public void delete(String registrationId) {
+    if (StringUtils.isEmpty(registrationId)) {
+      throw new IllegalArgumentException("registrationId cannot be null or empty");
+    }
+    registrationApi.delete(workspace.getImsOrgId(), workspace.getConsumerOrgId(),
+        workspace.getCredentialId(), registrationId);
+  }
 
   @Override
   public Optional<Registration> createRegistration(
       RegistrationInputModel.Builder registrationInputModelBuilder) {
     RegistrationInputModel inputModel = registrationInputModelBuilder
         .clientId(workspace.getApiKey()).build();
-    return registrationApi.createRegistration(workspace.getImsOrgId(), workspace.getConsumerOrgId(),
+    return registrationApi.post(workspace.getImsOrgId(), workspace.getConsumerOrgId(),
         workspace.getCredentialId(), inputModel);
-  }
-
-  @Override
-  public Optional<Registration> findById(String registrationId) {
-    if (StringUtils.isEmpty(registrationId)) {
-      throw new IllegalArgumentException("registrationId cannot be null or empty");
-    }
-    return registrationApi.findById(workspace.getImsOrgId(), workspace.getConsumerOrgId(),
-        workspace.getCredentialId(), registrationId);
   }
 
 }
