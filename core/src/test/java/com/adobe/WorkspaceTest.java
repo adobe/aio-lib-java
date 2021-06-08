@@ -25,7 +25,7 @@ public class WorkspaceTest {
   public ExpectedException expectedEx = ExpectedException.none();
 
   private static final String TEST_PROPERTIES = "workspace.properties";
-  private static final String TEST_VALUE = "changeMe";
+  private static final String TEST_VALUE = "_changeMe";
 
   private static Workspace properties() throws IOException {
     return Workspace.builder()
@@ -37,15 +37,14 @@ public class WorkspaceTest {
   public void testProperties() throws IOException {
     Workspace workspace = properties();
     Assert.assertEquals(Constants.IMS_URL, workspace.getImsUrl());
-    Assert.assertEquals(TEST_VALUE, workspace.getApiKey());
-    Assert.assertEquals(TEST_VALUE, workspace.getClientSecret());
-    Assert.assertEquals(TEST_VALUE, workspace.getApiKey());
-    Assert.assertEquals(TEST_VALUE, workspace.getCredentialId());
-    Assert.assertEquals(TEST_VALUE, workspace.getClientSecret());
-    Assert.assertEquals(TEST_VALUE, workspace.getConsumerOrgId());
-    Assert.assertEquals(TEST_VALUE, workspace.getImsOrgId());
-    Assert.assertEquals(TEST_VALUE, workspace.getTechnicalAccountId());
-    Assert.assertEquals(TEST_VALUE, workspace.getMetascopes().iterator().next());
+    Assert.assertEquals(Workspace.API_KEY+TEST_VALUE, workspace.getApiKey());
+    Assert.assertEquals(Workspace.CLIENT_SECRET+TEST_VALUE, workspace.getClientSecret());
+    Assert.assertEquals(Workspace.API_KEY+TEST_VALUE, workspace.getApiKey());
+    Assert.assertEquals(Workspace.CREDENTIAL_ID+TEST_VALUE, workspace.getCredentialId());
+    Assert.assertEquals(Workspace.CONSUMER_ORG_ID+TEST_VALUE, workspace.getConsumerOrgId());
+    Assert.assertEquals(Workspace.IMS_ORG_ID+TEST_VALUE, workspace.getImsOrgId());
+    Assert.assertEquals(Workspace.TECHNICAL_ACCOUNT_ID+TEST_VALUE, workspace.getTechnicalAccountId());
+    Assert.assertEquals(Workspace.META_SCOPES+TEST_VALUE, workspace.getMetascopes().iterator().next());
     Assert.assertEquals(null, workspace.getPrivateKey());
   }
 
