@@ -83,8 +83,6 @@ public class RegistrationServiceTestDrive {
       logger.info("found created: {}", createdId);
       registrationService.delete(createdId);
 
-
-
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

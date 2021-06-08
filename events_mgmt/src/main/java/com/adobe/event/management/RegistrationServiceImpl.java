@@ -37,6 +37,18 @@ class RegistrationServiceImpl implements RegistrationService {
     if (workspace == null) {
       throw new IllegalArgumentException("RegistrationService is missing a workspace context");
     }
+    if (StringUtils.isEmpty(workspace.getImsOrgId())) {
+      throw new IllegalArgumentException("Workspace is missing an imsOrgId context");
+    }
+    if (StringUtils.isEmpty(workspace.getConsumerOrgId())) {
+      throw new IllegalArgumentException("Workspace is missing a consumerOrgId context");
+    }
+    if (StringUtils.isEmpty(workspace.getCredentialId())) {
+      throw new IllegalArgumentException("Workspace is missing a credentialId context");
+    }
+    if (StringUtils.isEmpty(workspace.getApiKey())) {
+      throw new IllegalArgumentException("Workspace is missing an apiKey context");
+    }
     this.registrationApi = FeignUtil.getDefaultBuilderWithJacksonEncoder()
         .requestInterceptor(authInterceptor)
         .target(RegistrationApi.class, apiUrl);

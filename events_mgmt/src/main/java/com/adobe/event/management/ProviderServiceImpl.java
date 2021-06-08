@@ -38,6 +38,9 @@ class ProviderServiceImpl implements ProviderService {
     if (workspace == null) {
       throw new IllegalArgumentException("ProviderService is missing a workspace context");
     }
+    if (StringUtils.isEmpty(workspace.getConsumerOrgId())) {
+      throw new IllegalArgumentException("Workspace is missing a consumerOrgId context");
+    }
     this.providerApi = FeignUtil.getDefaultBuilderWithJacksonEncoder()
         .requestInterceptor(authInterceptor)
         .target(ProviderApi.class, apiUrl);

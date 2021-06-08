@@ -16,7 +16,6 @@ import com.adobe.event.management.model.Provider;
 import feign.RequestInterceptor;
 import java.util.List;
 import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 
 public interface ProviderService {
 
@@ -36,12 +35,6 @@ public interface ProviderService {
     private Workspace workspace;
     private String url;
 
-    private static void validateWorkspace(Workspace workspace) {
-      if (StringUtils.isEmpty(workspace.getConsumerOrgId())) {
-        throw new IllegalArgumentException("Workspace is missing a consumerOrgId context");
-      }
-    }
-
     public Builder() {
     }
 
@@ -51,7 +44,6 @@ public interface ProviderService {
     }
 
     public Builder workspace(Workspace workspace) {
-      validateWorkspace(workspace);
       this.workspace = workspace;
       return this;
     }
