@@ -11,6 +11,9 @@
  */
 package com.adobe.event.management;
 
+import static com.adobe.util.Constants.API_MANAGEMENT_URL;
+
+import com.adobe.Workspace;
 import com.adobe.event.management.api.ProviderApi;
 import com.adobe.event.management.model.Provider;
 import com.adobe.event.management.model.Providers;
@@ -24,28 +27,29 @@ import org.apache.commons.lang3.StringUtils;
 class ProviderServiceImpl implements ProviderService {
 
   private final ProviderApi providerApi;
-  private final String consumerOrgId;
+  private final Workspace workspace;
 
   ProviderServiceImpl(final RequestInterceptor authInterceptor,
-      final String consumerOrgId, final String url) {
+      final Workspace workspace, final String url) {
+    String apiUrl = StringUtils.isEmpty(url) ? API_MANAGEMENT_URL : url;
     if (authInterceptor == null) {
       throw new IllegalArgumentException("ProviderService is missing a authentication interceptor");
     }
-    if (StringUtils.isEmpty(url)) {
-      throw new IllegalArgumentException("ProviderService is missing a base api url");
+    if (workspace == null) {
+      throw new IllegalArgumentException("ProviderService is missing a workspace context");
     }
-    if (StringUtils.isEmpty(consumerOrgId)) {
-      throw new IllegalArgumentException("ProviderService is missing a consumerOrgId context");
+    if (StringUtils.isEmpty(workspace.getConsumerOrgId())) {
+      throw new IllegalArgumentException("Workspace is missing a consumerOrgId context");
     }
     this.providerApi = FeignUtil.getDefaultBuilderWithJacksonEncoder()
         .requestInterceptor(authInterceptor)
-        .target(ProviderApi.class, url);
-    this.consumerOrgId = consumerOrgId;
+        .target(ProviderApi.class, apiUrl);
+    this.workspace = workspace;
   }
 
   @Override
   public List<Provider> getProviders() {
-    Optional<Providers> providers = providerApi.findByConsumerOrgId(consumerOrgId);
+    Optional<Providers> providers = providerApi.findByConsumerOrgId(workspace.getConsumerOrgId());
     if (providers.isPresent() && providers.get().getProviderCollection() != null) {
       return providers.get().getProviderCollection().getProviders();
     } else {
@@ -55,18 +59,19 @@ class ProviderServiceImpl implements ProviderService {
 
   @Override
   public Optional<Provider> findById(String id) {
-    return providerApi.findById(id);
+    return providerApi.findById(id, true);
   }
 
   @Override
   public Optional<Provider> findBy(String providerMetadataId,
       String instanceId) {
-    if (StringUtils.isEmpty(providerMetadataId) || StringUtils.isEmpty(consumerOrgId)) {
+    if (StringUtils.isEmpty(providerMetadataId) || StringUtils
+        .isEmpty(workspace.getConsumerOrgId())) {
       throw new IllegalArgumentException(
           "You must specify at least a non empty consumerOrgId and providerMetadataId");
     }
     Optional<Providers> providers = providerApi
-        .findBy(consumerOrgId, providerMetadataId, instanceId);
+        .findBy(workspace.getConsumerOrgId(), providerMetadataId, instanceId);
     if (providers.isPresent() && providers.get().getProviderCollection() != null
         && providers.get().getProviderCollection().getProviders() != null) {
       if (providers.get().getProviderCollection().getProviders().isEmpty()) {

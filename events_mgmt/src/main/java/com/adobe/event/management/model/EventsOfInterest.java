@@ -11,6 +11,7 @@
  */
 package com.adobe.event.management.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 
@@ -22,12 +23,20 @@ public class EventsOfInterest {
   @JsonProperty("provider_id")
   String providerId;
 
+  private EventsOfInterest() {
+  }
+
+  private EventsOfInterest(String providerId, String eventCode) {
+    this.providerId = providerId;
+    this.eventCode = eventCode;
+  }
+
   public String getProviderId() {
     return providerId;
   }
 
-  public void setProviderId(String providerId) {
-    this.providerId = providerId;
+  public String getEventCode() {
+    return eventCode;
   }
 
   @Override
@@ -56,4 +65,28 @@ public class EventsOfInterest {
         '}';
   }
 
+  @JsonIgnore
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+
+    private String providerId;
+    private String eventCode;
+
+    public Builder setProviderId(String providerId) {
+      this.providerId = providerId;
+      return this;
+    }
+
+    public Builder setEventCode(String eventCode) {
+      this.eventCode = eventCode;
+      return this;
+    }
+
+    public EventsOfInterest build() {
+      return new EventsOfInterest(providerId, eventCode);
+    }
+  }
 }

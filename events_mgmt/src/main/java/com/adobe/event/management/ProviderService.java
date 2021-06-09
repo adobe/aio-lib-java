@@ -11,7 +11,7 @@
  */
 package com.adobe.event.management;
 
-import com.adobe.event.management.api.ProviderApi;
+import com.adobe.Workspace;
 import com.adobe.event.management.model.Provider;
 import feign.RequestInterceptor;
 import java.util.List;
@@ -32,8 +32,8 @@ public interface ProviderService {
   class Builder {
 
     private RequestInterceptor authInterceptor;
-    private String consumerOrgId;
-    private String url = ProviderApi.DEFAULT_URL;
+    private Workspace workspace;
+    private String url;
 
     public Builder() {
     }
@@ -43,8 +43,8 @@ public interface ProviderService {
       return this;
     }
 
-    public Builder consumerOrgId(String consumerOrgId) {
-      this.consumerOrgId = consumerOrgId;
+    public Builder workspace(Workspace workspace) {
+      this.workspace = workspace;
       return this;
     }
 
@@ -54,7 +54,7 @@ public interface ProviderService {
     }
 
     public ProviderService build() {
-      return new ProviderServiceImpl(authInterceptor, consumerOrgId, url);
+      return new ProviderServiceImpl(authInterceptor, workspace, url);
     }
   }
 }

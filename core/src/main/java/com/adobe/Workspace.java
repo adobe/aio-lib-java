@@ -27,33 +27,34 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Workspace {
 
-  private static final String IMS_URL = "ims_url";
-  private static final String IMS_ORG_ID = "ims_org_id";
-  private static final String CONSUMER_ORG_ID = "consumer_org_id";
-  private static final String API_KEY = "api_key";
-  private static final String CLIENT_SECRET = "client_secret";
-  private static final String TECHNICAL_ACCOUNT_ID = "technical_account_id";
-  private static final String META_SCOPES = "meta_scopes";
+  static final String IMS_URL = "aio_ims_url";
+  static final String IMS_ORG_ID = "aio_ims_org_id";
+  static final String CONSUMER_ORG_ID = "aio_consumer_org_id";
+  static final String API_KEY = "aio_api_key";
+  static final String CREDENTIAL_ID = "aio_credential_id";
+  static final String CLIENT_SECRET = "aio_client_secret";
+  static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
+  static final String META_SCOPES = "aio_meta_scopes";
 
   private final String imsUrl;
   private final String imsOrgId;
   private final String consumerOrgId;
   private final String apiKey;
+  private final String credentialId;
   private final String clientSecret;
   private final String technicalAccountId;
   private final Set<String> metascopes;
   private final PrivateKey privateKey;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String consumerOrgId,
-      final String apiKey, final String clientSecret, final String technicalAccountId,
+      final String apiKey, final String credentialId, final String clientSecret,
+      final String technicalAccountId,
       final Set<String> metascopes, final PrivateKey privateKey) {
-    if (StringUtils.isEmpty(imsUrl)) {
-      throw new IllegalArgumentException("Your `Worskpace` is missing an imsUrl");
-    }
-    this.imsUrl = imsUrl;
+    this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
     this.consumerOrgId = consumerOrgId;
     this.apiKey = apiKey;
+    this.credentialId = credentialId;
     this.clientSecret = clientSecret;
     this.technicalAccountId = technicalAccountId;
     this.metascopes = metascopes;
@@ -97,6 +98,10 @@ public class Workspace {
     return apiKey;
   }
 
+  public String getCredentialId() {
+    return credentialId;
+  }
+
   public String getClientSecret() {
     return clientSecret;
   }
@@ -126,6 +131,7 @@ public class Workspace {
         Objects.equals(imsOrgId, workspace.imsOrgId) &&
         Objects.equals(consumerOrgId, workspace.consumerOrgId) &&
         Objects.equals(apiKey, workspace.apiKey) &&
+        Objects.equals(credentialId, workspace.credentialId) &&
         Objects.equals(clientSecret, workspace.clientSecret) &&
         Objects.equals(technicalAccountId, workspace.technicalAccountId) &&
         Objects.equals(metascopes, workspace.metascopes) &&
@@ -135,7 +141,8 @@ public class Workspace {
   @Override
   public int hashCode() {
     return Objects
-        .hash(imsUrl, imsOrgId, consumerOrgId, apiKey, clientSecret, technicalAccountId, metascopes,
+        .hash(imsUrl, imsOrgId, consumerOrgId, apiKey, credentialId, clientSecret,
+            technicalAccountId, metascopes,
             privateKey);
   }
 
@@ -146,6 +153,7 @@ public class Workspace {
         ", imsOrgId='" + imsOrgId + '\'' +
         ", consumerOrgId='" + consumerOrgId + '\'' +
         ", apiKey='" + apiKey + '\'' +
+        ", credentialId='" + credentialId + '\'' +
         ", clientSecret='" + clientSecret + '\'' +
         ", technicalAccountId='" + technicalAccountId + '\'' +
         ", metascopes=" + metascopes +
@@ -158,10 +166,11 @@ public class Workspace {
 
   public static class Builder {
 
-    private String imsUrl = Constants.IMS_URL;
+    private String imsUrl;
     private String imsOrgId;
     private String consumerOrgId;
     private String apiKey;
+    private String credentialId;
     private String clientSecret;
     private String technicalAccountId;
     private final Set<String> metascopes = new HashSet<>();
@@ -192,6 +201,11 @@ public class Workspace {
       return this;
     }
 
+    public Builder credentialId(String credentialId) {
+      this.credentialId = credentialId;
+      return this;
+    }
+
     public Builder clientSecret(String clientSecret) {
       this.clientSecret = clientSecret;
       return this;
@@ -213,12 +227,14 @@ public class Workspace {
     }
 
     public Builder configMap(Map<String, String> configMap) {
-      this.imsUrl(configMap.get(IMS_URL));
-      this.imsOrgId(configMap.get(IMS_ORG_ID));
-      this.consumerOrgId(configMap.get(CONSUMER_ORG_ID));
-      this.apiKey(configMap.get(API_KEY));
-      this.clientSecret(configMap.get(CLIENT_SECRET));
-      this.technicalAccountId(configMap.get(TECHNICAL_ACCOUNT_ID));
+      this
+          .imsUrl(configMap.get(IMS_URL))
+          .imsOrgId(configMap.get(IMS_ORG_ID))
+          .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
+          .apiKey(configMap.get(API_KEY))
+          .credentialId(configMap.get(CREDENTIAL_ID))
+          .clientSecret(configMap.get(CLIENT_SECRET))
+          .technicalAccountId(configMap.get(TECHNICAL_ACCOUNT_ID));
       if (!StringUtils.isEmpty(configMap.get(META_SCOPES))) {
         String[] metascopeArray = configMap.get(META_SCOPES).split(",");
         for (String metascope : metascopeArray) {
@@ -244,7 +260,7 @@ public class Workspace {
 
     public Workspace build() {
       return new Workspace(imsUrl, imsOrgId, consumerOrgId,
-          apiKey, clientSecret, technicalAccountId,
+          apiKey, credentialId, clientSecret, technicalAccountId,
           metascopes, privateKey);
     }
   }

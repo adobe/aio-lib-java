@@ -23,12 +23,12 @@ import org.apache.commons.lang3.StringUtils;
 
 public class PrivateKeyBuilder {
 
-  private static final String ENCODE_PKCS8_KEY = "encoded_pkcs8";
-  private static final String PKCS8_FILE_PATH = "pkcs8_file_path";
+  private static final String ENCODE_PKCS8_KEY = "aio_encoded_pkcs8";
+  private static final String PKCS8_FILE_PATH = "aio_pkcs8_file_path";
 
-  private static final String PKCS12_FILE_PATH = "pkcs12_file_path";
-  private static final String PKCS12_PASSWORD = "pkcs12_password";
-  private static final String PKCS12_ALIAS = "pkcs12_alias";
+  private static final String PKCS12_FILE_PATH = "aio_pkcs12_file_path";
+  private static final String PKCS12_PASSWORD = "aio_pkcs12_password";
+  private static final String PKCS12_ALIAS = "aio_pkcs12_alias";
 
   private Map<String, String> configMap;
   private String encodePkcs8Key;

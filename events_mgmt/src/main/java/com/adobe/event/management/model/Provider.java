@@ -39,16 +39,19 @@ public class Provider {
   private String publisher = null;
 
   /**
+   * the associated EventMetadata can be eager loaded by the provider http API
+   */
+  @JsonProperty("_embedded")
+  private EventMetadataCollection eventMetadataCollection;
+
+
+  /**
    * The Id of this Events Provider
    *
    * @return id
    **/
   public String getId() {
     return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
   }
 
   /**
@@ -60,10 +63,6 @@ public class Provider {
     return label;
   }
 
-  public void setLabel(String label) {
-    this.label = label;
-  }
-
   /**
    * The description of this Events Provider, as shown on the Adobe I/O console
    *
@@ -71,10 +70,6 @@ public class Provider {
    **/
   public String getDescription() {
     return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 
   /**
@@ -97,10 +92,6 @@ public class Provider {
     return docsUrl;
   }
 
-  public void setDocsUrl(String docsUrl) {
-    this.docsUrl = docsUrl;
-  }
-
   /**
    * The publisher is &#x60;Adobe&#x60; for Adobe Cloud Solution. In the case of multi-instances or
    * on-premise Adobe solutions:  the publisher will be set to the organization_id owning this
@@ -114,8 +105,8 @@ public class Provider {
     return publisher;
   }
 
-  public void setPublisher(String publisher) {
-    this.publisher = publisher;
+  public EventMetadataCollection getEventMetadataCollection() {
+    return eventMetadataCollection;
   }
 
   @Override
@@ -126,29 +117,32 @@ public class Provider {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Provider providerHalModel = (Provider) o;
-    return Objects.equals(this.id, providerHalModel.id) &&
-        Objects.equals(this.label, providerHalModel.label) &&
-        Objects.equals(this.description, providerHalModel.description) &&
-        Objects.equals(this.source, providerHalModel.source) &&
-        Objects.equals(this.docsUrl, providerHalModel.docsUrl) &&
-        Objects.equals(this.publisher, providerHalModel.publisher);
+    Provider provider = (Provider) o;
+    return Objects.equals(id, provider.id) &&
+        Objects.equals(label, provider.label) &&
+        Objects.equals(description, provider.description) &&
+        Objects.equals(source, provider.source) &&
+        Objects.equals(docsUrl, provider.docsUrl) &&
+        Objects.equals(publisher, provider.publisher) &&
+        Objects.equals(eventMetadataCollection, provider.eventMetadataCollection);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, label, description, source, docsUrl, publisher);
+    return Objects
+        .hash(id, label, description, source, docsUrl, publisher, eventMetadataCollection);
   }
 
   @Override
   public String toString() {
     return "Provider{" +
-        " label='" + label + '\'' +
-        ", id='" + id + '\'' +
+        "id='" + id + '\'' +
+        ", label='" + label + '\'' +
         ", description='" + description + '\'' +
         ", source='" + source + '\'' +
         ", docsUrl='" + docsUrl + '\'' +
         ", publisher='" + publisher + '\'' +
+        ", eventMetadataCollection=" + eventMetadataCollection +
         '}';
   }
 }

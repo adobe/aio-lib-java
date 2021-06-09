@@ -6,7 +6,14 @@ It also holds the core `Adobe Developer Console` Workspace Builder.
 
 ## Workspace
 
-todo : add docs and code samples
+This library holds a [`Workspace`](./src/main/java/com/adobe/Workspace.java) POJO modeling
+your [Adobe Developer Console Project Workspace](https://www.adobe.io/apis/experienceplatform/console/docs.html#!AdobeDocs/adobeio-console/master/projects.md),
+
+To get you started quickly you could use a `.properties` file, 
+see our [sample config file](./src/test/resources/workspace.properties) and our JUnit Test
+
+For now, you have a bit of copy and paste to do, but we have a plan to streamline the process:
+* https://github.com/adobe/aio-lib-java/issues/5
 
 ## Builds
 
