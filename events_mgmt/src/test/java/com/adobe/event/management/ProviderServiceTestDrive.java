@@ -30,9 +30,8 @@ public class ProviderServiceTestDrive {
 
   // use your own property file filePath or classpath and don't push back to git
   private static final String DEFAULT_TEST_DRIVE_PROPERTIES = "workspace.secret.properties";
-  private static final String API_URL = "api_url";
-  private static final String CONSUMER_ORG_ID = "consumer_org_id";
-  public static final String PROVIDER_ID = "provider_id";
+  private static final String API_URL = "aio_api_url";
+  public static final String PROVIDER_ID = "aio_provider_id";
 
   /**
    * use your own property file filePath or classpath. WARNING: don't push back to github as it

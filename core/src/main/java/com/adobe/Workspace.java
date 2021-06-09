@@ -27,14 +27,14 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Workspace {
 
-  static final String IMS_URL = "ims_url";
-  static final String IMS_ORG_ID = "ims_org_id";
-  static final String CONSUMER_ORG_ID = "consumer_org_id";
-  static final String API_KEY = "api_key";
-  static final String CREDENTIAL_ID = "credential_id";
-  static final String CLIENT_SECRET = "client_secret";
-  static final String TECHNICAL_ACCOUNT_ID = "technical_account_id";
-  static final String META_SCOPES = "meta_scopes";
+  static final String IMS_URL = "aio_ims_url";
+  static final String IMS_ORG_ID = "aio_ims_org_id";
+  static final String CONSUMER_ORG_ID = "aio_consumer_org_id";
+  static final String API_KEY = "aio_api_key";
+  static final String CREDENTIAL_ID = "aio_credential_id";
+  static final String CLIENT_SECRET = "aio_client_secret";
+  static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
+  static final String META_SCOPES = "aio_meta_scopes";
 
   private final String imsUrl;
   private final String imsOrgId;
