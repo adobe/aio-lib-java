@@ -27,6 +27,7 @@
     <module>core</module>
     <module>ims</module>
     <module>events_mgmt</module>
+    <module>events_ingress</module>
   </modules>
 
 
