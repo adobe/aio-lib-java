@@ -20,10 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 
 public class RegistrationInputModel {
 
-  public enum DeliveryType {
-    WEBHOOK, JOURNAL, WEBHOOK_BATCH
-  }
-
   @JsonProperty("client_id")
   protected String clientId;
 
