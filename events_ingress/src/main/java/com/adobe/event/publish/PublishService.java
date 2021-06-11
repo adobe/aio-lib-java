@@ -9,23 +9,21 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.event.management;
+package com.adobe.event.publish;
 
-import com.adobe.Workspace;
-import com.adobe.event.management.model.Registration;
-import com.adobe.event.management.model.RegistrationInputModel;
+import com.adobe.event.publish.model.CloudEvent;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import feign.RequestInterceptor;
-import java.util.Optional;
 
-public interface RegistrationService {
 
-  Optional<Registration> findById(String registrationId);
+public interface PublishService {
 
-  void delete(String registrationId);
-
-  Optional<Registration> createRegistration(
-      RegistrationInputModel.Builder registrationInputModelBuilder);
-
+  CloudEvent publishCloudEvent(String providerId, String eventCode, String eventId, JsonNode data);
+  CloudEvent publishCloudEvent(String providerId, String eventCode, String data)
+      throws JsonProcessingException;
+  CloudEvent publishCloudEvent(String providerId, String eventCode, String eventId,  String data)
+      throws JsonProcessingException;
 
   static Builder builder() {
     return new Builder();
@@ -34,26 +32,19 @@ public interface RegistrationService {
   class Builder {
 
     private RequestInterceptor authInterceptor;
-    private Workspace workspace;
     private String url;
 
     public Builder authInterceptor(RequestInterceptor authInterceptor) {
       this.authInterceptor = authInterceptor;
       return this;
     }
-
-    public Builder workspace(Workspace workspace) {
-      this.workspace = workspace;
-      return this;
-    }
-
     public Builder url(String url) {
       this.url = url;
       return this;
     }
 
-    public RegistrationService build() {
-      return new RegistrationServiceImpl(authInterceptor, workspace, url);
+    public PublishService build() {
+      return new PublishServiceImpl(authInterceptor, url);
     }
   }
 }
