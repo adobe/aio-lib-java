@@ -49,7 +49,8 @@ public class FeignUtil {
         .decoder(new OptionalDecoder(new JacksonDecoder(objectMapper)))
         //.errorDecoder(new YourErrorDecoderHere(decoder)) // todo add upstream requestId in the log
         .logger(new Logger.ErrorLogger())
-        .logLevel(Level.NONE) // tune this when debugging
+        .logLevel(Level.NONE)
+        //.logLevel(Level.FULL) // use this instead when debugging
         .options(new Request.Options(DEFAULT_CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS,
             DEFAULT_READ_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, true));
   }
