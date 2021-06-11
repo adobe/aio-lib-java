@@ -11,7 +11,6 @@
  */
 package com.adobe.event.management.model;
 
-import com.adobe.event.management.model.RegistrationInputModel.DeliveryType;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.Objects;
@@ -19,13 +18,21 @@ import java.util.Set;
 
 public class Registration {
 
-  public enum WebHookStatus {
+  public enum Type {
+    USER, APP
+  }
+
+  public enum Status {
     ACCEPTED,
     DELETED,
     VERIFICATION_FAILED,
     HOOK_UNREACHABLE,
     UNSTABLE,
     VERIFIED;
+  }
+
+  public enum IntegrationStatus {
+    ENABLED, DISABLED
   }
 
   @JsonProperty("client_id")
@@ -44,23 +51,14 @@ public class Registration {
   @JsonProperty("webhook_url")
   protected String webhookUrl;
 
-
-  public enum WebHookType {
-    USER, APP
-  }
-
-  public enum IntegrationStatus {
-    ENABLED, DISABLED
-  }
-
   @JsonProperty("registration_id")
   private String registrationId;
 
   @JsonProperty("status")
-  private WebHookStatus status;
+  private Status status;
 
   @JsonProperty("type")
-  private WebHookType type;
+  private Type type;
 
   @JsonProperty("integration_status")
   private IntegrationStatus integrationStatus;
@@ -105,11 +103,11 @@ public class Registration {
     return this.registrationId;
   }
 
-  public WebHookStatus getStatus() {
+  public Status getStatus() {
     return this.status;
   }
 
-  public WebHookType getType() {
+  public Type getType() {
     return type;
   }
 
