@@ -12,7 +12,6 @@
 package com.adobe;
 
 import com.adobe.util.Constants;
-import com.adobe.util.FileUtil;
 import java.io.IOException;
 import org.junit.Assert;
 import org.junit.Rule;
@@ -27,34 +26,37 @@ public class WorkspaceTest {
   private static final String TEST_PROPERTIES = "workspace.properties";
   private static final String TEST_VALUE = "_changeMe";
 
-  private static Workspace properties() throws IOException {
+  private static Workspace getTestWorkspaceFromProperties() throws IOException {
     return Workspace.builder()
-        .properties(FileUtil.readPropertiesFromClassPath(TEST_PROPERTIES))
+        .propertiesPath(TEST_PROPERTIES)
         .build();
   }
 
   @Test
   public void testProperties() throws IOException {
-    Workspace workspace = properties();
-    Assert.assertEquals(Constants.IMS_URL, workspace.getImsUrl());
-    Assert.assertEquals(Workspace.API_KEY+TEST_VALUE, workspace.getApiKey());
-    Assert.assertEquals(Workspace.CLIENT_SECRET+TEST_VALUE, workspace.getClientSecret());
-    Assert.assertEquals(Workspace.API_KEY+TEST_VALUE, workspace.getApiKey());
-    Assert.assertEquals(Workspace.CREDENTIAL_ID+TEST_VALUE, workspace.getCredentialId());
-    Assert.assertEquals(Workspace.CONSUMER_ORG_ID+TEST_VALUE, workspace.getConsumerOrgId());
-    Assert.assertEquals(Workspace.IMS_ORG_ID+TEST_VALUE, workspace.getImsOrgId());
-    Assert.assertEquals(Workspace.TECHNICAL_ACCOUNT_ID+TEST_VALUE, workspace.getTechnicalAccountId());
-    Assert.assertEquals(Workspace.META_SCOPES+TEST_VALUE, workspace.getMetascopes().iterator().next());
-    Assert.assertEquals(null, workspace.getPrivateKey());
+    Workspace fromProperties = getTestWorkspaceFromProperties();
+    Workspace expected = Workspace.builder()
+        .imsUrl(Constants.IMS_URL)
+        .apiKey(Workspace.API_KEY + TEST_VALUE)
+        .clientSecret(Workspace.CLIENT_SECRET + TEST_VALUE)
+        .apiKey(Workspace.API_KEY + TEST_VALUE)
+        .credentialId(Workspace.CREDENTIAL_ID + TEST_VALUE)
+        .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
+        .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
+        .technicalAccountId(Workspace.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
+        .addMetascope(Workspace.META_SCOPES + TEST_VALUE)
+        .build();
+    Assert.assertEquals(expected, fromProperties);
+    Assert.assertEquals(expected.hashCode(), fromProperties.hashCode());
+    Assert.assertEquals(expected.toString(), fromProperties.toString());
   }
 
   @Test
   public void testValidateJwtCredentialConfig() throws IOException {
-    Workspace workspace = properties();
+    Workspace workspace = getTestWorkspaceFromProperties();
     expectedEx.expect(IllegalArgumentException.class);
     expectedEx.expectMessage("Your `Worskpace` should contain a privateKey");
     workspace.validateJwtCredentialConfig();
-
   }
 
 }
