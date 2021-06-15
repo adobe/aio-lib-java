@@ -23,7 +23,7 @@ public interface ProviderApi {
 
 
   /**
-   * @param id The provider uuid
+   * @param id            The provider uuid
    * @param eventmetadata if set to true the event_metadata will also be fetched
    * @return the associated Adobe I/O Events Provider
    */

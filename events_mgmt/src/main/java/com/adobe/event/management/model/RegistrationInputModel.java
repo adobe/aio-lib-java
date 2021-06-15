@@ -21,23 +21,24 @@ import org.apache.commons.lang3.StringUtils;
 public class RegistrationInputModel {
 
   @JsonProperty("client_id")
-  protected String clientId;
+  private final String clientId;
 
-  protected String name;
+  private final String name;
 
-  protected String description;
+  private final String description;
 
   @JsonProperty("delivery_type")
-  protected DeliveryType deliveryType;
+  private final DeliveryType deliveryType;
 
   @JsonProperty("events_of_interest")
-  protected Set<EventsOfInterest> eventsOfInterests = new HashSet<>();
+  private final Set<EventsOfInterest> eventsOfInterests;
 
   @JsonProperty("webhook_url")
-  protected String webhookUrl;
+  private final String webhookUrl;
 
-  private RegistrationInputModel(String clientId, String name, String description,
-      DeliveryType deliveryType, Set<EventsOfInterest> eventsOfInterests, String webhookUrl) {
+  private RegistrationInputModel(final String clientId, final String name, final String description,
+      final DeliveryType deliveryType, final Set<EventsOfInterest> eventsOfInterests,
+      final String webhookUrl) {
     if (deliveryType == null && StringUtils.isEmpty(webhookUrl)) {
       this.deliveryType = DeliveryType.JOURNAL;
     } else if (deliveryType == null && !StringUtils.isEmpty(webhookUrl)) {
@@ -53,7 +54,6 @@ public class RegistrationInputModel {
     this.name = name;
     this.description = description;
     this.eventsOfInterests = eventsOfInterests;
-
   }
 
   public String getClientId() {
