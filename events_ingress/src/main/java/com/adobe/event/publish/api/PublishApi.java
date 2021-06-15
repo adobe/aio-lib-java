@@ -25,8 +25,8 @@ public interface PublishApi {
    *
    * @param body your CloudEvent Input Model
    */
-  @RequestLine("POST ")
+  @RequestLine("POST")
   @Headers({"Content-Type: application/cloudevents+json"})
-  void post(CloudEvent body);
+  void publish(CloudEvent body);
 
 }

@@ -29,7 +29,7 @@ class PublishServiceImpl implements PublishService {
     String apiUrl = StringUtils.isEmpty(url) ? PublishApi.DEFAULT_URL : url;
     if (authInterceptor == null) {
       throw new IllegalArgumentException(
-          "RegistrationService is missing a authentication interceptor");
+          "PublishService is missing a authentication interceptor");
     }
     this.publishApi = FeignUtil.getDefaultBuilderWithJacksonEncoder()
         .requestInterceptor(authInterceptor)
@@ -54,7 +54,7 @@ class PublishServiceImpl implements PublishService {
     CloudEvent inputModel = CloudEvent.builder()
         .providerId(providerId).eventCode(eventCode).eventId(eventId)
         .data(data).build();
-    publishApi.post(inputModel);
+    publishApi.publish(inputModel);
     return inputModel;
   }
 
