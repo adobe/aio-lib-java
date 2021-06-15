@@ -19,12 +19,21 @@ import feign.RequestLine;
 @Headers("Accept: application/vnd.adobecloud.events+json")
 public interface JournalApi {
 
-  @RequestLine("GET ")
+  @RequestLine("GET")
   @Headers({"x-ims-org-id: {imsOrgId}"})
   Entry get(@Param("imsOrgId") String imsOrgId);
 
   @RequestLine("GET ?latest=true")
   @Headers({"x-ims-org-id: {imsOrgId}"})
   Entry getLatest(@Param("imsOrgId") String imsOrgId);
+
+  @RequestLine("GET ?since={position}")
+  @Headers({"x-ims-org-id: {imsOrgId}"})
+  Entry getSince(@Param("imsOrgId") String imsOrgId, @Param("position") String position);
+
+  @RequestLine("GET ?since={position}&limit={maxBatchSize}")
+  @Headers({"x-ims-org-id: {imsOrgId}"})
+  Entry getSince(@Param("imsOrgId") String imsOrgId,
+      @Param("position") String position, @Param("maxBatchSize") int maxBatchSize);
 
 }

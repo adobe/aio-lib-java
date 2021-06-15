@@ -41,8 +41,50 @@ public interface JournalService {
   Entry getLatest();
 
   /**
-   * @param linkUrl
-   * @return get a Journal Entry using the provided linkUrl
+   * @param position the last event position you already read. Once the events at a certain position
+   *                 have expired, that position in the journal can no longer be used to fetch more
+   *                 events. In such a scenario, your application will need to reset its position in
+   *                 the journal. To reset the position you could chose to consume events from the
+   *                 oldest available position or the latest position depending on your use case.
+   * @return the next journal Entry available after the provided position. Note that instead of
+   * constructing the URL to the next batch of "newer" events it is strongly recommended that you
+   * utilize the nextLink provided in any previous Entry you already fetched.
+   * @see Entry#getNextLink()
+   */
+  Entry getSince(String position);
+
+  /**
+   * @param position     the last event position you already read. Once the events at a certain
+   *                     position have expired, that position in the journal can no longer be used
+   *                     to fetch more events. In such a scenario, your application will need to
+   *                     reset its position in the journal. To reset the position you could chose to
+   *                     consume events from the oldest available position or the latest position
+   *                     depending on your use case.
+   * @param maxBatchSize When events are created at a high frequency, Journal persists groups of
+   *                     events in its storage units; when events are created at a lower rate, these
+   *                     storage units will contain only one event.
+   *                     <p>
+   *                     Hence, depending on the traffic of the events associated with your
+   *                     registration, the number of events returned in a single response batch
+   *                     varies: a batch of events contains at least one event (if you are not
+   *                     already at the end of the journal), but there is no pre-defined upper
+   *                     limit.
+   *                     <p>
+   *                     In case you wish to set an upper bound, you can supply this maxBatchSize
+   *                     with the maximum number of events that may be returned by the API.
+   * @return the next journal Entry available after the provided position (filled with maximum
+   * maxBatchSize events). Note that instead of constructing the URL to the next batch of "newer"
+   * events it is strongly recommended that you utilize the nextLink provided in any previous Entry
+   * you already fetched.
+   * @see Entry#getNextLink()
+   */
+
+  Entry getSince(String position, int maxBatchSize);
+
+  /**
+   * @param linkUrl typically the nextLink provided in any previous Entry you already fetched.
+   * @return get a Journal Entry using a linkUrl
+   * @see Entry#getNextLink()
    */
   Entry get(String linkUrl);
 

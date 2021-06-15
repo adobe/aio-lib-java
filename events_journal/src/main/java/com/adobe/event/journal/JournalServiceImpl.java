@@ -61,6 +61,16 @@ class JournalServiceImpl implements JournalService {
   }
 
   @Override
+  public Entry getSince(String position) {
+    return journalApi.getSince(this.imsOrgId, position);
+  }
+
+  @Override
+  public Entry getSince(String position, int maxBatchSize) {
+    return journalApi.getSince(this.imsOrgId, position, maxBatchSize);
+  }
+
+  @Override
   public Entry get(String linkUrl) {
     JournalApi linkJournalApi = FeignUtil.getBaseBuilder()
         .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))

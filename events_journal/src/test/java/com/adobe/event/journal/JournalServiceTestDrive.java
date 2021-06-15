@@ -56,7 +56,7 @@ public class JournalServiceTestDrive {
           .workspace(workspace)
           .build();
 
-      String journalUrl=prop.getProperty(AIO_JOURNAL_URL);
+      String journalUrl = prop.getProperty(AIO_JOURNAL_URL);
       int nofEvents = 0;
       int nofEntries = 1;
 
@@ -78,9 +78,13 @@ public class JournalServiceTestDrive {
         }
       }
       logger.info("The journal ({}) currently holds {} events (in {} journal entries)",
-          journalUrl, nofEvents, nofEntries-1);
+          journalUrl, nofEvents, nofEntries - 1);
 
       logger.info("Latest entry: {}", journalService.getLatest());
+
+      String position = "tuna:4c06140b-8bcc-448e-a6e8-48c6dda4949c.tuna:ec78bee9-e81b-4d66-bc9d-81edd112d0ce.4098bf54-25a4-4268-b0e5-13fa850b2db1.0.1623764399.jdsptlaewfsynoewgv7h";
+      logger.info("since entry: {}", journalService.getSince(position));
+      logger.info("since entry: {}", journalService.getSince(position, 3));
 
       System.exit(0);
     } catch (Exception e) {
