@@ -10,6 +10,7 @@
 * [`aio-lib-java-ims`](./ims) is a library wrapping a subset of [Adobe Identity Management System (IMS) API](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
 * [`aio-lib-java-events-mgmt`](./events_mgmt) is a library wrapping [Adobe I/O Events Provider and Registration API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/api.md)
 * [`aio-lib-java-events-ingress`](./events_ingress) is a library wrapping [Adobe I/O Events Publishing API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/eventsingress_api.md)
+* [`aio-lib-java-events-journal`](./events_journal) is a library wrapping [Adobe I/O Events Journaling API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/journaling_api.md)
 
 ## Builds
 
