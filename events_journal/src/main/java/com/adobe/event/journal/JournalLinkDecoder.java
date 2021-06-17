@@ -35,6 +35,7 @@ public class JournalLinkDecoder implements Decoder {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
   final static String LINK_HEADER = "link";
+  final static String RETRY_AFTER_HEADER = "retry-after";
   /**
    * links headers looks like the following:
    * <aPath>; rel=\"aName\"";
@@ -53,6 +54,10 @@ public class JournalLinkDecoder implements Decoder {
       return this.delegate.decode(response, type);
     } else if (response.status() >= 200 && response.status() < 300) {
       Entry entry = new Entry();
+      if (response.status() == 204 && response.headers() != null && response.headers()
+          .containsKey(RETRY_AFTER_HEADER)){
+        entry.setRetryAfterInSeconds(response.headers().get(RETRY_AFTER_HEADER).iterator().next());
+      }
       if (response.status() != 204) {
         entry = (Entry) this.delegate.decode(response, type);
       }

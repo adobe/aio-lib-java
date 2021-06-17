@@ -29,6 +29,7 @@ import org.junit.rules.ExpectedException;
 public class JournalLinkDecoderTest {
 
   private static final String TEST_IMS_ORG_ID = "testImsOrgId";
+  private static final int RETRY_AFTER_VALUE = 10;
   private JournalLinkDecoder journalLinkDecoderUnderTest;
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
@@ -38,6 +39,7 @@ public class JournalLinkDecoderTest {
     final MockWebServer server = new MockWebServer();
     String rootServerUrl = server.url("/").toString();
     server.enqueue(new MockResponse()
+        .addHeader(JournalLinkDecoder.RETRY_AFTER_HEADER, RETRY_AFTER_VALUE)
         .addHeader(JournalLinkDecoder.LINK_HEADER, getNextLink())
         .addHeader(JournalLinkDecoder.LINK_HEADER, getCountLink())
         .setResponseCode(204));
@@ -54,6 +56,7 @@ public class JournalLinkDecoderTest {
     assertEquals("http://localhost:" + server.getPort()
             + "/count/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2",
         entry.getLinks().get("count"));
+    assertEquals(RETRY_AFTER_VALUE,entry.getRetryAfterInSeconds());
   }
 
   @Test

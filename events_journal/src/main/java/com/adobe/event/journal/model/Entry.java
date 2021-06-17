@@ -32,6 +32,12 @@ public class Entry {
   @JsonIgnore
   private Map<String, String> links = new HashMap<>();
 
+  /**
+   * will be set when empty()
+   */
+  @JsonIgnore
+  private int retryAfterInSeconds;
+
   public List<Event> getEvents() {
     return events;
   }
@@ -55,6 +61,15 @@ public class Entry {
   }
 
   @JsonIgnore
+  public int getRetryAfterInSeconds() {
+    return retryAfterInSeconds;
+  }
+
+  public void setRetryAfterInSeconds(String retryAfterInSeconds) {
+    this.retryAfterInSeconds = Integer.valueOf(retryAfterInSeconds);
+  }
+
+  @JsonIgnore
   public int size() {
     return this.isEmpty() ? 0 : events.size();
   }
@@ -66,11 +81,18 @@ public class Entry {
 
   @Override
   public String toString() {
-    return "Entry{" +
-        "events=" + events +
-        ", page=" + page +
-        ", links=" + links +
-        '}';
+    if (!this.isEmpty()) {
+      return "Entry{" +
+          "events=" + events +
+          ", page=" + page +
+          ", links=" + links +
+          '}';
+    } else {
+      return "Entry{" +
+          "retryAfterInSeconds=" + retryAfterInSeconds +
+          ", links=" + links +
+          '}';
+    }
   }
 
   @Override
@@ -82,13 +104,14 @@ public class Entry {
       return false;
     }
     Entry entry = (Entry) o;
-    return Objects.equals(events, entry.events) &&
+    return retryAfterInSeconds == entry.retryAfterInSeconds &&
+        Objects.equals(events, entry.events) &&
         Objects.equals(page, entry.page) &&
         Objects.equals(links, entry.links);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(events, page, links);
+    return Objects.hash(events, page, links, retryAfterInSeconds);
   }
 }
