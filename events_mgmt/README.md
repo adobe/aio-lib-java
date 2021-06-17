@@ -7,11 +7,11 @@ by [`Adobe I/O Events` Provider and Registration APIs](https://www.adobe.io/apis
  
 ## ProviderService Test Drive
 
-    ProviderService providerService = ProviderService.builder()
-        .workspace(workspace) // [2]
-        .consumerOrgId(workspace.getConsumerOrgId()) // [2]
-        .build(); //
-    Optional<Provider> provider = providerService.findById("someProviderId"); //[3]
+     ProviderService providerService = ProviderService.builder()
+          .authInterceptor(authInterceptor) // [1]
+          .workspace(workspace) // [2]
+          .build(); //
+      Optional<Provider> provider = providerService.findById("someProviderId"); //[3]    Optional<Provider> provider = providerService.findById("someProviderId"); //[3]
 
  * [1] build your ProviderService by passing a OpenFeign Authentication Request Interceptor.
  You can use interceptors that our [ims](../ims) library provides,
