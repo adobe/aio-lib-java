@@ -30,6 +30,8 @@ public class Workspace {
   static final String IMS_URL = "aio_ims_url";
   static final String IMS_ORG_ID = "aio_ims_org_id";
   static final String CONSUMER_ORG_ID = "aio_consumer_org_id";
+  static final String PROJECT_ID = "aio_project_id";
+  static final String WORKSPACE_ID = "aio_workspace_id";
   static final String API_KEY = "aio_api_key";
   static final String CREDENTIAL_ID = "aio_credential_id";
   static final String CLIENT_SECRET = "aio_client_secret";
@@ -39,6 +41,8 @@ public class Workspace {
   private final String imsUrl;
   private final String imsOrgId;
   private final String consumerOrgId;
+  private final String projectId;
+  private final String workspaceId;
   private final String apiKey;
   private final String credentialId;
   private final String clientSecret;
@@ -47,12 +51,15 @@ public class Workspace {
   private final PrivateKey privateKey;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String consumerOrgId,
+      final String projectId, final String workspaceId,
       final String apiKey, final String credentialId, final String clientSecret,
       final String technicalAccountId,
       final Set<String> metascopes, final PrivateKey privateKey) {
     this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
     this.consumerOrgId = consumerOrgId;
+    this.projectId = projectId;
+    this.workspaceId = workspaceId;
     this.apiKey = apiKey;
     this.credentialId = credentialId;
     this.clientSecret = clientSecret;
@@ -94,6 +101,14 @@ public class Workspace {
     return consumerOrgId;
   }
 
+  public String getProjectId() {
+    return projectId;
+  }
+
+  public String getWorkspaceId() {
+    return workspaceId;
+  }
+
   public String getApiKey() {
     return apiKey;
   }
@@ -130,6 +145,8 @@ public class Workspace {
     return Objects.equals(imsUrl, workspace.imsUrl) &&
         Objects.equals(imsOrgId, workspace.imsOrgId) &&
         Objects.equals(consumerOrgId, workspace.consumerOrgId) &&
+        Objects.equals(projectId, workspace.projectId) &&
+        Objects.equals(workspaceId, workspace.workspaceId) &&
         Objects.equals(apiKey, workspace.apiKey) &&
         Objects.equals(credentialId, workspace.credentialId) &&
         Objects.equals(clientSecret, workspace.clientSecret) &&
@@ -141,9 +158,8 @@ public class Workspace {
   @Override
   public int hashCode() {
     return Objects
-        .hash(imsUrl, imsOrgId, consumerOrgId, apiKey, credentialId, clientSecret,
-            technicalAccountId, metascopes,
-            privateKey);
+        .hash(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId, apiKey, credentialId,
+            clientSecret, technicalAccountId, metascopes, privateKey);
   }
 
   @Override
@@ -152,6 +168,8 @@ public class Workspace {
         "imsUrl='" + imsUrl + '\'' +
         ", imsOrgId='" + imsOrgId + '\'' +
         ", consumerOrgId='" + consumerOrgId + '\'' +
+        ", projectId='" + projectId + '\'' +
+        ", workspaceId='" + workspaceId + '\'' +
         ", apiKey='" + apiKey + '\'' +
         ", credentialId='" + credentialId + '\'' +
         ", clientSecret='" + clientSecret + '\'' +
@@ -169,6 +187,8 @@ public class Workspace {
     private String imsUrl;
     private String imsOrgId;
     private String consumerOrgId;
+    private String projectId;
+    private String workspaceId;
     private String apiKey;
     private String credentialId;
     private String clientSecret;
@@ -181,56 +201,68 @@ public class Workspace {
     private Builder() {
     }
 
-    public Builder imsUrl(String imsUrl) {
+    public Builder imsUrl(final String imsUrl) {
       this.imsUrl = imsUrl;
       return this;
     }
 
-    public Builder imsOrgId(String imsOrgId) {
+    public Builder imsOrgId(final String imsOrgId) {
       this.imsOrgId = imsOrgId;
       return this;
     }
 
-    public Builder consumerOrgId(String consumerOrgId) {
+    public Builder consumerOrgId(final String consumerOrgId) {
       this.consumerOrgId = consumerOrgId;
       return this;
     }
 
-    public Builder apiKey(String apiKey) {
+    public Builder projectId(final String projectId) {
+      this.projectId = projectId;
+      return this;
+    }
+
+    public Builder workspaceId(final String workspaceId) {
+      this.workspaceId = workspaceId;
+      return this;
+    }
+
+    public Builder apiKey(final String apiKey) {
       this.apiKey = apiKey;
       return this;
     }
 
-    public Builder credentialId(String credentialId) {
+    public Builder credentialId(final String credentialId) {
       this.credentialId = credentialId;
       return this;
     }
 
-    public Builder clientSecret(String clientSecret) {
+    public Builder clientSecret(final String clientSecret) {
       this.clientSecret = clientSecret;
       return this;
     }
 
-    public Builder technicalAccountId(String technicalAccountId) {
+    public Builder technicalAccountId(final String technicalAccountId) {
       this.technicalAccountId = technicalAccountId;
       return this;
     }
 
-    public Builder addMetascope(String metascope) {
+    public Builder addMetascope(final String metascope) {
       this.metascopes.add(metascope);
       return this;
     }
 
-    public Builder privateKey(PrivateKey privateKey) {
+    public Builder privateKey(final PrivateKey privateKey) {
       this.privateKey = privateKey;
       return this;
     }
 
-    public Builder configMap(Map<String, String> configMap) {
+    public Builder configMap(final Map<String, String> configMap) {
       this
           .imsUrl(configMap.get(IMS_URL))
           .imsOrgId(configMap.get(IMS_ORG_ID))
           .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
+          .projectId(configMap.get(PROJECT_ID))
+          .workspaceId(configMap.get(WORKSPACE_ID))
           .apiKey(configMap.get(API_KEY))
           .credentialId(configMap.get(CREDENTIAL_ID))
           .clientSecret(configMap.get(CLIENT_SECRET))
@@ -248,18 +280,18 @@ public class Workspace {
       return configMap(System.getenv());
     }
 
-    public Builder propertiesPath(String propertiesPath) throws IOException {
+    public Builder propertiesPath(final String propertiesPath) throws IOException {
       return properties(
           readPropertiesFromFile(propertiesPath)
               .orElse(readPropertiesFromClassPath(propertiesPath)));
     }
 
-    public Builder properties(Properties properties) throws IOException {
+    public Builder properties(final Properties properties) throws IOException {
       return configMap(getMapFromProperties(properties));
     }
 
     public Workspace build() {
-      return new Workspace(imsUrl, imsOrgId, consumerOrgId,
+      return new Workspace(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId,
           apiKey, credentialId, clientSecret, technicalAccountId,
           metascopes, privateKey);
     }

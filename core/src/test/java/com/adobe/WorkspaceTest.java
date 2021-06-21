@@ -42,6 +42,8 @@ public class WorkspaceTest {
         .apiKey(Workspace.API_KEY + TEST_VALUE)
         .credentialId(Workspace.CREDENTIAL_ID + TEST_VALUE)
         .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
+        .projectId(Workspace.PROJECT_ID + TEST_VALUE)
+        .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
         .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
         .technicalAccountId(Workspace.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
         .addMetascope(Workspace.META_SCOPES + TEST_VALUE)
