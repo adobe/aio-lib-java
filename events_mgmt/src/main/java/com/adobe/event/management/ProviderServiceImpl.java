@@ -16,6 +16,7 @@ import static com.adobe.util.Constants.API_MANAGEMENT_URL;
 import com.adobe.Workspace;
 import com.adobe.event.management.api.ProviderApi;
 import com.adobe.event.management.model.Provider;
+import com.adobe.event.management.model.ProviderInputModel;
 import com.adobe.event.management.model.Providers;
 import com.adobe.util.FeignUtil;
 import feign.RequestInterceptor;
@@ -47,6 +48,15 @@ class ProviderServiceImpl implements ProviderService {
     this.workspace = workspace;
   }
 
+  private void validateFullWorkspaceContext(Workspace workspace) {
+    if (StringUtils.isEmpty(workspace.getProjectId())) {
+      throw new IllegalArgumentException("Workspace is missing a projectId context");
+    }
+    if (StringUtils.isEmpty(workspace.getWorkspaceId())) {
+      throw new IllegalArgumentException("Workspace is missing a workspaceId context");
+    }
+  }
+
   @Override
   public List<Provider> getProviders() {
     Optional<Providers> providers = providerApi.findByConsumerOrgId(workspace.getConsumerOrgId());
@@ -58,13 +68,34 @@ class ProviderServiceImpl implements ProviderService {
   }
 
   @Override
-  public Optional<Provider> findById(String id) {
+  public Optional<Provider> findById(final String id) {
     return providerApi.findById(id, true);
   }
 
   @Override
-  public Optional<Provider> findBy(String providerMetadataId,
-      String instanceId) {
+  public void delete(final String id) {
+    validateFullWorkspaceContext(workspace);
+    providerApi.delete(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), id);
+  }
+
+  @Override
+  public Optional<Provider> create(final ProviderInputModel providerInputModel) {
+    validateFullWorkspaceContext(workspace);
+    return providerApi.create(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), providerInputModel);
+  }
+
+  @Override
+  public Optional<Provider> update(final String id, final ProviderInputModel providerUpdateModel) {
+    validateFullWorkspaceContext(workspace);
+    return providerApi.update(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), id, providerUpdateModel);
+  }
+
+  @Override
+  public Optional<Provider> findBy(final String providerMetadataId,
+      final String instanceId) {
     if (StringUtils.isEmpty(providerMetadataId) || StringUtils
         .isEmpty(workspace.getConsumerOrgId())) {
       throw new IllegalArgumentException(

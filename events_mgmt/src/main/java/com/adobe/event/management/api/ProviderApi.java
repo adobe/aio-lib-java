@@ -12,15 +12,15 @@
 package com.adobe.event.management.api;
 
 import com.adobe.event.management.model.Provider;
+import com.adobe.event.management.model.ProviderInputModel;
 import com.adobe.event.management.model.Providers;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import java.util.Optional;
 
-@Headers("Accept: application/hal+json")
+@Headers({"Accept: application/hal+json"})
 public interface ProviderApi {
-
 
   /**
    * @param id            The provider uuid
@@ -52,5 +52,29 @@ public interface ProviderApi {
       @Param("consumerOrgId") String consumerOrgId,
       @Param("providerMetadataId") String providerMetadataId,
       @Param("instanceId") String instanceId);
+
+
+  @RequestLine("POST /events/{consumerOrgId}/{projectId}/{workspaceId}/providers")
+  @Headers({"Content-Type: application/json"})
+  Optional<Provider> create(
+      @Param("consumerOrgId") String consumerOrgId,
+      @Param("projectId") String projectId,
+      @Param("workspaceId") String workspaceId,
+      ProviderInputModel body);
+
+  @RequestLine("PUT /events/{consumerOrgId}/{projectId}/{workspaceId}/providers/{providerId}")
+  @Headers({"Content-Type: application/json"})
+  Optional<Provider> update(
+      @Param("consumerOrgId") String consumerOrgId,
+      @Param("projectId") String projectId,
+      @Param("workspaceId") String workspaceId,
+      @Param("providerId") String providerId,
+      ProviderInputModel body);
+
+  @RequestLine("DELETE /events/{consumerOrgId}/{projectId}/{workspaceId}/providers/{providerId}")
+  void delete(@Param("consumerOrgId") String consumerOrgId,
+      @Param("projectId") String projectId,
+      @Param("workspaceId") String workspaceId,
+      @Param("providerId") String providerId);
 
 }

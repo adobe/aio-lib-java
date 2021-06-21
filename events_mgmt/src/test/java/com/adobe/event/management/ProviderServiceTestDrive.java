@@ -13,6 +13,7 @@ package com.adobe.event.management;
 
 import com.adobe.Workspace;
 import com.adobe.event.management.model.Provider;
+import com.adobe.event.management.model.ProviderInputModel;
 import com.adobe.ims.JWTAuthInterceptor;
 import com.adobe.util.FileUtil;
 import com.adobe.util.PrivateKeyBuilder;
@@ -31,7 +32,6 @@ public class ProviderServiceTestDrive {
   // use your own property file filePath or classpath and don't push back to git
   private static final String DEFAULT_TEST_DRIVE_PROPERTIES = "workspace.secret.properties";
   private static final String API_URL = "aio_api_url";
-  public static final String PROVIDER_ID = "aio_provider_id";
 
   /**
    * use your own property file filePath or classpath. WARNING: don't push back to github as it
@@ -70,11 +70,20 @@ public class ProviderServiceTestDrive {
       List<Provider> providers = providerService.getProviders();
       logger.info("providers: {}", providers);
 
-      Optional<Provider> provider1 = providerService.findById(prop.getProperty(PROVIDER_ID));
-      logger.info("provider1: {}", provider1);
-
       Optional<Provider> provider2 = providerService.findById("notfound");
       logger.info("provider2: {}", provider2);
+
+      ProviderInputModel providerCreateModel = ProviderInputModel.builder()
+          .label("aio-lib-java test drive provider label")
+          .description("aio-lib-java test drive provider description")
+          .docsUrl("https://github.com/adobe/aio-lib-java/blob/main/events_mgmt/README.md#providerservice-test-drive")
+          .build();
+      Optional<Provider> created = providerService.create(providerCreateModel);
+      logger.info("created: {}", created);
+      Optional<Provider> justCreated = providerService.findById(created.get().getId());
+      logger.info("justCreated: {}", justCreated);
+      providerService.delete(justCreated.get().getId());
+      logger.info("deleted: {}", justCreated.get().getId());
 
       System.exit(0);
     } catch (Exception e) {

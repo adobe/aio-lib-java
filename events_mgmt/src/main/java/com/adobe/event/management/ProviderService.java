@@ -13,6 +13,7 @@ package com.adobe.event.management;
 
 import com.adobe.Workspace;
 import com.adobe.event.management.model.Provider;
+import com.adobe.event.management.model.ProviderInputModel;
 import feign.RequestInterceptor;
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +22,15 @@ public interface ProviderService {
 
   List<Provider> getProviders();
 
-  Optional<Provider> findById(String id);
+  Optional<Provider> findById(final String id);
 
-  Optional<Provider> findBy(String providerMetadataId, String instanceId);
+  void delete(final String id);
+
+  Optional<Provider> create(final ProviderInputModel providerCreateModel);
+
+  Optional<Provider> update(final String id, final ProviderInputModel providerUpdateModel);
+
+  Optional<Provider> findBy(final String providerMetadataId, final String instanceId);
 
   static Builder builder() {
     return new Builder();
