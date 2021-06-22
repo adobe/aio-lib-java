@@ -42,8 +42,7 @@ public class Provider {
    * the associated EventMetadata can be eager loaded by the provider http API
    */
   @JsonProperty("_embedded")
-  private EventMetadataCollection.EventMetadataList eventMetadataCollection;
-
+  private EventMetadataCollection.EventMetadataList eventMetadataList;
 
   /**
    * The Id of this Events Provider
@@ -105,8 +104,8 @@ public class Provider {
     return publisher;
   }
 
-  public EventMetadataCollection.EventMetadataList getEventMetadataCollection() {
-    return eventMetadataCollection;
+  public EventMetadataCollection.EventMetadataList getEventMetadataList() {
+    return eventMetadataList;
   }
 
   @Override
@@ -124,13 +123,13 @@ public class Provider {
         Objects.equals(source, provider.source) &&
         Objects.equals(docsUrl, provider.docsUrl) &&
         Objects.equals(publisher, provider.publisher) &&
-        Objects.equals(eventMetadataCollection, provider.eventMetadataCollection);
+        Objects.equals(eventMetadataList, provider.eventMetadataList);
   }
 
   @Override
   public int hashCode() {
     return Objects
-        .hash(id, label, description, source, docsUrl, publisher, eventMetadataCollection);
+        .hash(id, label, description, source, docsUrl, publisher, eventMetadataList);
   }
 
   @Override
@@ -142,7 +141,7 @@ public class Provider {
         ", source='" + source + '\'' +
         ", docsUrl='" + docsUrl + '\'' +
         ", publisher='" + publisher + '\'' +
-        ", eventMetadataCollection=" + eventMetadataCollection +
+        ", eventMetadata=" + eventMetadataList +
         '}';
   }
 }

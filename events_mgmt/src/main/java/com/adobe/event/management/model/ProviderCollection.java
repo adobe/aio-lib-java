@@ -43,11 +43,16 @@ public class ProviderCollection {
 
   @JsonIgnore
   public List<Provider> getProviders() {
-    if (providerList != null && providerList.getProviders() != null) {
+    if (!this.isEmpty()) {
       return providerList.getProviders();
     } else {
       return new ArrayList<>();
     }
+  }
+
+  @JsonIgnore
+  public boolean isEmpty() {
+    return (providerList == null || providerList.isEmpty());
   }
 
   @Override
@@ -75,7 +80,7 @@ public class ProviderCollection {
   public static class ProviderList {
 
     @JsonProperty("providers")
-    private List<Provider> providers = null;
+    private List<Provider> providers;
 
     /**
      * Adobe I/O Event Providers collection.
@@ -84,6 +89,11 @@ public class ProviderCollection {
      **/
     public List<Provider> getProviders() {
       return providers;
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+      return (providers == null || providers.isEmpty());
     }
 
     @Override

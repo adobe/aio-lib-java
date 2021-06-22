@@ -12,6 +12,7 @@
 package com.adobe.event.management;
 
 import com.adobe.Workspace;
+import com.adobe.event.management.model.EventMetadata;
 import com.adobe.event.management.model.Provider;
 import com.adobe.event.management.model.ProviderInputModel;
 import feign.RequestInterceptor;
@@ -22,15 +23,27 @@ public interface ProviderService {
 
   List<Provider> getProviders();
 
-  Optional<Provider> findById(final String id);
+  Optional<Provider> findProviderById(final String providerId);
 
-  void delete(final String id);
+  void deleteProvider(final String providerId);
 
-  Optional<Provider> create(final ProviderInputModel providerCreateModel);
+  Optional<Provider> createProvider(final ProviderInputModel providerCreateModel);
 
-  Optional<Provider> update(final String id, final ProviderInputModel providerUpdateModel);
+  Optional<Provider> updateProvider(final String id, final ProviderInputModel providerUpdateModel);
 
-  Optional<Provider> findBy(final String providerMetadataId, final String instanceId);
+  Optional<Provider> findProviderBy(final String providerMetadataId, final String instanceId);
+
+  List<EventMetadata> getEventMetadata(final String providerId);
+
+  Optional<EventMetadata> getEventMetadata(final String providerId, final String eventCode);
+
+  Optional<EventMetadata> createEventMetadata(final String providerId, final EventMetadata eventMetadata);
+
+  Optional<EventMetadata> updateEventMetadata(final String providerId, final EventMetadata eventMetadata);
+
+  void deleteEventMetadata(final String providerId, final String eventCode);
+
+  void deleteAllEventMetadata(final String providerId);
 
   static Builder builder() {
     return new Builder();

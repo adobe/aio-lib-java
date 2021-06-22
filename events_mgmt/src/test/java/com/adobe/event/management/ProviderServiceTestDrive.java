@@ -59,25 +59,19 @@ public class ProviderServiceTestDrive {
       RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
           .workspace(workspace)
           .build();
-
-      EventMetadataService eventMetadataService = EventMetadataService.builder()
-          .authInterceptor(authInterceptor) // [1]
-          .workspace(workspace) // [2]
-          .url(prop.getProperty(API_URL)) // you can omit this if you target prod
-          .build(); //
-
+      
       ProviderService providerService = ProviderService.builder()
           .authInterceptor(authInterceptor) // [1]
           .workspace(workspace) // [2]
           .url(prop.getProperty(API_URL)) // you can omit this if you target prod
           .build(); //
-      Optional<Provider> provider = providerService.findById("someProviderId"); //[3]
+      Optional<Provider> provider = providerService.findProviderById("someProviderId"); //[3]
       logger.info("someProvider: {}", provider);
 
       List<Provider> providers = providerService.getProviders();
       logger.info("providers: {}", providers);
 
-      Optional<Provider> provider2 = providerService.findById("notfound");
+      Optional<Provider> provider2 = providerService.findProviderById("notfound");
       logger.info("provider2: {}", provider2);
 
       ProviderInputModel providerCreateModel = ProviderInputModel.builder()
@@ -86,7 +80,7 @@ public class ProviderServiceTestDrive {
           .docsUrl(
               "https://github.com/adobe/aio-lib-java/blob/main/events_mgmt/README.md#providerservice-test-drive")
           .build();
-      Optional<Provider> created = providerService.create(providerCreateModel);
+      Optional<Provider> created = providerService.createProvider(providerCreateModel);
       logger.info("created: {}", created);
       String providerId = created.get().getId();
 
@@ -95,12 +89,12 @@ public class ProviderServiceTestDrive {
           .description("aio-java-lib Test Drive Event")
           .build();
       logger
-          .info("added EventMetadata :{}", eventMetadataService.create(providerId, eventMetadata1));
+          .info("added EventMetadata :{}", providerService.createEventMetadata(providerId, eventMetadata1));
 
-      Optional<Provider> aboutToBeDeleted = providerService.findById(created.get().getId());
+      Optional<Provider> aboutToBeDeleted = providerService.findProviderById(created.get().getId());
       logger.info("aboutToBeDeleted: {}", aboutToBeDeleted);
 
-      providerService.delete(aboutToBeDeleted.get().getId());
+      providerService.deleteProvider(aboutToBeDeleted.get().getId());
       logger.info("deleted: {}", aboutToBeDeleted.get().getId());
       logger.info("ProviderServiceTestDrive completed successfully.");
       System.exit(0);

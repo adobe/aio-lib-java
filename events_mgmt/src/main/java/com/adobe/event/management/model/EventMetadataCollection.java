@@ -43,11 +43,16 @@ public class EventMetadataCollection {
 
   @JsonIgnore
   public List<EventMetadata> getEventMetadata() {
-    if (eventMetadataList != null && eventMetadataList.getEventmetadata() != null) {
+    if (!this.isEmpty()) {
       return eventMetadataList.getEventmetadata();
     } else {
       return new ArrayList<>();
     }
+  }
+
+  @JsonIgnore
+  public boolean isEmpty() {
+    return (eventMetadataList == null || eventMetadataList.getEventmetadata().isEmpty());
   }
 
   @Override
@@ -76,10 +81,15 @@ public class EventMetadataCollection {
   public static class EventMetadataList {
 
     @JsonProperty("eventmetadata")
-    private List<EventMetadata> eventmetadata = null;
+    private List<EventMetadata> eventmetadata;
 
     public List<EventMetadata> getEventmetadata() {
       return eventmetadata;
+    }
+
+    @JsonIgnore
+    public boolean isEmpty() {
+      return (eventmetadata == null || eventmetadata.isEmpty());
     }
 
     @Override

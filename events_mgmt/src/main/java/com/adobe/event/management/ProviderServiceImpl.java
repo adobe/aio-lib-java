@@ -14,7 +14,10 @@ package com.adobe.event.management;
 import static com.adobe.util.Constants.API_MANAGEMENT_URL;
 
 import com.adobe.Workspace;
+import com.adobe.event.management.api.EventMetadataApi;
 import com.adobe.event.management.api.ProviderApi;
+import com.adobe.event.management.model.EventMetadata;
+import com.adobe.event.management.model.EventMetadataCollection;
 import com.adobe.event.management.model.Provider;
 import com.adobe.event.management.model.ProviderCollection;
 import com.adobe.event.management.model.ProviderInputModel;
@@ -28,6 +31,7 @@ import org.apache.commons.lang3.StringUtils;
 class ProviderServiceImpl implements ProviderService {
 
   private final ProviderApi providerApi;
+  private final EventMetadataApi eventMetadataApi;
   private final Workspace workspace;
 
   ProviderServiceImpl(final RequestInterceptor authInterceptor,
@@ -43,6 +47,9 @@ class ProviderServiceImpl implements ProviderService {
     this.providerApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
         .target(ProviderApi.class, apiUrl);
+    this.eventMetadataApi = FeignUtil.getDefaultBuilder()
+        .requestInterceptor(authInterceptor)
+        .target(EventMetadataApi.class, apiUrl);
     this.workspace = workspace;
   }
 
@@ -58,30 +65,31 @@ class ProviderServiceImpl implements ProviderService {
   }
 
   @Override
-  public Optional<Provider> findById(final String id) {
-    return providerApi.findById(id, true);
+  public Optional<Provider> findProviderById(final String providerId) {
+    return providerApi.findById(providerId, true);
   }
 
   @Override
-  public void delete(final String id) {
+  public void deleteProvider(final String providerId) {
     providerApi.delete(workspace.getConsumerOrgId(), workspace.getProjectId(),
-        workspace.getWorkspaceId(), id);
+        workspace.getWorkspaceId(), providerId);
   }
 
   @Override
-  public Optional<Provider> create(final ProviderInputModel providerInputModel) {
+  public Optional<Provider> createProvider(final ProviderInputModel providerInputModel) {
     return providerApi.create(workspace.getConsumerOrgId(), workspace.getProjectId(),
         workspace.getWorkspaceId(), providerInputModel);
   }
 
   @Override
-  public Optional<Provider> update(final String id, final ProviderInputModel providerUpdateModel) {
+  public Optional<Provider> updateProvider(final String id,
+      final ProviderInputModel providerUpdateModel) {
     return providerApi.update(workspace.getConsumerOrgId(), workspace.getProjectId(),
         workspace.getWorkspaceId(), id, providerUpdateModel);
   }
 
   @Override
-  public Optional<Provider> findBy(final String providerMetadataId,
+  public Optional<Provider> findProviderBy(final String providerMetadataId,
       final String instanceId) {
     if (StringUtils.isEmpty(providerMetadataId) || StringUtils
         .isEmpty(workspace.getConsumerOrgId())) {
@@ -100,6 +108,52 @@ class ProviderServiceImpl implements ProviderService {
     } else {
       return Optional.empty();
     }
+  }
+
+  @Override
+  public List<EventMetadata> getEventMetadata(final String providerId) {
+    Optional<EventMetadataCollection> eventMetadataCollection =
+        eventMetadataApi.findByProviderId(providerId);
+    if (eventMetadataCollection.isPresent()) {
+      return eventMetadataCollection.get().getEventMetadata();
+    } else {
+      return new ArrayList<>();
+    }
+  }
+
+  @Override
+  public Optional<EventMetadata> getEventMetadata(final String providerId, final String eventCode) {
+    return eventMetadataApi.findByProviderIdAndEventCode(providerId, eventCode);
+  }
+
+  @Override
+  public Optional<EventMetadata> createEventMetadata(final String providerId,
+      final EventMetadata eventMetadata) {
+    return eventMetadataApi.create(
+        workspace.getConsumerOrgId(), workspace.getProjectId(), workspace.getWorkspaceId(),
+        providerId, eventMetadata);
+  }
+
+  @Override
+  public Optional<EventMetadata> updateEventMetadata(final String providerId,
+      final EventMetadata eventMetadata) {
+    return eventMetadataApi.update(
+        workspace.getConsumerOrgId(), workspace.getProjectId(), workspace.getWorkspaceId(),
+        providerId, eventMetadata.getEventCode(), eventMetadata);
+  }
+
+  @Override
+  public void deleteEventMetadata(final String providerId, final String eventCode) {
+    eventMetadataApi.deleteByProviderIdAndEventCode(
+        workspace.getConsumerOrgId(), workspace.getProjectId(), workspace.getWorkspaceId(),
+        providerId, eventCode);
+  }
+
+  @Override
+  public void deleteAllEventMetadata(final String providerId) {
+    eventMetadataApi.deleteByProviderId(
+        workspace.getConsumerOrgId(), workspace.getProjectId(), workspace.getWorkspaceId(),
+        providerId);
   }
 
 }
