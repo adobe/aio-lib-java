@@ -38,17 +38,20 @@ public class Workspace {
   static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
   static final String META_SCOPES = "aio_meta_scopes";
 
+  // Auth related :
   private final String imsUrl;
   private final String imsOrgId;
-  private final String consumerOrgId;
-  private final String projectId;
-  private final String workspaceId;
   private final String apiKey;
   private final String credentialId;
   private final String clientSecret;
   private final String technicalAccountId;
   private final Set<String> metascopes;
   private final PrivateKey privateKey;
+
+  // workspace context related:
+  private final String consumerOrgId;
+  private final String projectId;
+  private final String workspaceId;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String consumerOrgId,
       final String projectId, final String workspaceId,
@@ -57,15 +60,16 @@ public class Workspace {
       final Set<String> metascopes, final PrivateKey privateKey) {
     this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
-    this.consumerOrgId = consumerOrgId;
-    this.projectId = projectId;
-    this.workspaceId = workspaceId;
     this.apiKey = apiKey;
     this.credentialId = credentialId;
     this.clientSecret = clientSecret;
     this.technicalAccountId = technicalAccountId;
     this.metascopes = metascopes;
     this.privateKey = privateKey;
+
+    this.consumerOrgId = consumerOrgId;
+    this.projectId = projectId;
+    this.workspaceId = workspaceId;
   }
 
   public void validateJwtCredentialConfig() {
@@ -82,12 +86,25 @@ public class Workspace {
       throw new IllegalArgumentException("Your `Worskpace` is missing a technicalAccountId");
     }
     if (metascopes.isEmpty()) {
-      throw new IllegalArgumentException("Your `Worskpace` should contain at least one metascope");
+      throw new IllegalArgumentException("Your `Worskpace` is missing a metascope");
     }
     if (privateKey == null) {
-      throw new IllegalArgumentException("Your `Worskpace` should contain a privateKey");
+      throw new IllegalArgumentException("Your `Worskpace` is missing a privateKey");
     }
   }
+
+  public void validateWorkspaceContext() {
+    if (StringUtils.isEmpty(this.getConsumerOrgId())) {
+      throw new IllegalArgumentException("Your `Worskpace` is missing a consumerOrgId");
+    }
+    if (StringUtils.isEmpty(this.getProjectId())) {
+      throw new IllegalArgumentException("Your `Worskpace` is missing a projectId");
+    }
+    if (StringUtils.isEmpty(this.getWorkspaceId())) {
+      throw new IllegalArgumentException("Your `Worskpace` is missing a workspaceId");
+    }
+  }
+
 
   public String getImsUrl() {
     return imsUrl;

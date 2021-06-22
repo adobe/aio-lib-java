@@ -51,13 +51,14 @@ public class WorkspaceTest {
     Assert.assertEquals(expected, fromProperties);
     Assert.assertEquals(expected.hashCode(), fromProperties.hashCode());
     Assert.assertEquals(expected.toString(), fromProperties.toString());
+    fromProperties.validateWorkspaceContext();
   }
 
   @Test
   public void testValidateJwtCredentialConfig() throws IOException {
     Workspace workspace = getTestWorkspaceFromProperties();
     expectedEx.expect(IllegalArgumentException.class);
-    expectedEx.expectMessage("Your `Worskpace` should contain a privateKey");
+    expectedEx.expectMessage("Your `Worskpace` is missing a privateKey");
     workspace.validateJwtCredentialConfig();
   }
 
