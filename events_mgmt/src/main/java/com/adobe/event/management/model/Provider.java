@@ -12,7 +12,10 @@
 
 package com.adobe.event.management.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -42,7 +45,7 @@ public class Provider {
    * the associated EventMetadata can be eager loaded by the provider http API
    */
   @JsonProperty("_embedded")
-  private EventMetadataCollection.EventMetadataList eventMetadataList;
+  private EventMetadataCollection.EventMetadataList embeddedEventMetadata;
 
   /**
    * The Id of this Events Provider
@@ -104,8 +107,14 @@ public class Provider {
     return publisher;
   }
 
-  public EventMetadataCollection.EventMetadataList getEventMetadataList() {
-    return eventMetadataList;
+  public EventMetadataCollection.EventMetadataList getEmbeddedEventMetadata() {
+    return embeddedEventMetadata;
+  }
+
+  @JsonIgnore
+  public List<EventMetadata> getEventMetadata() {
+    return (embeddedEventMetadata!=null) ?
+        embeddedEventMetadata.getEventmetadata() : new ArrayList<>();
   }
 
   @Override
@@ -123,13 +132,13 @@ public class Provider {
         Objects.equals(source, provider.source) &&
         Objects.equals(docsUrl, provider.docsUrl) &&
         Objects.equals(publisher, provider.publisher) &&
-        Objects.equals(eventMetadataList, provider.eventMetadataList);
+        Objects.equals(embeddedEventMetadata, provider.embeddedEventMetadata);
   }
 
   @Override
   public int hashCode() {
     return Objects
-        .hash(id, label, description, source, docsUrl, publisher, eventMetadataList);
+        .hash(id, label, description, source, docsUrl, publisher, embeddedEventMetadata);
   }
 
   @Override
@@ -141,7 +150,7 @@ public class Provider {
         ", source='" + source + '\'' +
         ", docsUrl='" + docsUrl + '\'' +
         ", publisher='" + publisher + '\'' +
-        ", eventMetadata=" + eventMetadataList +
+        ", eventMetadata=" + embeddedEventMetadata +
         '}';
   }
 }
