@@ -23,27 +23,31 @@
 
 package com.adobe.event.management.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Adobe I/O Events Providers Collection Model
+ */
 public class ProviderCollection {
 
-  @JsonProperty("providers")
-  private List<Provider> providers = null;
+  @JsonProperty("_embedded")
+  private ProviderList providerList;
 
-  public ProviderCollection providers(List<Provider> providers) {
-    this.providers = providers;
-    return this;
+  public ProviderList getProviderList() {
+    return providerList;
   }
 
-  /**
-   * Adobe I/O Event Providers collection.
-   *
-   * @return providers
-   **/
+  @JsonIgnore
   public List<Provider> getProviders() {
-    return providers;
+    if (providerList != null && providerList.getProviders() != null) {
+      return providerList.getProviders();
+    } else {
+      return new ArrayList<>();
+    }
   }
 
   @Override
@@ -54,17 +58,54 @@ public class ProviderCollection {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    ProviderCollection providerCollectionHalModelEmbedded = (ProviderCollection) o;
-    return Objects.equals(this.providers, providerCollectionHalModelEmbedded.providers);
+    ProviderCollection that = (ProviderCollection) o;
+    return Objects.equals(providerList, that.providerList);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(providers);
+    return Objects.hash(providerList);
   }
 
   @Override
   public String toString() {
-    return "{" + providers + "}";
+    return "ProviderCollection{" + providerList + '}';
+  }
+
+  public static class ProviderList {
+
+    @JsonProperty("providers")
+    private List<Provider> providers = null;
+
+    /**
+     * Adobe I/O Event Providers collection.
+     *
+     * @return providers
+     **/
+    public List<Provider> getProviders() {
+      return providers;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (this == o) {
+        return true;
+      }
+      if (o == null || getClass() != o.getClass()) {
+        return false;
+      }
+      ProviderList providerCollectionHalModelEmbedded = (ProviderList) o;
+      return Objects.equals(this.providers, providerCollectionHalModelEmbedded.providers);
+    }
+
+    @Override
+    public int hashCode() {
+      return Objects.hash(providers);
+    }
+
+    @Override
+    public String toString() {
+      return "{" + providers + "}";
+    }
   }
 }

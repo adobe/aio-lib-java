@@ -12,22 +12,40 @@
 
 package com.adobe.event.management.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 public class EventMetadata {
 
-  @JsonProperty("description")
-  private String description = null;
+  @JsonProperty("event_code")
+  private String eventCode;
 
   @JsonProperty("label")
-  private String label = null;
+  private String label;
 
-  @JsonProperty("event_code")
-  private String eventCode = null;
+  @JsonProperty("description")
+  private String description;
 
   @JsonProperty("sample_event_template")
-  private String sampleEventTemplate = null;
+  private String sampleEventTemplate;
+
+  //used by Jackson deserializer
+  private EventMetadata() {
+  }
+
+  private EventMetadata(String eventCode, String label, String description,
+      String sampleEventTemplate) {
+    if (StringUtils.isEmpty(eventCode)) {
+      throw new IllegalArgumentException(
+          "EventMetadata is missing a label");
+    }
+    this.eventCode = eventCode;
+    this.label = (StringUtils.isEmpty(label)) ? eventCode : label;
+    this.description = description;
+    this.sampleEventTemplate = sampleEventTemplate;
+  }
 
   public String getDescription() {
     return description;
@@ -72,5 +90,42 @@ public class EventMetadata {
         ", label='" + label + '\'' +
         ", description='" + description + '\'' +
         '}';
+  }
+
+  @JsonIgnore
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+
+    private String eventCode;
+    private String label;
+    private String description;
+    private String sampleEventTemplate;
+
+    public Builder eventCode(String eventCode) {
+      this.eventCode = eventCode;
+      return this;
+    }
+
+    public Builder label(String label) {
+      this.label = label;
+      return this;
+    }
+
+    public Builder description(String description) {
+      this.description = description;
+      return this;
+    }
+
+    public Builder sampleEventTemplate(String sampleEventTemplate) {
+      this.sampleEventTemplate = sampleEventTemplate;
+      return this;
+    }
+
+    public EventMetadata build() {
+      return new EventMetadata(eventCode, label, description, sampleEventTemplate);
+    }
   }
 }

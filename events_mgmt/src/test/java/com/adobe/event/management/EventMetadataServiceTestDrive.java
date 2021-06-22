@@ -12,29 +12,24 @@
 package com.adobe.event.management;
 
 import com.adobe.Workspace;
-import com.adobe.event.management.model.EventsOfInterest;
-import com.adobe.event.management.model.Registration;
-import com.adobe.event.management.model.RegistrationInputModel;
+import com.adobe.event.management.model.EventMetadata;
 import com.adobe.ims.JWTAuthInterceptor;
 import com.adobe.util.FileUtil;
 import com.adobe.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
 import java.security.PrivateKey;
-import java.util.Optional;
+import java.util.List;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RegistrationServiceTestDrive {
+public class EventMetadataServiceTestDrive {
 
-  private static final Logger logger = LoggerFactory.getLogger(RegistrationServiceTestDrive.class);
+  private static final Logger logger = LoggerFactory.getLogger(EventMetadataServiceTestDrive.class);
 
   // use your own property file filePath or classpath and don't push back to git
   private static final String DEFAULT_TEST_DRIVE_PROPERTIES = "workspace.secret.properties";
   private static final String API_URL = "aio_api_url";
-
-  public static final String PROVIDER_ID = "aio_provider_id";
-  public static final String EVENT_CODE = "aio_event_code";
 
   /**
    * use your own property file filePath or classpath. WARNING: don't push back to github as it
@@ -43,6 +38,8 @@ public class RegistrationServiceTestDrive {
    */
   private static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
 
+  public static final String PROVIDER_ID = "aio_provider_id";
+  public static final String EVENT_CODE = "aio_event_code";
 
   public static void main(String[] args) {
     try {
@@ -50,6 +47,9 @@ public class RegistrationServiceTestDrive {
       Properties prop =
           FileUtil.readPropertiesFromClassPath(
               (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
+
+      String providerId = prop.getProperty(PROVIDER_ID);
+      String eventCode = prop.getProperty(EVENT_CODE);
 
       PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
 
@@ -62,29 +62,17 @@ public class RegistrationServiceTestDrive {
           .workspace(workspace)
           .build();
 
-      RegistrationService registrationService = RegistrationService.builder()
+      EventMetadataService eventMetadataService = EventMetadataService.builder()
           .authInterceptor(authInterceptor) // [1]
           .workspace(workspace) // [2]
           .url(prop.getProperty(API_URL)) // you can omit this if you target prod
           .build(); //
-      Optional<Registration> registration =
-          registrationService.findById("someRegistrationId"); // [3]
-      logger.info("someRegistration: {}", registration);
+      List<EventMetadata> eventMetadataList = eventMetadataService.getEventMetadata(providerId);
+      logger.info("eventMetadataList: {}", eventMetadataList);
+      logger
+          .info("eventMetadata: {}", eventMetadataService.getEventMetadata(providerId, eventCode));
 
-      Optional<Registration> created = registrationService.createRegistration(
-          RegistrationInputModel.builder()
-              .description("aio-lib-java registration description")
-              .name("aio-lib-java registration name")
-              .addEventsOfInterests(EventsOfInterest.builder()
-                  .setEventCode(prop.getProperty(EVENT_CODE))
-                  .setProviderId(prop.getProperty(PROVIDER_ID)).build())
-      );
-      String createdId = created.get().getRegistrationId();
-      logger.info("created: {}", created.get());
-      registrationService.delete(createdId);
-      logger.info("deleted: {}", createdId);
-
-      logger.info("RegistrationServiceTestDrive completed successfully.");
+      logger.info("EventMetadataServiceTestDrive completed successfully.");
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

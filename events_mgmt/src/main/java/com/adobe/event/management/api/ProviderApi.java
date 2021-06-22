@@ -12,8 +12,8 @@
 package com.adobe.event.management.api;
 
 import com.adobe.event.management.model.Provider;
+import com.adobe.event.management.model.ProviderCollection;
 import com.adobe.event.management.model.ProviderInputModel;
-import com.adobe.event.management.model.Providers;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
@@ -37,7 +37,7 @@ public interface ProviderApi {
    * @return Providers the Adobe I/O Events Providers entitled to the provided consumerOrgId
    */
   @RequestLine("GET /events/{consumerOrgId}/providers")
-  Optional<Providers> findByConsumerOrgId(
+  Optional<ProviderCollection> findByConsumerOrgId(
       @Param("consumerOrgId") String consumerOrgId);
 
   /**
@@ -48,7 +48,7 @@ public interface ProviderApi {
    * @return the specific Adobe I/O Events Provider associated to the provided natural tripple key
    */
   @RequestLine("GET /events/{consumerOrgId}/providers?providerMetadataId={providerMetadataId}&instanceId={instanceId}")
-  Optional<Providers> findBy(
+  Optional<ProviderCollection> findBy(
       @Param("consumerOrgId") String consumerOrgId,
       @Param("providerMetadataId") String providerMetadataId,
       @Param("instanceId") String instanceId);

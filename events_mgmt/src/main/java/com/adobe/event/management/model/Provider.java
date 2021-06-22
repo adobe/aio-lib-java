@@ -21,28 +21,28 @@ import java.util.Objects;
 public class Provider {
 
   @JsonProperty("id")
-  private String id = null;
+  private String id;
 
   @JsonProperty("label")
-  private String label = null;
+  private String label;
 
   @JsonProperty("description")
-  private String description = null;
+  private String description;
 
   @JsonProperty("source")
-  private final String source = null;
+  private String source;
 
   @JsonProperty("docs_url")
-  private String docsUrl = null;
+  private String docsUrl;
 
   @JsonProperty("publisher")
-  private String publisher = null;
+  private String publisher;
 
   /**
    * the associated EventMetadata can be eager loaded by the provider http API
    */
   @JsonProperty("_embedded")
-  private EventMetadataCollection eventMetadataCollection;
+  private EventMetadataCollection.EventMetadataList eventMetadataCollection;
 
 
   /**
@@ -105,7 +105,7 @@ public class Provider {
     return publisher;
   }
 
-  public EventMetadataCollection getEventMetadataCollection() {
+  public EventMetadataCollection.EventMetadataList getEventMetadataCollection() {
     return eventMetadataCollection;
   }
 
