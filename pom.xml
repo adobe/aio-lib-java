@@ -26,6 +26,7 @@
     <module>ims</module>
     <module>events_mgmt</module>
     <module>events_ingress</module>
+    <module>events_journal</module>
   </modules>
 
 
@@ -82,6 +83,8 @@
 
     <commons-text.version>1.6</commons-text.version>
     <junit.version>4.11</junit.version>
+    <okhttp3.mockwebserver.version>4.9.1</okhttp3.mockwebserver.version>
+    <mockito.version>3.11.1</mockito.version>
     <slf4j.version>1.7.13</slf4j.version>
     <jackson.version>2.12.3</jackson.version>
     <jjwt.version>0.11.2</jjwt.version>
@@ -162,6 +165,20 @@
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-simple</artifactId>
         <version>${slf4j.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>mockwebserver</artifactId>
+        <version>${okhttp3.mockwebserver.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
         <scope>test</scope>
       </dependency>
 

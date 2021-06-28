@@ -11,8 +11,6 @@
  */
 package com.adobe.util;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Feign;
 import feign.Logger;
 import feign.Logger.Level;
@@ -32,9 +30,6 @@ public class FeignUtil {
   public static final int DEFAULT_READ_TIMEOUT_IN_SECONDS = 60;
   public static final String NON_AVAILABLE = "NA";
 
-  private static final ObjectMapper objectMapper = new ObjectMapper()
-      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
   private FeignUtil() {
   }
 
@@ -46,7 +41,6 @@ public class FeignUtil {
     return Feign.builder()
         .logger(new Slf4jLogger())
         .decode404()
-        .decoder(new OptionalDecoder(new JacksonDecoder(objectMapper)))
         //.errorDecoder(new YourErrorDecoderHere(decoder)) // todo add upstream requestId in the log
         .logger(new Logger.ErrorLogger())
         .logLevel(Level.NONE)
@@ -59,9 +53,10 @@ public class FeignUtil {
    * @return a Feign builder we want to reuse across the sdk with jackson encoder and decoder,
    * logger and our global read and time out options
    */
-  public static Feign.Builder getDefaultBuilderWithJacksonEncoder() {
+  public static Feign.Builder getDefaultBuilder() {
     return getBaseBuilder()
-        .encoder(new JacksonEncoder(objectMapper));
+        .decoder(new OptionalDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
+        .encoder(new JacksonEncoder(JacksonUtil.DEFAULT_OBJECT_MAPPER));
 
   }
 
@@ -71,8 +66,8 @@ public class FeignUtil {
    */
   public static Feign.Builder getBuilderWithFormEncoder() {
     return getBaseBuilder()
+        .decoder(new OptionalDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .encoder(new FormEncoder());
-
   }
 
 }

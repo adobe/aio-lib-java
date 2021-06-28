@@ -31,7 +31,7 @@ class PublishServiceImpl implements PublishService {
       throw new IllegalArgumentException(
           "PublishService is missing a authentication interceptor");
     }
-    this.publishApi = FeignUtil.getDefaultBuilderWithJacksonEncoder()
+    this.publishApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
         .target(PublishApi.class, apiUrl);
   }

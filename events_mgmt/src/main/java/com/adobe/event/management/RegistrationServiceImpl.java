@@ -49,7 +49,7 @@ class RegistrationServiceImpl implements RegistrationService {
     if (StringUtils.isEmpty(workspace.getApiKey())) {
       throw new IllegalArgumentException("Workspace is missing an apiKey context");
     }
-    this.registrationApi = FeignUtil.getDefaultBuilderWithJacksonEncoder()
+    this.registrationApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
         .target(RegistrationApi.class, apiUrl);
     this.workspace = workspace;
