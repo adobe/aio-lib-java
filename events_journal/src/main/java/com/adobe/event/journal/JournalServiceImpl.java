@@ -13,7 +13,7 @@ package com.adobe.event.journal;
 
 import com.adobe.Workspace;
 import com.adobe.event.journal.api.JournalApi;
-import com.adobe.event.journal.model.Entry;
+import com.adobe.event.journal.model.JournalEntry;
 import com.adobe.util.FeignUtil;
 import com.adobe.util.JacksonUtil;
 import feign.RequestInterceptor;
@@ -51,27 +51,27 @@ class JournalServiceImpl implements JournalService {
   }
 
   @Override
-  public Entry getOldest() {
+  public JournalEntry getOldest() {
     return journalApi.get(this.imsOrgId);
   }
 
   @Override
-  public Entry getLatest() {
+  public JournalEntry getLatest() {
     return journalApi.getLatest(this.imsOrgId);
   }
 
   @Override
-  public Entry getSince(String position) {
+  public JournalEntry getSince(String position) {
     return journalApi.getSince(this.imsOrgId, position);
   }
 
   @Override
-  public Entry getSince(String position, int maxBatchSize) {
+  public JournalEntry getSince(String position, int maxBatchSize) {
     return journalApi.getSince(this.imsOrgId, position, maxBatchSize);
   }
 
   @Override
-  public Entry get(String linkUrl) {
+  public JournalEntry get(String linkUrl) {
     JournalApi linkJournalApi = FeignUtil.getBaseBuilder()
         .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .requestInterceptor(authInterceptor)

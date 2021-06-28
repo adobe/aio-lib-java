@@ -12,7 +12,7 @@
 package com.adobe.event.journal;
 
 import com.adobe.Workspace;
-import com.adobe.event.journal.model.Entry;
+import com.adobe.event.journal.model.JournalEntry;
 import feign.RequestInterceptor;
 
 public interface JournalService {
@@ -25,7 +25,7 @@ public interface JournalService {
    * will change. This is only because as older events expire, the starting position of the journal
    * begins pointing to a new set of oldest available events.
    */
-  Entry getOldest();
+  JournalEntry getOldest();
 
   /**
    * @return the latest journal Entry: in most cases, there will not be any events to consume yet
@@ -36,9 +36,9 @@ public interface JournalService {
    * This method is just a way to jump to the "end" of the journal (asking for "events from now
    * onward"). The client applications should use the Entry.getNextLink() to iterate over the
    * journal from that position onward.
-   * @see Entry#getNextLink()
+   * @see JournalEntry#getNextLink()
    */
-  Entry getLatest();
+  JournalEntry getLatest();
 
   /**
    * @param position the last event position you already read. Once the events at a certain position
@@ -49,9 +49,9 @@ public interface JournalService {
    * @return the next journal Entry available after the provided position. Note that instead of
    * constructing the URL to the next batch of "newer" events it is strongly recommended that you
    * utilize the nextLink provided in any previous Entry you already fetched.
-   * @see Entry#getNextLink()
+   * @see JournalEntry#getNextLink()
    */
-  Entry getSince(String position);
+  JournalEntry getSince(String position);
 
   /**
    * @param position     the last event position you already read. Once the events at a certain
@@ -76,17 +76,17 @@ public interface JournalService {
    * maxBatchSize events). Note that instead of constructing the URL to the next batch of "newer"
    * events it is strongly recommended that you utilize the nextLink provided in any previous Entry
    * you already fetched.
-   * @see Entry#getNextLink()
+   * @see JournalEntry#getNextLink()
    */
 
-  Entry getSince(String position, int maxBatchSize);
+  JournalEntry getSince(String position, int maxBatchSize);
 
   /**
    * @param linkUrl typically the nextLink provided in any previous Entry you already fetched.
    * @return get a Journal Entry using a linkUrl
-   * @see Entry#getNextLink()
+   * @see JournalEntry#getNextLink()
    */
-  Entry get(String linkUrl);
+  JournalEntry get(String linkUrl);
 
   static Builder builder() {
     return new Builder();

@@ -11,7 +11,7 @@
  */
 package com.adobe.event.journal.api;
 
-import com.adobe.event.journal.model.Entry;
+import com.adobe.event.journal.model.JournalEntry;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
@@ -21,19 +21,19 @@ public interface JournalApi {
 
   @RequestLine("GET")
   @Headers({"x-ims-org-id: {imsOrgId}"})
-  Entry get(@Param("imsOrgId") String imsOrgId);
+  JournalEntry get(@Param("imsOrgId") String imsOrgId);
 
   @RequestLine("GET ?latest=true")
   @Headers({"x-ims-org-id: {imsOrgId}"})
-  Entry getLatest(@Param("imsOrgId") String imsOrgId);
+  JournalEntry getLatest(@Param("imsOrgId") String imsOrgId);
 
   @RequestLine("GET ?since={position}")
   @Headers({"x-ims-org-id: {imsOrgId}"})
-  Entry getSince(@Param("imsOrgId") String imsOrgId, @Param("position") String position);
+  JournalEntry getSince(@Param("imsOrgId") String imsOrgId, @Param("position") String position);
 
   @RequestLine("GET ?since={position}&limit={maxBatchSize}")
   @Headers({"x-ims-org-id: {imsOrgId}"})
-  Entry getSince(@Param("imsOrgId") String imsOrgId,
+  JournalEntry getSince(@Param("imsOrgId") String imsOrgId,
       @Param("position") String position, @Param("maxBatchSize") int maxBatchSize);
 
 }

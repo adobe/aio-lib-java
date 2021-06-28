@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.adobe.event.journal.api.JournalApi;
-import com.adobe.event.journal.model.Entry;
+import com.adobe.event.journal.model.JournalEntry;
 import com.adobe.util.JacksonUtil;
 import feign.Feign;
 import feign.FeignException;
@@ -48,7 +48,7 @@ public class JournalLinkDecoderTest {
     final JournalApi api = Feign.builder()
         .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .target(JournalApi.class, rootServerUrl);
-    Entry entry = api.get(TEST_IMS_ORG_ID);
+    JournalEntry entry = api.get(TEST_IMS_ORG_ID);
     assertTrue(entry.isEmpty());
     assertEquals("http://localhost:" + server.getPort()
             + "/events-fast/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2",
@@ -75,7 +75,7 @@ public class JournalLinkDecoderTest {
     final JournalApi api = Feign.builder()
         .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .target(JournalApi.class, rootServerUrl);
-    Entry entry = api.get(TEST_IMS_ORG_ID);
+    JournalEntry entry = api.get(TEST_IMS_ORG_ID);
     assertTrue(!entry.isEmpty());
     assertEquals("http://localhost:" + server.getPort()
             + "/events-fast/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2",
@@ -103,7 +103,7 @@ public class JournalLinkDecoderTest {
 
     expectedEx.expect(FeignException.class);
     expectedEx.expectMessage("404");
-    Entry entry = api.get(TEST_IMS_ORG_ID);
+    JournalEntry entry = api.get(TEST_IMS_ORG_ID);
   }
 
 
