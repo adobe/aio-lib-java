@@ -15,6 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.TextNode;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,8 +24,11 @@ public class JacksonUtil {
   private JacksonUtil() {
   }
 
-  public static final ObjectMapper DEFAULT_OBJECT_MAPPER = new ObjectMapper()
-      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+  public static final ObjectMapper DEFAULT_OBJECT_MAPPER =
+      JsonMapper.builder()
+          .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+          .findAndAddModules()
+          .build();
 
   public static JsonNode getJsonNode(String jsonPayload) throws JsonProcessingException {
     if (StringUtils.isEmpty(jsonPayload)) {

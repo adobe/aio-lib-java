@@ -12,7 +12,7 @@
 package com.adobe.event.journal;
 
 import com.adobe.Workspace;
-import com.adobe.event.journal.model.Entry;
+import com.adobe.event.journal.model.JournalEntry;
 import com.adobe.ims.JWTAuthInterceptor;
 import com.adobe.util.FileUtil;
 import com.adobe.util.PrivateKeyBuilder;
@@ -66,7 +66,7 @@ public class JournalServiceTestDrive {
           .url(journalUrl) // [3]
           .build(); //
 
-      Entry entry = journalService.getOldest(); // [4]
+      JournalEntry entry = journalService.getOldest(); // [4]
       nofEvents += entry.size();
       logger.info("entry 1: {}", entry);
       while (!entry.isEmpty()) {

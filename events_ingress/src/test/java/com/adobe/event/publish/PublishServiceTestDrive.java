@@ -15,6 +15,7 @@ import com.adobe.Workspace;
 import com.adobe.event.publish.model.CloudEvent;
 import com.adobe.ims.JWTAuthInterceptor;
 import com.adobe.util.FileUtil;
+import com.adobe.util.JacksonUtil;
 import com.adobe.util.PrivateKeyBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.RequestInterceptor;
@@ -70,7 +71,7 @@ public class PublishServiceTestDrive {
           prop.getProperty(AIO_EVENT_CODE),
           "your event payload");
           //("   { \"key\" : \"value\" } "));
-      logger.info("published {}", cloudEvent);
+      logger.info("published {}", JacksonUtil.DEFAULT_OBJECT_MAPPER.writeValueAsString(cloudEvent));
 
       System.exit(0);
     } catch (Exception e) {

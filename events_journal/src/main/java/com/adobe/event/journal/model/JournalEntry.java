@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class Entry {
+public class JournalEntry {
 
   private static final String NEXT = "next";
 
@@ -82,13 +82,13 @@ public class Entry {
   @Override
   public String toString() {
     if (!this.isEmpty()) {
-      return "Entry{" +
+      return "JournalEntry{" +
           "events=" + events +
           ", page=" + page +
           ", links=" + links +
           '}';
     } else {
-      return "Entry{" +
+      return "JournalEntry{" +
           "retryAfterInSeconds=" + retryAfterInSeconds +
           ", links=" + links +
           '}';
@@ -103,7 +103,7 @@ public class Entry {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    Entry entry = (Entry) o;
+    JournalEntry entry = (JournalEntry) o;
     return retryAfterInSeconds == entry.retryAfterInSeconds &&
         Objects.equals(events, entry.events) &&
         Objects.equals(page, entry.page) &&
