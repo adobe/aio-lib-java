@@ -28,7 +28,7 @@ public class Registration {
     VERIFICATION_FAILED,
     HOOK_UNREACHABLE,
     UNSTABLE,
-    VERIFIED;
+    VERIFIED
   }
 
   public enum IntegrationStatus {

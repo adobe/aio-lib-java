@@ -80,9 +80,11 @@ public class RegistrationServiceTestDrive {
                   .setProviderId(prop.getProperty(PROVIDER_ID)).build())
       );
       String createdId = created.get().getRegistrationId();
-      logger.info("found created: {}", createdId);
+      logger.info("created: {}", created.get());
       registrationService.delete(createdId);
+      logger.info("deleted: {}", createdId);
 
+      logger.info("RegistrationServiceTestDrive completed successfully.");
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

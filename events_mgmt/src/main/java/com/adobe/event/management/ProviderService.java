@@ -12,18 +12,50 @@
 package com.adobe.event.management;
 
 import com.adobe.Workspace;
+import com.adobe.event.management.model.EventMetadata;
 import com.adobe.event.management.model.Provider;
+import com.adobe.event.management.model.ProviderInputModel;
 import feign.RequestInterceptor;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This interface methods are returning either Optional or List.
+ *
+ * When the underlying Adobe IO http API endpoints are responding with `404`,
+ * these methods will return empty Optional or empty List.
+ *
+ * When the underlying Adobe IO http API endpoints are responding with other `4xx` or `5xx` errors,
+ * these methods will throw runtime FeignException exposing these error codes.
+ *
+ * We may work on a more specific error handling as part of https://github.com/adobe/aio-lib-java/issues/7.
+ *
+ */
 public interface ProviderService {
 
   List<Provider> getProviders();
 
-  Optional<Provider> findById(String id);
+  Optional<Provider> findProviderById(final String providerId);
 
-  Optional<Provider> findBy(String providerMetadataId, String instanceId);
+  void deleteProvider(final String providerId);
+
+  Optional<Provider> createProvider(final ProviderInputModel providerCreateModel);
+
+  Optional<Provider> updateProvider(final String id, final ProviderInputModel providerUpdateModel);
+
+  Optional<Provider> findProviderBy(final String providerMetadataId, final String instanceId);
+
+  List<EventMetadata> getEventMetadata(final String providerId);
+
+  Optional<EventMetadata> getEventMetadata(final String providerId, final String eventCode);
+
+  Optional<EventMetadata> createEventMetadata(final String providerId, final EventMetadata eventMetadata);
+
+  Optional<EventMetadata> updateEventMetadata(final String providerId, final EventMetadata eventMetadata);
+
+  void deleteEventMetadata(final String providerId, final String eventCode);
+
+  void deleteAllEventMetadata(final String providerId);
 
   static Builder builder() {
     return new Builder();

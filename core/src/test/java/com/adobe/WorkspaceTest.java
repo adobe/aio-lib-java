@@ -42,6 +42,8 @@ public class WorkspaceTest {
         .apiKey(Workspace.API_KEY + TEST_VALUE)
         .credentialId(Workspace.CREDENTIAL_ID + TEST_VALUE)
         .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
+        .projectId(Workspace.PROJECT_ID + TEST_VALUE)
+        .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
         .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
         .technicalAccountId(Workspace.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
         .addMetascope(Workspace.META_SCOPES + TEST_VALUE)
@@ -49,13 +51,14 @@ public class WorkspaceTest {
     Assert.assertEquals(expected, fromProperties);
     Assert.assertEquals(expected.hashCode(), fromProperties.hashCode());
     Assert.assertEquals(expected.toString(), fromProperties.toString());
+    fromProperties.validateWorkspaceContext();
   }
 
   @Test
   public void testValidateJwtCredentialConfig() throws IOException {
     Workspace workspace = getTestWorkspaceFromProperties();
     expectedEx.expect(IllegalArgumentException.class);
-    expectedEx.expectMessage("Your `Worskpace` should contain a privateKey");
+    expectedEx.expectMessage("Your `Worskpace` is missing a privateKey");
     workspace.validateJwtCredentialConfig();
   }
 
