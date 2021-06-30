@@ -20,12 +20,12 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * This interface methods are returning either Optional<T> or List<T>.
+ * This interface methods are returning either Optional or List.
  *
- * When the underlying Adobe I/O http API endpoints are responding with `404`,
+ * When the underlying Adobe IO http API endpoints are responding with `404`,
  * these methods will return empty Optional or empty List.
  *
- * When the underlying Adobe I/O http API endpoints are responding with other `4xx` or `5xx` errors,
+ * When the underlying Adobe IO http API endpoints are responding with other `4xx` or `5xx` errors,
  * these methods will throw runtime FeignException exposing these error codes.
  *
  * We may work on a more specific error handling as part of https://github.com/adobe/aio-lib-java/issues/7.

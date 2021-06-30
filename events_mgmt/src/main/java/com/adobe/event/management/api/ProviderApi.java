@@ -40,13 +40,6 @@ public interface ProviderApi {
   Optional<ProviderCollection> findByConsumerOrgId(
       @Param("consumerOrgId") String consumerOrgId);
 
-  /**
-   * @param consumerOrgId      The consumer organization Id used to look up the Adobe I/O Events
-   *                           Providers
-   * @param providerMetadataId
-   * @param instanceId
-   * @return the specific Adobe I/O Events Provider associated to the provided natural tripple key
-   */
   @RequestLine("GET /events/{consumerOrgId}/providers?providerMetadataId={providerMetadataId}&instanceId={instanceId}")
   Optional<ProviderCollection> findBy(
       @Param("consumerOrgId") String consumerOrgId,
