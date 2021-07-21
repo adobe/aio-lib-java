@@ -13,7 +13,9 @@ package com.adobe.event.publish.api;
 
 import com.adobe.event.publish.model.CloudEvent;
 import feign.Headers;
+import feign.Param;
 import feign.RequestLine;
+import java.util.Optional;
 
 @Headers("Accept: application/json")
 public interface PublishApi {
@@ -21,12 +23,29 @@ public interface PublishApi {
   String DEFAULT_URL = "https://eventsingress.adobe.io";
 
   /**
-   * publish a Cloud Event
+   * publish a Cloud Event Payload
    *
    * @param body your CloudEvent Input Model
    */
   @RequestLine("POST")
   @Headers({"Content-Type: application/cloudevents+json"})
-  void publish(CloudEvent body);
+  void publishCloudEvent(CloudEvent body);
+
+  /**
+   * publish a Raw Event Json Payload
+   * @param eventCode the Adobe I/O EventMetadata eventCode associated with the Event
+   * @param providerId  the Adobe I/O EventMetadata ProviderId associated with the Event
+   * @param rawEvent the Raw Event Json Payload to publish
+   */
+  @RequestLine("POST")
+  @Headers({
+      "Content-Type: application/json",
+      "x-adobe-event-provider-id: {providerId}",
+      "x-adobe-event-code: {eventCode}"
+  })
+  void publishRawEvent(
+      @Param("providerId") String providerId,
+      @Param("eventCode") String eventCode,
+      String rawEvent);
 
 }

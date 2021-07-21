@@ -24,6 +24,7 @@ public interface PublishService {
       throws JsonProcessingException;
   CloudEvent publishCloudEvent(String providerId, String eventCode, String eventId,  String data)
       throws JsonProcessingException;
+  void publishRawEvent(String providerId, String eventCode, String rawEvent);
 
   static Builder builder() {
     return new Builder();
