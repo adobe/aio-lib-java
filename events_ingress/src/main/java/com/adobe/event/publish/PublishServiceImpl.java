@@ -54,8 +54,12 @@ class PublishServiceImpl implements PublishService {
     CloudEvent inputModel = CloudEvent.builder()
         .providerId(providerId).eventCode(eventCode).eventId(eventId)
         .data(data).build();
-    publishApi.publish(inputModel);
+    publishApi.publishCloudEvent(inputModel);
     return inputModel;
   }
 
+  @Override
+  public void publishRawEvent(String providerId, String eventCode, String rawEvent) {
+    publishApi.publishRawEvent(providerId,  eventCode, rawEvent);
+  }
 }

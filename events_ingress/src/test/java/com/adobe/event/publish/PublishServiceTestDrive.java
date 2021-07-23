@@ -62,6 +62,9 @@ public class PublishServiceTestDrive {
           .workspace(workspace)
           .build();
 
+      String eventDataPayload =  "your event payload";
+      //String eventDataPayload = "   { \"key\" : \"value\" } ";
+
       PublishService publishService = PublishService.builder()
           .authInterceptor(authInterceptor) // [1]
           .url(prop.getProperty(AIO_PUBLISH_URL)) // you can omit this if you target prod
@@ -69,9 +72,14 @@ public class PublishServiceTestDrive {
       CloudEvent cloudEvent = publishService.publishCloudEvent(
           prop.getProperty(AIO_PROVIDER_ID),
           prop.getProperty(AIO_EVENT_CODE),
-          "your event payload");
-          //("   { \"key\" : \"value\" } "));
-      logger.info("published {}", JacksonUtil.DEFAULT_OBJECT_MAPPER.writeValueAsString(cloudEvent));
+          eventDataPayload);
+      logger.info("published Cloud Event{}", JacksonUtil.DEFAULT_OBJECT_MAPPER.writeValueAsString(cloudEvent));
+
+      // Adobe I/O Events Publishing API also allows the publication of simple/raw event json payload
+      publishService.publishRawEvent(prop.getProperty(AIO_PROVIDER_ID),
+          prop.getProperty(AIO_EVENT_CODE),
+          eventDataPayload);
+      logger.info("published Raw Event{}",eventDataPayload);
 
       System.exit(0);
     } catch (Exception e) {
