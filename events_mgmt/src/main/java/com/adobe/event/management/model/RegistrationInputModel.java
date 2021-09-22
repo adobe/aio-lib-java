@@ -157,6 +157,12 @@ public class RegistrationInputModel {
       return this;
     }
 
+    public Builder addMultipleEventsOfInterests(
+        Set<EventsOfInterest> multipleEventsOfInterest) {
+      this.eventsOfInterests.addAll(multipleEventsOfInterest);
+      return this;
+    }
+    
     public Builder webhookUrl(String webhookUrl) {
       this.webhookUrl = webhookUrl;
       return this;
