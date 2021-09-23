@@ -15,7 +15,7 @@ import com.adobe.Workspace;
 import com.adobe.event.journal.model.JournalEntry;
 import com.adobe.ims.JWTAuthInterceptor;
 import com.adobe.util.FileUtil;
-import com.adobe.util.PrivateKeyBuilder;
+import com.adobe.ims.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
 import java.security.PrivateKey;
 import java.util.Properties;

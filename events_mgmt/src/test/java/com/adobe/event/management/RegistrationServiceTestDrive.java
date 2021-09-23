@@ -17,7 +17,7 @@ import com.adobe.event.management.model.Registration;
 import com.adobe.event.management.model.RegistrationInputModel;
 import com.adobe.ims.JWTAuthInterceptor;
 import com.adobe.util.FileUtil;
-import com.adobe.util.PrivateKeyBuilder;
+import com.adobe.ims.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
 import java.security.PrivateKey;
 import java.util.Optional;

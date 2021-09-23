@@ -13,7 +13,7 @@ package com.adobe.ims;
 
 import com.adobe.Workspace;
 import com.adobe.ims.model.AccessToken;
-import com.adobe.util.PrivateKeyBuilder;
+import com.adobe.ims.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
 import java.security.PrivateKey;
 import org.slf4j.Logger;

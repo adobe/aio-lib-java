@@ -27,6 +27,7 @@
     <module>events_mgmt</module>
     <module>events_ingress</module>
     <module>events_journal</module>
+    <module>osgi-fragment</module>
   </modules>
 
 
@@ -80,6 +81,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <license.header.path>${maven.multiModuleProjectDirectory}/copyright_header.txt</license.header.path>
 
     <commons-text.version>1.6</commons-text.version>
     <junit.version>4.11</junit.version>
@@ -212,7 +214,7 @@
           <artifactId>license-maven-plugin</artifactId>
           <version>3.0</version>
           <configuration>
-            <header>${maven.multiModuleProjectDirectory}/copyright_header.txt</header>
+            <header>${license.header.path}</header>
             <excludes>
               <!-- Exclude third-party libs. -->
               <exclude>**/lib/**</exclude>
