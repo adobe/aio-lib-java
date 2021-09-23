@@ -158,8 +158,8 @@ public class RegistrationInputModel {
     }
 
     public Builder addEventsOfInterests(
-        Set<EventsOfInterest> multipleEventsOfInterest) {
-      this.eventsOfInterests.addAll(multipleEventsOfInterest);
+        Set<EventsOfInterest> eventsOfInterest) {
+      this.eventsOfInterests.addAll(eventsOfInterest);
       return this;
     }
     
