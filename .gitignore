@@ -5,7 +5,7 @@ temp
 *secret*
 **/secret
 **/*secret*
-
+.vscode/
 
 swagger_client
 LocalTest.java
