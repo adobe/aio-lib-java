@@ -77,11 +77,6 @@
       <version>${project.version}</version>
     </dependency>
 
-    <!-- <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-text</artifactId>
-      <version>${commons-text.version}</version>
-    </dependency> -->
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
@@ -167,6 +162,18 @@
 				<version>1.4.0</version>
 				<!-- <scope>provided</scope> -->
 			</dependency>
+      <dependency>
+        <artifactId>org.apache.sling.feature.apiregions</artifactId>
+        <version>1.1.8</version>
+        <groupId>org.apache.sling</groupId>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <artifactId>org.apache.sling.commons.log</artifactId>
+        <version>5.1.12</version>
+        <groupId>org.apache.sling</groupId>
+        <scope>provided</scope>
+      </dependency>
   </dependencies>
 
   <build>
@@ -218,7 +225,10 @@
               !org.apache.tools.ant.*,
               !org.eclipse.core.*,
               !org.eclipse.jdt.core.*,
-              !org.eclipse.jdt.internal.*
+              !org.eclipse.jdt.internal.*,
+              !com.sun.activation.*,
+              !sun.misc.*,
+              *
             </Import-Package>
             <Export-Package>
               feign.*,com.adobe,com.adobe.util,com.adobe.event.publish,com.adobe.event.publish.api,
@@ -226,7 +236,7 @@
               com.adobe.event.journal.model,com.adobe.event.management,com.adobe.event.management.api,
               com.adobe.event.management.model,com.adobe.ims,com.adobe.ims.api,com.adobe.ims.model,
               com.adobe.ims.util,com.fasterxml.jackson.*,jakarta.xml.bind.*,jakarta.activation.*,
-              com.adobe.aio.lib.Activator,org.apache.commons.lang3.StringUtils,org.slf4j.*
+              com.adobe.aio.lib.Activator,org.apache.commons.lang3.StringUtils
             </Export-Package>
           </instructions>
         </configuration>
