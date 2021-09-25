@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 Adobe. All rights reserved.
+    This file is licensed to you under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License. You may obtain a copy
+    of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software distributed under
+    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+    OF ANY KIND, either express or implied. See the License for the specific language
+    governing permissions and limitations under the License.
+
+-->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>bundle</packaging>
+  <artifactId>com.adobe.aio-lib-java.osgi</artifactId>
+  <name>Adobe I/O - Java SDK - OSGI bundle</name>
+  <description>Adobe I/O - Java SDK - OSGI bundle</description>
+  <version>0.0.6-SNAPSHOT</version>
+
+  <parent>
+    <groupId>com.adobe</groupId>
+    <artifactId>aio-lib-java</artifactId>
+    <version>0.0.6-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  
+  <properties>
+    <!-- <fragment.host>aemaioevents.core</fragment.host> -->
+    <crx.host>localhost</crx.host>
+    <crx.port>4502</crx.port>
+    <crx.username>admin</crx.username>
+    <crx.password>admin</crx.password>
+    <crx.path>/apps/aemaioevents-packages/application/install</crx.path>
+
+    <commons-text.version>1.6</commons-text.version>
+    <junit.version>4.11</junit.version>
+    <okhttp3.mockwebserver.version>4.9.1</okhttp3.mockwebserver.version>
+    <mockito.version>3.11.1</mockito.version>
+    <slf4j.version>1.7.13</slf4j.version>
+    <jackson.version>2.12.3</jackson.version>
+    <jjwt.version>0.11.2</jjwt.version>
+
+    <feign.version>11.2</feign.version>
+    <feign-form.version>3.8.0</feign-form.version>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-ims</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-events-mgmt</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-events-ingress</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-events-journal</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+      <version>${commons-text.version}</version>
+    </dependency> -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+      <version>3.0</version>
+  </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-api</artifactId>
+      <version>${jjwt.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-impl</artifactId>
+      <version>${jjwt.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt-jackson</artifactId>
+      <version>${jjwt.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <version>3.0.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <version>${jackson.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.sun.xml.bind</groupId>
+      <artifactId>jaxb-impl</artifactId>
+      <version>3.0.2</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-core</artifactId>
+      <version>${feign.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-jackson</artifactId>
+      <version>${feign.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign</groupId>
+      <artifactId>feign-slf4j</artifactId>
+      <version>${feign.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.github.openfeign.form</groupId>
+      <artifactId>feign-form</artifactId>
+      <version>${feign-form.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.20</version>
+    </dependency>
+    <dependency>
+      <groupId>org.eclipse.jdt</groupId>
+      <artifactId>org.eclipse.jdt.core</artifactId>
+      <version>3.27.0</version>
+    </dependency>
+
+			<!-- scr -->
+			<dependency>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>org.apache.felix.scr.annotations</artifactId>
+				<version>1.9.4</version>
+				<!-- <scope>provided</scope> -->
+			</dependency>
+
+			<!-- felix -->
+			<dependency>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>org.osgi.core</artifactId>
+				<version>1.4.0</version>
+				<!-- <scope>provided</scope> -->
+			</dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-scr-plugin</artifactId>
+			</plugin>
+      <plugin>
+        <groupId>org.apache.sling</groupId>
+        <artifactId>maven-sling-plugin</artifactId>
+        <version>2.1.8</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>3.5.0</version>
+        <extensions>true</extensions>
+        <configuration>
+          <instructions>
+            <_noee>true</_noee>
+            <!-- <Bundle-Activator>com.adobe.aio.lib.Activator</Bundle-Activator> -->
+            <Bundle-Vendor>Adobe</Bundle-Vendor>
+            <Bundle-Name>${project.name}</Bundle-Name>
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <Embed-Dependency>
+              aio-lib-java-ims,
+              aio-lib-java-core,
+              aio-lib-java-events-mgmt,
+              aio-lib-java-events-ingress,
+              aio-lib-java-events-journal,
+              commons-text,
+              jjwt-api,
+              jjwt-impl,
+              jjwt-jackson,
+              feign-core,
+              feign-form,
+              feign-slf4j,
+              feign-jackson,
+              lombok,
+              commons-lang3
+            </Embed-Dependency>
+            <Embed-Transitive>true</Embed-Transitive>
+            <Import-Package>
+              !com.sun.tools.*,
+              !org.apache.tools.ant.*,
+              !org.eclipse.core.*,
+              !org.eclipse.jdt.core.*,
+              !org.eclipse.jdt.internal.*
+            </Import-Package>
+            <Export-Package>
+              feign.*,com.adobe,com.adobe.util,com.adobe.event.publish,com.adobe.event.publish.api,
+              com.adobe.event.publish.model,com.adobe.event.journal,com.adobe.event.journal.api,
+              com.adobe.event.journal.model,com.adobe.event.management,com.adobe.event.management.api,
+              com.adobe.event.management.model,com.adobe.ims,com.adobe.ims.api,com.adobe.ims.model,
+              com.adobe.ims.util,com.fasterxml.jackson.*,jakarta.xml.bind.*,jakarta.activation.*,
+              com.adobe.aio.lib.Activator,org.apache.commons.lang3.StringUtils,org.slf4j.*
+            </Export-Package>
+          </instructions>
+        </configuration>
+      </plugin>
+    </plugins>
+
+  </build>
+
+
+  <!-- ====================================================================== -->
+  <!-- P R O F I L E S                                                        -->
+  <!-- ====================================================================== -->
+  <profiles>
+    <profile>
+      <id>localInstall</id>
+      <activation>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>maven-sling-plugin</artifactId>
+            <configuration>
+              <slingUrl>http://${crx.host}:${crx.port}${crx.path}</slingUrl>
+              <user>${crx.username}</user>
+              <password>${crx.password}</password>
+              <deploymentMethod>WebDAV</deploymentMethod>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+
+</project>

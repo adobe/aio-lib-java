@@ -18,7 +18,7 @@
 
   <groupId>com.adobe</groupId>
   <artifactId>aio-lib-java</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.0.6-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -27,7 +27,7 @@
     <module>events_mgmt</module>
     <module>events_ingress</module>
     <module>events_journal</module>
-    <module>osgi-fragment</module>
+    <module>osgi</module>
   </modules>
 
 
@@ -229,6 +229,7 @@
               <exclude>Dockerfile.build</exclude>
               <exclude>Makefile</exclude>
               <exclude>.github/*</exclude>
+              <exclude>.vscode/*</exclude>
             </excludes>
             <mapping>
               <!-- Add license headers to Play Framework routes files-->
@@ -333,4 +334,3 @@
   </profiles>
 
 </project>
-
