@@ -31,23 +31,19 @@
   </parent>
   
   <properties>
-    <!-- <fragment.host>aemaioevents.core</fragment.host> -->
+    <org.osgi.framework.version>1.9.0</org.osgi.framework.version>
+
+    <!--
+    If you want to deploy the bundle from the source
+    1. modify the below `crx.*` properties according to your needs
+    2. run `mvn -Dlicense.header.path=../copyright_header.txt -P localInstall clean install sling:install`
+     -->
     <crx.host>localhost</crx.host>
     <crx.port>4502</crx.port>
     <crx.username>admin</crx.username>
     <crx.password>admin</crx.password>
     <crx.path>/apps/aemaioevents-packages/application/install</crx.path>
 
-    <commons-text.version>1.6</commons-text.version>
-    <junit.version>4.11</junit.version>
-    <okhttp3.mockwebserver.version>4.9.1</okhttp3.mockwebserver.version>
-    <mockito.version>3.11.1</mockito.version>
-    <slf4j.version>1.7.13</slf4j.version>
-    <jackson.version>2.12.3</jackson.version>
-    <jjwt.version>0.11.2</jjwt.version>
-
-    <feign.version>11.2</feign.version>
-    <feign-form.version>3.8.0</feign-form.version>
   </properties>
 
   <dependencies>
@@ -78,112 +74,52 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.commons</groupId>
-      <artifactId>commons-lang3</artifactId>
-      <version>3.0</version>
-  </dependency>
-    <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
-      <version>${jjwt.version}</version>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-impl</artifactId>
-      <version>${jjwt.version}</version>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-jackson</artifactId>
-      <version>${jjwt.version}</version>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <version>3.0.1</version>
     </dependency>
 
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
-      <version>${jackson.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.sun.xml.bind</groupId>
-      <artifactId>jaxb-impl</artifactId>
-      <version>3.0.2</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign</groupId>
       <artifactId>feign-core</artifactId>
-      <version>${feign.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign</groupId>
       <artifactId>feign-jackson</artifactId>
-      <version>${feign.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign</groupId>
       <artifactId>feign-slf4j</artifactId>
-      <version>${feign.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.openfeign.form</groupId>
       <artifactId>feign-form</artifactId>
-      <version>${feign-form.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.projectlombok</groupId>
-      <artifactId>lombok</artifactId>
-      <version>1.18.20</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jdt</groupId>
-      <artifactId>org.eclipse.jdt.core</artifactId>
-      <version>3.27.0</version>
     </dependency>
 
-			<!-- scr -->
-			<dependency>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>org.apache.felix.scr.annotations</artifactId>
-				<version>1.9.4</version>
-				<!-- <scope>provided</scope> -->
-			</dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.framework</artifactId>
+      <version>${org.osgi.framework.version}</version>
+      <scope>provided</scope>
+    </dependency>
 
-			<!-- felix -->
-			<dependency>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>org.osgi.core</artifactId>
-				<version>1.4.0</version>
-				<!-- <scope>provided</scope> -->
-			</dependency>
-      <dependency>
-        <artifactId>org.apache.sling.feature.apiregions</artifactId>
-        <version>1.1.8</version>
-        <groupId>org.apache.sling</groupId>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <artifactId>org.apache.sling.commons.log</artifactId>
-        <version>5.1.12</version>
-        <groupId>org.apache.sling</groupId>
-        <scope>provided</scope>
-      </dependency>
   </dependencies>
 
   <build>
     <plugins>
       <plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.felix</groupId>
-				<artifactId>maven-scr-plugin</artifactId>
 			</plugin>
       <plugin>
         <groupId>org.apache.sling</groupId>
@@ -216,7 +152,6 @@
               feign-form,
               feign-slf4j,
               feign-jackson,
-              lombok,
               commons-lang3
             </Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
@@ -228,6 +163,9 @@
               !org.eclipse.jdt.internal.*,
               !com.sun.activation.*,
               !sun.misc.*,
+              !lombok.*,
+              !jakarta.xml.bind.*,
+              !jakarta.activation.*,
               *
             </Import-Package>
             <Export-Package>
@@ -235,8 +173,8 @@
               com.adobe.event.publish.model,com.adobe.event.journal,com.adobe.event.journal.api,
               com.adobe.event.journal.model,com.adobe.event.management,com.adobe.event.management.api,
               com.adobe.event.management.model,com.adobe.ims,com.adobe.ims.api,com.adobe.ims.model,
-              com.adobe.ims.util,com.fasterxml.jackson.*,jakarta.xml.bind.*,jakarta.activation.*,
-              com.adobe.aio.lib.Activator,org.apache.commons.lang3.StringUtils
+              com.adobe.ims.util,com.fasterxml.jackson.*,
+              com.adobe.aio.lib.Activator
             </Export-Package>
           </instructions>
         </configuration>
