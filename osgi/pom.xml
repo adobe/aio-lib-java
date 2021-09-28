@@ -36,13 +36,12 @@
     <!--
     If you want to deploy the bundle from the source
     1. modify the below `crx.*` properties according to your needs
-    2. run `mvn -Dlicense.header.path=../copyright_header.txt -P localInstall clean install sling:install`
+    2. run `mvn -Dcrx.path=/apps/changeMe/install -Dlicense.header.path=../copyright_header.txt -P localInstall clean install sling:install`
      -->
     <crx.host>localhost</crx.host>
     <crx.port>4502</crx.port>
     <crx.username>admin</crx.username>
     <crx.password>admin</crx.password>
-    <crx.path>/apps/aemaioevents-packages/application/install</crx.path>
 
   </properties>
 
@@ -134,7 +133,7 @@
         <configuration>
           <instructions>
             <_noee>true</_noee>
-            <!-- <Bundle-Activator>com.adobe.aio.lib.Activator</Bundle-Activator> -->
+            <Bundle-Activator>com.adobe.aio.lib.Activator</Bundle-Activator>
             <Bundle-Vendor>Adobe</Bundle-Vendor>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
