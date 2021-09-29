@@ -41,8 +41,21 @@ public interface ProviderService {
 
   Optional<Provider> createProvider(final ProviderInputModel providerCreateModel);
 
+  /**
+   *
+   * @param providerInputModel the input payload
+   * @return create and if conflict/409 arises, instead, update a provider using the provided payload
+   */
+  Optional<Provider> createOrUpdateProvider(ProviderInputModel providerInputModel);
+
   Optional<Provider> updateProvider(final String id, final ProviderInputModel providerUpdateModel);
 
+  /**
+   *
+   * @param providerMetadataId
+   * @param instanceId
+   * @return the providers list matching the provided criteria and with non-empty event metadata list
+   */
   Optional<Provider> findProviderBy(final String providerMetadataId, final String instanceId);
 
   List<EventMetadata> getEventMetadata(final String providerId);

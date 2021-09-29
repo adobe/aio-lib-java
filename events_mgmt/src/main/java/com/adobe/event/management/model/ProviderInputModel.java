@@ -12,27 +12,51 @@
 package com.adobe.event.management.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * The Input Model necessary to update/PUT an Adobe I/O Events Provider
+ * The Input Model necessary to POST/PUT an Adobe I/O Events Provider
  */
+@JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties(
+    ignoreUnknown = true
+)
 public class ProviderInputModel {
+
+  public static final String THIRD_PARTY_PROVIDER_METADATA_ID = "3rd_party_custom_events";
+
+  /**
+   * Optional key when creating/POST-ing a new provider.
+   * Note it will be ignored when updating/PUT-ing it.
+   */
+  @JsonProperty("instance_id")
+  private final String instanceId;
+
+  /**
+   * Optional provider providerMetadataId/type when creating/POST-ing a new provider.
+   * Note it will be ignored when updating/PUT-ing it.
+   */
+  @JsonProperty("provider_metadata")
+  private final String providerMetadataId;
 
   /**
    * The label of this Events Provider, as shown on the Adobe I/O console
    */
-  protected final String label;
-  protected final String description;
+  private final String label;
+  private final String description;
   /**
    * The documentation url of this Events Provider, as shown on the Adobe I/O console
    */
   @JsonProperty("docs_url")
-  protected final String docsUrl;
+  private final String docsUrl;
 
-  protected ProviderInputModel(final String label, final String description, final String docsUrl) {
+  private ProviderInputModel(final String label, final String description, final String docsUrl, final String instanceId,
+      final String providerMetadataId) {
     if (StringUtils.isEmpty(label)) {
       throw new IllegalArgumentException(
           "ProviderUpdateModel is missing a label");
@@ -40,6 +64,8 @@ public class ProviderInputModel {
     this.label = label;
     this.description = description;
     this.docsUrl = docsUrl;
+    this.providerMetadataId = providerMetadataId;
+    this.instanceId = instanceId;
   }
 
   public String getLabel() {
@@ -54,6 +80,10 @@ public class ProviderInputModel {
     return this.docsUrl;
   }
 
+  public String getInstanceId() { return this.instanceId; }
+
+  public String getProviderMetadataId() { return this.providerMetadataId; }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -63,22 +93,24 @@ public class ProviderInputModel {
       return false;
     }
     ProviderInputModel that = (ProviderInputModel) o;
-    return Objects.equals(label, that.label) &&
-        Objects.equals(description, that.description) &&
-        Objects.equals(docsUrl, that.docsUrl);
+    return Objects.equals(instanceId, that.instanceId) && Objects.equals(providerMetadataId,
+        that.providerMetadataId) && Objects.equals(label, that.label) && Objects.equals(
+        description, that.description) && Objects.equals(docsUrl, that.docsUrl);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(label, description, docsUrl);
+    return Objects.hash(instanceId, providerMetadataId, label, description, docsUrl);
   }
 
   @Override
   public String toString() {
-    return "ProviderUpdateModel{" +
+    return "ProviderInputModel{" +
         "label='" + label + '\'' +
         ", description='" + description + '\'' +
         ", docsUrl='" + docsUrl + '\'' +
+        ", providerMetadataId='" + providerMetadataId + '\'' +
+        ", instanceId='" + instanceId + '\'' +
         '}';
   }
 
@@ -92,6 +124,8 @@ public class ProviderInputModel {
     private String label;
     private String description;
     private String docsUrl;
+    private String instanceId;
+    private String providerMetadataId;
 
     public Builder() {
     }
@@ -111,8 +145,18 @@ public class ProviderInputModel {
       return this;
     }
 
+    public Builder providerMetadataId(final String providerMetadataId) {
+      this.providerMetadataId = providerMetadataId;
+      return this;
+    }
+
+    public Builder instanceId(final String instanceId) {
+      this.instanceId = instanceId;
+      return this;
+    }
+
     public ProviderInputModel build() {
-      return new ProviderInputModel(label, description, docsUrl);
+      return new ProviderInputModel(label, description, docsUrl, instanceId, providerMetadataId);
     }
   }
 }
