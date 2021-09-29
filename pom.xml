@@ -18,7 +18,7 @@
 
   <groupId>com.adobe</groupId>
   <artifactId>aio-lib-java</artifactId>
-  <version>0.0.5-SNAPSHOT</version>
+  <version>0.0.6-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -27,6 +27,7 @@
     <module>events_mgmt</module>
     <module>events_ingress</module>
     <module>events_journal</module>
+    <module>osgi</module>
   </modules>
 
 
@@ -80,6 +81,7 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <license.header.path>${maven.multiModuleProjectDirectory}/copyright_header.txt</license.header.path>
 
     <commons-text.version>1.6</commons-text.version>
     <junit.version>4.11</junit.version>
@@ -154,6 +156,7 @@
         <version>${feign-form.version}</version>
       </dependency>
 
+
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit-dep</artifactId>
@@ -212,7 +215,7 @@
           <artifactId>license-maven-plugin</artifactId>
           <version>3.0</version>
           <configuration>
-            <header>${maven.multiModuleProjectDirectory}/copyright_header.txt</header>
+            <header>${license.header.path}</header>
             <excludes>
               <!-- Exclude third-party libs. -->
               <exclude>**/lib/**</exclude>
@@ -227,6 +230,7 @@
               <exclude>Dockerfile.build</exclude>
               <exclude>Makefile</exclude>
               <exclude>.github/*</exclude>
+              <exclude>.vscode/*</exclude>
             </excludes>
             <mapping>
               <!-- Add license headers to Play Framework routes files-->
@@ -331,4 +335,3 @@
   </profiles>
 
 </project>
-

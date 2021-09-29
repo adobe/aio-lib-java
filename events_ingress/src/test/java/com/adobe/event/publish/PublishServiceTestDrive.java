@@ -16,12 +16,10 @@ import com.adobe.event.publish.model.CloudEvent;
 import com.adobe.ims.JWTAuthInterceptor;
 import com.adobe.util.FileUtil;
 import com.adobe.util.JacksonUtil;
-import com.adobe.util.PrivateKeyBuilder;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.adobe.ims.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
 import java.security.PrivateKey;
 import java.util.Properties;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

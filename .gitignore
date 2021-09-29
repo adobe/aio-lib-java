@@ -5,7 +5,17 @@ temp
 *secret*
 **/secret
 **/*secret*
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+**/.settings
+**/.classpath
+**/.factorypath
+**/*.iml
 
 
 swagger_client
 LocalTest.java
+deptree.txt
