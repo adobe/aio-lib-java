@@ -28,8 +28,6 @@ import org.apache.commons.lang3.StringUtils;
 )
 public class ProviderInputModel {
 
-  public static final String THIRD_PARTY_PROVIDER_METADATA_ID = "3rd_party_custom_events";
-
   /**
    * Optional key when creating/POST-ing a new provider.
    * Note it will be ignored when updating/PUT-ing it.

@@ -32,6 +32,7 @@ import java.util.Optional;
  *
  */
 public interface ProviderService {
+  String CUSTOM_EVENTS_PROVIDER_METADATA_ID = "3rd_party_custom_events";
 
   List<Provider> getProviders();
 
@@ -49,6 +50,8 @@ public interface ProviderService {
   Optional<Provider> createOrUpdateProvider(ProviderInputModel providerInputModel);
 
   Optional<Provider> updateProvider(final String id, final ProviderInputModel providerUpdateModel);
+
+  Optional<Provider> findCustomEventsProviderByInstanceId(String instanceId);
 
   /**
    *

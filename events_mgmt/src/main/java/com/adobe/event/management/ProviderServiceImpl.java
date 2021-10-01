@@ -110,6 +110,11 @@ class ProviderServiceImpl implements ProviderService {
   }
 
   @Override
+  public Optional<Provider> findCustomEventsProviderByInstanceId(final String instanceId){
+    return findProviderBy(CUSTOM_EVENTS_PROVIDER_METADATA_ID,instanceId);
+  }
+
+  @Override
   public Optional<Provider> findProviderBy(final String providerMetadataId,
       final String instanceId) {
     if (StringUtils.isEmpty(providerMetadataId) || StringUtils
