@@ -46,7 +46,6 @@ public class ConflictException extends FeignException {
         return null;
       }
     } catch (JsonProcessingException e) {
-      e.printStackTrace();
       logger.warn("The Conflict/409 Error response is not of the expected format",e.getMessage());
       return null;
     }

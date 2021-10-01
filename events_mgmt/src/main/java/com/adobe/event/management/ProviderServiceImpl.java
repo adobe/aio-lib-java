@@ -21,6 +21,7 @@ import com.adobe.event.management.model.EventMetadataCollection;
 import com.adobe.event.management.model.Provider;
 import com.adobe.event.management.model.ProviderCollection;
 import com.adobe.event.management.model.ProviderInputModel;
+import com.adobe.util.Constants;
 import com.adobe.util.FeignUtil;
 import feign.RequestInterceptor;
 import java.util.ArrayList;
@@ -111,7 +112,7 @@ class ProviderServiceImpl implements ProviderService {
 
   @Override
   public Optional<Provider> findCustomEventsProviderByInstanceId(final String instanceId){
-    return findProviderBy(CUSTOM_EVENTS_PROVIDER_METADATA_ID,instanceId);
+    return findProviderBy(Constants.CUSTOM_EVENTS_PROVIDER_METADATA_ID,instanceId);
   }
 
   @Override
