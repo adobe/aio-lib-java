@@ -31,6 +31,7 @@ public class ProviderInputModel {
   /**
    * Optional key when creating/POST-ing a new provider.
    * Note it will be ignored when updating/PUT-ing it.
+   * If none is provided our API will create a Random UUID for you.
    */
   @JsonProperty("instance_id")
   private final String instanceId;
@@ -38,6 +39,9 @@ public class ProviderInputModel {
   /**
    * Optional provider providerMetadataId/type when creating/POST-ing a new provider.
    * Note it will be ignored when updating/PUT-ing it.
+   * If none is provided our API will assume you want to create a `Custom Events` Provider
+   * and hence will use the associated providerMetadataId.
+   * @see com.adobe.util.Constants#CUSTOM_EVENTS_PROVIDER_METADATA_ID
    */
   @JsonProperty("provider_metadata")
   private final String providerMetadataId;
