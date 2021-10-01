@@ -9,18 +9,17 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.util;
+package com.adobe.event.management;
 
-public class Constants {
+import feign.FeignException;
+import feign.Response;
+import feign.codec.ErrorDecoder;
 
-  public static final String AUTHORIZATION_HEADER = "Authorization";
-  public static final String BEARER_PREFIX = "Bearer ";
-  public static final String API_KEY_HEADER = "x-api-key";
-  public static final String IMS_URL = "https://ims-na1.adobelogin.com";
-  public static final String API_MANAGEMENT_URL = "https://api.adobe.io";
-  public static final String CUSTOM_EVENTS_PROVIDER_METADATA_ID = "3rd_party_custom_events";
+public class ConflictErrorDecoder implements ErrorDecoder {
 
-  private Constants() {
+  @Override
+  public Exception decode(String methodKey, Response response) {
+    FeignException exception = FeignException.errorStatus(methodKey, response);
+    return (response.status()==409) ? new ConflictException(response, exception) : exception;
   }
-
 }
