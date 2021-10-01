@@ -19,12 +19,12 @@
   <artifactId>com.adobe.aio-lib-java.osgi</artifactId>
   <name>Adobe I/O - Java SDK - OSGI bundle</name>
   <description>Adobe I/O - Java SDK - OSGI bundle</description>
-  <version>0.0.7</version>
+  <version>0.0.8-SNAPSHOT</version>
 
   <parent>
     <groupId>com.adobe</groupId>
     <artifactId>aio-lib-java</artifactId>
-    <version>0.0.7</version>
+    <version>0.0.8-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   
