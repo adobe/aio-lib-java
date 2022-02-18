@@ -210,7 +210,7 @@ public class Workspace {
     private String credentialId;
     private String clientSecret;
     private String technicalAccountId;
-    private Set<String> metascopes = new HashSet<>();
+    private final Set<String> metascopes = new HashSet<>();
     private PrivateKey privateKey;
 
     private Map<String, String> workspaceProperties;
@@ -265,11 +265,6 @@ public class Workspace {
 
     public Builder addMetascope(final String metascope) {
       this.metascopes.add(metascope);
-      return this;
-    }
-
-    public Builder setMetascopes(final Set<String> metascopes){
-      this.metascopes = metascopes;
       return this;
     }
 
