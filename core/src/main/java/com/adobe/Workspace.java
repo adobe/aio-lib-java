@@ -27,16 +27,16 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Workspace {
 
-  static final String IMS_URL = "aio_ims_url";
-  static final String IMS_ORG_ID = "aio_ims_org_id";
-  static final String CONSUMER_ORG_ID = "aio_consumer_org_id";
-  static final String PROJECT_ID = "aio_project_id";
-  static final String WORKSPACE_ID = "aio_workspace_id";
-  static final String API_KEY = "aio_api_key";
-  static final String CREDENTIAL_ID = "aio_credential_id";
-  static final String CLIENT_SECRET = "aio_client_secret";
-  static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
-  static final String META_SCOPES = "aio_meta_scopes";
+  public static final String IMS_URL = "aio_ims_url";
+  public static final String IMS_ORG_ID = "aio_ims_org_id";
+  public static final String CONSUMER_ORG_ID = "aio_consumer_org_id";
+  public static final String PROJECT_ID = "aio_project_id";
+  public static final String WORKSPACE_ID = "aio_workspace_id";
+  public static final String API_KEY = "aio_api_key";
+  public static final String CREDENTIAL_ID = "aio_credential_id";
+  public static final String CLIENT_SECRET = "aio_client_secret";
+  public static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
+  public static final String META_SCOPES = "aio_meta_scopes";
 
   // Auth related :
   private final String imsUrl;
@@ -210,7 +210,7 @@ public class Workspace {
     private String credentialId;
     private String clientSecret;
     private String technicalAccountId;
-    private final Set<String> metascopes = new HashSet<>();
+    private Set<String> metascopes = new HashSet<>();
     private PrivateKey privateKey;
 
     private Map<String, String> workspaceProperties;
@@ -265,6 +265,11 @@ public class Workspace {
 
     public Builder addMetascope(final String metascope) {
       this.metascopes.add(metascope);
+      return this;
+    }
+
+    public Builder setMetascopes(final Set<String> metascopes){
+      this.metascopes = metascopes;
       return this;
     }
 

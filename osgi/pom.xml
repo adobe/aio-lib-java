@@ -71,6 +71,10 @@
     </dependency>
 
     <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
     </dependency>
@@ -161,7 +165,6 @@
               !com.sun.activation.*,
               !sun.misc.*,
               !lombok.*,
-              !jakarta.xml.bind.*,
               !jakarta.activation.*,
               *
             </Import-Package>
