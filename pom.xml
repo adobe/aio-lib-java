@@ -85,6 +85,7 @@
 
     <commons-text.version>1.6</commons-text.version>
     <junit.version>4.11</junit.version>
+    <tomakehurst.version>2.31.0</tomakehurst.version>
     <okhttp3.mockwebserver.version>4.9.1</okhttp3.mockwebserver.version>
     <mockito.version>3.11.1</mockito.version>
     <slf4j.version>1.7.13</slf4j.version>
@@ -161,6 +162,13 @@
         <groupId>junit</groupId>
         <artifactId>junit-dep</artifactId>
         <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock-jre8</artifactId>
+        <version>${tomakehurst.version}</version>
         <scope>test</scope>
       </dependency>
 
