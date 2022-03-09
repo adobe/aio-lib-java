@@ -39,7 +39,7 @@ public class EventMetadata {
       String sampleEventTemplate) {
     if (StringUtils.isEmpty(eventCode)) {
       throw new IllegalArgumentException(
-          "EventMetadata is missing a label");
+          "EventMetadata is missing an Event Code");
     }
     this.eventCode = eventCode;
     this.label = (StringUtils.isEmpty(label)) ? eventCode : label;
