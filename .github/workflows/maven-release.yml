@@ -10,7 +10,7 @@
 # governing permissions and limitations under the License.
 #
 
-name: Release Plain Old Java library to OSSRH
+name: release
 
 # Run workflow on commits to default branch
 on:

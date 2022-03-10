@@ -11,82 +11,73 @@
  */
 package com.adobe.event.management.model;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 
 public class RegistrationInputModel {
 
-  public enum DeliveryType {
-    WEBHOOK, JOURNAL, WEBHOOK_BATCH
-  }
-
   @JsonProperty("client_id")
-  protected String clientId;
+  private final String clientId;
 
-  protected String name;
+  private final String name;
 
-  protected String description;
+  private final String description;
 
   @JsonProperty("delivery_type")
-  protected DeliveryType deliveryType;
+  private final DeliveryType deliveryType;
 
   @JsonProperty("events_of_interest")
-  protected Set<EventsOfInterest> eventsOfInterests = new HashSet<>();
+  private final Set<EventsOfInterest> eventsOfInterests;
 
   @JsonProperty("webhook_url")
-  protected String webhookUrl;
+  private final String webhookUrl;
+
+  private RegistrationInputModel(final String clientId, final String name, final String description,
+      final DeliveryType deliveryType, final Set<EventsOfInterest> eventsOfInterests,
+      final String webhookUrl) {
+    if (deliveryType == null && StringUtils.isEmpty(webhookUrl)) {
+      this.deliveryType = DeliveryType.JOURNAL;
+    } else if (deliveryType == null && !StringUtils.isEmpty(webhookUrl)) {
+      this.deliveryType = DeliveryType.WEBHOOK;
+    } else if (deliveryType != DeliveryType.JOURNAL && StringUtils.isEmpty(webhookUrl)) {
+      throw new IllegalArgumentException(
+          "RegistrationInputModel is a webhook registration, but missing a webhook url");
+    } else {
+      this.deliveryType = deliveryType;
+    }
+    this.webhookUrl = webhookUrl;//Todo validate url, must be https
+    this.clientId = clientId;
+    this.name = name;
+    this.description = description;
+    this.eventsOfInterests = eventsOfInterests;
+  }
 
   public String getClientId() {
     return clientId;
-  }
-
-  public void setClientId(String clientId) {
-    this.clientId = clientId;
   }
 
   public String getName() {
     return name;
   }
 
-  public void setName(String name) {
-    this.name = name;
-  }
-
   public String getDescription() {
     return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
   }
 
   public DeliveryType getDeliveryType() {
     return deliveryType;
   }
 
-  public void setDeliveryType(
-      DeliveryType deliveryType) {
-    this.deliveryType = deliveryType;
-  }
-
   public Set<EventsOfInterest> getEventsOfInterests() {
     return eventsOfInterests;
   }
 
-  public void setEventsOfInterests(
-      Set<EventsOfInterest> eventsOfInterests) {
-    this.eventsOfInterests = eventsOfInterests;
-  }
-
   public String getWebhookUrl() {
     return webhookUrl;
-  }
-
-  public void setWebhookUrl(String webhookUrl) {
-    this.webhookUrl = webhookUrl;
   }
 
   @Override
@@ -121,5 +112,66 @@ public class RegistrationInputModel {
         ", eventsOfInterests=" + eventsOfInterests +
         ", webhookUrl='" + webhookUrl + '\'' +
         '}';
+  }
+
+  @JsonIgnore
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public static class Builder {
+
+    private String clientId;
+    private String name;
+    private String description;
+    private DeliveryType deliveryType;
+    private Set<EventsOfInterest> eventsOfInterests = new HashSet<>();
+    private String webhookUrl;
+
+    public Builder() {
+    }
+
+    public Builder clientId(String clientId) {
+      this.clientId = clientId;
+      return this;
+    }
+
+    public Builder name(String name) {
+      this.name = name;
+      return this;
+    }
+
+    public Builder description(String description) {
+      this.description = description;
+      return this;
+    }
+
+    public Builder deliveryType(DeliveryType deliveryType) {
+      this.deliveryType = deliveryType;
+      return this;
+    }
+
+    public Builder addEventsOfInterests(
+        EventsOfInterest eventsOfInterest) {
+      this.eventsOfInterests.add(eventsOfInterest);
+      return this;
+    }
+
+    public Builder addEventsOfInterests(
+        Set<EventsOfInterest> eventsOfInterest) {
+      this.eventsOfInterests.addAll(eventsOfInterest);
+      return this;
+    }
+    
+    public Builder webhookUrl(String webhookUrl) {
+      this.webhookUrl = webhookUrl;
+      return this;
+    }
+
+    public RegistrationInputModel build() {
+      return new RegistrationInputModel(clientId, name, description, deliveryType,
+          eventsOfInterests,
+          webhookUrl);
+    }
   }
 }

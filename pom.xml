@@ -12,21 +12,22 @@
     governing permissions and limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.adobe</groupId>
   <artifactId>aio-lib-java</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.0.10-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
     <module>core</module>
     <module>ims</module>
     <module>events_mgmt</module>
+    <module>events_ingress</module>
+    <module>events_journal</module>
+    <module>osgi</module>
   </modules>
 
 
@@ -58,7 +59,8 @@
 
   <scm>
     <connection>scm:git:https://github.com/adobe/aio-lib-java-events.git</connection>
-    <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-events.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-events.git
+    </developerConnection>
     <url>https://github.com/adobe/aio-lib-java-events/tree/master</url>
     <tag>HEAD</tag>
   </scm>
@@ -79,16 +81,19 @@
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <license.header.path>${maven.multiModuleProjectDirectory}/copyright_header.txt</license.header.path>
 
     <commons-text.version>1.6</commons-text.version>
-
-    <jjwt.version>0.11.2</jjwt.version>
-    <jackson.version>2.12.3</jackson.version>
+    <junit.version>4.11</junit.version>
+    <wiremock.version>2.31.0</wiremock.version>
+    <okhttp3.mockwebserver.version>4.9.1</okhttp3.mockwebserver.version>
+    <mockito.version>3.11.1</mockito.version>
     <slf4j.version>1.7.13</slf4j.version>
+    <jackson.version>2.12.3</jackson.version>
+    <jjwt.version>0.11.2</jjwt.version>
 
     <feign.version>11.2</feign.version>
     <feign-form.version>3.8.0</feign-form.version>
-
   </properties>
 
 
@@ -152,12 +157,42 @@
         <version>${feign-form.version}</version>
       </dependency>
 
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit-dep</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock-jre8</artifactId>
+        <version>${wiremock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-simple</artifactId>
         <version>${slf4j.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>mockwebserver</artifactId>
+        <version>${okhttp3.mockwebserver.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${mockito.version}</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 
@@ -188,7 +223,7 @@
           <artifactId>license-maven-plugin</artifactId>
           <version>3.0</version>
           <configuration>
-            <header>${maven.multiModuleProjectDirectory}/copyright_header.txt</header>
+            <header>${license.header.path}</header>
             <excludes>
               <!-- Exclude third-party libs. -->
               <exclude>**/lib/**</exclude>
@@ -203,6 +238,7 @@
               <exclude>Dockerfile.build</exclude>
               <exclude>Makefile</exclude>
               <exclude>.github/*</exclude>
+              <exclude>.vscode/*</exclude>
             </excludes>
             <mapping>
               <!-- Add license headers to Play Framework routes files-->
@@ -307,4 +343,3 @@
   </profiles>
 
 </project>
-

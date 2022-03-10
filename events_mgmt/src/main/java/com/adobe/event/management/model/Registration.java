@@ -12,35 +12,53 @@
 package com.adobe.event.management.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
-public class Registration extends RegistrationInputModel {
+public class Registration {
 
-  public enum WebHookStatus {
+  public enum Type {
+    USER, APP
+  }
+
+  public enum Status {
     ACCEPTED,
     DELETED,
     VERIFICATION_FAILED,
     HOOK_UNREACHABLE,
     UNSTABLE,
-    VERIFIED;
-  }
-
-  public enum WebHookType {
-    USER, APP
+    VERIFIED
   }
 
   public enum IntegrationStatus {
     ENABLED, DISABLED
   }
 
+  @JsonProperty("client_id")
+  protected String clientId;
+
+  protected String name;
+
+  protected String description;
+
+  @JsonProperty("delivery_type")
+  protected DeliveryType deliveryType;
+
+  @JsonProperty("events_of_interest")
+  protected Set<EventsOfInterest> eventsOfInterests = new HashSet<>();
+
+  @JsonProperty("webhook_url")
+  protected String webhookUrl;
+
   @JsonProperty("registration_id")
   private String registrationId;
 
   @JsonProperty("status")
-  private WebHookStatus status;
+  private Status status;
 
   @JsonProperty("type")
-  private WebHookType type;
+  private Type type;
 
   @JsonProperty("integration_status")
   private IntegrationStatus integrationStatus;
@@ -57,69 +75,60 @@ public class Registration extends RegistrationInputModel {
   @JsonProperty(value = "updated_date")
   private String updatedDate;
 
+  public String getClientId() {
+    return clientId;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getDescription() {
+    return description;
+  }
+
+  public DeliveryType getDeliveryType() {
+    return deliveryType;
+  }
+
+  public Set<EventsOfInterest> getEventsOfInterests() {
+    return eventsOfInterests;
+  }
+
+  public String getWebhookUrl() {
+    return webhookUrl;
+  }
 
   public String getRegistrationId() {
     return this.registrationId;
   }
 
-  public void setRegistrationId(String registrationId) {
-    this.registrationId = registrationId;
-  }
-
-  public WebHookStatus getStatus() {
+  public Status getStatus() {
     return this.status;
   }
 
-  public void setStatus(WebHookStatus status) {
-    this.status = status;
-  }
-
-  public WebHookType getType() {
+  public Type getType() {
     return type;
-  }
-
-  public void setType(WebHookType type) {
-    this.type = type;
   }
 
   public IntegrationStatus getIntegrationStatus() {
     return integrationStatus;
   }
 
-  public void setIntegrationStatus(IntegrationStatus integrationStatus) {
-    this.integrationStatus = integrationStatus;
-  }
-
   public String getJournalUrl() {
     return journalUrl;
-  }
-
-  public void setJournalUrl(String journalUrl) {
-    this.journalUrl = journalUrl;
   }
 
   public String getTraceUrl() {
     return traceUrl;
   }
 
-  public void setTraceUrl(String traceUrl) {
-    this.traceUrl = traceUrl;
-  }
-
   public String getCreatedDate() {
     return createdDate;
   }
 
-  public void setCreatedDate(String createdDate) {
-    this.createdDate = createdDate;
-  }
-
   public String getUpdatedDate() {
     return updatedDate;
-  }
-
-  public void setUpdatedDate(String updatedDate) {
-    this.updatedDate = updatedDate;
   }
 
   @Override

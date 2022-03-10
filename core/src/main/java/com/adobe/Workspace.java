@@ -27,37 +27,49 @@ import org.apache.commons.lang3.StringUtils;
 
 public class Workspace {
 
-  private static final String IMS_URL = "ims_url";
-  private static final String IMS_ORG_ID = "ims_org_id";
-  private static final String CONSUMER_ORG_ID = "consumer_org_id";
-  private static final String API_KEY = "api_key";
-  private static final String CLIENT_SECRET = "client_secret";
-  private static final String TECHNICAL_ACCOUNT_ID = "technical_account_id";
-  private static final String META_SCOPES = "meta_scopes";
+  public static final String IMS_URL = "aio_ims_url";
+  public static final String IMS_ORG_ID = "aio_ims_org_id";
+  public static final String CONSUMER_ORG_ID = "aio_consumer_org_id";
+  public static final String PROJECT_ID = "aio_project_id";
+  public static final String WORKSPACE_ID = "aio_workspace_id";
+  public static final String API_KEY = "aio_api_key";
+  public static final String CREDENTIAL_ID = "aio_credential_id";
+  public static final String CLIENT_SECRET = "aio_client_secret";
+  public static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
+  public static final String META_SCOPES = "aio_meta_scopes";
 
+  // Auth related :
   private final String imsUrl;
   private final String imsOrgId;
-  private final String consumerOrgId;
   private final String apiKey;
+  private final String credentialId;
   private final String clientSecret;
   private final String technicalAccountId;
   private final Set<String> metascopes;
   private final PrivateKey privateKey;
 
+  // workspace context related:
+  private final String consumerOrgId;
+  private final String projectId;
+  private final String workspaceId;
+
   private Workspace(final String imsUrl, final String imsOrgId, final String consumerOrgId,
-      final String apiKey, final String clientSecret, final String technicalAccountId,
+      final String projectId, final String workspaceId,
+      final String apiKey, final String credentialId, final String clientSecret,
+      final String technicalAccountId,
       final Set<String> metascopes, final PrivateKey privateKey) {
-    if (StringUtils.isEmpty(imsUrl)) {
-      throw new IllegalArgumentException("Your `Worskpace` is missing an imsUrl");
-    }
-    this.imsUrl = imsUrl;
+    this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
-    this.consumerOrgId = consumerOrgId;
     this.apiKey = apiKey;
+    this.credentialId = credentialId;
     this.clientSecret = clientSecret;
     this.technicalAccountId = technicalAccountId;
     this.metascopes = metascopes;
     this.privateKey = privateKey;
+
+    this.consumerOrgId = consumerOrgId;
+    this.projectId = projectId;
+    this.workspaceId = workspaceId;
   }
 
   public void validateJwtCredentialConfig() {
@@ -74,12 +86,25 @@ public class Workspace {
       throw new IllegalArgumentException("Your `Worskpace` is missing a technicalAccountId");
     }
     if (metascopes.isEmpty()) {
-      throw new IllegalArgumentException("Your `Worskpace` should contain at least one metascope");
+      throw new IllegalArgumentException("Your `Worskpace` is missing a metascope");
     }
     if (privateKey == null) {
-      throw new IllegalArgumentException("Your `Worskpace` should contain a privateKey");
+      throw new IllegalArgumentException("Your `Worskpace` is missing a privateKey");
     }
   }
+
+  public void validateWorkspaceContext() {
+    if (StringUtils.isEmpty(this.getConsumerOrgId())) {
+      throw new IllegalArgumentException("Your `Worskpace` is missing a consumerOrgId");
+    }
+    if (StringUtils.isEmpty(this.getProjectId())) {
+      throw new IllegalArgumentException("Your `Worskpace` is missing a projectId");
+    }
+    if (StringUtils.isEmpty(this.getWorkspaceId())) {
+      throw new IllegalArgumentException("Your `Worskpace` is missing a workspaceId");
+    }
+  }
+
 
   public String getImsUrl() {
     return imsUrl;
@@ -93,8 +118,20 @@ public class Workspace {
     return consumerOrgId;
   }
 
+  public String getProjectId() {
+    return projectId;
+  }
+
+  public String getWorkspaceId() {
+    return workspaceId;
+  }
+
   public String getApiKey() {
     return apiKey;
+  }
+
+  public String getCredentialId() {
+    return credentialId;
   }
 
   public String getClientSecret() {
@@ -125,7 +162,10 @@ public class Workspace {
     return Objects.equals(imsUrl, workspace.imsUrl) &&
         Objects.equals(imsOrgId, workspace.imsOrgId) &&
         Objects.equals(consumerOrgId, workspace.consumerOrgId) &&
+        Objects.equals(projectId, workspace.projectId) &&
+        Objects.equals(workspaceId, workspace.workspaceId) &&
         Objects.equals(apiKey, workspace.apiKey) &&
+        Objects.equals(credentialId, workspace.credentialId) &&
         Objects.equals(clientSecret, workspace.clientSecret) &&
         Objects.equals(technicalAccountId, workspace.technicalAccountId) &&
         Objects.equals(metascopes, workspace.metascopes) &&
@@ -135,8 +175,8 @@ public class Workspace {
   @Override
   public int hashCode() {
     return Objects
-        .hash(imsUrl, imsOrgId, consumerOrgId, apiKey, clientSecret, technicalAccountId, metascopes,
-            privateKey);
+        .hash(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId, apiKey, credentialId,
+            clientSecret, technicalAccountId, metascopes, privateKey);
   }
 
   @Override
@@ -145,7 +185,10 @@ public class Workspace {
         "imsUrl='" + imsUrl + '\'' +
         ", imsOrgId='" + imsOrgId + '\'' +
         ", consumerOrgId='" + consumerOrgId + '\'' +
+        ", projectId='" + projectId + '\'' +
+        ", workspaceId='" + workspaceId + '\'' +
         ", apiKey='" + apiKey + '\'' +
+        ", credentialId='" + credentialId + '\'' +
         ", clientSecret='" + clientSecret + '\'' +
         ", technicalAccountId='" + technicalAccountId + '\'' +
         ", metascopes=" + metascopes +
@@ -158,10 +201,13 @@ public class Workspace {
 
   public static class Builder {
 
-    private String imsUrl = Constants.IMS_URL;
+    private String imsUrl;
     private String imsOrgId;
     private String consumerOrgId;
+    private String projectId;
+    private String workspaceId;
     private String apiKey;
+    private String credentialId;
     private String clientSecret;
     private String technicalAccountId;
     private final Set<String> metascopes = new HashSet<>();
@@ -172,53 +218,72 @@ public class Workspace {
     private Builder() {
     }
 
-    public Builder imsUrl(String imsUrl) {
+    public Builder imsUrl(final String imsUrl) {
       this.imsUrl = imsUrl;
       return this;
     }
 
-    public Builder imsOrgId(String imsOrgId) {
+    public Builder imsOrgId(final String imsOrgId) {
       this.imsOrgId = imsOrgId;
       return this;
     }
 
-    public Builder consumerOrgId(String consumerOrgId) {
+    public Builder consumerOrgId(final String consumerOrgId) {
       this.consumerOrgId = consumerOrgId;
       return this;
     }
 
-    public Builder apiKey(String apiKey) {
+    public Builder projectId(final String projectId) {
+      this.projectId = projectId;
+      return this;
+    }
+
+    public Builder workspaceId(final String workspaceId) {
+      this.workspaceId = workspaceId;
+      return this;
+    }
+
+    public Builder apiKey(final String apiKey) {
       this.apiKey = apiKey;
       return this;
     }
 
-    public Builder clientSecret(String clientSecret) {
+    public Builder credentialId(final String credentialId) {
+      this.credentialId = credentialId;
+      return this;
+    }
+
+    public Builder clientSecret(final String clientSecret) {
       this.clientSecret = clientSecret;
       return this;
     }
 
-    public Builder technicalAccountId(String technicalAccountId) {
+    public Builder technicalAccountId(final String technicalAccountId) {
       this.technicalAccountId = technicalAccountId;
       return this;
     }
 
-    public Builder addMetascope(String metascope) {
+    public Builder addMetascope(final String metascope) {
       this.metascopes.add(metascope);
       return this;
     }
 
-    public Builder privateKey(PrivateKey privateKey) {
+    public Builder privateKey(final PrivateKey privateKey) {
       this.privateKey = privateKey;
       return this;
     }
 
-    public Builder configMap(Map<String, String> configMap) {
-      this.imsUrl(configMap.get(IMS_URL));
-      this.imsOrgId(configMap.get(IMS_ORG_ID));
-      this.consumerOrgId(configMap.get(CONSUMER_ORG_ID));
-      this.apiKey(configMap.get(API_KEY));
-      this.clientSecret(configMap.get(CLIENT_SECRET));
-      this.technicalAccountId(configMap.get(TECHNICAL_ACCOUNT_ID));
+    public Builder configMap(final Map<String, String> configMap) {
+      this
+          .imsUrl(configMap.get(IMS_URL))
+          .imsOrgId(configMap.get(IMS_ORG_ID))
+          .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
+          .projectId(configMap.get(PROJECT_ID))
+          .workspaceId(configMap.get(WORKSPACE_ID))
+          .apiKey(configMap.get(API_KEY))
+          .credentialId(configMap.get(CREDENTIAL_ID))
+          .clientSecret(configMap.get(CLIENT_SECRET))
+          .technicalAccountId(configMap.get(TECHNICAL_ACCOUNT_ID));
       if (!StringUtils.isEmpty(configMap.get(META_SCOPES))) {
         String[] metascopeArray = configMap.get(META_SCOPES).split(",");
         for (String metascope : metascopeArray) {
@@ -232,19 +297,19 @@ public class Workspace {
       return configMap(System.getenv());
     }
 
-    public Builder propertiesPath(String propertiesPath) throws IOException {
+    public Builder propertiesPath(final String propertiesPath) throws IOException {
       return properties(
           readPropertiesFromFile(propertiesPath)
               .orElse(readPropertiesFromClassPath(propertiesPath)));
     }
 
-    public Builder properties(Properties properties) throws IOException {
+    public Builder properties(final Properties properties) throws IOException {
       return configMap(getMapFromProperties(properties));
     }
 
     public Workspace build() {
-      return new Workspace(imsUrl, imsOrgId, consumerOrgId,
-          apiKey, clientSecret, technicalAccountId,
+      return new Workspace(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId,
+          apiKey, credentialId, clientSecret, technicalAccountId,
           metascopes, privateKey);
     }
   }

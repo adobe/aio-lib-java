@@ -11,8 +11,55 @@
  */
 package com.adobe;
 
+import com.adobe.util.Constants;
+import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.ExpectedException;
+
 public class WorkspaceTest {
 
-  //TODO
+  @Rule
+  public ExpectedException expectedEx = ExpectedException.none();
+
+  private static final String TEST_PROPERTIES = "workspace.properties";
+  private static final String TEST_VALUE = "_changeMe";
+
+  private static Workspace getTestWorkspaceFromProperties() throws IOException {
+    return Workspace.builder()
+        .propertiesPath(TEST_PROPERTIES)
+        .build();
+  }
+
+  @Test
+  public void testProperties() throws IOException {
+    Workspace fromProperties = getTestWorkspaceFromProperties();
+    Workspace expected = Workspace.builder()
+        .imsUrl(Constants.IMS_URL)
+        .apiKey(Workspace.API_KEY + TEST_VALUE)
+        .clientSecret(Workspace.CLIENT_SECRET + TEST_VALUE)
+        .apiKey(Workspace.API_KEY + TEST_VALUE)
+        .credentialId(Workspace.CREDENTIAL_ID + TEST_VALUE)
+        .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
+        .projectId(Workspace.PROJECT_ID + TEST_VALUE)
+        .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
+        .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
+        .technicalAccountId(Workspace.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
+        .addMetascope(Workspace.META_SCOPES + TEST_VALUE)
+        .build();
+    Assert.assertEquals(expected, fromProperties);
+    Assert.assertEquals(expected.hashCode(), fromProperties.hashCode());
+    Assert.assertEquals(expected.toString(), fromProperties.toString());
+    fromProperties.validateWorkspaceContext();
+  }
+
+  @Test
+  public void testValidateJwtCredentialConfig() throws IOException {
+    Workspace workspace = getTestWorkspaceFromProperties();
+    expectedEx.expect(IllegalArgumentException.class);
+    expectedEx.expectMessage("Your `Worskpace` is missing a privateKey");
+    workspace.validateJwtCredentialConfig();
+  }
 
 }
