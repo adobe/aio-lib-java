@@ -69,6 +69,12 @@
       <artifactId>aio-lib-java-events-journal</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-events-xdm</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
 
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
@@ -146,6 +152,7 @@
               aio-lib-java-events-mgmt,
               aio-lib-java-events-ingress,
               aio-lib-java-events-journal,
+              aio-lib-java-events-xdm,
               commons-text,
               jjwt-api,
               jjwt-impl,
@@ -176,7 +183,7 @@
               com.adobe.event.journal.model,com.adobe.event.management,com.adobe.event.management.api,
               com.adobe.event.management.model,com.adobe.ims,com.adobe.ims.api,com.adobe.ims.model,
               com.adobe.ims.util,com.fasterxml.jackson.*,
-              com.adobe.aio.lib.Activator
+              com.adobe.aio.lib.Activator,com.adobe.xdm.*
             </Export-Package>
           </instructions>
         </configuration>

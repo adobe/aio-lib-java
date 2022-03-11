@@ -27,6 +27,7 @@
     <module>events_mgmt</module>
     <module>events_ingress</module>
     <module>events_journal</module>
+    <module>events_xdm</module>
     <module>osgi</module>
   </modules>
 
@@ -94,11 +95,40 @@
 
     <feign.version>11.2</feign.version>
     <feign-form.version>3.8.0</feign-form.version>
+
+    <com.adobe.aem.uber-jar.version>6.5.0</com.adobe.aem.uber-jar.version>
+    <javax.jcr.version>2.0</javax.jcr.version>
+    <xdm.event-model.version>0.94.15</xdm.event-model.version>
+
   </properties>
 
 
   <dependencyManagement>
     <dependencies>
+
+      <!-- adobe.io XDM event model -->
+      <dependency>
+        <groupId>com.adobe.xdm.event</groupId>
+        <artifactId>com.adobe.xdm.event.xdm-event-model</artifactId>
+        <version>${xdm.event-model.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- Adobe AEM Dependencies -->
+      <dependency>
+        <groupId>com.adobe.aem</groupId>
+        <artifactId>uber-jar</artifactId>
+        <version>${com.adobe.aem.uber-jar.version}</version>
+        <classifier>apis</classifier>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- JCR -->
+      <dependency>
+        <groupId>javax.jcr</groupId>
+        <artifactId>jcr</artifactId>
+        <version>${javax.jcr.version}</version>
+        <scope>provided</scope>
+      </dependency>
 
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -156,7 +186,6 @@
         <artifactId>feign-form</artifactId>
         <version>${feign-form.version}</version>
       </dependency>
-
 
       <dependency>
         <groupId>junit</groupId>
