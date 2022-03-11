@@ -12,6 +12,7 @@
 package com.adobe.ims.api;
 
 import com.adobe.ims.model.AccessToken;
+import com.adobe.ims.model.TokenValidation;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
@@ -24,4 +25,13 @@ public interface ImsApi {
       @Param("client_id") String clientId,
       @Param("client_secret") String clientSecret,
       @Param("jwt_token") String jwtToken);
+
+  @RequestLine("POST /ims/validate_token/v1")
+  @Headers("Content-Type: application/x-www-form-urlencoded")
+  TokenValidation validateToken(
+      @Param("type") String type,
+      @Param("client_id") String clientId,
+      @Param("token") String accessToken);
+
+
 }
