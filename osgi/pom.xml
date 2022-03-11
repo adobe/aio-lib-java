@@ -19,12 +19,12 @@
   <artifactId>com.adobe.aio-lib-java.osgi</artifactId>
   <name>Adobe I/O - Java SDK - OSGI bundle</name>
   <description>Adobe I/O - Java SDK - OSGI bundle</description>
-  <version>0.0.9-SNAPSHOT</version>
+  <version>0.0.10-SNAPSHOT</version>
 
   <parent>
     <groupId>com.adobe</groupId>
     <artifactId>aio-lib-java</artifactId>
-    <version>0.0.9-SNAPSHOT</version>
+    <version>0.0.10-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   
@@ -85,6 +85,11 @@
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-jackson</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>jakarta.xml.bind</groupId>
+      <artifactId>jakarta.xml.bind-api</artifactId>
     </dependency>
 
     <dependency>
@@ -153,7 +158,8 @@
               feign-form,
               feign-slf4j,
               feign-jackson,
-              commons-lang3
+              commons-lang3,
+              jakarta.xml.bind-api
             </Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
             <Import-Package>
