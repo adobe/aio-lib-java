@@ -30,17 +30,6 @@
   
   <properties>
     <org.osgi.framework.version>1.9.0</org.osgi.framework.version>
-
-    <!--
-    If you want to deploy the bundle from the source
-    1. modify the below `crx.*` properties according to your needs
-    2. run `mvn -Dcrx.path=/apps/changeMe/install -Dlicense.header.path=../copyright_header.txt -P localInstall clean install sling:install`
-     -->
-    <crx.host>localhost</crx.host>
-    <crx.port>4502</crx.port>
-    <crx.username>admin</crx.username>
-    <crx.password>admin</crx.password>
-
   </properties>
 
   <dependencies>
@@ -69,13 +58,7 @@
       <artifactId>aio-lib-java-events-journal</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>com.adobe</groupId>
-      <artifactId>aio-lib-java-events-xdm</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-
-
+    
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
@@ -152,7 +135,6 @@
               aio-lib-java-events-mgmt,
               aio-lib-java-events-ingress,
               aio-lib-java-events-journal,
-              aio-lib-java-events-xdm,
               commons-text,
               jjwt-api,
               jjwt-impl,
@@ -178,12 +160,12 @@
               *
             </Import-Package>
             <Export-Package>
-              feign.*,com.adobe,com.adobe.util,com.adobe.event.publish,com.adobe.event.publish.api,
+              feign.*,io.jsonwebtoken,com.adobe,com.adobe.util,com.adobe.event.publish,com.adobe.event.publish.api,
               com.adobe.event.publish.model,com.adobe.event.journal,com.adobe.event.journal.api,
               com.adobe.event.journal.model,com.adobe.event.management,com.adobe.event.management.api,
               com.adobe.event.management.model,com.adobe.ims,com.adobe.ims.api,com.adobe.ims.model,
               com.adobe.ims.util,com.fasterxml.jackson.*,
-              com.adobe.aio.lib.Activator,com.adobe.xdm.*
+              com.adobe.exception
             </Export-Package>
           </instructions>
         </configuration>
@@ -192,31 +174,6 @@
 
   </build>
 
-
-  <!-- ====================================================================== -->
-  <!-- P R O F I L E S                                                        -->
-  <!-- ====================================================================== -->
-  <profiles>
-    <profile>
-      <id>localInstall</id>
-      <activation>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>maven-sling-plugin</artifactId>
-            <configuration>
-              <slingUrl>http://${crx.host}:${crx.port}${crx.path}</slingUrl>
-              <user>${crx.username}</user>
-              <password>${crx.password}</password>
-              <deploymentMethod>WebDAV</deploymentMethod>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 
 
 </project>

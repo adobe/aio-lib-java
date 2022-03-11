@@ -11,10 +11,6 @@
 #
 
 source ~/.bash_profile
-echo ""
-echo "=================================================================="
-echo " Build and deploy com.adobe.aio-lib-java.osgi on local AEM server"
-echo "=================================================================="
-mvn -Dcrx.path=/apps/eventproxy/install.author -Dlicense.header.path=../copyright_header.txt -P localInstall clean install sling:install
+mvn -Dcrx.path=/apps/aio/install -Dlicense.header.path=../copyright_header.txt -P localInstall clean install sling:install
 
 

@@ -1,7 +1,6 @@
 # `aio-lib-java-events-xdm`
 
-`aio-lib-java-events-xdm` holds a few 
-(Adobe I/O Events) [Xdm](https://github.com/adobe/xdm-event-model) Extensions models.
+`aio-lib-java-events-xdm` holds [xdm](https://github.com/adobe/xdm-event-model) extensions models.
 
 ## Builds
 
