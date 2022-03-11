@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 Adobe. All rights reserved.
+    This file is licensed to you under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License. You may obtain a copy
+    of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software distributed under
+    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+    OF ANY KIND, either express or implied. See the License for the specific language
+    governing permissions and limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+  <parent>
+    <groupId>com.adobe</groupId>
+    <artifactId>aio-lib-java</artifactId>
+    <version>0.0.10-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>aio-lib-java-core-aem</artifactId>
+  <name>Adobe I/O - Core AEM Library</name>
+  <description>Adobe I/O - Core AEM Library</description>
+
+  <dependencies>
+
+    <dependency>
+      <groupId>com.adobe</groupId>
+      <artifactId>aio-lib-java-ims</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- adobe.io XDM event model -->
+    <dependency>
+      <groupId>com.adobe.xdm.event</groupId>
+      <artifactId>com.adobe.xdm.event.xdm-event-model</artifactId>
+    </dependency>
+
+    <!-- AEM related -->
+    <dependency>
+      <groupId>com.adobe.aem</groupId>
+      <artifactId>uber-jar</artifactId>
+      <classifier>apis</classifier>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.sling</groupId>
+      <artifactId>org.apache.sling.servlets.annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.jcr</groupId>
+      <artifactId>jcr</artifactId>
+    </dependency>
+    <!-- osgi -->
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.service.metatype.annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.service.component.annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.service.component</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.service.cm</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.framework</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.osgi</groupId>
+      <artifactId>org.osgi.annotation.versioning</artifactId>
+    </dependency>
+    <!-- EOF AEM related -->
+
+    <!-- various -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-text</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit-dep</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
+    </dependency>
+
+  </dependencies>
+
+  <!-- ====================================================================== -->
+  <!-- B U I L D   D E F I N I T I O N                                        -->
+  <!-- ====================================================================== -->
+  <build>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>maven-sling-plugin</artifactId>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>maven-jspc-plugin</artifactId>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>maven-jcrocm-plugin</artifactId>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>slingstart-maven-plugin</artifactId>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.sling</groupId>
+        <artifactId>sling-maven-plugin</artifactId>
+      </plugin>
+
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>bnd-process</id>
+            <goals>
+              <goal>bnd-process</goal>
+            </goals>
+            <configuration>
+              <bnd><![CDATA[
+Bundle-Category: AIO
+Bundle-Vendor: Adobe
+Bundle-SymbolicName: com.adobe.aio-lib-java-core-aem
+Import-Package: javax.annotation;version=0.0.0,com.fasterxml.jackson.*;version="[2.3.0, 3.0.0)",*
+ -exportcontents: ${packages;VERSIONED}
+Export-Package: com.adobe
+ -snapshot: ${tstamp;yyyyMMddHHmmssSSS}
+Bundle-DocURL:
+ -plugin org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin
+                                ]]></bnd>
+            </configuration>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
+            <version>1.0.2</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-baseline-maven-plugin</artifactId>
+        <configuration>
+          <failOnMissing>false</failOnMissing>
+        </configuration>
+        <executions>
+          <execution>
+            <id>baseline</id>
+            <goals>
+              <goal>baseline</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+
+</project>
