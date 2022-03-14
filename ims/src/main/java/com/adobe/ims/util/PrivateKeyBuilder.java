@@ -66,8 +66,8 @@ public class PrivateKeyBuilder {
       try {
         return KeyStoreUtil.getPrivateKeyFromEncodedPkcs8(encodePkcs8Key);
       } catch (Exception e) {
-        throw new RuntimeException(
-            "Invalid encoded pkcs8 Private Key configuration. "
+        throw new IllegalArgumentException(
+            "AIO Invalid encoded pkcs8 Private Key configuration. "
                 + "" + e.getMessage(), e);
       }
     } else {
@@ -88,11 +88,11 @@ public class PrivateKeyBuilder {
             imsConfig.get(PKCS12_PASSWORD));
       } else {
         throw new IllegalArgumentException(
-            "PrivateKeyBuilder is missing a valid (pkcs8 or pkcs12) Private Key configuration");
+            "AIO is missing a valid (pkcs8 or pkcs12) Private Key configuration");
       }
     } catch (Exception e) {
-      throw new RuntimeException(
-          "PrivateKeyBuilder holds an invalid (pkcs8 or pkcs12) Private Key configuration. "
+      throw new IllegalArgumentException(
+          "AIO holds an invalid (pkcs8 or pkcs12) Private Key configuration. "
               + "" + e.getMessage(), e);
     }
   }

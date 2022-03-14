@@ -9,15 +9,16 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.ims;
+package com.adobe.io.auth;
 
-import feign.RequestInterceptor;
+import com.adobe.ims.JWTAuthInterceptor;
+import com.adobe.io.status.StatusSupplier;
 
 /**
  * Adobe I/O Events Auth service interface
  */
-public interface AuthService {
+public interface JWTAuthInterceptorSupplier extends StatusSupplier {
 
-  RequestInterceptor getRequestInterceptor();
+  JWTAuthInterceptor getJWTAuthInterceptor();
 
 }

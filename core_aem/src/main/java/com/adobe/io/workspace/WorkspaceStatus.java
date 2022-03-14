@@ -9,24 +9,27 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.ims.internal;
+package com.adobe.io.workspace;
 
-import com.adobe.ims.AuthService;
-import com.adobe.workspace.WorkspaceConfig;
-import com.adobe.ims.JWTAuthInterceptor;
-import feign.RequestInterceptor;
+import com.adobe.io.status.Status;
+import com.adobe.io.status.StatusServlet;
+import javax.servlet.Servlet;
+import org.apache.sling.servlets.annotations.SlingServletPaths;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-@Component(immediate = true, service = AuthService.class)
-public class AuthServiceImpl implements AuthService {
+@Component(immediate = true, service = Servlet.class)
+@SlingServletPaths("/bin/aio/workspace.json")
+public class WorkspaceStatus extends StatusServlet {
+
+  private static final long serialVersionUID = 1L;
 
   @Reference
-  WorkspaceConfig workspaceConfig;
+  private WorkspaceSupplier workspaceSupplier;
 
   @Override
-  public RequestInterceptor getRequestInterceptor() {
-    return JWTAuthInterceptor.builder().workspace(workspaceConfig.getWorkspace()).build();
+  public Status getStatus() {
+    return workspaceSupplier.getStatus();
   }
-
 }
+

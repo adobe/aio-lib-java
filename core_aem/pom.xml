@@ -12,119 +12,121 @@
     governing permissions and limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-  <parent>
-    <groupId>com.adobe</groupId>
-    <artifactId>aio-lib-java</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
+  <description>Adobe I/O - Core AEM Library</description>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>aio-lib-java-core-aem</artifactId>
   <name>Adobe I/O - Core AEM Library</name>
-  <description>Adobe I/O - Core AEM Library</description>
+  <artifactId>aio-lib-java-core-aem</artifactId>
+
+  <!-- ====================================================================== -->
+  <!-- B U I L D   D E F I N I T I O N                                        -->
+  <!-- ====================================================================== -->
+  <parent>
+    <artifactId>aio-lib-java</artifactId>
+    <groupId>com.adobe</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.0.10-SNAPSHOT</version>
+  </parent>
+
 
   <dependencies>
-
     <dependency>
-      <groupId>com.adobe</groupId>
       <artifactId>aio-lib-java-ims</artifactId>
+      <groupId>com.adobe</groupId>
       <version>${project.version}</version>
     </dependency>
 
     <!-- adobe.io XDM event model -->
     <dependency>
-      <groupId>com.adobe.xdm.event</groupId>
       <artifactId>com.adobe.xdm.event.xdm-event-model</artifactId>
+      <groupId>com.adobe.xdm.event</groupId>
     </dependency>
 
     <!-- AEM related -->
     <dependency>
-      <groupId>com.adobe.aem</groupId>
       <artifactId>uber-jar</artifactId>
       <classifier>apis</classifier>
+      <groupId>com.adobe.aem</groupId>
     </dependency>
     <dependency>
-      <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.servlets.annotations</artifactId>
+      <groupId>org.apache.sling</groupId>
     </dependency>
     <dependency>
-      <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
+      <groupId>javax.jcr</groupId>
     </dependency>
     <!-- osgi -->
     <dependency>
-      <groupId>org.osgi</groupId>
       <artifactId>org.osgi.service.metatype.annotations</artifactId>
+      <groupId>org.osgi</groupId>
     </dependency>
     <dependency>
-      <groupId>org.osgi</groupId>
       <artifactId>org.osgi.service.component.annotations</artifactId>
+      <groupId>org.osgi</groupId>
     </dependency>
     <dependency>
-      <groupId>org.osgi</groupId>
       <artifactId>org.osgi.service.component</artifactId>
+      <groupId>org.osgi</groupId>
     </dependency>
     <dependency>
-      <groupId>org.osgi</groupId>
       <artifactId>org.osgi.service.cm</artifactId>
+      <groupId>org.osgi</groupId>
     </dependency>
     <dependency>
-      <groupId>org.osgi</groupId>
       <artifactId>org.osgi.framework</artifactId>
+      <groupId>org.osgi</groupId>
     </dependency>
     <dependency>
-      <groupId>org.osgi</groupId>
       <artifactId>org.osgi.annotation.versioning</artifactId>
+      <groupId>org.osgi</groupId>
     </dependency>
     <!-- EOF AEM related -->
 
     <!-- various -->
     <dependency>
-      <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
+      <groupId>javax.servlet</groupId>
     </dependency>
     <dependency>
-      <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+      <groupId>org.slf4j</groupId>
     </dependency>
     <dependency>
-      <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>org.apache.commons</groupId>
-      <artifactId>commons-text</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>com.fasterxml.jackson.core</groupId>
-      <artifactId>jackson-databind</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit-dep</artifactId>
-    </dependency>
-
-    <dependency>
+      <artifactId>slf4j-api</artifactId>
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-simple</artifactId>
     </dependency>
 
+    <dependency>
+      <artifactId>commons-text</artifactId>
+      <groupId>org.apache.commons</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>jackson-databind</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>junit-dep</artifactId>
+      <groupId>junit</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>slf4j-simple</artifactId>
+      <groupId>org.slf4j</groupId>
+    </dependency>
   </dependencies>
 
-  <!-- ====================================================================== -->
-  <!-- B U I L D   D E F I N I T I O N                                        -->
-  <!-- ====================================================================== -->
   <build>
     <resources>
       <resource>
@@ -133,42 +135,23 @@
       </resource>
     </resources>
 
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <groupId>org.apache.sling</groupId>
-          <artifactId>maven-sling-plugin</artifactId>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.sling</groupId>
-          <artifactId>maven-jspc-plugin</artifactId>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.sling</groupId>
-          <artifactId>maven-jcrocm-plugin</artifactId>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.sling</groupId>
-          <artifactId>slingstart-maven-plugin</artifactId>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-
     <plugins>
       <plugin>
         <groupId>org.apache.sling</groupId>
         <artifactId>sling-maven-plugin</artifactId>
       </plugin>
-
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-maven-plugin</artifactId>
+        <dependencies>
+          <dependency>
+            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
+            <groupId>org.apache.sling</groupId>
+            <version>1.0.2</version>
+          </dependency>
+        </dependencies>
         <executions>
           <execution>
-            <id>bnd-process</id>
-            <goals>
-              <goal>bnd-process</goal>
-            </goals>
             <configuration>
               <bnd><![CDATA[
 Bundle-Category: AIO
@@ -176,21 +159,18 @@ Bundle-Vendor: Adobe
 Bundle-SymbolicName: com.adobe.aio-lib-java-core-aem
 Import-Package: javax.annotation;version=0.0.0,com.fasterxml.jackson.*;version="[2.3.0, 3.0.0)",*
  -exportcontents: ${packages;VERSIONED}
-Export-Package: com.adobe
+Export-Package: com.adobe.io.workspace,com.adobe.io.auth,com.adobe.io.status
  -snapshot: ${tstamp;yyyyMMddHHmmssSSS}
 Bundle-DocURL:
  -plugin org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin
                                 ]]></bnd>
             </configuration>
+            <goals>
+              <goal>bnd-process</goal>
+            </goals>
+            <id>bnd-process</id>
           </execution>
         </executions>
-        <dependencies>
-          <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
-            <version>1.0.2</version>
-          </dependency>
-        </dependencies>
       </plugin>
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
@@ -200,10 +180,10 @@ Bundle-DocURL:
         </configuration>
         <executions>
           <execution>
-            <id>baseline</id>
             <goals>
               <goal>baseline</goal>
             </goals>
+            <id>baseline</id>
           </execution>
         </executions>
       </plugin>
@@ -218,6 +198,5 @@ Bundle-DocURL:
       </plugin>
     </plugins>
   </build>
-
 
 </project>

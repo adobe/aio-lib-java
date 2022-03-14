@@ -16,6 +16,7 @@ import static com.adobe.util.FileUtil.readPropertiesFromClassPath;
 import static com.adobe.util.FileUtil.readPropertiesFromFile;
 
 import com.adobe.util.Constants;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.util.HashSet;
@@ -43,9 +44,9 @@ public class Workspace {
   private final String imsOrgId;
   private final String apiKey;
   private final String credentialId;
-  private final String clientSecret;
   private final String technicalAccountId;
   private final Set<String> metascopes;
+  private final String clientSecret;
   private final PrivateKey privateKey;
 
   // workspace context related:
@@ -70,6 +71,11 @@ public class Workspace {
     this.consumerOrgId = consumerOrgId;
     this.projectId = projectId;
     this.workspaceId = workspaceId;
+  }
+
+  public void validateAll(){
+    validateJwtCredentialConfig();
+    validateWorkspaceContext();
   }
 
   public void validateJwtCredentialConfig() {
@@ -134,10 +140,6 @@ public class Workspace {
     return credentialId;
   }
 
-  public String getClientSecret() {
-    return clientSecret;
-  }
-
   public String getTechnicalAccountId() {
     return technicalAccountId;
   }
@@ -146,8 +148,22 @@ public class Workspace {
     return metascopes;
   }
 
+  // we want to avoid serializing this secret in the Status endpoints
+  @JsonIgnore
+  public String getClientSecret() {
+    return clientSecret;
+  }
+  public boolean isClientSecretDefined(){
+    return ! StringUtils.isEmpty(this.clientSecret);
+  }
+
+  // we want to avoid serializing this secret in the Status endpoints
+  @JsonIgnore
   public PrivateKey getPrivateKey() {
     return privateKey;
+  }
+  public boolean isPrivateKeytDefined(){
+    return (this.privateKey!=null);
   }
 
   @Override

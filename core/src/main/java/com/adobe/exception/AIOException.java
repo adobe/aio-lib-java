@@ -9,13 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.workspace;
+package com.adobe.exception;
 
-import com.adobe.Workspace;
+public class AIOException extends RuntimeException {
 
-public interface WorkspaceConfig {
+  public AIOException(String message) {
+    super(message);
+  }
 
-  Workspace getWorkspace();
+  public AIOException(Throwable throwable) {
+    super(throwable);
+  }
 
-  String getWorkspaceConfig();
+  public AIOException(String message, Throwable throwable) {
+    super(message, throwable);
+  }
 }
