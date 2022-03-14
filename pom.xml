@@ -28,7 +28,6 @@
     <module>events_mgmt</module>
     <module>events_ingress</module>
     <module>events_journal</module>
-    <module>events_xdm</module>
     <module>osgi</module>
   </modules>
 
@@ -127,9 +126,6 @@ If you want to deploy the bundle from the source
 
     <com.adobe.aem.uber-jar.version>6.5.0</com.adobe.aem.uber-jar.version>
     <javax.jcr.version>2.0</javax.jcr.version>
-
-
-
 
   </properties>
 

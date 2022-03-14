@@ -154,7 +154,7 @@
           <execution>
             <configuration>
               <bnd><![CDATA[
-Bundle-Category: AIO
+Bundle-Category: aio
 Bundle-Vendor: Adobe
 Bundle-SymbolicName: com.adobe.aio-lib-java-core-aem
 Import-Package: javax.annotation;version=0.0.0,com.fasterxml.jackson.*;version="[2.3.0, 3.0.0)",*
