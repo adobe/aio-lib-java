@@ -19,7 +19,6 @@ import com.adobe.io.workspace.ocd.WorkspaceConfig;
 import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -48,7 +47,9 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
   public Status getStatus() {
     Map<String, Object> details = new HashMap<>();
     try {
-      Workspace workspace = this.getWorkspace();
+      details.put("workspace", Workspace.builder()
+          .configMap(getAuthConfigMap(workspaceConfig)).build());
+      Workspace workspace = getWorkspace();
       details.put("workspace", workspace);
       workspace.validateAll();
       return new Status(Status.VALID_CONFIG, details);
@@ -65,9 +66,9 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
    */
   @Override
   public Workspace getWorkspace() {
-    if (!workspaceConfig.aio_private_key().isEmpty()) {
+    if (!workspaceConfig.aio_encoded_pkcs8().isEmpty()) {
       PrivateKey privateKey = new PrivateKeyBuilder()
-          .encodePkcs8Key(workspaceConfig.aio_private_key()).build();
+          .encodedPkcs8Key(workspaceConfig.aio_encoded_pkcs8()).build();
       return Workspace.builder()
           .configMap(getAuthConfigMap(workspaceConfig))
           .privateKey(privateKey).build();
@@ -89,8 +90,7 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
     map.put(Workspace.PROJECT_ID, config.aio_project_id());
     map.put(Workspace.TECHNICAL_ACCOUNT_ID, config.aio_technical_account_id());
     map.put(Workspace.WORKSPACE_ID, config.aio_workspace_id());
-    String metaScopes = StringUtils.join(config.aio_meta_scopes(), ',');
-    map.put(Workspace.META_SCOPES, metaScopes);
+    map.put(Workspace.META_SCOPES, config.aio_meta_scopes());
     return map;
   }
 

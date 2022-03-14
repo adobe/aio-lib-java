@@ -15,23 +15,18 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
-  <description>Adobe I/O - Core AEM Library</description>
   <modelVersion>4.0.0</modelVersion>
 
-  <name>Adobe I/O - Core AEM Library</name>
-  <artifactId>aio-lib-java-core-aem</artifactId>
-
-  <!-- ====================================================================== -->
-  <!-- B U I L D   D E F I N I T I O N                                        -->
-  <!-- ====================================================================== -->
   <parent>
-    <artifactId>aio-lib-java</artifactId>
     <groupId>com.adobe</groupId>
-    <relativePath>../pom.xml</relativePath>
+    <artifactId>aio-lib-java</artifactId>
     <version>0.0.10-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
 
+  <description>Adobe I/O - Core AEM Library</description>
+  <name>Adobe I/O - Core AEM Library</name>
+  <artifactId>com.adobe.aio-lib-java.core-aem</artifactId>
 
   <dependencies>
     <dependency>
@@ -100,27 +95,20 @@
       <artifactId>commons-lang3</artifactId>
       <groupId>org.apache.commons</groupId>
     </dependency>
-
-    <dependency>
-      <artifactId>slf4j-api</artifactId>
-      <groupId>org.slf4j</groupId>
-    </dependency>
-
     <dependency>
       <artifactId>commons-text</artifactId>
       <groupId>org.apache.commons</groupId>
     </dependency>
-
     <dependency>
       <artifactId>jackson-databind</artifactId>
       <groupId>com.fasterxml.jackson.core</groupId>
     </dependency>
 
+    <!-- test -->
     <dependency>
       <artifactId>junit-dep</artifactId>
       <groupId>junit</groupId>
     </dependency>
-
     <dependency>
       <artifactId>slf4j-simple</artifactId>
       <groupId>org.slf4j</groupId>
@@ -156,7 +144,7 @@
               <bnd><![CDATA[
 Bundle-Category: aio
 Bundle-Vendor: Adobe
-Bundle-SymbolicName: com.adobe.aio-lib-java-core-aem
+Bundle-SymbolicName: com.adobe.aio-lib-java.core-aem
 Import-Package: javax.annotation;version=0.0.0,com.fasterxml.jackson.*;version="[2.3.0, 3.0.0)",*
  -exportcontents: ${packages;VERSIONED}
 Export-Package: com.adobe.io.workspace,com.adobe.io.auth,com.adobe.io.status

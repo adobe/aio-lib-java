@@ -162,7 +162,7 @@ public class Workspace {
   public PrivateKey getPrivateKey() {
     return privateKey;
   }
-  public boolean isPrivateKeytDefined(){
+  public boolean isPrivateKeyDefined(){
     return (this.privateKey!=null);
   }
 
