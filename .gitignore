@@ -22,3 +22,5 @@ deptree.txt
 sample_cloud_event.json
 sample_entry.json
 ProviderServiceCleanTestDrive.java
+aem_events/src/main/content/jcr_root/apps/config.direct
+aem_events/src/main/content/jcr_root/apps/config.env

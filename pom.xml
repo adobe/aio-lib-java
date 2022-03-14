@@ -29,6 +29,7 @@
     <module>events_ingress</module>
     <module>events_journal</module>
     <module>osgi</module>
+    <module>aem_events</module>
   </modules>
 
 

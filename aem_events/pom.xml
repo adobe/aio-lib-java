@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 Adobe. All rights reserved.
+    This file is licensed to you under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License. You may obtain a copy
+    of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software distributed under
+    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+    OF ANY KIND, either express or implied. See the License for the specific language
+    governing permissions and limitations under the License.
+
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.adobe</groupId>
+        <artifactId>aio-lib-java</artifactId>
+        <version>0.0.10-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <name>Adobe I/O - AEM Events Package</name>
+    <description>Adobe I/O - AEM Events Package</description>
+    <artifactId>aio-lib-java-aem-events</artifactId>
+    <packaging>content-package</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.adobe</groupId>
+            <artifactId>com.adobe.aio-lib-java.core-aem</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe</groupId>
+            <artifactId>com.adobe.aio-lib-java.osgi</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
+    <!-- ====================================================================== -->
+    <!-- B U I L D   D E F I N I T I O N                                        -->
+    <!-- ====================================================================== -->
+    <build>
+        <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
+        <resources>
+            <!-- define the resources that will go into the package -->
+            <resource>
+                <!--
+                    we want to keep some of the META-INF files and not configure
+                    everything in the plugin.
+                -->
+                <directory>${basedir}/src/main/content/META-INF</directory>
+                <targetPath>../vault-work/META-INF</targetPath>
+            </resource>
+            <resource>
+                <directory>${basedir}/src/main/content/jcr_root</directory>
+                <excludes>
+                    <!-- exclude .vlt control files in the package -->
+                    <exclude>**/.vlt</exclude>
+                    <exclude>**/.vltignore</exclude>
+                    <exclude>**/.gitignore</exclude>
+                    <exclude>**/*.iml</exclude>
+                    <exclude>**/.classpath</exclude>
+                    <exclude>**/.project</exclude>
+                    <exclude>**/.settings</exclude>
+                    <exclude>**/.DS_Store</exclude>
+                    <exclude>**/target/**</exclude>
+                    <exclude>**/pom.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
+            <!--
+                we want to keep some of the META-INF files and not configure
+                everything in the plugin (mainly the filters).
+
+                copy the resource explicitly instead of attaching it to the default resources
+            -->
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-metainf-vault-resources</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/vault-work/META-INF</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>${basedir}/META-INF</directory>
+                                    <filtering>false</filtering>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- ====================================================================== -->
+            <!-- V A U L T   P A C K A G E   P L U G I N S                              -->
+            <!-- ====================================================================== -->
+            <plugin>
+                <groupId>org.apache.jackrabbit</groupId>
+                <artifactId>filevault-package-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <group>com.adobe</group>
+                    <name>aio-lib-java-aem-events</name>
+                    <packageType>application</packageType>
+                    <accessControlHandling>merge</accessControlHandling>
+                    <properties>
+                        <cloudManagerTarget>none</cloudManagerTarget>>
+                    </properties>
+                    <embeddeds>
+                        <embedded>
+                            <groupId>com.adobe</groupId>
+                            <artifactId>com.adobe.aio-lib-java.core-aem</artifactId>
+                            <target>/apps/aio/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>com.adobe</groupId>
+                            <artifactId>com.adobe.aio-lib-java.osgi</artifactId>
+                            <target>/apps/aio/install</target>
+                        </embedded>
+                    </embeddeds>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.day.jcr.vault</groupId>
+                <artifactId>content-package-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <verbose>true</verbose>
+                    <failOnError>true</failOnError>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.sling</groupId>
+                <artifactId>htl-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
