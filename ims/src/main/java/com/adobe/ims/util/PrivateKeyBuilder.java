@@ -23,15 +23,15 @@ import org.apache.commons.lang3.StringUtils;
 
 public class PrivateKeyBuilder {
 
-  private static final String ENCODE_PKCS8_KEY = "aio_encoded_pkcs8";
-  private static final String PKCS8_FILE_PATH = "aio_pkcs8_file_path";
+  public static final String AIO_ENCODED_PKCS_8 = "aio_encoded_pkcs8";
+  private static final String AIO_PKCS_8_FILE_PATH = "aio_pkcs8_file_path";
 
-  private static final String PKCS12_FILE_PATH = "aio_pkcs12_file_path";
-  private static final String PKCS12_PASSWORD = "aio_pkcs12_password";
-  private static final String PKCS12_ALIAS = "aio_pkcs12_alias";
+  private static final String AIO_PKCS_12_FILE_PATH = "aio_pkcs12_file_path";
+  private static final String AIO_PKCS_12_PASSWORD = "aio_pkcs12_password";
+  private static final String AIO_PKCS_12_ALIAS = "aio_pkcs12_alias";
 
   private Map<String, String> configMap;
-  private String encodePkcs8Key;
+  private String encodedPkcs8Key;
 
   public PrivateKeyBuilder() {
   }
@@ -56,18 +56,18 @@ public class PrivateKeyBuilder {
     return this;
   }
 
-  public PrivateKeyBuilder encodePkcs8Key(String encodePkcs8Key) {
-    this.encodePkcs8Key = encodePkcs8Key;
+  public PrivateKeyBuilder encodedPkcs8Key(String encodePkcs8Key) {
+    this.encodedPkcs8Key = encodePkcs8Key;
     return this;
   }
 
   public PrivateKey build() {
-    if (!StringUtils.isEmpty(encodePkcs8Key)) {
+    if (!StringUtils.isEmpty(encodedPkcs8Key)) {
       try {
-        return KeyStoreUtil.getPrivateKeyFromEncodedPkcs8(encodePkcs8Key);
+        return KeyStoreUtil.getPrivateKeyFromEncodedPkcs8(encodedPkcs8Key);
       } catch (Exception e) {
-        throw new RuntimeException(
-            "Invalid encoded pkcs8 Private Key configuration. "
+        throw new IllegalArgumentException(
+            "AIO Invalid encoded pkcs8 Private Key configuration. "
                 + "" + e.getMessage(), e);
       }
     } else {
@@ -77,22 +77,23 @@ public class PrivateKeyBuilder {
 
   private static PrivateKey getPrivateKey(final Map<String, String> imsConfig) {
     try {
-      if (imsConfig.containsKey(ENCODE_PKCS8_KEY)) {
-        return KeyStoreUtil.getPrivateKeyFromEncodedPkcs8(imsConfig.get(ENCODE_PKCS8_KEY));
-      } else if (imsConfig.containsKey(PKCS8_FILE_PATH)) {
-        return KeyStoreUtil.getPrivateKeyFromPkcs8File(imsConfig.get(PKCS8_FILE_PATH));
-      } else if (imsConfig.containsKey(PKCS12_FILE_PATH) && imsConfig.containsKey(PKCS12_PASSWORD)
-          && imsConfig.containsKey(PKCS12_ALIAS)) {
+      if (imsConfig.containsKey(AIO_ENCODED_PKCS_8)) {
+        return KeyStoreUtil.getPrivateKeyFromEncodedPkcs8(imsConfig.get(AIO_ENCODED_PKCS_8));
+      } else if (imsConfig.containsKey(AIO_PKCS_8_FILE_PATH)) {
+        return KeyStoreUtil.getPrivateKeyFromPkcs8File(imsConfig.get(AIO_PKCS_8_FILE_PATH));
+      } else if (imsConfig.containsKey(AIO_PKCS_12_FILE_PATH) && imsConfig.containsKey(
+          AIO_PKCS_12_PASSWORD)
+          && imsConfig.containsKey(AIO_PKCS_12_ALIAS)) {
         return KeyStoreUtil.getPrivateKeyFromPkcs12File(
-            imsConfig.get(PKCS12_FILE_PATH), imsConfig.get(PKCS12_ALIAS),
-            imsConfig.get(PKCS12_PASSWORD));
+            imsConfig.get(AIO_PKCS_12_FILE_PATH), imsConfig.get(AIO_PKCS_12_ALIAS),
+            imsConfig.get(AIO_PKCS_12_PASSWORD));
       } else {
         throw new IllegalArgumentException(
-            "PrivateKeyBuilder is missing a valid (pkcs8 or pkcs12) Private Key configuration");
+            "AIO is missing a valid (pkcs8 or pkcs12) Private Key configuration");
       }
     } catch (Exception e) {
-      throw new RuntimeException(
-          "PrivateKeyBuilder holds an invalid (pkcs8 or pkcs12) Private Key configuration. "
+      throw new IllegalArgumentException(
+          "AIO holds an invalid (pkcs8 or pkcs12) Private Key configuration. "
               + "" + e.getMessage(), e);
     }
   }
