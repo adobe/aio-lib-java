@@ -13,13 +13,7 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
   <modelVersion>4.0.0</modelVersion>
-  <packaging>bundle</packaging>
-  <artifactId>com.adobe.aio-lib-java.osgi</artifactId>
-  <name>Adobe I/O - Java SDK - OSGI bundle</name>
-  <description>Adobe I/O - Java SDK - OSGI bundle</description>
-  <version>0.0.10-SNAPSHOT</version>
 
   <parent>
     <groupId>com.adobe</groupId>
@@ -27,21 +21,12 @@
     <version>0.0.10-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
-  
-  <properties>
-    <org.osgi.framework.version>1.9.0</org.osgi.framework.version>
 
-    <!--
-    If you want to deploy the bundle from the source
-    1. modify the below `crx.*` properties according to your needs
-    2. run `mvn -Dcrx.path=/apps/changeMe/install -Dlicense.header.path=../copyright_header.txt -P localInstall clean install sling:install`
-     -->
-    <crx.host>localhost</crx.host>
-    <crx.port>4502</crx.port>
-    <crx.username>admin</crx.username>
-    <crx.password>admin</crx.password>
-
-  </properties>
+  <packaging>bundle</packaging>
+  <artifactId>com.adobe.aio-lib-java.osgi</artifactId>
+  <name>Adobe I/O - Java SDK - OSGI bundle</name>
+  <description>Adobe I/O - Java SDK - OSGI bundle</description>
+  <version>0.0.10-SNAPSHOT</version>
 
   <dependencies>
     <dependency>
@@ -69,7 +54,7 @@
       <artifactId>aio-lib-java-events-journal</artifactId>
       <version>${project.version}</version>
     </dependency>
-
+    
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
       <artifactId>jjwt-api</artifactId>
@@ -112,8 +97,6 @@
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.framework</artifactId>
-      <version>${org.osgi.framework.version}</version>
-      <scope>provided</scope>
     </dependency>
 
   </dependencies>
@@ -126,7 +109,6 @@
       <plugin>
         <groupId>org.apache.sling</groupId>
         <artifactId>maven-sling-plugin</artifactId>
-        <version>2.1.8</version>
       </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
@@ -176,40 +158,12 @@
               com.adobe.event.journal.model,com.adobe.event.management,com.adobe.event.management.api,
               com.adobe.event.management.model,com.adobe.ims,com.adobe.ims.api,com.adobe.ims.model,
               com.adobe.ims.util,com.fasterxml.jackson.*,
-              com.adobe.aio.lib.Activator
+              com.adobe.exception,com.adobe.aio.lib
             </Export-Package>
           </instructions>
         </configuration>
       </plugin>
     </plugins>
-
   </build>
-
-
-  <!-- ====================================================================== -->
-  <!-- P R O F I L E S                                                        -->
-  <!-- ====================================================================== -->
-  <profiles>
-    <profile>
-      <id>localInstall</id>
-      <activation>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>maven-sling-plugin</artifactId>
-            <configuration>
-              <slingUrl>http://${crx.host}:${crx.port}${crx.path}</slingUrl>
-              <user>${crx.username}</user>
-              <password>${crx.password}</password>
-              <deploymentMethod>WebDAV</deploymentMethod>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
-
 
 </project>
