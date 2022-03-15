@@ -18,7 +18,7 @@
   <parent>
     <groupId>com.adobe</groupId>
     <artifactId>aio-lib-java</artifactId>
-    <version>0.0.10-SNAPSHOT</version>
+    <version>0.0.11-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -26,11 +26,7 @@
   <artifactId>com.adobe.aio-lib-java.osgi</artifactId>
   <name>Adobe I/O - Java SDK - OSGI bundle</name>
   <description>Adobe I/O - Java SDK - OSGI bundle</description>
-  <version>0.0.10-SNAPSHOT</version>
-
-  <properties>
-    <org.osgi.framework.version>1.9.0</org.osgi.framework.version>
-  </properties>
+  <version>0.0.11-SNAPSHOT</version>
 
   <dependencies>
     <dependency>
@@ -101,8 +97,6 @@
     <dependency>
       <groupId>org.osgi</groupId>
       <artifactId>org.osgi.framework</artifactId>
-      <version>${org.osgi.framework.version}</version>
-      <scope>provided</scope>
     </dependency>
 
   </dependencies>
@@ -115,7 +109,6 @@
       <plugin>
         <groupId>org.apache.sling</groupId>
         <artifactId>maven-sling-plugin</artifactId>
-        <version>2.1.8</version>
       </plugin>
       <plugin>
         <groupId>org.apache.felix</groupId>
@@ -160,12 +153,12 @@
               *
             </Import-Package>
             <Export-Package>
-              feign.*,io.jsonwebtoken,com.adobe,com.adobe.util,com.adobe.event.publish,com.adobe.event.publish.api,
+              feign.*,com.adobe,com.adobe.util,com.adobe.event.publish,com.adobe.event.publish.api,
               com.adobe.event.publish.model,com.adobe.event.journal,com.adobe.event.journal.api,
               com.adobe.event.journal.model,com.adobe.event.management,com.adobe.event.management.api,
               com.adobe.event.management.model,com.adobe.ims,com.adobe.ims.api,com.adobe.ims.model,
               com.adobe.ims.util,com.fasterxml.jackson.*,
-              com.adobe.exception
+              com.adobe.exception,com.adobe.aio.lib
             </Export-Package>
           </instructions>
         </configuration>

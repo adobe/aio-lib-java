@@ -18,20 +18,19 @@
 
   <groupId>com.adobe</groupId>
   <artifactId>aio-lib-java</artifactId>
-  <version>0.0.10-SNAPSHOT</version>
+  <version>0.0.11-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
     <module>core</module>
-    <module>core_aem</module>
     <module>ims</module>
     <module>events_mgmt</module>
     <module>events_ingress</module>
     <module>events_journal</module>
     <module>osgi</module>
+    <module>core_aem</module>
     <module>aem_events</module>
   </modules>
-
 
   <name>Adobe I/O - Java SDK</name>
   <description>Adobe I/O - Java SDK - Parent Project</description>
@@ -127,6 +126,7 @@ If you want to deploy the bundle from the source
 
     <com.adobe.aem.uber-jar.version>6.5.0</com.adobe.aem.uber-jar.version>
     <javax.jcr.version>2.0</javax.jcr.version>
+    <org.osgi.framework.version>1.9.0</org.osgi.framework.version>
 
   </properties>
 
@@ -225,7 +225,7 @@ If you want to deploy the bundle from the source
       <dependency>
         <groupId>org.osgi</groupId>
         <artifactId>org.osgi.framework</artifactId>
-        <version>1.9.0</version>
+        <version>${org.osgi.framework.version}</version>
         <scope>provided</scope>
       </dependency>
 
@@ -364,6 +364,7 @@ If you want to deploy the bundle from the source
         <artifactId>license-maven-plugin</artifactId>
         <!-- Note: run "mvn license:format" to add headers automatically -->
       </plugin>
+      <!--
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -374,6 +375,7 @@ If you want to deploy the bundle from the source
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
       </plugin>
+      -->
     </plugins>
 
     <pluginManagement>
@@ -483,163 +485,163 @@ If you want to deploy the bundle from the source
           </configuration>
         </plugin>
 
+        <!-- Maven Jar Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
 
+        <!-- Maven Clean Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
 
-            <!-- Maven Jar Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-jar-plugin</artifactId>
-              <version>3.1.2</version>
-            </plugin>
+        <!-- Felix Bundle Maven Plugin -->
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>3.5.0</version>
+        </plugin>
 
-            <!-- Maven Clean Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-clean-plugin</artifactId>
-              <version>3.1.0</version>
-            </plugin>
+        <!-- BND Maven Plugin -->
+        <plugin>
+          <groupId>biz.aQute.bnd</groupId>
+          <artifactId>bnd-maven-plugin</artifactId>
+          <version>${bnd.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>biz.aQute.bnd</groupId>
+          <artifactId>bnd-baseline-maven-plugin</artifactId>
+          <version>${bnd.version}</version>
+        </plugin>
 
-            <!-- BND Maven Plugin -->
-            <plugin>
-              <groupId>biz.aQute.bnd</groupId>
-              <artifactId>bnd-maven-plugin</artifactId>
-              <version>${bnd.version}</version>
-            </plugin>
-            <plugin>
-              <groupId>biz.aQute.bnd</groupId>
-              <artifactId>bnd-baseline-maven-plugin</artifactId>
-              <version>${bnd.version}</version>
-            </plugin>
+        <!-- Maven Resources Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${maven-resources-plugin.version}</version>
+          <configuration>
+            <!-- ensure that the empty directories are copied -->
+            <includeEmptyDirs>true</includeEmptyDirs>
+          </configuration>
+        </plugin>
 
-            <!-- Maven Resources Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-resources-plugin</artifactId>
-              <version>${maven-resources-plugin.version}</version>
-              <configuration>
-                <!-- ensure that the empty directories are copied -->
-                <includeEmptyDirs>true</includeEmptyDirs>
-              </configuration>
-            </plugin>
+        <!-- Maven Compiler Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.6.1</version>
+        </plugin>
 
-            <!-- Maven Compiler Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-compiler-plugin</artifactId>
-              <version>3.6.1</version>
-            </plugin>
+        <!-- Maven Installer Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
 
-            <!-- Maven Installer Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-install-plugin</artifactId>
-              <version>2.5.2</version>
-            </plugin>
+        <!-- Maven Surefire Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+          <configuration>
+            <useSystemClassLoader>false</useSystemClassLoader>
+          </configuration>
+        </plugin>
 
-            <!-- Maven Surefire Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <version>2.22.1</version>
-              <configuration>
-                <useSystemClassLoader>false</useSystemClassLoader>
-              </configuration>
-            </plugin>
+        <!-- Maven Failsafe Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.22.1</version>
+        </plugin>
 
-            <!-- Maven Failsafe Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-failsafe-plugin</artifactId>
-              <version>2.22.1</version>
-            </plugin>
+        <!-- Maven Deploy Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
 
-            <!-- Maven Deploy Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-deploy-plugin</artifactId>
-              <version>2.8.2</version>
-            </plugin>
+        <!-- Apache Sling Plugin -->
+        <plugin>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>sling-maven-plugin</artifactId>
+          <version>2.4.0</version>
+          <configuration>
+            <slingUrl>http://${aem.host}:${aem.port}/system/console</slingUrl>
+            <deploymentMethod>WebConsole</deploymentMethod>
+          </configuration>
+        </plugin>
 
-            <!-- Apache Sling Plugin -->
-            <plugin>
-              <groupId>org.apache.sling</groupId>
-              <artifactId>sling-maven-plugin</artifactId>
-              <version>2.4.0</version>
-              <configuration>
-                <slingUrl>http://${aem.host}:${aem.port}/system/console</slingUrl>
-                <deploymentMethod>WebConsole</deploymentMethod>
-              </configuration>
-            </plugin>
+        <!-- HTL Maven Plugin -->
+        <plugin>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>htl-maven-plugin</artifactId>
+          <version>1.0.6</version>
+          <configuration>
+            <failOnWarnings>true</failOnWarnings>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>validate</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
 
-            <!-- HTL Maven Plugin -->
-            <plugin>
-              <groupId>org.apache.sling</groupId>
-              <artifactId>htl-maven-plugin</artifactId>
-              <version>1.0.6</version>
-              <configuration>
-                <failOnWarnings>true</failOnWarnings>
-              </configuration>
-              <executions>
-                <execution>
-                  <goals>
-                    <goal>validate</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
+        <!-- Jackrabbit FileVault Package Plugin -->
+        <plugin>
+          <groupId>org.apache.jackrabbit</groupId>
+          <artifactId>filevault-package-maven-plugin</artifactId>
+          <version>1.0.3</version>
+          <configuration>
+            <accessControlHandling>merge</accessControlHandling>
+            <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
+            <properties>
+              <createdBy>Adobe Systems Incorporated</createdBy>
+            </properties>
+          </configuration>
+        </plugin>
 
-            <!-- Jackrabbit FileVault Package Plugin -->
-            <plugin>
-              <groupId>org.apache.jackrabbit</groupId>
-              <artifactId>filevault-package-maven-plugin</artifactId>
-              <version>1.0.3</version>
-              <configuration>
-                <accessControlHandling>merge</accessControlHandling>
-                <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
-                <properties>
-                  <createdBy>Adobe Systems Incorporated</createdBy>
-                </properties>
-              </configuration>
-            </plugin>
+        <!-- Content Package Plugin -->
+        <plugin>
+          <groupId>com.day.jcr.vault</groupId>
+          <artifactId>content-package-maven-plugin</artifactId>
+          <version>1.0.2</version>
+          <configuration>
+            <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
+            <failOnError>true</failOnError>
+            <userId>${vault.user}</userId>
+            <password>${vault.password}</password>
+          </configuration>
+        </plugin>
 
-            <!-- Content Package Plugin -->
-            <plugin>
-              <groupId>com.day.jcr.vault</groupId>
-              <artifactId>content-package-maven-plugin</artifactId>
-              <version>1.0.2</version>
-              <configuration>
-                <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
-                <failOnError>true</failOnError>
-                <userId>${vault.user}</userId>
-                <password>${vault.password}</password>
-              </configuration>
-            </plugin>
+        <!-- Maven Enforcer Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>1.4.1</version>
+        </plugin>
 
-            <!-- Maven Enforcer Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-enforcer-plugin</artifactId>
-              <version>1.4.1</version>
-            </plugin>
+        <!-- Maven Dependency Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
 
-            <!-- Maven Dependency Plugin -->
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-dependency-plugin</artifactId>
-              <version>3.0.0</version>
-            </plugin>
-
-            <!-- Build Helper Maven Plugin -->
-            <plugin>
-              <groupId>org.codehaus.mojo</groupId>
-              <artifactId>build-helper-maven-plugin</artifactId>
-              <version>3.0.0</version>
-            </plugin>
-
-
-
-
-
+        <!-- Build Helper Maven Plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
 
       </plugins>
     </pluginManagement>
