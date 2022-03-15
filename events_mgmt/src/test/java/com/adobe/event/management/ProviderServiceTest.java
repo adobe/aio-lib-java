@@ -27,19 +27,19 @@ import static junit.framework.TestCase.assertNotNull;
 
 public class ProviderServiceTest {
 
-  private static final String PROVIDER_ID = "619363ad-2461-4c1c-bb09-848f8b4d0a30";
-  private static final String SOURCE_ID = "urn:uuid:619363ad-2461-4c1c-bb09-848f8b4d0a30";
-
   private static final String PROVIDER_MODEL_LABEL = "aio-lib-java Wiremock - test drive provider label";
   private static final String PROVIDER_MODEL_DESCRIPTION = "aio-lib-java Wiremock - test drive provider description";
   private static final String PROVIDER_MODEL_DOCS_URL = "https://localhost.com/test";
 
-  private static final String METADATA_EVENTCODE = "wiremock_eventcode";
-  private static final String METADATA_DESCRIPTION = "wiremock test description";
-  private static final String METADATA_LABEL = "test label";
+  private static final String EVENT_CODE = "wiremock_eventcode";
+  private static final String EVENT_DESCRIPTION = "wiremock test description";
+  private static final String EVENT_LABEL = "test label";
+
+  private static final String PROVIDER_METADATA_ID = "someProviderMetadataId";
+  private static final String INSTANCE_ID = "someProviderInstanceId";
 
   @Rule
-  public WireMockRule wireMockRule = new WireMockRule(9999);
+  public WireMockRule wireMockRule = new WireMockRule(Integer.parseInt(TestUtil.PORT));
 
   @Test
   public void providerServiceTest() {
@@ -54,113 +54,118 @@ public class ProviderServiceTest {
             .build();
 
 //    /** getProviders */
-    stubFor(get(urlEqualTo("/events/someConsumerOrgId/providers"))
-            .willReturn(okJson("{\"_links\":{\"self\":{\"href\":\"localhost:9999/events/someConsumerOrgId/providers\"}},\"_embedded\":{\"providers\":[{\"_links\":{\"rel:eventmetadata\":{\"href\":\"localhost:9999/events/providers/207aad29-f183-4c3d-87b5-22b21b8f0ee9/eventmetadata\"},\"self\":{\"href\":\"localhost:9999/events/providers/207aad29-f183-4c3d-87b5-22b21b8f0ee9\"}},\"id\":\"207aad29-f183-4c3d-87b5-22b21b8f0ee9\",\"label\":\"Analytics Triggers\",\"description\":\"Adobe Analytics Triggers events provider (gain insight into behavior of users on your site)\",\"source\":\"urn:uuid:207aad29-f183-4c3d-87b5-22b21b8f0ee9\",\"docs_url\":\"https://localhost.com/test\",\"publisher\":\"Adobe\"}]}}")
+    stubFor(get(urlEqualTo(String.format("/events/%s/providers", TestUtil.CONSUMER_ORG_ID)))
+            .willReturn(okJson("{\"_links\":{\"self\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/"+TestUtil.CONSUMER_ORG_ID+"/providers\"}},\"_embedded\":{\"providers\":[{\"_links\":{\"rel:eventmetadata\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/providers/"+TestUtil.PROVIDER_ID+"/eventmetadata\"},\"self\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/providers/"+TestUtil.PROVIDER_ID+"\"}},\"id\":\""+TestUtil.PROVIDER_ID+"\",\"label\":\""+PROVIDER_MODEL_LABEL+"\",\"description\":\""+PROVIDER_MODEL_DESCRIPTION+"\",\"source\":\""+TestUtil.SOURCE_ID+"\",\"docs_url\":\""+PROVIDER_MODEL_DOCS_URL+"\",\"publisher\":\"Adobe\"}]}}")
                     .withStatus(200)
             ));
     List<Provider> providers = getProviderService().getProviders();
-    verify(getRequestedFor(urlEqualTo("/events/someConsumerOrgId/providers")));
+    verify(getRequestedFor(urlEqualTo(String.format("/events/%s/providers", TestUtil.CONSUMER_ORG_ID))));
     assertNotNull(providers);
     assertEquals(1, providers.size());
+    assertEquals(TestUtil.PROVIDER_ID, providers.get(0).getId());
+    assertEquals(TestUtil.SOURCE_ID, providers.get(0).getSource());
+    assertEquals(PROVIDER_MODEL_LABEL, providers.get(0).getLabel());
+    assertEquals(PROVIDER_MODEL_DESCRIPTION, providers.get(0).getDescription());
+    assertEquals(PROVIDER_MODEL_DOCS_URL, providers.get(0).getDocsUrl());
 
 //    /** findProviderById */
-    stubFor(get(urlEqualTo("/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30?eventmetadata=true"))
-            .willReturn(okJson("{\"_links\":{\"rel:eventmetadata\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata\"},\"rel:update\":{\"href\":\"localhost:9999/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30\"},\"self\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30\"}},\"id\":\"619363ad-2461-4c1c-bb09-848f8b4d0a30\",\"label\":\"aio-lib-java Wiremock - test drive provider label\",\"description\":\"aio-lib-java Wiremock - test drive provider description\",\"source\":\"urn:uuid:619363ad-2461-4c1c-bb09-848f8b4d0a30\",\"docs_url\":\"https://localhost.com/test\",\"publisher\":\"someImsOrgId\"}")
+    stubFor(get(urlEqualTo(String.format("/events/providers/%s?eventmetadata=true", TestUtil.PROVIDER_ID)))
+            .willReturn(okJson(getProviderResponse())
                     .withStatus(200)
             ));
-    provider = getProviderService().findProviderById(PROVIDER_ID);
-    verify(getRequestedFor(urlEqualTo("/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30?eventmetadata=true")));
-    assertEquals(PROVIDER_ID, Objects.requireNonNull(provider.orElse(null)).getId());
+    provider = getProviderService().findProviderById(TestUtil.PROVIDER_ID);
+    verify(getRequestedFor(urlEqualTo(String.format("/events/providers/%s?eventmetadata=true", TestUtil.PROVIDER_ID))));
+    assertEquals(TestUtil.PROVIDER_ID, Objects.requireNonNull(provider.orElse(null)).getId());
     assertEquals(PROVIDER_MODEL_LABEL, provider.get().getLabel());
     assertEquals(PROVIDER_MODEL_DESCRIPTION, provider.get().getDescription());
-    assertEquals(SOURCE_ID, provider.get().getSource());
+    assertEquals(TestUtil.SOURCE_ID, provider.get().getSource());
     assertEquals(PROVIDER_MODEL_DOCS_URL, provider.get().getDocsUrl());
     assertEquals(TestUtil.IMS_ORG_ID, provider.get().getPublisher());
 
-    stubFor(get(urlEqualTo("/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30?eventmetadata=true"))
+    stubFor(get(urlEqualTo(String.format("/events/providers/%s?eventmetadata=true", TestUtil.PROVIDER_ID)))
             .willReturn(aResponse()
             .withStatus(404)
             ));
-    provider = getProviderService().findProviderById(PROVIDER_ID); //[3]
-    verify(getRequestedFor(urlEqualTo("/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30?eventmetadata=true")));
+    provider = getProviderService().findProviderById(TestUtil.PROVIDER_ID);
+    verify(getRequestedFor(urlEqualTo(String.format("/events/providers/%s?eventmetadata=true", TestUtil.PROVIDER_ID))));
     assertEquals(Optional.empty(),provider);
 
 //    /** findProviderBy */
-    stubFor(get(urlEqualTo("/events/someConsumerOrgId/providers?providerMetadataId=12345&instanceId=54321"))
-            .willReturn(okJson("{\"_links\":{\"self\":{\"href\":\"localhost:9999/events/someConsumerOrgId/providers\"}},\"_embedded\":{\"providers\":[{\"_links\":{\"rel:eventmetadata\":{\"href\":\"localhost:9999/events/providers/207aad29-f183-4c3d-87b5-22b21b8f0ee9/eventmetadata\"},\"self\":{\"href\":\"localhost:9999/events/providers/207aad29-f183-4c3d-87b5-22b21b8f0ee9\"}},\"id\":\"207aad29-f183-4c3d-87b5-22b21b8f0ee9\",\"label\":\"Analytics Triggers\",\"description\":\"Adobe Analytics Triggers events provider (gain insight into behavior of users on your site)\",\"source\":\"urn:uuid:207aad29-f183-4c3d-87b5-22b21b8f0ee9\",\"docs_url\":\"https://localhost.com/test\",\"publisher\":\"Adobe\"}]}}")
+    stubFor(get(urlEqualTo(String.format("/events/%s/providers?providerMetadataId=%s&instanceId=%s", TestUtil.CONSUMER_ORG_ID, PROVIDER_METADATA_ID, INSTANCE_ID)))
+            .willReturn(okJson(getProviderResponse())
                     .withStatus(200)
             ));
-    Optional<Provider> providersBy = getProviderService().findProviderBy("12345","54321"); //[3]
-    verify(getRequestedFor(urlEqualTo("/events/someConsumerOrgId/providers?providerMetadataId=12345&instanceId=54321")));
+    Optional<Provider> providersBy = getProviderService().findProviderBy(PROVIDER_METADATA_ID, INSTANCE_ID);
+    verify(getRequestedFor(urlEqualTo(String.format("/events/%s/providers?providerMetadataId=%s&instanceId=%s", TestUtil.CONSUMER_ORG_ID, PROVIDER_METADATA_ID, INSTANCE_ID))));
     assertNotNull(providersBy);
 
 //    /** createProvider */
-    stubFor(post(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers"))
+    stubFor(post(urlEqualTo(String.format("/events/%s/%s/%s/providers", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
-            .willReturn(okJson("{\"_links\":{\"rel:eventmetadata\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata\"},\"rel:update\":{\"href\":\"localhost:9999/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30\"},\"self\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30\"}},\"id\":\"619363ad-2461-4c1c-bb09-848f8b4d0a30\",\"label\":\"aio-lib-java Wiremock - test drive provider label\",\"description\":\"aio-lib-java Wiremock - test drive provider description\",\"source\":\"urn:uuid:619363ad-2461-4c1c-bb09-848f8b4d0a30\",\"docs_url\":\"https://localhost.com/test\",\"publisher\":\"someImsOrgId\"}")
+            .willReturn(okJson(getProviderResponse())
                     .withStatus(201)
             ));
     provider = getProviderService().createProvider(providerCreateModel);
-    verify(postRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers")));
-    assertEquals(PROVIDER_ID, Objects.requireNonNull(provider.orElse(null)).getId());
+    verify(postRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID))));
+    assertEquals(TestUtil.PROVIDER_ID, Objects.requireNonNull(provider.orElse(null)).getId());
     assertEquals(PROVIDER_MODEL_LABEL, provider.get().getLabel());
     assertEquals(PROVIDER_MODEL_DESCRIPTION, provider.get().getDescription());
-    assertEquals(SOURCE_ID, provider.get().getSource());
+    assertEquals(TestUtil.SOURCE_ID, provider.get().getSource());
     assertEquals(PROVIDER_MODEL_DOCS_URL, provider.get().getDocsUrl());
     assertEquals(TestUtil.IMS_ORG_ID, provider.get().getPublisher());
 
 //    /** createOrUpdateProvider */
-    stubFor(post(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers"))
+    stubFor(post(urlEqualTo(String.format("/events/%s/%s/%s/providers", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
-            .willReturn(okJson("{\"reason\":\"Use PUT or PATCH to update: Another provider exists with the same natural key (organization_id, provider_metadata/type, instanceId). Request id: Zl5ZErvdGJ2GiFXNq1X1fTEVQOuT16Xp.\", \"message\":\"619363ad-2461-4c1c-bb09-848f8b4d0a30\"}")
+            .willReturn(okJson("{\"reason\":\"Use PUT or PATCH to update: Another provider exists with the same natural key (organization_id, provider_metadata/type, instanceId). Request id: Zl5ZErvdGJ2GiFXNq1X1fTEVQOuT16Xp.\", \"message\":\""+TestUtil.PROVIDER_ID+"\"}")
                     .withStatus(409)
             ));
-    stubFor(put(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30"))
+    stubFor(put(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
-            .willReturn(okJson("{\"_links\":{\"rel:eventmetadata\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata\"},\"rel:update\":{\"href\":\"localhost:9999/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30\"},\"self\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30\"}},\"id\":\"619363ad-2461-4c1c-bb09-848f8b4d0a30\",\"label\":\"aio-lib-java Wiremock - test drive provider label\",\"description\":\"aio-lib-java Wiremock - test drive provider description\",\"source\":\"urn:uuid:619363ad-2461-4c1c-bb09-848f8b4d0a30\",\"docs_url\":\"https://localhost.com/test\",\"publisher\":\"someImsOrgId\"}")
+            .willReturn(okJson(getProviderResponse())
                     .withStatus(200)
             ));
     provider = getProviderService().createOrUpdateProvider(providerCreateModel);
-    verify(postRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers")));
-    verify(putRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30")));
-    assertEquals(PROVIDER_ID, Objects.requireNonNull(provider.orElse(null)).getId());
+    verify(postRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID))));
+    verify(putRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID))));
+    assertEquals(TestUtil.PROVIDER_ID, Objects.requireNonNull(provider.orElse(null)).getId());
     assertEquals(PROVIDER_MODEL_LABEL, provider.get().getLabel());
     assertEquals(PROVIDER_MODEL_DESCRIPTION, provider.get().getDescription());
-    assertEquals(SOURCE_ID, provider.get().getSource());
+    assertEquals(TestUtil.SOURCE_ID, provider.get().getSource());
     assertEquals(PROVIDER_MODEL_DOCS_URL, provider.get().getDocsUrl());
     assertEquals(TestUtil.IMS_ORG_ID, provider.get().getPublisher());
 
 //    /** updateProvider */
-    stubFor(put(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30"))
+    stubFor(put(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
-            .willReturn(okJson("{\"_links\":{\"rel:eventmetadata\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata\"},\"rel:update\":{\"href\":\"localhost:9999/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30\"},\"self\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30\"}},\"id\":\"619363ad-2461-4c1c-bb09-848f8b4d0a30\",\"label\":\"aio-lib-java Wiremock - test drive provider label\",\"description\":\"aio-lib-java Wiremock - test drive provider description\",\"source\":\"urn:uuid:619363ad-2461-4c1c-bb09-848f8b4d0a30\",\"docs_url\":\"https://localhost.com/test\",\"publisher\":\"someImsOrgId\"}")
+            .willReturn(okJson(getProviderResponse())
                     .withStatus(200)
             ));
-    provider = getProviderService().updateProvider(PROVIDER_ID, providerCreateModel);
-    verify(putRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30")));
-    assertEquals(PROVIDER_ID, Objects.requireNonNull(provider.orElse(null)).getId());
+    provider = getProviderService().updateProvider(TestUtil.PROVIDER_ID, providerCreateModel);
+    verify(putRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID))));
+    assertEquals(TestUtil.PROVIDER_ID, Objects.requireNonNull(provider.orElse(null)).getId());
     assertEquals(PROVIDER_MODEL_LABEL, provider.get().getLabel());
     assertEquals(PROVIDER_MODEL_DESCRIPTION, provider.get().getDescription());
-    assertEquals(SOURCE_ID, provider.get().getSource());
+    assertEquals(TestUtil.SOURCE_ID, provider.get().getSource());
     assertEquals(PROVIDER_MODEL_DOCS_URL, provider.get().getDocsUrl());
     assertEquals(TestUtil.IMS_ORG_ID, provider.get().getPublisher());
 
-    stubFor(put(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30"))
+    stubFor(put(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
             .willReturn(aResponse()
                     .withStatus(404)
             ));
-    provider = getProviderService().updateProvider(PROVIDER_ID, providerCreateModel);
-    verify(putRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30")));
+    provider = getProviderService().updateProvider(TestUtil.PROVIDER_ID, providerCreateModel);
+    verify(putRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID))));
     assertEquals(Optional.empty(),provider);
 
 //    /** deleteProvider */
-    stubFor(delete(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30"))
+    stubFor(delete(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID)))
             .willReturn(aResponse()
                     .withStatus(204)
             ));
-    getProviderService().deleteProvider(PROVIDER_ID);
-    verify(deleteRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30")));
+    getProviderService().deleteProvider(TestUtil.PROVIDER_ID);
+    verify(deleteRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID))));
 
   }
 
@@ -169,77 +174,77 @@ public class ProviderServiceTest {
 
     Optional<EventMetadata> metadata;
     EventMetadata eventMetadata = EventMetadata.builder()
-            .eventCode(METADATA_EVENTCODE)
-            .description(METADATA_DESCRIPTION)
-            .label(METADATA_LABEL)
+            .eventCode(EVENT_CODE)
+            .description(EVENT_DESCRIPTION)
+            .label(EVENT_LABEL)
             .build();
 
 //    /** getEventMetadata */
-    stubFor(get(urlEqualTo("/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode"))
-            .willReturn(okJson("{\"_links\":{\"rel:sample_event\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode/sample_event\"},\"rel:update\":{\"href\":\"localhost:9999/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode\"},\"self\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode\"}},\"description\":\"wiremock test description\",\"label\":\"test label\",\"event_code\":\"wiremock_eventcode\"}")
+    stubFor(get(urlEqualTo(String.format("/events/providers/%s/eventmetadata/%s", TestUtil.PROVIDER_ID, EVENT_CODE)))
+            .willReturn(okJson(getMetadataResponse())
                     .withStatus(200)
             ));
-    metadata = getProviderService().getEventMetadata(PROVIDER_ID, METADATA_EVENTCODE);
-    verify(getRequestedFor(urlEqualTo("/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode")));
-    assertEquals(METADATA_EVENTCODE, Objects.requireNonNull(metadata.orElse(null)).getEventCode());
-    assertEquals(METADATA_DESCRIPTION, metadata.get().getDescription());
-    assertEquals(METADATA_LABEL, metadata.get().getLabel());
+    metadata = getProviderService().getEventMetadata(TestUtil.PROVIDER_ID, EVENT_CODE);
+    verify(getRequestedFor(urlEqualTo(String.format("/events/providers/%s/eventmetadata/%s", TestUtil.PROVIDER_ID, EVENT_CODE))));
+    assertEquals(EVENT_CODE, Objects.requireNonNull(metadata.orElse(null)).getEventCode());
+    assertEquals(EVENT_DESCRIPTION, metadata.get().getDescription());
+    assertEquals(EVENT_LABEL, metadata.get().getLabel());
 
-    stubFor(get(urlEqualTo("/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata"))
-            .willReturn(okJson("{\"_links\":{\"self\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata\"}},\"_embedded\":{\"eventmetadata\":[{\"_links\":{\"rel:sample_event\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode/sample_event\"},\"rel:update\":{\"href\":\"localhost:9999/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode\"},\"self\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode\"}},\"description\":\"wiremock test description\",\"label\":\"test label\",\"event_code\":\"wiremock_eventcode\"}]}}")
+    stubFor(get(urlEqualTo(String.format("/events/providers/%s/eventmetadata", TestUtil.PROVIDER_ID)))
+            .willReturn(okJson("{\"_links\":{\"self\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/providers/"+TestUtil.PROVIDER_ID+"/eventmetadata\"}},\"_embedded\":{\"eventmetadata\":["+getMetadataResponse()+"]}}")
                     .withStatus(200)
             ));
-    List<EventMetadata> metadataList = getProviderService().getEventMetadata("619363ad-2461-4c1c-bb09-848f8b4d0a30");
-    verify(getRequestedFor(urlEqualTo("/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata")));
+    List<EventMetadata> metadataList = getProviderService().getEventMetadata(TestUtil.PROVIDER_ID);
+    verify(getRequestedFor(urlEqualTo(String.format("/events/providers/%s/eventmetadata", TestUtil.PROVIDER_ID))));
     assertEquals(1, metadataList.size());
 
 //    /** createEventMetadata */
-    stubFor(post(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata"))
+    stubFor(post(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
-            .willReturn(okJson("{\"_links\":{\"rel:sample_event\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode/sample_event\"},\"rel:update\":{\"href\":\"localhost:9999/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode\"},\"self\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode\"}},\"description\":\"wiremock test description\",\"label\":\"test label\",\"event_code\":\"wiremock_eventcode\"}")
+            .willReturn(okJson(getMetadataResponse())
                     .withStatus(200)
             ));
-    metadata = getProviderService().createEventMetadata(PROVIDER_ID, eventMetadata);
-    verify(postRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata")));
-    assertEquals(METADATA_EVENTCODE, Objects.requireNonNull(metadata.orElse(null)).getEventCode());
-    assertEquals(METADATA_DESCRIPTION, metadata.get().getDescription());
-    assertEquals(METADATA_LABEL, metadata.get().getLabel());
+    metadata = getProviderService().createEventMetadata(TestUtil.PROVIDER_ID, eventMetadata);
+    verify(postRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID))));
+    assertEquals(EVENT_CODE, Objects.requireNonNull(metadata.orElse(null)).getEventCode());
+    assertEquals(EVENT_DESCRIPTION, metadata.get().getDescription());
+    assertEquals(EVENT_LABEL, metadata.get().getLabel());
 
 //    /** updateEventMetadata */
-    stubFor(put(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode"))
+    stubFor(put(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID, EVENT_CODE)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
-            .willReturn(okJson("{\"_links\":{\"rel:sample_event\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode/sample_event\"},\"rel:update\":{\"href\":\"localhost:9999/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode\"},\"self\":{\"href\":\"localhost:9999/events/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode\"}},\"description\":\"wiremock test description\",\"label\":\"test label\",\"event_code\":\"wiremock_eventcode\"}")
+            .willReturn(okJson(getMetadataResponse())
                     .withStatus(200)
             ));
-    metadata = getProviderService().updateEventMetadata(PROVIDER_ID, eventMetadata);
-    verify(putRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode")));
-    assertEquals(METADATA_EVENTCODE, Objects.requireNonNull(metadata.orElse(null)).getEventCode());
-    assertEquals(METADATA_DESCRIPTION, metadata.get().getDescription());
-    assertEquals(METADATA_LABEL, metadata.get().getLabel());
+    metadata = getProviderService().updateEventMetadata(TestUtil.PROVIDER_ID, eventMetadata);
+    verify(putRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID, EVENT_CODE))));
+    assertEquals(EVENT_CODE, Objects.requireNonNull(metadata.orElse(null)).getEventCode());
+    assertEquals(EVENT_DESCRIPTION, metadata.get().getDescription());
+    assertEquals(EVENT_LABEL, metadata.get().getLabel());
 
-    stubFor(put(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode"))
+    stubFor(put(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID, EVENT_CODE)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
             .willReturn(aResponse()
                     .withStatus(404)
             ));
-    metadata = getProviderService().updateEventMetadata(PROVIDER_ID, eventMetadata);
-    verify(putRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode")));
+    metadata = getProviderService().updateEventMetadata(TestUtil.PROVIDER_ID, eventMetadata);
+    verify(putRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID, EVENT_CODE))));
     assertEquals(Optional.empty(), metadata);
 
 //    /** deleteEventMetadata */
-    stubFor(delete(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata"))
+    stubFor(delete(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID)))
             .willReturn(aResponse()
                     .withStatus(204)
             ));
-    getProviderService().deleteAllEventMetadata(PROVIDER_ID);
-    verify(deleteRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata")));
+    getProviderService().deleteAllEventMetadata(TestUtil.PROVIDER_ID);
+    verify(deleteRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID))));
 
-    stubFor(delete(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode"))
+    stubFor(delete(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID, EVENT_CODE)))
             .willReturn(aResponse()
                     .withStatus(204)
             ));
-    getProviderService().deleteEventMetadata(PROVIDER_ID, METADATA_EVENTCODE);
-    verify(putRequestedFor(urlEqualTo("/events/someConsumerOrgId/someProjectId/someWorkspaceId/providers/619363ad-2461-4c1c-bb09-848f8b4d0a30/eventmetadata/wiremock_eventcode")));
+    getProviderService().deleteEventMetadata(TestUtil.PROVIDER_ID, EVENT_CODE);
+    verify(putRequestedFor(urlEqualTo(String.format("/events/%s/%s/%s/providers/%s/eventmetadata/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.PROJECT_ID, TestUtil.WORKSPACE_ID, TestUtil.PROVIDER_ID, EVENT_CODE))));
 
   }
 
@@ -256,8 +261,16 @@ public class ProviderServiceTest {
     return ProviderService.builder()
             .authInterceptor(authInterceptor)
             .workspace(TestUtil.getWorkspace())
-            .url(TestUtil.getWorkspace().getImsUrl())
+            .url(TestUtil.API_MANAGEMENT_URL)
             .build();
   }
+
+    private static String getMetadataResponse(){
+        return "{\"_links\":{\"rel:sample_event\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/providers/"+TestUtil.PROVIDER_ID+"/eventmetadata/"+EVENT_CODE+"/sample_event\"},\"rel:update\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/"+TestUtil.CONSUMER_ORG_ID+"/"+TestUtil.PROJECT_ID+"/"+TestUtil.WORKSPACE_ID+"/providers/"+TestUtil.PROVIDER_ID+"/eventmetadata/"+EVENT_CODE+"\"},\"self\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/providers/"+TestUtil.PROVIDER_ID+"/eventmetadata/"+EVENT_CODE+"\"}},\"description\":\""+EVENT_DESCRIPTION+"\",\"label\":\""+EVENT_LABEL+"\",\"event_code\":\""+EVENT_CODE+"\"}";
+    }
+
+    private static String getProviderResponse(){
+        return "{\"_links\":{\"rel:eventmetadata\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/providers/"+TestUtil.PROVIDER_ID+"/eventmetadata\"},\"rel:update\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/"+TestUtil.CONSUMER_ORG_ID+"/"+TestUtil.PROJECT_ID+"/"+TestUtil.WORKSPACE_ID+"/providers/"+TestUtil.PROVIDER_ID+"\"},\"self\":{\"href\":\""+TestUtil.API_MANAGEMENT_URL+"/events/providers/"+TestUtil.PROVIDER_ID+"\"}},\"id\":\""+TestUtil.PROVIDER_ID+"\",\"label\":\""+PROVIDER_MODEL_LABEL+"\",\"description\":\""+PROVIDER_MODEL_DESCRIPTION+"\",\"source\":\""+TestUtil.SOURCE_ID+"\",\"docs_url\":\""+PROVIDER_MODEL_DOCS_URL+"\",\"publisher\":\""+TestUtil.IMS_ORG_ID+"\"}";
+    }
 
 }

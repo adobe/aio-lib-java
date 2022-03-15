@@ -27,7 +27,7 @@ public class RegistrationServiceTest {
   private static final String REGISTRATION_ID = "12345";
 
   @Rule
-  public WireMockRule wireMockRule = new WireMockRule(9999);
+  public WireMockRule wireMockRule = new WireMockRule(Integer.parseInt(TestUtil.PORT));
 
   @Test
   public void registrationServiceTest() {
@@ -35,18 +35,18 @@ public class RegistrationServiceTest {
     assertNotNull(getRegistrationService());
 
 //    /** getRegistration */
-    stubFor(get(urlEqualTo("/events/organizations/someConsumerOrgId/integrations/someCredentialId/registrations/12345"))
+    stubFor(get(urlEqualTo(String.format("/events/organizations/%s/integrations/%s/registrations/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.CREDENTIAL_ID, REGISTRATION_ID)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
             .withHeader(TestUtil.IMS_ORG_ID_HEADER, equalTo(TestUtil.IMS_ORG_ID))
             .willReturn(aResponse()
                     .withStatus(200)
             ));
     getRegistrationService().findById(REGISTRATION_ID);
-    verify(getRequestedFor(urlEqualTo("/events/organizations/someConsumerOrgId/integrations/someCredentialId/registrations/12345")));
+    verify(getRequestedFor(urlEqualTo(String.format("/events/organizations/%s/integrations/%s/registrations/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.CREDENTIAL_ID, REGISTRATION_ID))));
 
 
 //    /** postRegistration */
-    stubFor(post(urlEqualTo("/events/organizations/someConsumerOrgId/integrations/someCredentialId/registrations"))
+    stubFor(post(urlEqualTo(String.format("/events/organizations/%s/integrations/%s/registrations", TestUtil.CONSUMER_ORG_ID, TestUtil.CREDENTIAL_ID)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
             .withHeader(TestUtil.IMS_ORG_ID_HEADER, equalTo(TestUtil.IMS_ORG_ID))
             .willReturn(aResponse()
@@ -58,18 +58,18 @@ public class RegistrationServiceTest {
             .addEventsOfInterests(EventsOfInterest.builder()
                     .setEventCode("osgi_ping")
                     .setProviderId("11111").build()));
-    verify(postRequestedFor(urlEqualTo("/events/organizations/someConsumerOrgId/integrations/someCredentialId/registrations")));
+    verify(postRequestedFor(urlEqualTo(String.format("/events/organizations/%s/integrations/%s/registrations", TestUtil.CONSUMER_ORG_ID, TestUtil.CREDENTIAL_ID))));
 
 
 //    /** deleteRegistration */
-    stubFor(delete(urlEqualTo("/events/organizations/someConsumerOrgId/integrations/someCredentialId/registrations/12345"))
+    stubFor(delete(urlEqualTo(String.format("/events/organizations/%s/integrations/%s/registrations/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.CREDENTIAL_ID, REGISTRATION_ID)))
             .withHeader(TestUtil.CONTENT_TYPE_HEADER, equalTo(TestUtil.CONTENT_TYPE_HEADER_VALUE))
             .withHeader(TestUtil.IMS_ORG_ID_HEADER, equalTo(TestUtil.IMS_ORG_ID))
             .willReturn(aResponse()
                     .withStatus(200)
             ));
     getRegistrationService().delete(REGISTRATION_ID);
-    verify(deleteRequestedFor(urlEqualTo("/events/organizations/someConsumerOrgId/integrations/someCredentialId/registrations/12345")));
+    verify(deleteRequestedFor(urlEqualTo(String.format("/events/organizations/%s/integrations/%s/registrations/%s", TestUtil.CONSUMER_ORG_ID, TestUtil.CREDENTIAL_ID, REGISTRATION_ID))));
 
   }
 
@@ -86,7 +86,7 @@ public class RegistrationServiceTest {
     return RegistrationService.builder()
             .authInterceptor(authInterceptor)
             .workspace(TestUtil.getWorkspace())
-            .url(TestUtil.getWorkspace().getImsUrl())
+            .url(TestUtil.API_URL)
             .build();
   }
 

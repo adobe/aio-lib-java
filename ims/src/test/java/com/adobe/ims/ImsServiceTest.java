@@ -26,7 +26,7 @@ public class ImsServiceTest {
   private static final Logger logger = LoggerFactory.getLogger(ImsServiceTest.class);
 
   @Rule
-  public WireMockRule wireMockRule = new WireMockRule(9999);
+  public WireMockRule wireMockRule = new WireMockRule(Integer.parseInt(TestUtil.PORT));
 
   @Test
   public void imsServiceTest(){
