@@ -16,6 +16,7 @@ import static com.adobe.util.FileUtil.readPropertiesFromClassPath;
 import static com.adobe.util.FileUtil.readPropertiesFromFile;
 
 import com.adobe.util.Constants;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.util.HashSet;
@@ -43,9 +44,9 @@ public class Workspace {
   private final String imsOrgId;
   private final String apiKey;
   private final String credentialId;
-  private final String clientSecret;
   private final String technicalAccountId;
   private final Set<String> metascopes;
+  private final String clientSecret;
   private final PrivateKey privateKey;
 
   // workspace context related:
@@ -70,6 +71,15 @@ public class Workspace {
     this.consumerOrgId = consumerOrgId;
     this.projectId = projectId;
     this.workspaceId = workspaceId;
+  }
+
+  public static Builder builder() {
+    return new Builder();
+  }
+
+  public void validateAll() {
+    validateJwtCredentialConfig();
+    validateWorkspaceContext();
   }
 
   public void validateJwtCredentialConfig() {
@@ -105,6 +115,15 @@ public class Workspace {
     }
   }
 
+  public String getProjectUrl() {
+    if (!StringUtils.isEmpty(this.getConsumerOrgId()) && !StringUtils.isEmpty(
+        this.getProjectId())) {
+      return "https://developer.adobe.com/console/projects/" + this.getConsumerOrgId() +
+          "/" + this.getProjectId() + "/overview";
+    } else {
+      return null;
+    }
+  }
 
   public String getImsUrl() {
     return imsUrl;
@@ -134,10 +153,6 @@ public class Workspace {
     return credentialId;
   }
 
-  public String getClientSecret() {
-    return clientSecret;
-  }
-
   public String getTechnicalAccountId() {
     return technicalAccountId;
   }
@@ -146,8 +161,24 @@ public class Workspace {
     return metascopes;
   }
 
+  // we want to avoid serializing this secret
+  @JsonIgnore
+  public String getClientSecret() {
+    return clientSecret;
+  }
+
+  public boolean isClientSecretDefined() {
+    return !StringUtils.isEmpty(this.clientSecret);
+  }
+
+  // we want to avoid serializing this secret 
+  @JsonIgnore
   public PrivateKey getPrivateKey() {
     return privateKey;
+  }
+
+  public boolean isPrivateKeyDefined() {
+    return (this.privateKey != null);
   }
 
   @Override
@@ -195,12 +226,9 @@ public class Workspace {
         '}';
   }
 
-  public static Builder builder() {
-    return new Builder();
-  }
-
   public static class Builder {
 
+    private final Set<String> metascopes = new HashSet<>();
     private String imsUrl;
     private String imsOrgId;
     private String consumerOrgId;
@@ -210,7 +238,6 @@ public class Workspace {
     private String credentialId;
     private String clientSecret;
     private String technicalAccountId;
-    private final Set<String> metascopes = new HashSet<>();
     private PrivateKey privateKey;
 
     private Map<String, String> workspaceProperties;
