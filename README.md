@@ -6,12 +6,15 @@
 
 ## Modules
 
+Plain old Java Libraries:
 * [`aio-lib-java-core`](./core)  holds the core models, builders, utilities used across the other libraries below,
 * [`aio-lib-java-ims`](./ims) is a library wrapping a subset of [Adobe Identity Management System (IMS) API](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
 * [`aio-lib-java-events-mgmt`](./events_mgmt) is a library wrapping [Adobe I/O Events Provider and Registration API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/api.md)
 * [`aio-lib-java-events-ingress`](./events_ingress) is a library wrapping [Adobe I/O Events Publishing API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/eventsingress_api.md)
 * [`aio-lib-java-events-journal`](./events_journal) is a library wrapping [Adobe I/O Events Journaling API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/journaling_api.md)
-* [`aio-lib-java-osgi`](./osgi) is a Java OSGI bundle embedding all the above libraries (to ease the integration of `aio-lib-java` libraries in an OSGI-based application, such as AEM).
+
+AEM Modules:
+* [`com.adobe.aio-lib-java.osgi`](./osgi) is a Java OSGI bundle embedding all the plain old Java libraries of this sdk (as well as their dependencies tree).
 
 ## Builds
 

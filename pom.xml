@@ -30,7 +30,6 @@
     <module>osgi</module>
   </modules>
 
-
   <name>Adobe I/O - Java SDK</name>
   <description>Adobe I/O - Java SDK - Parent Project</description>
   <url>https://github.com/adobe/aio-lib-java-events</url>
@@ -83,27 +82,189 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <license.header.path>${maven.multiModuleProjectDirectory}/copyright_header.txt</license.header.path>
 
+    <maven-resources-plugin.version>3.0.2</maven-resources-plugin.version>
+    <jacoco.version>0.8.5</jacoco.version>
+
     <commons-text.version>1.6</commons-text.version>
+    <commons-lang3.version>3.6</commons-lang3.version>
     <junit.version>4.11</junit.version>
     <wiremock.version>2.31.0</wiremock.version>
     <okhttp3.mockwebserver.version>4.9.1</okhttp3.mockwebserver.version>
     <mockito.version>3.11.1</mockito.version>
-    <slf4j.version>1.7.13</slf4j.version>
+    <slf4j.version>1.7.21</slf4j.version>
+    <slf4j-api.version>[1.7.21,1.7.25]</slf4j-api.version>
     <jackson.version>2.12.3</jackson.version>
     <jjwt.version>0.11.2</jjwt.version>
 
     <feign.version>11.2</feign.version>
     <feign-form.version>3.8.0</feign-form.version>
+
+    <xdm.event-model.version>0.94.15</xdm.event-model.version>
+
+    <!-- aem related -->
+    <aem.host>localhost</aem.host>
+    <aem.port>4502</aem.port>
+    <aem.publish.host>localhost</aem.publish.host>
+    <aem.publish.port>4503</aem.publish.port>
+    <sling.user>admin</sling.user>
+    <sling.password>admin</sling.password>
+    <vault.user>admin</vault.user>
+    <vault.password>admin</vault.password>
+    <!--
+If you want to deploy the bundle from the source
+1. modify the below `crx.*` properties according to your needs
+2. run `mvn -Dcrx.path=/apps/changeMe/install -Dlicense.header.path=../copyright_header.txt -P localInstall clean install sling:install`
+ -->
+    <crx.host>localhost</crx.host>
+    <crx.port>4502</crx.port>
+    <crx.username>admin</crx.username>
+    <crx.password>admin</crx.password>
+
+    <bnd.version>4.2.0</bnd.version>
+
+    <com.adobe.aem.uber-jar.version>6.5.0</com.adobe.aem.uber-jar.version>
+    <javax.jcr.version>2.0</javax.jcr.version>
+    <org.osgi.framework.version>1.9.0</org.osgi.framework.version>
+
   </properties>
 
 
   <dependencyManagement>
     <dependencies>
 
+      <!-- adobe.io XDM event model -->
+      <dependency>
+        <groupId>com.adobe.xdm.event</groupId>
+        <artifactId>com.adobe.xdm.event.xdm-event-model</artifactId>
+        <version>${xdm.event-model.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <!-- Adobe AEM Dependencies -->
+      <dependency>
+        <groupId>com.adobe.aem</groupId>
+        <artifactId>uber-jar</artifactId>
+        <version>${com.adobe.aem.uber-jar.version}</version>
+        <classifier>apis</classifier>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.sling</groupId>
+        <artifactId>org.apache.sling.servlets.annotations</artifactId>
+        <version>1.2.6</version>
+        <scope>provided</scope>
+      </dependency>
+
+
+      <!-- JCR -->
+      <dependency>
+        <groupId>javax.jcr</groupId>
+        <artifactId>jcr</artifactId>
+        <version>${javax.jcr.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+
+      <!-- OSGi Dependencies for AEM 6.5 and above-->
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.versioning</artifactId>
+        <version>1.1.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.annotation.bundle</artifactId>
+        <version>1.0.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.service.metatype.annotations</artifactId>
+        <version>1.4.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.service.component.annotations</artifactId>
+        <version>1.4.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.service.component</artifactId>
+        <version>1.4.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.service.cm</artifactId>
+        <version>1.6.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.service.event</artifactId>
+        <version>1.3.1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.service.log</artifactId>
+        <version>1.4.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.resource</artifactId>
+        <version>1.0.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.framework</artifactId>
+        <version>${org.osgi.framework.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- Servlet API -->
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>3.1.0</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.servlet.jsp</groupId>
+        <artifactId>jsp-api</artifactId>
+        <version>2.1</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>javax.annotation-api</artifactId>
+        <version>1.3.2</version>
+        <scope>provided</scope>
+      </dependency>
+
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-text</artifactId>
         <version>${commons-text.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+        <version>${commons-lang3.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j-api.version}</version>
+        <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -115,13 +276,11 @@
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt-impl</artifactId>
         <version>${jjwt.version}</version>
-        <scope>runtime</scope>
       </dependency>
       <dependency>
         <groupId>io.jsonwebtoken</groupId>
         <artifactId>jjwt-jackson</artifactId>
         <version>${jjwt.version}</version>
-        <scope>runtime</scope>
       </dependency>
 
       <dependency>
@@ -156,7 +315,6 @@
         <artifactId>feign-form</artifactId>
         <version>${feign-form.version}</version>
       </dependency>
-
 
       <dependency>
         <groupId>junit</groupId>
@@ -204,6 +362,7 @@
         <artifactId>license-maven-plugin</artifactId>
         <!-- Note: run "mvn license:format" to add headers automatically -->
       </plugin>
+      <!--
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -214,6 +373,7 @@
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
       </plugin>
+      -->
     </plugins>
 
     <pluginManagement>
@@ -322,6 +482,165 @@
             <serverId>ossrh</serverId>
           </configuration>
         </plugin>
+
+        <!-- Maven Jar Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>3.1.2</version>
+        </plugin>
+
+        <!-- Maven Clean Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-clean-plugin</artifactId>
+          <version>3.1.0</version>
+        </plugin>
+
+        <!-- Felix Bundle Maven Plugin -->
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>3.5.0</version>
+        </plugin>
+
+        <!-- BND Maven Plugin -->
+        <plugin>
+          <groupId>biz.aQute.bnd</groupId>
+          <artifactId>bnd-maven-plugin</artifactId>
+          <version>${bnd.version}</version>
+        </plugin>
+        <plugin>
+          <groupId>biz.aQute.bnd</groupId>
+          <artifactId>bnd-baseline-maven-plugin</artifactId>
+          <version>${bnd.version}</version>
+        </plugin>
+
+        <!-- Maven Resources Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>${maven-resources-plugin.version}</version>
+          <configuration>
+            <!-- ensure that the empty directories are copied -->
+            <includeEmptyDirs>true</includeEmptyDirs>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Compiler Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.6.1</version>
+        </plugin>
+
+        <!-- Maven Installer Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>2.5.2</version>
+        </plugin>
+
+        <!-- Maven Surefire Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <version>2.22.1</version>
+          <configuration>
+            <useSystemClassLoader>false</useSystemClassLoader>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Failsafe Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-failsafe-plugin</artifactId>
+          <version>2.22.1</version>
+        </plugin>
+
+        <!-- Maven Deploy Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-deploy-plugin</artifactId>
+          <version>2.8.2</version>
+        </plugin>
+
+        <!-- Apache Sling Plugin -->
+        <plugin>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>sling-maven-plugin</artifactId>
+          <version>2.4.0</version>
+          <configuration>
+            <slingUrl>http://${aem.host}:${aem.port}/system/console</slingUrl>
+            <deploymentMethod>WebConsole</deploymentMethod>
+          </configuration>
+        </plugin>
+
+        <!-- HTL Maven Plugin -->
+        <plugin>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>htl-maven-plugin</artifactId>
+          <version>1.0.6</version>
+          <configuration>
+            <failOnWarnings>true</failOnWarnings>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>validate</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+
+        <!-- Jackrabbit FileVault Package Plugin -->
+        <plugin>
+          <groupId>org.apache.jackrabbit</groupId>
+          <artifactId>filevault-package-maven-plugin</artifactId>
+          <version>1.0.3</version>
+          <configuration>
+            <accessControlHandling>merge</accessControlHandling>
+            <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
+            <properties>
+              <createdBy>Adobe Systems Incorporated</createdBy>
+            </properties>
+          </configuration>
+        </plugin>
+
+        <!-- Content Package Plugin -->
+        <plugin>
+          <groupId>com.day.jcr.vault</groupId>
+          <artifactId>content-package-maven-plugin</artifactId>
+          <version>1.0.2</version>
+          <configuration>
+            <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
+            <failOnError>true</failOnError>
+            <userId>${vault.user}</userId>
+            <password>${vault.password}</password>
+          </configuration>
+        </plugin>
+
+        <!-- Maven Enforcer Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-enforcer-plugin</artifactId>
+          <version>1.4.1</version>
+        </plugin>
+
+        <!-- Maven Dependency Plugin -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-dependency-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+
+        <!-- Build Helper Maven Plugin -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>build-helper-maven-plugin</artifactId>
+          <version>3.0.0</version>
+        </plugin>
+
       </plugins>
     </pluginManagement>
   </build>
@@ -340,6 +659,140 @@
         </plugins>
       </build>
     </profile>
+
+    <profile>
+      <id>localInstall</id>
+      <activation>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>maven-sling-plugin</artifactId>
+            <configuration>
+              <slingUrl>http://${crx.host}:${crx.port}${crx.path}</slingUrl>
+              <user>${crx.username}</user>
+              <password>${crx.password}</password>
+              <deploymentMethod>WebDAV</deploymentMethod>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <!-- Development profile: install only the bundle -->
+    <profile>
+      <id>autoInstallBundle</id>
+      <!--
+          To enable this feature for a bundle, the sling-maven-plugin
+          (without configuration) needs to be included:
+          <plugin>
+              <groupId>org.apache.sling</groupId>
+              <artifactId>sling-maven-plugin</artifactId>
+           </plugin>
+      -->
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.sling</groupId>
+              <artifactId>sling-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>install-bundle</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>autoInstallPackage</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.jackrabbit</groupId>
+              <artifactId>filevault-package-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>create-package</id>
+                  <goals>
+                    <goal>package</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>com.day.jcr.vault</groupId>
+              <artifactId>content-package-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>install-package</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                  <configuration>
+                    <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+    <profile>
+      <id>autoInstallPackagePublish</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.jackrabbit</groupId>
+              <artifactId>filevault-package-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>create-package</id>
+                  <goals>
+                    <goal>package</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>com.day.jcr.vault</groupId>
+              <artifactId>content-package-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>install-package-publish</id>
+                  <goals>
+                    <goal>install</goal>
+                  </goals>
+                  <configuration>
+                    <targetURL>http://${aem.publish.host}:${aem.publish.port}/crx/packmgr/service.jsp
+                    </targetURL>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+    </profile>
+
   </profiles>
 
 </project>
