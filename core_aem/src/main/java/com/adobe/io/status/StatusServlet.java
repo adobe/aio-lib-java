@@ -21,13 +21,14 @@ import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 public abstract class StatusServlet extends SlingSafeMethodsServlet {
 
   abstract public Status getStatus();
+  private ObjectMapper objectMapper = new ObjectMapper();
 
   @Override
   protected void doGet(final SlingHttpServletRequest req,
       final SlingHttpServletResponse resp) throws ServletException, IOException {
     resp.setContentType("application/json");
     resp.getWriter()
-        .write(new ObjectMapper().writer().writeValueAsString(this.getStatus()));
+        .write(objectMapper.writer().writeValueAsString(this.getStatus()));
     resp.flushBuffer();
   }
 

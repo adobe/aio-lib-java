@@ -24,8 +24,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <description>Adobe I/O - Core AEM Library</description>
-  <name>Adobe I/O - Core AEM Library</name>
+  <description>Adobe I/O - Core AEM - OSGI bundle</description>
+  <name>Adobe I/O - Core AEM - OSGI bundle</name>
   <artifactId>com.adobe.aio-lib-java.core-aem</artifactId>
 
   <dependencies>
@@ -33,12 +33,7 @@
       <artifactId>aio-lib-java-ims</artifactId>
       <groupId>com.adobe</groupId>
       <version>${project.version}</version>
-    </dependency>
-
-    <!-- adobe.io XDM event model -->
-    <dependency>
-      <artifactId>com.adobe.xdm.event.xdm-event-model</artifactId>
-      <groupId>com.adobe.xdm.event</groupId>
+      <scope>provided</scope>
     </dependency>
 
     <!-- AEM related -->

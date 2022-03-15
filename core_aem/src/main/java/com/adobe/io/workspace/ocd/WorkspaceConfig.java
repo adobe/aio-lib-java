@@ -25,8 +25,7 @@ public @interface WorkspaceConfig {
   String aio_ims_url() default "https://ims-na1.adobelogin.com";
 
   @AttributeDefinition(name = "Meta Scopes",
-      description = "Comma separated list of metascopes associated with your API (`/s/event_receiver_api,/s/ent_adobeio_sdk` for instance) (project.workspace.details.credentials.jwt.meta_scopes)",
-      cardinality = 10)
+      description = "Comma separated list of metascopes associated with your API (`/s/event_receiver_api,/s/ent_adobeio_sdk` for instance) (project.workspace.details.credentials.jwt.meta_scopes)")
   String aio_meta_scopes() default "$[env:"+ Workspace.META_SCOPES +";default=/s/event_receiver_api,/s/ent_adobeio_sdk]";
 
   @AttributeDefinition(name = "IMS ORG ID",

@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.io.workspace;
+package com.adobe.io.auth;
 
 import com.adobe.io.status.Status;
 import com.adobe.io.status.StatusServlet;
@@ -18,18 +18,17 @@ import org.apache.sling.servlets.annotations.SlingServletPaths;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
-@Component(immediate = true, service = Servlet.class)
-@SlingServletPaths("/bin/aio/workspace.json")
-public class WorkspaceStatus extends StatusServlet {
 
-  private static final long serialVersionUID = 1L;
+@Component(immediate = true, service = Servlet.class)
+@SlingServletPaths("/bin/aio/jwt.json")
+public class JWTAuthInterceptorStatusServlet extends StatusServlet {
 
   @Reference
-  private WorkspaceSupplier workspaceSupplier;
+  private JWTAuthInterceptorSupplier jwtAuthInterceptorSupplier;
 
   @Override
   public Status getStatus() {
-    return workspaceSupplier.getStatus();
+    return jwtAuthInterceptorSupplier.getStatus();
   }
 }
 
