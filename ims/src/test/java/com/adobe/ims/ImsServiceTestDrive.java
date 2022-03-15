@@ -34,6 +34,7 @@ public class ImsServiceTestDrive {
 
     AccessToken accessToken = imsService.getJwtExchangeAccessToken(); // [4]
 
+
     // [1] Build your PrivateKey looking up the key indicated by you System Environment variables
     // [2] build your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace)
     //     looking up other System Environment variables.
@@ -69,11 +70,12 @@ public class ImsServiceTestDrive {
           .propertiesPath(DEFAULT_TEST_PROPERTIES)
           .privateKey(privateKey)
           .build();
+      ImsService imsService = ImsService.builder().workspace(workspace).build();
 
-      AccessToken accessToken = ImsService.builder().workspace(workspace).build()
-          .getJwtExchangeAccessToken();
-
+      AccessToken accessToken = imsService.getJwtExchangeAccessToken();
       logger.info("accessToken: {}", accessToken.getAccessToken());
+      logger.info(imsService.validateAccessToken(accessToken.getAccessToken()).toString());
+
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

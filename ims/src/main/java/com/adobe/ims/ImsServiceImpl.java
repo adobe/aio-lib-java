@@ -18,6 +18,7 @@ import com.adobe.util.FeignUtil;
 
 class ImsServiceImpl implements ImsService {
 
+  public static final String ACCESS_TOKEN = "access_token";
   private final ImsApi imsApi;
   private final Workspace workspace;
 
@@ -32,6 +33,11 @@ class ImsServiceImpl implements ImsService {
     workspace.validateJwtCredentialConfig();
     return imsApi.getAccessToken(workspace.getApiKey(),
         workspace.getClientSecret(), new JwtTokenBuilder(workspace).build());
+  }
+
+  @Override
+  public Boolean validateAccessToken(String accessToken) {
+    return imsApi.validateToken(ACCESS_TOKEN, workspace.getApiKey(), accessToken).getValid();
   }
 
 }

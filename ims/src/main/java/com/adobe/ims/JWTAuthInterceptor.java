@@ -44,15 +44,16 @@ public class JWTAuthInterceptor implements RequestInterceptor {
     }
   }
 
+  public boolean isUp(){
+    return imsService.validateAccessToken(this.getAccessToken());
+  }
+
   private void applyAuthorization(RequestTemplate requestTemplate) {
     // If the request already have an authorization
     if (requestTemplate.headers().containsKey(AUTHORIZATION_HEADER)) {
       return;
     }
     // If first time or of expired, get the token
-    else if (expirationTimeMillis == null || System.currentTimeMillis() >= expirationTimeMillis) {
-      updateAccessToken();
-    }
     if (getAccessToken() != null) {
       requestTemplate.header(AUTHORIZATION_HEADER, BEARER_PREFIX + getAccessToken());
     }
@@ -65,6 +66,9 @@ public class JWTAuthInterceptor implements RequestInterceptor {
   }
 
   private synchronized String getAccessToken() {
+    if (expirationTimeMillis == null || System.currentTimeMillis() >= expirationTimeMillis) {
+      updateAccessToken();
+    }
     return this.accessToken.getAccessToken();
   }
 

@@ -19,42 +19,26 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonInclude(Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class AccessToken {
+public class TokenValidation {
 
-  /**
-   * The access_token itself
-   */
-  @JsonProperty("access_token")
-  private final String accessToken;
+  @JsonProperty("valid")
+  private final Boolean valid;
 
-  /**
-   * the value in milliseconds when the token will expire.
-   */
-  @JsonProperty("expires_in")
-  private final long expiresIn;
 
   @JsonCreator
-  public AccessToken(
-      @JsonProperty("access_token") String accessToken,
-      @JsonProperty("expires_in") long expiresIn) {
-    this.accessToken = accessToken;
-    this.expiresIn = expiresIn;
+  public TokenValidation(
+      @JsonProperty("valid") Boolean valid) {
+    this.valid = valid;
   }
 
-  public String getAccessToken() {
-    return accessToken;
+  public Boolean getValid() {
+    return valid;
   }
-
-  public long getExpiresIn() {
-    return expiresIn;
-  }
-
 
   @Override
   public String toString() {
-    return "AccessToken{" +
-        ", accessToken='**secret**'" +
-        ", expiresIn=" + expiresIn +
+    return "TokenValidation{" +
+        "valid='" + valid + '\'' +
         '}';
   }
 }

@@ -14,6 +14,7 @@ package com.adobe.ims;
 
 import com.adobe.Workspace;
 import com.adobe.ims.model.AccessToken;
+import com.adobe.ims.model.TokenValidation;
 
 public interface ImsService {
 
@@ -22,6 +23,8 @@ public interface ImsService {
   static Builder builder() {
     return new Builder();
   }
+
+  Boolean validateAccessToken(String accessToken);
 
   class Builder {
 
