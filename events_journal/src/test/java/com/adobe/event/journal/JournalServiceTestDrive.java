@@ -14,8 +14,8 @@ package com.adobe.event.journal;
 import com.adobe.Workspace;
 import com.adobe.event.journal.model.JournalEntry;
 import com.adobe.ims.JWTAuthInterceptor;
-import com.adobe.ims.util.PrivateKeyBuilder;
 import com.adobe.util.FileUtil;
+import com.adobe.ims.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
 import java.security.PrivateKey;
 import java.util.Properties;
@@ -42,29 +42,29 @@ public class JournalServiceTestDrive {
     try {
 
       Properties prop =
-              FileUtil.readPropertiesFromClassPath(
-                      (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
+          FileUtil.readPropertiesFromClassPath(
+              (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
 
       PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
 
       Workspace workspace = Workspace.builder()
-              .properties(prop)
-              .privateKey(privateKey)
-              .build();
+          .properties(prop)
+          .privateKey(privateKey)
+          .build();
 
       RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
-              .workspace(workspace)
-              .build();
+          .workspace(workspace)
+          .build();
 
       String journalUrl = prop.getProperty(AIO_JOURNAL_URL);
       int nofEvents = 0;
       int nofEntries = 1;
 
       JournalService journalService = JournalService.builder()
-              .authInterceptor(authInterceptor) // [1]
-              .workspace(workspace) // [2]
-              .url(journalUrl) // [3]
-              .build(); //
+          .authInterceptor(authInterceptor) // [1]
+          .workspace(workspace) // [2]
+          .url(journalUrl) // [3]
+          .build(); //
 
       JournalEntry entry = journalService.getOldest(); // [4]
       nofEvents += entry.size();
@@ -78,7 +78,7 @@ public class JournalServiceTestDrive {
         }
       }
       logger.info("The journal ({}) currently holds {} events (in {} journal entries)",
-              journalUrl, nofEvents, nofEntries - 1);
+          journalUrl, nofEvents, nofEntries - 1);
 
       logger.info("Latest entry: {}", journalService.getLatest());
 
@@ -92,5 +92,6 @@ public class JournalServiceTestDrive {
       System.exit(-1);
     }
   }
+
 
 }

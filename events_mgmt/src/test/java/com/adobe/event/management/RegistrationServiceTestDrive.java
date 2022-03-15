@@ -16,8 +16,8 @@ import com.adobe.event.management.model.EventsOfInterest;
 import com.adobe.event.management.model.Registration;
 import com.adobe.event.management.model.RegistrationInputModel;
 import com.adobe.ims.JWTAuthInterceptor;
-import com.adobe.ims.util.PrivateKeyBuilder;
 import com.adobe.util.FileUtil;
+import com.adobe.ims.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
 import java.security.PrivateKey;
 import java.util.Optional;
@@ -48,36 +48,36 @@ public class RegistrationServiceTestDrive {
     try {
 
       Properties prop =
-              FileUtil.readPropertiesFromClassPath(
-                      (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
+          FileUtil.readPropertiesFromClassPath(
+              (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
 
       PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
 
       Workspace workspace = Workspace.builder()
-              .properties(prop)
-              .privateKey(privateKey)
-              .build();
+          .properties(prop)
+          .privateKey(privateKey)
+          .build();
 
       RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
-              .workspace(workspace)
-              .build();
+          .workspace(workspace)
+          .build();
 
       RegistrationService registrationService = RegistrationService.builder()
-              .authInterceptor(authInterceptor) // [1]
-              .workspace(workspace) // [2]
-              .url(prop.getProperty(API_URL)) // you can omit this if you target prod
-              .build(); //
+          .authInterceptor(authInterceptor) // [1]
+          .workspace(workspace) // [2]
+          .url(prop.getProperty(API_URL)) // you can omit this if you target prod
+          .build(); //
       Optional<Registration> registration =
-              registrationService.findById("someRegistrationId"); // [3]
+          registrationService.findById("someRegistrationId"); // [3]
       logger.info("someRegistration: {}", registration);
 
       Optional<Registration> created = registrationService.createRegistration(
-              RegistrationInputModel.builder()
-                      .description("aio-lib-java registration description")
-                      .name("aio-lib-java registration name")
-                      .addEventsOfInterests(EventsOfInterest.builder()
-                              .setEventCode(prop.getProperty(EVENT_CODE))
-                              .setProviderId(prop.getProperty(PROVIDER_ID)).build())
+          RegistrationInputModel.builder()
+              .description("aio-lib-java registration description")
+              .name("aio-lib-java registration name")
+              .addEventsOfInterests(EventsOfInterest.builder()
+                  .setEventCode(prop.getProperty(EVENT_CODE))
+                  .setProviderId(prop.getProperty(PROVIDER_ID)).build())
       );
       String createdId = created.get().getRegistrationId();
       logger.info("created: {}", created.get());
@@ -91,5 +91,6 @@ public class RegistrationServiceTestDrive {
       System.exit(-1);
     }
   }
+
 
 }

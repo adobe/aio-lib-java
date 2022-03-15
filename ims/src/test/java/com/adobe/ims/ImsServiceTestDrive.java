@@ -14,8 +14,8 @@ package com.adobe.ims;
 import com.adobe.Workspace;
 import com.adobe.ims.model.AccessToken;
 import com.adobe.ims.util.PrivateKeyBuilder;
-import java.security.PrivateKey;
 import feign.RequestInterceptor;
+import java.security.PrivateKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,9 +27,9 @@ public class ImsServiceTestDrive {
 
     PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build(); // [1]
     Workspace workspace = Workspace.builder()
-            .systemEnv()
-            .privateKey(privateKey)
-            .build(); // [2]
+        .systemEnv()
+        .privateKey(privateKey)
+        .build(); // [2]
     ImsService imsService = ImsService.builder().workspace(workspace).build(); // [3]
 
     AccessToken accessToken = imsService.getJwtExchangeAccessToken(); // [4]
@@ -44,14 +44,14 @@ public class ImsServiceTestDrive {
 
     // here is one way you can build the related IMS Feign JWT Auth Interceptor
     RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
-            .imsService(imsService)
-            .apiKey(workspace.getApiKey())
-            .build();
+        .imsService(imsService)
+        .apiKey(workspace.getApiKey())
+        .build();
 
     // or you could also do
     RequestInterceptor authInterceptor2 = JWTAuthInterceptor.builder()
-            .workspace(workspace)
-            .build();
+        .workspace(workspace)
+        .build();
   }
 
   /**
@@ -66,12 +66,12 @@ public class ImsServiceTestDrive {
       PrivateKey privateKey = new PrivateKeyBuilder().configPath(DEFAULT_TEST_PROPERTIES).build();
 
       Workspace workspace = Workspace.builder()
-              .propertiesPath(DEFAULT_TEST_PROPERTIES)
-              .privateKey(privateKey)
-              .build();
+          .propertiesPath(DEFAULT_TEST_PROPERTIES)
+          .privateKey(privateKey)
+          .build();
 
       AccessToken accessToken = ImsService.builder().workspace(workspace).build()
-              .getJwtExchangeAccessToken();
+          .getJwtExchangeAccessToken();
 
       logger.info("accessToken: {}", accessToken.getAccessToken());
       System.exit(0);

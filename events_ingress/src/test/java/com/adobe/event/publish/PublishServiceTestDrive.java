@@ -14,15 +14,14 @@ package com.adobe.event.publish;
 import com.adobe.Workspace;
 import com.adobe.event.publish.model.CloudEvent;
 import com.adobe.ims.JWTAuthInterceptor;
-import com.adobe.ims.util.PrivateKeyBuilder;
 import com.adobe.util.FileUtil;
 import com.adobe.util.JacksonUtil;
+import com.adobe.ims.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.security.PrivateKey;
 import java.util.Properties;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PublishServiceTestDrive {
 
@@ -42,42 +41,43 @@ public class PublishServiceTestDrive {
    */
   private static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
 
+
   public static void main(String[] args) {
     try {
 
       Properties prop =
-              FileUtil.readPropertiesFromClassPath(
-                      (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
+          FileUtil.readPropertiesFromClassPath(
+              (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
 
       PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
 
       Workspace workspace = Workspace.builder()
-              .properties(prop)
-              .privateKey(privateKey)
-              .build();
+          .properties(prop)
+          .privateKey(privateKey)
+          .build();
 
       RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
-              .workspace(workspace)
-              .build();
+          .workspace(workspace)
+          .build();
 
-      String eventDataPayload = "your event payload";
+      String eventDataPayload =  "your event payload";
       //String eventDataPayload = "   { \"key\" : \"value\" } ";
 
       PublishService publishService = PublishService.builder()
-              .authInterceptor(authInterceptor) // [1]
-              .url(prop.getProperty(AIO_PUBLISH_URL)) // you can omit this if you target prod
-              .build(); //
+          .authInterceptor(authInterceptor) // [1]
+          .url(prop.getProperty(AIO_PUBLISH_URL)) // you can omit this if you target prod
+          .build(); //
       CloudEvent cloudEvent = publishService.publishCloudEvent(
-              prop.getProperty(AIO_PROVIDER_ID),
-              prop.getProperty(AIO_EVENT_CODE),
-              eventDataPayload);
+          prop.getProperty(AIO_PROVIDER_ID),
+          prop.getProperty(AIO_EVENT_CODE),
+          eventDataPayload);
       logger.info("published Cloud Event{}", JacksonUtil.DEFAULT_OBJECT_MAPPER.writeValueAsString(cloudEvent));
 
       // Adobe I/O Events Publishing API also allows the publication of simple/raw event json payload
       publishService.publishRawEvent(prop.getProperty(AIO_PROVIDER_ID),
-              prop.getProperty(AIO_EVENT_CODE),
-              eventDataPayload);
-      logger.info("published Raw Event{}", eventDataPayload);
+          prop.getProperty(AIO_EVENT_CODE),
+          eventDataPayload);
+      logger.info("published Raw Event{}",eventDataPayload);
 
       System.exit(0);
     } catch (Exception e) {
@@ -85,5 +85,6 @@ public class PublishServiceTestDrive {
       System.exit(-1);
     }
   }
+
 
 }
