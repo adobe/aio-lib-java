@@ -9,19 +9,28 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.event.management;
+package com.adobe.exception;
 
-import com.adobe.util.IOErrorDecoder;
 import feign.FeignException;
 import feign.Response;
-import feign.codec.ErrorDecoder;
+import java.util.Optional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class ConflictErrorDecoder extends IOErrorDecoder implements ErrorDecoder {
+public class IOUpstreamError extends FeignException {
 
-  @Override
-  public Exception decode(String methodKey, Response response) {
-    return (response.status()==409) ?
-        new ConflictException(response, FeignException.errorStatus(methodKey, response)) :
-        super.decode(methodKey, response);
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final String upStreamRequestId;
+
+  public IOUpstreamError(Response response, FeignException exception, String requestId) {
+    super(response.status(),
+        "request-id: `" + requestId + "` "+ exception.getMessage(),
+        response.request(), exception);
+    this.upStreamRequestId = requestId;
   }
+
+  public Optional<String> getUpStreamRequestId(){
+   return Optional.ofNullable(upStreamRequestId);
+  }
+
 }

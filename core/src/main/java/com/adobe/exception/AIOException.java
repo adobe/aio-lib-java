@@ -9,19 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.event.management;
+package com.adobe.exception;
 
-import com.adobe.util.IOErrorDecoder;
-import feign.FeignException;
-import feign.Response;
-import feign.codec.ErrorDecoder;
+public class AIOException extends RuntimeException {
 
-public class ConflictErrorDecoder extends IOErrorDecoder implements ErrorDecoder {
+  public AIOException(String message) {
+    super(message);
+  }
 
-  @Override
-  public Exception decode(String methodKey, Response response) {
-    return (response.status()==409) ?
-        new ConflictException(response, FeignException.errorStatus(methodKey, response)) :
-        super.decode(methodKey, response);
+  public AIOException(Throwable throwable) {
+    super(throwable);
+  }
+
+  public AIOException(String message, Throwable throwable) {
+    super(message, throwable);
   }
 }
