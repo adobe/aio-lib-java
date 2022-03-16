@@ -18,7 +18,7 @@
     <parent>
         <groupId>com.adobe</groupId>
         <artifactId>aio-lib-java</artifactId>
-        <version>0.0.11-SNAPSHOT</version>
+        <version>0.0.11</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -114,7 +114,7 @@
                     <packageType>application</packageType>
                     <accessControlHandling>merge</accessControlHandling>
                     <properties>
-                        <cloudManagerTarget>none</cloudManagerTarget>>
+                        <cloudManagerTarget>none</cloudManagerTarget>&gt;
                     </properties>
                     <embeddeds>
                         <embedded>
