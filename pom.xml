@@ -28,6 +28,8 @@
     <module>events_ingress</module>
     <module>events_journal</module>
     <module>osgi</module>
+    <module>core_aem</module>
+    <module>aem_events</module>
   </modules>
 
   <name>Adobe I/O - Java SDK</name>
