@@ -1,4 +1,5 @@
-# `aio-lib-java` 
+# `aio-lib-java`
+
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.adobe/aio-lib-java)](https://search.maven.org/artifact/com.adobe/aio-lib-java)
 [![Build](https://github.com/adobe/aio-lib-java/workflows/build/badge.svg)](https://github.com/adobe/aio-lib-java/actions?query=workflow%3Abuild)
@@ -14,7 +15,10 @@ Plain old Java Libraries:
 * [`aio-lib-java-events-journal`](./events_journal) is a library wrapping [Adobe I/O Events Journaling API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/journaling_api.md)
 
 AEM Modules:
-* [`com.adobe.aio-lib-java.osgi`](./osgi) is a Java OSGI bundle embedding all the plain old Java libraries of this sdk (as well as their dependencies tree).
+* [`aio-lib-java-osgi`](./osgi) is a Java OSGI bundle embedding all the plain old Java libraries of this sdk (as well as their dependencies tree).
+* [`aio-lib-java-core-aem`](./core_aem) is a Java OSGI bundle hosting OSGI Components wrapping [`aio-lib-java-core`](./core) and [`aio-lib-java-ims`](./ims)
+* [`aio-aem-events`](./aem-events)] is an AEM package containing all the OSGI bundles listed above, with their default configuration, enabling AEM and Adobe I/O Events integration.
+
 
 ## Builds
 
@@ -28,6 +32,6 @@ Contributions are welcomed! Read the [Contributing Guide](./.github/CONTRIBUTING
 
 This project is licensed under the Apache V2 License. See [LICENSE](LICENSE.md) for more information.
 
-### Support 
+### Support
 
 This project is still in preliminary phase. No official support/SLA's is available for the SDK. 
