@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 Adobe. All rights reserved.
+    This file is licensed to you under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License. You may obtain a copy
+    of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software distributed under
+    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+    OF ANY KIND, either express or implied. See the License for the specific language
+    governing permissions and limitations under the License.
+
+-->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>aio-aem</artifactId>
+    <groupId>com.adobe</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.0.13-SNAPSHOT</version>
+  </parent>
+
+  <artifactId>com.adobe.aio.aem.lib-osgi</artifactId>
+  <description>Adobe I/O - Java SDK - OSGI bundle</description>
+  <modelVersion>4.0.0</modelVersion>
+  <name>Adobe I/O - Java SDK - OSGI bundle</name>
+
+  <packaging>bundle</packaging>
+
+  <dependencies>
+    <dependency>
+      <artifactId>aio-lib-java-ims</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>aio-lib-java-core</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>aio-lib-java-events-mgmt</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>aio-lib-java-events-ingress</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>aio-lib-java-events-journal</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>xdm-event-model</artifactId>
+      <groupId>com.adobe.event</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>jjwt-api</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>jjwt-impl</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>jjwt-jackson</artifactId>
+      <groupId>io.jsonwebtoken</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>jakarta.xml.bind-api</artifactId>
+      <groupId>jakarta.xml.bind</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>validation-api</artifactId>
+      <groupId>javax.validation</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>jackson-databind</artifactId>
+      <groupId>com.fasterxml.jackson.core</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>feign-core</artifactId>
+      <groupId>io.github.openfeign</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>feign-jackson</artifactId>
+      <groupId>io.github.openfeign</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>feign-slf4j</artifactId>
+      <groupId>io.github.openfeign</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>feign-form</artifactId>
+      <groupId>io.github.openfeign.form</groupId>
+    </dependency>
+
+    <dependency>
+      <artifactId>org.osgi.framework</artifactId>
+      <groupId>org.osgi</groupId>
+    </dependency>
+
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-sling-plugin</artifactId>
+        <groupId>org.apache.sling</groupId>
+      </plugin>
+      <plugin>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <configuration>
+          <instructions>
+            <Bundle-Activator>com.adobe.aio.aem.activator.Activator</Bundle-Activator>
+            <Bundle-Name>${project.name}</Bundle-Name>
+            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <Bundle-Vendor>Adobe</Bundle-Vendor>
+            <Embed-Dependency>
+              aio-lib-java-ims,
+              aio-lib-java-core,
+              aio-lib-java-events-mgmt,
+              aio-lib-java-events-ingress,
+              aio-lib-java-events-journal,
+              xdm-event-model,
+              commons-text,
+              jjwt-api,
+              jjwt-impl,
+              jjwt-jackson,
+              feign-core,
+              feign-form,
+              feign-slf4j,
+              feign-jackson,
+              commons-lang3,
+              jakarta.xml.bind-api,
+              validation-api
+            </Embed-Dependency>
+            <Embed-Transitive>true</Embed-Transitive>
+            <Export-Package>
+              feign.*,
+              com.fasterxml.jackson.*,
+              com.adobe.xdm.*,
+              com.adobe.aio.workspace,
+              com.adobe.aio.exception,
+              com.adobe.aio.util,
+              com.adobe.aio.ims,
+              com.adobe.aio.ims.model,
+              com.adobe.aio.ims.util,
+              com.adobe.aio.event.publish,
+              com.adobe.aio.event.publish.api,
+              com.adobe.aio.event.publish.model,
+              com.adobe.aio.event.journal.api,
+              com.adobe.aio.event.journal,
+              com.adobe.aio.event.journal.model,
+              com.adobe.aio.event.management,
+              com.adobe.aio.event.management.api,
+              com.adobe.aio.event.management.model,
+              com.adobe.aio.aem.activator
+            </Export-Package>
+            <Import-Package>
+              !com.sun.tools.*,
+              !org.apache.tools.ant.*,
+              !org.eclipse.core.*,
+              !org.eclipse.jdt.core.*,
+              !org.eclipse.jdt.internal.*,
+              !com.sun.activation.*,
+              !sun.misc.*,
+              !lombok.*,
+              !jakarta.activation.*,
+              *
+            </Import-Package>
+            <_noee>true</_noee>
+          </instructions>
+        </configuration>
+        <extensions>true</extensions>
+        <groupId>org.apache.felix</groupId>
+        <version>3.5.0</version>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>
