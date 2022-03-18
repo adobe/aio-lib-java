@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright 2017 Adobe. All rights reserved.
+    This file is licensed to you under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License. You may obtain a copy
+    of the License at http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software distributed under
+    the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR REPRESENTATIONS
+    OF ANY KIND, either express or implied. See the License for the specific language
+    governing permissions and limitations under the License.
+
+-->
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <artifactId>aio-aem-events</artifactId>
+
+  <build>
+    <plugins>
+      <!--
+          we want to keep some of the META-INF files and not configure
+          everything in the plugin (mainly the filters).
+
+          copy the resource explicitly instead of attaching it to the default resources
+      -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <outputDirectory>${project.build.directory}/vault-work/META-INF</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/META-INF</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <id>copy-metainf-vault-resources</id>
+            <phase>generate-resources</phase>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- ====================================================================== -->
+      <!-- V A U L T   P A C K A G E   P L U G I N S                              -->
+      <!-- ====================================================================== -->
+      <plugin>
+        <artifactId>filevault-package-maven-plugin</artifactId>
+        <configuration>
+          <accessControlHandling>merge</accessControlHandling>
+          <embeddeds>
+            <embedded>
+              <artifactId>com.adobe.aio.aem.core</artifactId>
+              <groupId>com.adobe</groupId>
+              <target>/apps/aio/install</target>
+            </embedded>
+            <embedded>
+              <artifactId>com.adobe.aio.aem.lib-osgi</artifactId>
+              <groupId>com.adobe</groupId>
+              <target>/apps/aio/install</target>
+            </embedded>
+            <embedded>
+              <artifactId>com.adobe.aio.aem.event.management</artifactId>
+              <groupId>com.adobe</groupId>
+              <target>/apps/aio/install</target>
+            </embedded>
+            <embedded>
+              <artifactId>com.adobe.aio.aem.event.publish</artifactId>
+              <groupId>com.adobe</groupId>
+              <target>/apps/aio/install</target>
+            </embedded>
+            <embedded>
+              <artifactId>com.adobe.aio.aem.event.osgimapping</artifactId>
+              <groupId>com.adobe</groupId>
+              <target>/apps/aio/install</target>
+            </embedded>
+          </embeddeds>
+          <group>com.adobe</group>
+          <name>aio-lib-java-aem-events</name>
+          <packageType>application</packageType>
+          <properties>
+            <cloudManagerTarget>none</cloudManagerTarget>
+          </properties>
+        </configuration>
+        <extensions>true</extensions>
+        <groupId>org.apache.jackrabbit</groupId>
+      </plugin>
+      <plugin>
+        <artifactId>content-package-maven-plugin</artifactId>
+        <configuration>
+          <failOnError>true</failOnError>
+          <verbose>true</verbose>
+        </configuration>
+        <extensions>true</extensions>
+        <groupId>com.day.jcr.vault</groupId>
+      </plugin>
+
+      <plugin>
+        <artifactId>htl-maven-plugin</artifactId>
+        <groupId>org.apache.sling</groupId>
+      </plugin>
+    </plugins>
+    <resources>
+      <!-- define the resources that will go into the package -->
+      <resource>
+        <!--
+            we want to keep some of the META-INF files and not configure
+            everything in the plugin.
+        -->
+        <directory>${basedir}/src/main/content/META-INF</directory>
+        <targetPath>../vault-work/META-INF</targetPath>
+      </resource>
+      <resource>
+        <directory>${basedir}/src/main/content/jcr_root</directory>
+        <excludes>
+          <!-- exclude .vlt control files in the package -->
+          <exclude>**/.vlt</exclude>
+          <exclude>**/.vltignore</exclude>
+          <exclude>**/.gitignore</exclude>
+          <exclude>**/*.iml</exclude>
+          <exclude>**/.classpath</exclude>
+          <exclude>**/.project</exclude>
+          <exclude>**/.settings</exclude>
+          <exclude>**/.DS_Store</exclude>
+          <exclude>**/target/**</exclude>
+          <exclude>**/pom.xml</exclude>
+        </excludes>
+      </resource>
+    </resources>
+    <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
+  </build>
+
+  <dependencies>
+    <dependency>
+      <artifactId>com.adobe.aio.aem.event.osgimapping</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>com.adobe.aio.aem.event.publish</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>com.adobe.aio.aem.event.management</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>com.adobe.aio.aem.core</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <artifactId>com.adobe.aio.aem.lib-osgi</artifactId>
+      <groupId>com.adobe</groupId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+  <description>Adobe I/O - AEM Events Package</description>
+  <modelVersion>4.0.0</modelVersion>
+  <name>Adobe I/O - AEM Events Package</name>
+
+  <packaging>content-package</packaging>
+
+  <!-- ====================================================================== -->
+  <!-- B U I L D   D E F I N I T I O N                                        -->
+  <!-- ====================================================================== -->
+  <parent>
+    <artifactId>aio-aem</artifactId>
+    <groupId>com.adobe</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.0.13-SNAPSHOT</version>
+  </parent>
+
+</project>
