@@ -27,3 +27,5 @@ aem_events/src/main/content/jcr_root/apps/config.env
 slingInstall.sh
 aio-aem-events/src/main/content/jcr_root/apps/config.direct
 aio-aem-events/src/main/content/jcr_root/apps/config.env
+aem/aio_aem_events/src/main/content/jcr_root/apps/config.direct
+aem/aio_aem_events/src/main/content/jcr_root/apps/config.env

@@ -1,0 +1,5 @@
+{
+  "aio.event.code": "ping",
+  "aio.event.label": "ping",
+  "aio.event.description": "ping event"
+}
