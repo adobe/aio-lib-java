@@ -39,7 +39,7 @@ and start interacting with the many Adobe I/O API that support such authenticati
     // [4] use this service to retrieve an access token using a jwt exchange token flow
        
                       
-Have a look at our [ImsService `main()` Test Drive](./src/test/java/com/adobe/ims/ImsServiceTestDrive.java)
+Have a look at our [ImsService `main()` Test Drive](./src/test/java/com/adobe/aio/ims/ImsServiceTestDrive.java)
 
 ### Configurations
 
@@ -75,7 +75,7 @@ For option 3, Use the following commands to set the alias (as `myalias` here)  a
 
 ### Our reusable `OpenFeign` JWT (exchange token flow) Authentication `RequestInterceptor`
 
-This lib also contains JWT (exchange token flow) Authentication `RequestInterceptor`: [JWTAuthInterceptor](src/main/java/com/adobe/ims/api/JWTAuthInterceptor.java) 
+This lib also contains JWT (exchange token flow) Authentication `RequestInterceptor`: [JWTAuthInterceptor](src/main/java/com/adobe/aio/ims/api/JWTAuthInterceptor.java) 
 It is a [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors).
 It can be leverage to add the authentication headers expected by many Adobe APIs, it will add
 * an `Authorization` header with a `Bearer` access token (generated from a JWT exchange flow)
