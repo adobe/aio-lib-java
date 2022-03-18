@@ -12,7 +12,7 @@ This project is composed of Java Libraries :
 * [`aio-lib-java-events-mgmt`](./events_mgmt) is a library wrapping [Adobe I/O Events Provider and Registration API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/api.md)
 * [`aio-lib-java-events-ingress`](./events_ingress) is a library wrapping [Adobe I/O Events Publishing API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/eventsingress_api.md)
 * [`aio-lib-java-events-journal`](./events_journal) is a library wrapping [Adobe I/O Events Journaling API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/journaling_api.md)
-* as well as [`aem`] a sub-module, home of various Adobe I/O and AEM osgi connectors and packages
+* as well as [`aem`](./aem) a sub-module, home of various Adobe I/O and AEM osgi connectors and packages
 
 ## Builds
 
