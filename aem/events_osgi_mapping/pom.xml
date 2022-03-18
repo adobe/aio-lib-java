@@ -12,9 +12,7 @@
     governing permissions and limitations under the License.
 
 -->
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>com.adobe.aio.aem.event.osgimapping</artifactId>
 
   <build>
@@ -206,7 +204,7 @@ Bundle-DocURL:
     <artifactId>aio-aem</artifactId>
     <groupId>com.adobe</groupId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.0.13-SNAPSHOT</version>
+    <version>0.0.14</version>
   </parent>
 
 </project>
