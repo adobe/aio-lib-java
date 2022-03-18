@@ -8,7 +8,7 @@ This project is the multi-modules project hosting Adobe I/O Events and AEM conne
 * [`com.adobe.aio.aem.core`](./core_aem) is a Java OSGI bundle hosting OSGI Components wrapping [`aio-lib-java-core`](../core) and [`aio-lib-java-ims`](../ims)
 * [`com.adobe.aio.aem.event.management`](./events_mgmt_aem) is a Java OSGI bundle hosting OSGI Components wrapping [`aio-lib-java-events-mgmt`](../events_mgmt_aem)
 * [`com.adobe.aio.aem.event.publish`](./events_ingress_aem) is a Java OSGI bundle hosting OSGI Components  wrapping [`aio-lib-java-events-ingress`](../events_ingress)
-* [`aio-aem-events`](./aio-aem-events)] is an AEM package containing all the OSGI bundles listed above, with their default configuration, enabling AEM and Adobe I/O Events integration.
+* [`aio-aem-events`](./aio-aem-events) is an AEM package containing all the OSGI bundles listed above, with their default configuration, enabling AEM and Adobe I/O Events integration.
 
 ## Builds
 
