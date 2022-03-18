@@ -18,7 +18,7 @@
 
   <groupId>com.adobe</groupId>
   <artifactId>aio-lib-java</artifactId>
-  <version>0.0.12</version>
+  <version>0.0.13-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -75,7 +75,7 @@
     <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-events.git
     </developerConnection>
     <url>https://github.com/adobe/aio-lib-java-events/tree/master</url>
-    <tag>aio-lib-java-0.0.12</tag>
+    <tag>HEAD</tag>
   </scm>
 
   <distributionManagement>
