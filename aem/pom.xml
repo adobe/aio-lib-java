@@ -35,8 +35,8 @@
     <module>lib_osgi</module>
     <module>core_aem</module>
     <module>events_mgmt_aem</module>
-    <!--module>events_ingress_aem</module>
-    <module>events_osgi_mapping</module>
+    <module>events_ingress_aem</module>
+    <!--module>events_osgi_mapping</module>
     <module>aio_aem_events</module-->
   </modules>
 
