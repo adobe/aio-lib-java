@@ -12,7 +12,9 @@
     governing permissions and limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
@@ -137,10 +139,10 @@
               <bnd><![CDATA[
 Bundle-Category: aio
 Bundle-Vendor: Adobe
-Bundle-SymbolicName: com.adobe.aio-lib-java.core-aem
+Bundle-SymbolicName: ${project.artifactId}
 Import-Package: javax.annotation;version=0.0.0,com.fasterxml.jackson.*;version="[2.3.0, 3.0.0)",*
  -exportcontents: ${packages;VERSIONED}
-Export-Package: com.adobe.io.workspace,com.adobe.io.auth,com.adobe.io.status
+Export-Package: com.adobe.aio.aem.workspace,com.adobe.aio.aem.auth,com.adobe.aio.aem.status,com.adobe.aio.aem.util
  -snapshot: ${tstamp;yyyyMMddHHmmssSSS}
 Bundle-DocURL:
  -plugin org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin

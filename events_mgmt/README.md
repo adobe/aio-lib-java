@@ -22,7 +22,7 @@ by [`Adobe I/O Events` Provider and Registration APIs](https://www.adobe.io/apis
  * [2] set the workspace context expected by the ProviderService
  * [3] have this service retrieve one of your event provider by passing a provider id.
 
-See our [`main()` Test Drive](./src/test/java/com/adobe/event/management/ProviderServiceTestDrive.java)
+See our [`main()` Test Drive](./src/test/java/com/adobe/aio/event/management/ProviderServiceTestDrive.java)
 
 ## RegistrationService Test Drive
 

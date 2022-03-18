@@ -24,7 +24,7 @@ by [`Adobe I/O Events` Publishing API](https://www.adobe.io/apis/experienceplatf
    * a `x-api-key` header associated with the above token
  * [3] have this service publish a CloudEvent 
  
-See our [`main()` Test Drive](./src/test/java/com/adobe/event/publish/PublishServiceTestDrive.java)
+See our [`main()` Test Drive](./src/test/java/com/adobe/aio/event/publish/PublishServiceTestDrive.java)
  
 
 ## Builds

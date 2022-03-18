@@ -53,6 +53,10 @@
       <artifactId>aio-lib-java-events-journal</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>com.adobe.event</groupId>
+      <artifactId>xdm-event-model</artifactId>
+    </dependency>
     
     <dependency>
       <groupId>io.jsonwebtoken</groupId>
@@ -70,6 +74,10 @@
     <dependency>
       <groupId>jakarta.xml.bind</groupId>
       <artifactId>jakarta.xml.bind-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
     </dependency>
 
     <dependency>
@@ -117,7 +125,7 @@
         <configuration>
           <instructions>
             <_noee>true</_noee>
-            <Bundle-Activator>com.adobe.aio.lib.Activator</Bundle-Activator>
+            <Bundle-Activator>com.adobe.aio.aem.activator.Activator</Bundle-Activator>
             <Bundle-Vendor>Adobe</Bundle-Vendor>
             <Bundle-Name>${project.name}</Bundle-Name>
             <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
@@ -127,6 +135,7 @@
               aio-lib-java-events-mgmt,
               aio-lib-java-events-ingress,
               aio-lib-java-events-journal,
+              xdm-event-model,
               commons-text,
               jjwt-api,
               jjwt-impl,
@@ -136,7 +145,8 @@
               feign-slf4j,
               feign-jackson,
               commons-lang3,
-              jakarta.xml.bind-api
+              jakarta.xml.bind-api,
+              validation-api
             </Embed-Dependency>
             <Embed-Transitive>true</Embed-Transitive>
             <Import-Package>
@@ -152,12 +162,22 @@
               *
             </Import-Package>
             <Export-Package>
-              feign.*,com.adobe,com.adobe.util,com.adobe.event.publish,com.adobe.event.publish.api,
-              com.adobe.event.publish.model,com.adobe.event.journal,com.adobe.event.journal.api,
-              com.adobe.event.journal.model,com.adobe.event.management,com.adobe.event.management.api,
-              com.adobe.event.management.model,com.adobe.ims,com.adobe.ims.api,com.adobe.ims.model,
-              com.adobe.ims.util,com.fasterxml.jackson.*,
-              com.adobe.exception,com.adobe.aio.lib
+              feign.*,
+              com.fasterxml.jackson.*,
+              com.adobe.xdm.*
+              com.adobe.aio.workspace,
+              com.adobe.aio.exception,
+              com.adobe.aio.util,
+              com.adobe.aio.ims,
+              com.adobe.aio.ims.model,
+              com.adobe.aio.ims.util,
+              com.adobe.aio.event.publish,
+              com.adobe.aio.event.publish.model,
+              com.adobe.aio.event.journal,
+              com.adobe.aio.event.journal.model,
+              com.adobe.aio.event.management,
+              com.adobe.aio.event.management.model,
+              com.adobe.aio.aem.activator
             </Export-Package>
           </instructions>
         </configuration>
