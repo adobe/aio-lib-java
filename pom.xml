@@ -18,7 +18,7 @@
 
   <groupId>com.adobe</groupId>
   <artifactId>aio-lib-java</artifactId>
-  <version>0.0.12-SNAPSHOT</version>
+  <version>0.0.13-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -29,24 +29,13 @@
     <module>events_ingress</module>
     <module>events_journal</module>
 
-
-    <module>osgi</module>
-    <module>core_aem</module>
-    <module>aem_events</module>
-
-    <!--
-    <module>events_mgmt_aem</module>
-    <module>events_ingress_aem</module>
-    <module>events_osgi_aem</module>
-    <module>aio-aem-events</module>
-    -->
-
+    <module>aem</module>
 
   </modules>
 
-  <name>Adobe I/O - Java SDK</name>
+  <name>Adobe I/O - Java SDK - Parent Project</name>
   <description>Adobe I/O - Java SDK - Parent Project</description>
-  <url>https://github.com/adobe/aio-lib-java-events</url>
+  <url>https://github.com/adobe/aio-lib-java</url>
 
   <licenses>
     <license>
@@ -71,10 +60,10 @@
   </developers>
 
   <scm>
-    <connection>scm:git:https://github.com/adobe/aio-lib-java-events.git</connection>
-    <developerConnection>scm:git:https://github.com/adobe/aio-lib-java-events.git
+    <connection>scm:git:https://github.com/adobe/aio-lib-java.git</connection>
+    <developerConnection>scm:git:https://github.com/adobe/aio-lib-java.git
     </developerConnection>
-    <url>https://github.com/adobe/aio-lib-java-events/tree/master</url>
+    <url>https://github.com/adobe/aio-lib-java/tree/master</url>
     <tag>HEAD</tag>
   </scm>
 
@@ -117,31 +106,9 @@
 
     <xdm.event-model.version>0.92.5</xdm.event-model.version>
 
-    <!-- aem related -->
-    <aem.host>localhost</aem.host>
-    <aem.port>4502</aem.port>
-    <aem.publish.host>localhost</aem.publish.host>
-    <aem.publish.port>4503</aem.publish.port>
-    <sling.user>admin</sling.user>
-    <sling.password>admin</sling.password>
-    <vault.user>admin</vault.user>
-    <vault.password>admin</vault.password>
-    <!--
-If you want to deploy the bundle from the source
-1. modify the below `crx.*` properties according to your needs
-2. run `mvn -Dcrx.path=/apps/changeMe/install -Dlicense.header.path=../copyright_header.txt -P localInstall clean install sling:install`
- -->
-    <crx.host>localhost</crx.host>
-    <crx.port>4502</crx.port>
-    <crx.username>admin</crx.username>
-    <crx.password>admin</crx.password>
-
-    <bnd.version>4.2.0</bnd.version>
-
     <com.adobe.aem.uber-jar.version>6.5.0</com.adobe.aem.uber-jar.version>
     <javax.jcr.version>2.0</javax.jcr.version>
     <org.osgi.framework.version>1.9.0</org.osgi.framework.version>
-
 
   </properties>
 
@@ -387,7 +354,6 @@ If you want to deploy the bundle from the source
         <artifactId>license-maven-plugin</artifactId>
         <!-- Note: run "mvn license:format" to add headers automatically -->
       </plugin>
-      <!--
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
@@ -398,7 +364,6 @@ If you want to deploy the bundle from the source
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
       </plugin>
-      -->
     </plugins>
 
     <pluginManagement>
@@ -522,25 +487,6 @@ If you want to deploy the bundle from the source
           <version>3.1.0</version>
         </plugin>
 
-        <!-- Felix Bundle Maven Plugin -->
-        <plugin>
-          <groupId>org.apache.felix</groupId>
-          <artifactId>maven-bundle-plugin</artifactId>
-          <version>3.5.0</version>
-        </plugin>
-
-        <!-- BND Maven Plugin -->
-        <plugin>
-          <groupId>biz.aQute.bnd</groupId>
-          <artifactId>bnd-maven-plugin</artifactId>
-          <version>${bnd.version}</version>
-        </plugin>
-        <plugin>
-          <groupId>biz.aQute.bnd</groupId>
-          <artifactId>bnd-baseline-maven-plugin</artifactId>
-          <version>${bnd.version}</version>
-        </plugin>
-
         <!-- Maven Resources Plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -590,61 +536,6 @@ If you want to deploy the bundle from the source
           <version>2.8.2</version>
         </plugin>
 
-        <!-- Apache Sling Plugin -->
-        <plugin>
-          <groupId>org.apache.sling</groupId>
-          <artifactId>sling-maven-plugin</artifactId>
-          <version>2.4.0</version>
-          <configuration>
-            <slingUrl>http://${aem.host}:${aem.port}/system/console</slingUrl>
-            <deploymentMethod>WebConsole</deploymentMethod>
-          </configuration>
-        </plugin>
-
-        <!-- HTL Maven Plugin -->
-        <plugin>
-          <groupId>org.apache.sling</groupId>
-          <artifactId>htl-maven-plugin</artifactId>
-          <version>1.0.6</version>
-          <configuration>
-            <failOnWarnings>true</failOnWarnings>
-          </configuration>
-          <executions>
-            <execution>
-              <goals>
-                <goal>validate</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-
-        <!-- Jackrabbit FileVault Package Plugin -->
-        <plugin>
-          <groupId>org.apache.jackrabbit</groupId>
-          <artifactId>filevault-package-maven-plugin</artifactId>
-          <version>1.0.3</version>
-          <configuration>
-            <accessControlHandling>merge</accessControlHandling>
-            <filterSource>src/main/content/META-INF/vault/filter.xml</filterSource>
-            <properties>
-              <createdBy>Adobe Systems Incorporated</createdBy>
-            </properties>
-          </configuration>
-        </plugin>
-
-        <!-- Content Package Plugin -->
-        <plugin>
-          <groupId>com.day.jcr.vault</groupId>
-          <artifactId>content-package-maven-plugin</artifactId>
-          <version>1.0.2</version>
-          <configuration>
-            <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
-            <failOnError>true</failOnError>
-            <userId>${vault.user}</userId>
-            <password>${vault.password}</password>
-          </configuration>
-        </plugin>
-
         <!-- Maven Enforcer Plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -682,139 +573,6 @@ If you want to deploy the bundle from the source
             <artifactId>maven-gpg-plugin</artifactId>
           </plugin>
         </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>localInstall</id>
-      <activation>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>maven-sling-plugin</artifactId>
-            <configuration>
-              <slingUrl>http://${crx.host}:${crx.port}${crx.path}</slingUrl>
-              <user>${crx.username}</user>
-              <password>${crx.password}</password>
-              <deploymentMethod>WebDAV</deploymentMethod>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <!-- Development profile: install only the bundle -->
-    <profile>
-      <id>autoInstallBundle</id>
-      <!--
-          To enable this feature for a bundle, the sling-maven-plugin
-          (without configuration) needs to be included:
-          <plugin>
-              <groupId>org.apache.sling</groupId>
-              <artifactId>sling-maven-plugin</artifactId>
-           </plugin>
-      -->
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.sling</groupId>
-              <artifactId>sling-maven-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>install-bundle</id>
-                  <goals>
-                    <goal>install</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>
-    </profile>
-    <profile>
-      <id>autoInstallPackage</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.jackrabbit</groupId>
-              <artifactId>filevault-package-maven-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>create-package</id>
-                  <goals>
-                    <goal>package</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-            <plugin>
-              <groupId>com.day.jcr.vault</groupId>
-              <artifactId>content-package-maven-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>install-package</id>
-                  <goals>
-                    <goal>install</goal>
-                  </goals>
-                  <configuration>
-                    <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>
-    </profile>
-    <profile>
-      <id>autoInstallPackagePublish</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.jackrabbit</groupId>
-              <artifactId>filevault-package-maven-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>create-package</id>
-                  <goals>
-                    <goal>package</goal>
-                  </goals>
-                </execution>
-              </executions>
-            </plugin>
-            <plugin>
-              <groupId>com.day.jcr.vault</groupId>
-              <artifactId>content-package-maven-plugin</artifactId>
-              <executions>
-                <execution>
-                  <id>install-package-publish</id>
-                  <goals>
-                    <goal>install</goal>
-                  </goals>
-                  <configuration>
-                    <targetURL>http://${aem.publish.host}:${aem.publish.port}/crx/packmgr/service.jsp
-                    </targetURL>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
-          </plugins>
-        </pluginManagement>
       </build>
     </profile>
 
