@@ -14,13 +14,13 @@
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
+    <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
-    <groupId>com.adobe</groupId>
     <relativePath>../pom.xml</relativePath>
     <version>0.0.15-SNAPSHOT</version>
   </parent>
 
-  <artifactId>com.adobe.aio.aem.lib-osgi</artifactId>
+  <artifactId>aio-lib-osgi</artifactId>
   <description>Adobe I/O - Java SDK - OSGI bundle</description>
   <modelVersion>4.0.0</modelVersion>
   <name>Adobe I/O - Java SDK - OSGI bundle</name>
@@ -30,27 +30,27 @@
   <dependencies>
     <dependency>
       <artifactId>aio-lib-java-ims</artifactId>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio</groupId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <artifactId>aio-lib-java-core</artifactId>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio</groupId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <artifactId>aio-lib-java-events-mgmt</artifactId>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio</groupId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <artifactId>aio-lib-java-events-ingress</artifactId>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio</groupId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <artifactId>aio-lib-java-events-journal</artifactId>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio</groupId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -114,8 +114,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
       </plugin>
       <plugin>
-        <artifactId>maven-sling-plugin</artifactId>
         <groupId>org.apache.sling</groupId>
+        <artifactId>sling-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <artifactId>maven-bundle-plugin</artifactId>
@@ -123,7 +123,7 @@
           <instructions>
             <Bundle-Activator>com.adobe.aio.aem.activator.Activator</Bundle-Activator>
             <Bundle-Name>${project.name}</Bundle-Name>
-            <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
             <Bundle-Vendor>Adobe</Bundle-Vendor>
             <Embed-Dependency>
               aio-lib-java-ims,

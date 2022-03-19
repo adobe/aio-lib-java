@@ -15,7 +15,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <parent>
-    <groupId>com.adobe</groupId>
+    <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java</artifactId>
     <version>0.0.15-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
@@ -29,7 +29,7 @@
   <dependencies>
 
     <dependency>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-core</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -49,7 +49,7 @@
       <artifactId>slf4j-simple</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-ims</artifactId>
       <version>${project.version}</version>
     </dependency>
