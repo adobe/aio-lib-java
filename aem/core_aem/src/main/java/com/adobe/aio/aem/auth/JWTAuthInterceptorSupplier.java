@@ -12,7 +12,7 @@
 package com.adobe.aio.aem.auth;
 
 import com.adobe.aio.aem.status.StatusSupplier;
-import com.adobe.aio.ims.JWTAuthInterceptor;
+import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 
 /**
  * Adobe I/O Events Auth service interface

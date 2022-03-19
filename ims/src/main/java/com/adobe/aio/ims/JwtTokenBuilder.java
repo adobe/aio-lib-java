@@ -33,7 +33,7 @@ import java.util.Map;
  * It will also help you getting this signed with a `RSASSA-PKCS1-V1_5` Digital Signatures with `SHA-2` and a `RS256` The JWT algorithm/`alg` header value.
  * For this, it leverages a third-party open source library : [jjwt](https://github.com/jwtk/jjwt)
  */
-class JwtTokenBuilder {
+public class JwtTokenBuilder {
 
   private final Map<String, Object> claims;
   private final PrivateKey privateKey;

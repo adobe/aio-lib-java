@@ -9,25 +9,25 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.event.management;
+package com.adobe.aio.event.management.feign;
 
+import com.adobe.aio.event.management.RegistrationService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.EventsOfInterest;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationInputModel;
-import com.adobe.aio.ims.JWTAuthInterceptor;
 import com.adobe.aio.util.FileUtil;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
-import feign.RequestInterceptor;
+
 import java.security.PrivateKey;
 import java.util.Optional;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RegistrationServiceTestDrive {
+public class FeignRegistrationServiceTestDrive {
 
-  private static final Logger logger = LoggerFactory.getLogger(RegistrationServiceTestDrive.class);
+  private static final Logger logger = LoggerFactory.getLogger(FeignRegistrationServiceTestDrive.class);
 
   // use your own property file filePath or classpath and don't push back to git
   private static final String DEFAULT_TEST_DRIVE_PROPERTIES = "workspace.secret.properties";
@@ -58,12 +58,8 @@ public class RegistrationServiceTestDrive {
           .privateKey(privateKey)
           .build();
 
-      RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
-          .workspace(workspace)
-          .build();
 
       RegistrationService registrationService = RegistrationService.builder()
-          .authInterceptor(authInterceptor) // [1]
           .workspace(workspace) // [2]
           .url(prop.getProperty(API_URL)) // you can omit this if you target prod
           .build(); //
@@ -84,7 +80,7 @@ public class RegistrationServiceTestDrive {
       registrationService.delete(createdId);
       logger.info("deleted: {}", createdId);
 
-      logger.info("RegistrationServiceTestDrive completed successfully.");
+      logger.info("FeignRegistrationServiceTestDrive completed successfully.");
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

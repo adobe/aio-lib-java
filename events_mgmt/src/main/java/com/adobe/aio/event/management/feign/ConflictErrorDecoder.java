@@ -9,28 +9,19 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.exception;
+package com.adobe.aio.event.management.feign;
 
+import com.adobe.aio.util.feign.IOErrorDecoder;
 import feign.FeignException;
 import feign.Response;
-import java.util.Optional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import feign.codec.ErrorDecoder;
 
-public class IOUpstreamError extends FeignException {
+public class ConflictErrorDecoder extends IOErrorDecoder implements ErrorDecoder {
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private final String upStreamRequestId;
-
-  public IOUpstreamError(Response response, FeignException exception, String requestId) {
-    super(response.status(),
-        "request-id: `" + requestId + "` "+ exception.getMessage(),
-        response.request(), exception);
-    this.upStreamRequestId = requestId;
+  @Override
+  public Exception decode(String methodKey, Response response) {
+    return (response.status()==409) ?
+        new ConflictException(response, FeignException.errorStatus(methodKey, response)) :
+        super.decode(methodKey, response);
   }
-
-  public Optional<String> getUpStreamRequestId(){
-   return Optional.ofNullable(upStreamRequestId);
-  }
-
 }

@@ -9,13 +9,16 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.event.publish;
+package com.adobe.aio.event.publish.feign;
 
+import com.adobe.aio.event.publish.PublishService;
 import com.adobe.aio.event.publish.api.PublishApi;
 import com.adobe.aio.event.publish.model.CloudEvent;
 import com.adobe.aio.exception.AIOException;
-import com.adobe.aio.util.FeignUtil;
+import com.adobe.aio.ims.feign.JWTAuthInterceptor;
+import com.adobe.aio.util.feign.FeignUtil;
 import com.adobe.aio.util.JacksonUtil;
+import com.adobe.aio.workspace.Workspace;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,17 +26,18 @@ import com.fasterxml.jackson.databind.node.TextNode;
 import feign.RequestInterceptor;
 import org.apache.commons.lang3.StringUtils;
 
-class PublishServiceImpl implements PublishService {
+public class FeignPublishService implements PublishService {
 
   private final PublishApi publishApi;
 
-  PublishServiceImpl(final RequestInterceptor authInterceptor,
-      final String url) {
+  public FeignPublishService(final Workspace workspace, final String url) {
     String apiUrl = StringUtils.isEmpty(url) ? PublishApi.DEFAULT_URL : url;
-    if (authInterceptor == null) {
+    if (workspace == null) {
       throw new IllegalArgumentException(
-          "PublishService is missing a authentication interceptor");
+          "PublishService is missing a workspace context");
     }
+    workspace.validateWorkspaceContext();
+    RequestInterceptor authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
     this.publishApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
         .target(PublishApi.class, apiUrl);

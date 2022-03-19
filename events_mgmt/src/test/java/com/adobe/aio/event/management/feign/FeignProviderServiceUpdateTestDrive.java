@@ -9,25 +9,25 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.event.management;
+package com.adobe.aio.event.management.feign;
 
+import com.adobe.aio.event.management.ProviderService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.ProviderInputModel;
-import com.adobe.aio.ims.JWTAuthInterceptor;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.util.FileUtil;
-import feign.RequestInterceptor;
+
 import java.security.PrivateKey;
 import java.util.Optional;
 import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ProviderServiceUpdateTestDrive {
+public class FeignProviderServiceUpdateTestDrive {
 
-  private static final Logger logger = LoggerFactory.getLogger(ProviderServiceUpdateTestDrive.class);
+  private static final Logger logger = LoggerFactory.getLogger(FeignProviderServiceUpdateTestDrive.class);
 
   // use your own property file filePath or classpath and don't push back to git
   private static final String DEFAULT_TEST_DRIVE_PROPERTIES = "workspace.secret.properties";
@@ -54,13 +54,8 @@ public class ProviderServiceUpdateTestDrive {
           .properties(prop)
           .privateKey(privateKey)
           .build();
-
-      RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
-          .workspace(workspace)
-          .build();
       
       ProviderService providerService = ProviderService.builder()
-          .authInterceptor(authInterceptor) // [1]
           .workspace(workspace) // [2]
           .url(prop.getProperty(API_URL)) // you can omit this if you target prod
           .build(); //
@@ -104,7 +99,7 @@ public class ProviderServiceUpdateTestDrive {
 
       providerService.deleteProvider(aboutToBeDeleted.get().getId());
       logger.info("deleted: {}", aboutToBeDeleted.get().getId());
-      logger.info("ProviderServiceUpdateTestDrive completed successfully.");
+      logger.info("FeignProviderServiceUpdateTestDrive completed successfully.");
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

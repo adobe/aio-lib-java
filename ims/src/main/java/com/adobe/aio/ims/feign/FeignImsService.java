@@ -9,20 +9,22 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.ims;
+package com.adobe.aio.ims.feign;
 
+import com.adobe.aio.ims.ImsService;
+import com.adobe.aio.ims.JwtTokenBuilder;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.api.ImsApi;
 import com.adobe.aio.ims.model.AccessToken;
-import com.adobe.aio.util.FeignUtil;
+import com.adobe.aio.util.feign.FeignUtil;
 
-class ImsServiceImpl implements ImsService {
+public class FeignImsService implements ImsService {
 
   public static final String ACCESS_TOKEN = "access_token";
   private final ImsApi imsApi;
   private final Workspace workspace;
 
-  ImsServiceImpl(final Workspace workspace) {
+  public FeignImsService(final Workspace workspace) {
     this.workspace = workspace;
     this.imsApi = FeignUtil.getBuilderWithFormEncoder()
         .target(ImsApi.class, workspace.getImsUrl());

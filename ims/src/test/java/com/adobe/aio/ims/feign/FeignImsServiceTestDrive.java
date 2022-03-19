@@ -9,8 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.ims;
+package com.adobe.aio.ims.feign;
 
+import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
@@ -19,9 +20,9 @@ import java.security.PrivateKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ImsServiceTestDrive {
+public class FeignImsServiceTestDrive {
 
-  private static final Logger logger = LoggerFactory.getLogger(ImsServiceTestDrive.class);
+  private static final Logger logger = LoggerFactory.getLogger(FeignImsServiceTestDrive.class);
 
   public static void runTheReadmeFile() {
 

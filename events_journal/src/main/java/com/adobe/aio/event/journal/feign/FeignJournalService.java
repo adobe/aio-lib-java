@@ -9,29 +9,26 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.event.journal;
+package com.adobe.aio.event.journal.feign;
 
+import com.adobe.aio.event.journal.JournalService;
+import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.journal.api.JournalApi;
 import com.adobe.aio.event.journal.model.JournalEntry;
-import com.adobe.aio.util.FeignUtil;
+import com.adobe.aio.util.feign.FeignUtil;
 import com.adobe.aio.util.JacksonUtil;
 import feign.RequestInterceptor;
 import feign.jackson.JacksonDecoder;
 import org.apache.commons.lang3.StringUtils;
 
-class JournalServiceImpl implements JournalService {
+public class FeignJournalService implements JournalService {
 
   private final JournalApi journalApi;
   private final String imsOrgId;
   private final RequestInterceptor authInterceptor;
 
-  JournalServiceImpl(final RequestInterceptor authInterceptor,
-      final String journalUrl, Workspace workspace) {
-    if (authInterceptor == null) {
-      throw new IllegalArgumentException(
-          "JournalService is missing a authentication interceptor");
-    }
+  public FeignJournalService(final Workspace workspace, final String journalUrl) {
     if (StringUtils.isEmpty(journalUrl)) {
       throw new IllegalArgumentException(
           "JournalService is missing aj ournalUrl");
@@ -42,8 +39,9 @@ class JournalServiceImpl implements JournalService {
     if (StringUtils.isEmpty(workspace.getImsOrgId())) {
       throw new IllegalArgumentException("Workspace is missing an imsOrgId context");
     }
+    workspace.validateWorkspaceContext();
     this.imsOrgId = workspace.getImsOrgId();
-    this.authInterceptor = authInterceptor;
+    authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
     this.journalApi = FeignUtil.getBaseBuilder()
         .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .requestInterceptor(authInterceptor)

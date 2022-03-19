@@ -1,0 +1,46 @@
+Bundle-Category: aio
+Bundle-Vendor: Adobe
+Bundle-Name: Adobe I/O - Java SDK - OSGI bundle
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
+Import-Package: \
+    !com.sun.tools.*,\
+    !org.apache.tools.ant.*,\
+    !org.eclipse.core.*,\
+    !org.eclipse.jdt.core.*,\
+    !org.eclipse.jdt.internal.*,\
+    !com.sun.activation.*,\
+    !sun.misc.*,\
+    !jakarta.activation.*,\
+    !org.glassfish.hk2.osgiresourcelocator,\
+    !lombok,\
+    javax.annotation;version="0.0.0",\
+    com.fasterxml.jackson.annotation;version="[2.9,3)",\
+    com.fasterxml.jackson.core;version="[2.9,3)",\
+    com.fasterxml.jackson.databind;version="[2.9,3)",\
+    com.fasterxml.jackson.databind.cfg;version="[2.9,3)",\
+    com.fasterxml.jackson.databind.deser.std;version="[2.9,3)",\
+    com.fasterxml.jackson.databind.module;version="[2.9,3)",\
+    com.fasterxml.jackson.databind.node;version="[2.9,3)",\
+    com.fasterxml.jackson.databind.type;version="[2.9,3)",\
+    *
+Export-Package: com.adobe.aio.workspace;version="${project.version}",\
+    com.adobe.aio.exception;version="${project.version}",\
+    com.adobe.aio.util;version="${project.version}",\
+    com.adobe.aio.ims;version="${project.version}",\
+    com.adobe.aio.ims.model;version="${project.version}",\
+    com.adobe.aio.ims.util;version="${project.version}",\
+    com.adobe.aio.event.management;version="${project.version}",\
+    com.adobe.aio.event.management.model;version="${project.version}",\
+    com.adobe.aio.event.journal;version="${project.version}",\
+    com.adobe.aio.event.journal.model;version="${project.version}",\
+    com.adobe.aio.event.publish;version="${project.version}",\
+    com.adobe.aio.event.publish.model;version="${project.version}"
+Bundle-DocURL:
+
+-includeresource: target/dependency/;lib:=true
+-exportcontents: ${removeall;${packages;VERSIONED};${packages;CONDITIONAL}}
+-plugin: org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin
+-plugin: org.apache.sling.bnd.models.ModelsScannerPlugin
+-noextraheaders: true
+-snapshot: SNAPSHOT
+-fixupmessages: "Classes found in the wrong directory:";is:=ignore

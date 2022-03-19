@@ -9,31 +9,29 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.event.management;
+package com.adobe.aio.event.management.feign;
 
 import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 
+import com.adobe.aio.event.management.RegistrationService;
+import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.api.RegistrationApi;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationInputModel;
-import com.adobe.aio.util.FeignUtil;
+import com.adobe.aio.util.feign.FeignUtil;
 import feign.RequestInterceptor;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
-class RegistrationServiceImpl implements RegistrationService {
+public class FeignRegistrationService implements RegistrationService {
 
   private final RegistrationApi registrationApi;
   private final Workspace workspace;
 
-  RegistrationServiceImpl(final RequestInterceptor authInterceptor, final Workspace workspace,
-      final String url) {
+  public FeignRegistrationService(final Workspace workspace,
+                                  final String url) {
     String apiUrl = StringUtils.isEmpty(url) ? API_MANAGEMENT_URL : url;
-    if (authInterceptor == null) {
-      throw new IllegalArgumentException(
-          "RegistrationService is missing a authentication interceptor");
-    }
     if (workspace == null) {
       throw new IllegalArgumentException("RegistrationService is missing a workspace context");
     }
@@ -49,6 +47,8 @@ class RegistrationServiceImpl implements RegistrationService {
     if (StringUtils.isEmpty(workspace.getApiKey())) {
       throw new IllegalArgumentException("Workspace is missing an apiKey context");
     }
+    workspace.validateWorkspaceContext();
+    RequestInterceptor authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
     this.registrationApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
         .target(RegistrationApi.class, apiUrl);

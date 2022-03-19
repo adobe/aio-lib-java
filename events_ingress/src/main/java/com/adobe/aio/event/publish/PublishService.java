@@ -11,10 +11,11 @@
  */
 package com.adobe.aio.event.publish;
 
+import com.adobe.aio.event.publish.feign.FeignPublishService;
 import com.adobe.aio.event.publish.model.CloudEvent;
+import com.adobe.aio.workspace.Workspace;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import feign.RequestInterceptor;
 
 
 public interface PublishService {
@@ -32,11 +33,11 @@ public interface PublishService {
 
   class Builder {
 
-    private RequestInterceptor authInterceptor;
+    private Workspace workspace;
     private String url;
 
-    public Builder authInterceptor(RequestInterceptor authInterceptor) {
-      this.authInterceptor = authInterceptor;
+    public Builder workspace(Workspace workspace) {
+      this.workspace = workspace;
       return this;
     }
     public Builder url(String url) {
@@ -45,7 +46,7 @@ public interface PublishService {
     }
 
     public PublishService build() {
-      return new PublishServiceImpl(authInterceptor, url);
+      return new FeignPublishService(workspace, url);
     }
   }
 }

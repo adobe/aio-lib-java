@@ -9,11 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.event.journal;
+package com.adobe.aio.event.journal.feign;
 
+import com.adobe.aio.event.journal.JournalService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.journal.model.JournalEntry;
-import com.adobe.aio.ims.JWTAuthInterceptor;
+import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.util.FileUtil;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import feign.RequestInterceptor;
@@ -22,9 +23,9 @@ import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class JournalServiceTestDrive {
+public class FeignJournalServiceTestDrive {
 
-  private static final Logger logger = LoggerFactory.getLogger(JournalServiceTestDrive.class);
+  private static final Logger logger = LoggerFactory.getLogger(FeignJournalServiceTestDrive.class);
 
   // use your own property file filePath or classpath and don't push back to git
   private static final String DEFAULT_TEST_DRIVE_PROPERTIES = "workspace.secret.properties";
@@ -52,16 +53,11 @@ public class JournalServiceTestDrive {
           .privateKey(privateKey)
           .build();
 
-      RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
-          .workspace(workspace)
-          .build();
-
       String journalUrl = prop.getProperty(AIO_JOURNAL_URL);
       int nofEvents = 0;
       int nofEntries = 1;
 
       JournalService journalService = JournalService.builder()
-          .authInterceptor(authInterceptor) // [1]
           .workspace(workspace) // [2]
           .url(journalUrl) // [3]
           .build(); //

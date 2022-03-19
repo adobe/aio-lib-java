@@ -11,9 +11,9 @@
  */
 package com.adobe.aio.event.journal;
 
+import com.adobe.aio.event.journal.feign.FeignJournalService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.journal.model.JournalEntry;
-import feign.RequestInterceptor;
 
 public interface JournalService {
 
@@ -94,14 +94,8 @@ public interface JournalService {
 
   class Builder {
 
-    private RequestInterceptor authInterceptor;
     private String url;
     private Workspace workspace;
-
-    public Builder authInterceptor(RequestInterceptor authInterceptor) {
-      this.authInterceptor = authInterceptor;
-      return this;
-    }
 
     public Builder url(String url) {
       this.url = url;
@@ -114,7 +108,7 @@ public interface JournalService {
     }
 
     public JournalService build() {
-      return new JournalServiceImpl(authInterceptor, url, workspace);
+      return new FeignJournalService(workspace, url);
     }
   }
 }

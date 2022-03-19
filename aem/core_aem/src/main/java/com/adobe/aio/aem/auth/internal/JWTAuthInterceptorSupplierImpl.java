@@ -14,7 +14,7 @@ package com.adobe.aio.aem.auth.internal;
 import com.adobe.aio.aem.auth.JWTAuthInterceptorSupplier;
 import com.adobe.aio.aem.status.Status;
 import com.adobe.aio.aem.workspace.WorkspaceSupplier;
-import com.adobe.aio.ims.JWTAuthInterceptor;
+import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import java.util.HashMap;
 import java.util.Map;
 import org.osgi.service.component.annotations.Activate;

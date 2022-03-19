@@ -9,10 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.event.management;
+package com.adobe.aio.event.management.feign;
 
 import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 
+import com.adobe.aio.event.management.ProviderService;
+import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.api.EventMetadataApi;
 import com.adobe.aio.event.management.api.ProviderApi;
@@ -22,7 +24,7 @@ import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.ProviderCollection;
 import com.adobe.aio.event.management.model.ProviderInputModel;
 import com.adobe.aio.util.Constants;
-import com.adobe.aio.util.FeignUtil;
+import com.adobe.aio.util.feign.FeignUtil;
 import feign.RequestInterceptor;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class ProviderServiceImpl implements ProviderService {
+public class FeignProviderService implements ProviderService {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -39,16 +41,14 @@ class ProviderServiceImpl implements ProviderService {
   private final EventMetadataApi eventMetadataApi;
   private final Workspace workspace;
 
-  ProviderServiceImpl(final RequestInterceptor authInterceptor,
-      final Workspace workspace, final String url) {
+  public FeignProviderService(final Workspace workspace, final String url) {
     String apiUrl = StringUtils.isEmpty(url) ? API_MANAGEMENT_URL : url;
-    if (authInterceptor == null) {
-      throw new IllegalArgumentException("ProviderService is missing a authentication interceptor");
-    }
+    
     if (workspace == null) {
       throw new IllegalArgumentException("ProviderService is missing a workspace context");
     }
     workspace.validateWorkspaceContext();
+    RequestInterceptor authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
     this.providerApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
         .errorDecoder(new ConflictErrorDecoder())

@@ -9,12 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.event.journal;
+package com.adobe.aio.event.journal.feign;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.adobe.aio.event.journal.api.JournalApi;
+import com.adobe.aio.event.journal.feign.JournalLinkDecoder;
 import com.adobe.aio.event.journal.model.JournalEntry;
 import com.adobe.aio.util.JacksonUtil;
 import feign.Feign;

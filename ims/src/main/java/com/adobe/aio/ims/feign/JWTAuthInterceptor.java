@@ -9,12 +9,13 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.ims;
+package com.adobe.aio.ims.feign;
 
 import static com.adobe.aio.util.Constants.API_KEY_HEADER;
 import static com.adobe.aio.util.Constants.AUTHORIZATION_HEADER;
 import static com.adobe.aio.util.Constants.BEARER_PREFIX;
 
+import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.model.AccessToken;
 import feign.RequestInterceptor;

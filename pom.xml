@@ -52,8 +52,16 @@
 
   <developers>
     <developer>
+      <id>francoisledroff</id>
       <name>Francois Le Droff</name>
       <email>ledroff@adobe.com</email>
+      <organization>Adobe</organization>
+      <organizationUrl>https://www.adobe.com</organizationUrl>
+    </developer>
+    <developer>
+      <id>bstopp</id>
+      <name>Bryan Stopp</name>
+      <email>stopp@adobe.com</email>
       <organization>Adobe</organization>
       <organizationUrl>https://www.adobe.com</organizationUrl>
     </developer>
@@ -61,8 +69,7 @@
 
   <scm>
     <connection>scm:git:https://github.com/adobe/aio-lib-java.git</connection>
-    <developerConnection>scm:git:https://github.com/adobe/aio-lib-java.git
-    </developerConnection>
+    <developerConnection>scm:git:https://github.com/adobe/aio-lib-java.git</developerConnection>
     <url>https://github.com/adobe/aio-lib-java/tree/master</url>
     <tag>HEAD</tag>
   </scm>
@@ -111,8 +118,7 @@
     <org.osgi.framework.version>1.9.0</org.osgi.framework.version>
 
   </properties>
-
-
+  
   <dependencyManagement>
     <dependencies>
 

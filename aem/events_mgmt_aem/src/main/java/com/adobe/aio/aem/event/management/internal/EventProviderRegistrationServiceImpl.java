@@ -124,7 +124,6 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
   private ProviderService getProviderService() {
     if (this.providerService == null) {
       this.providerService = ProviderService.builder()
-          .authInterceptor(jwtAuthInterceptorSupplier.getJWTAuthInterceptor())
           .workspace(workspaceSupplier.getWorkspace())
           .url(apiManagementUrl)
           .build();
