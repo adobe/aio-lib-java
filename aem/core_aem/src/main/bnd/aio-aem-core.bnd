@@ -1,0 +1,12 @@
+Bundle-Category: aio
+Bundle-Vendor: Adobe
+Bundle-Name: ${project.name}
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
+Import-Package: javax.annotation;version=0.0.0,*
+Bundle-DocURL:
+
+-noextraheaders: true
+-snapshot: SNAPSHOT
+-exportcontents: ${removeall;${packages;VERSIONED};${packages;CONDITIONAL}}
+-plugin: org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin
+-plugin: org.apache.sling.bnd.models.ModelsScannerPlugin

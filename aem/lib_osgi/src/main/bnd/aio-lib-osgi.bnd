@@ -1,6 +1,6 @@
 Bundle-Category: aio
 Bundle-Vendor: Adobe
-Bundle-Name: Adobe I/O - Java SDK - OSGI bundle
+Bundle-Name: ${project.name}
 Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
 Import-Package: \
     !com.sun.tools.*,\
@@ -34,13 +34,14 @@ Export-Package: com.adobe.aio.workspace;version="${project.version}",\
     com.adobe.aio.event.journal;version="${project.version}",\
     com.adobe.aio.event.journal.model;version="${project.version}",\
     com.adobe.aio.event.publish;version="${project.version}",\
-    com.adobe.aio.event.publish.model;version="${project.version}"
+    com.adobe.aio.event.publish.model;version="${project.version}",\
+    com.adobe.xdm.*;version="${project.version}",
 Bundle-DocURL:
 
+-noextraheaders: true
+-snapshot: SNAPSHOT
 -includeresource: target/dependency/;lib:=true
 -exportcontents: ${removeall;${packages;VERSIONED};${packages;CONDITIONAL}}
 -plugin: org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin
 -plugin: org.apache.sling.bnd.models.ModelsScannerPlugin
--noextraheaders: true
--snapshot: SNAPSHOT
 -fixupmessages: "Classes found in the wrong directory:";is:=ignore

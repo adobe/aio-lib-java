@@ -25,83 +25,7 @@
   <artifactId>aio-event-osgimapping</artifactId>
   <name>Adobe I/O - AEM OSGI Events Mapper - OSGI bundle</name>
   <description>Adobe I/O - AEM OSGI Events Mapper - OSGI bundle</description>
-
-
-
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>sling-maven-plugin</artifactId>
-        <groupId>org.apache.sling</groupId>
-      </plugin>
-      <plugin>
-        <artifactId>bnd-maven-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
-            <groupId>org.apache.sling</groupId>
-            <version>1.0.2</version>
-          </dependency>
-        </dependencies>
-        <executions>
-          <execution>
-            <configuration>
-              <bnd><![CDATA[
-Bundle-Category: aio
-Bundle-Vendor: Adobe
-Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
-Import-Package: javax.annotation;version=0.0.0,com.fasterxml.jackson.*;version="[2.3.0, 3.0.0)",*
- -exportcontents: ${packages;VERSIONED}
-Export-Package: com.adobe.aio.aem.event.osgimapping,
-com.adobe.aio.aem.event.osgimapping.eventhandler,
-com.adobe.aio.aem.event.xdm
- -snapshot: ${tstamp;yyyyMMddHHmmssSSS}
-Bundle-DocURL:
- -plugin org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin
-                                ]]></bnd>
-            </configuration>
-            <goals>
-              <goal>bnd-process</goal>
-            </goals>
-            <id>bnd-process</id>
-          </execution>
-        </executions>
-        <groupId>biz.aQute.bnd</groupId>
-      </plugin>
-      <plugin>
-        <artifactId>bnd-baseline-maven-plugin</artifactId>
-        <configuration>
-          <failOnMissing>false</failOnMissing>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>baseline</goal>
-            </goals>
-            <id>baseline</id>
-          </execution>
-        </executions>
-        <groupId>biz.aQute.bnd</groupId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-          </archive>
-        </configuration>
-        <groupId>org.apache.maven.plugins</groupId>
-      </plugin>
-    </plugins>
-
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-  </build>
-
+  
   <dependencies>
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
@@ -208,5 +132,67 @@ Bundle-DocURL:
       <groupId>org.slf4j</groupId>
     </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>sling-maven-plugin</artifactId>
+        <groupId>org.apache.sling</groupId>
+      </plugin>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <configuration>
+              <bndfile>src/main/bnd/aio-event-osgimapping.bnd</bndfile>
+            </configuration>
+            <goals>
+              <goal>bnd-process</goal>
+            </goals>
+            <id>bnd-process</id>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
+            <groupId>org.apache.sling</groupId>
+            <version>1.0.2</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.bnd.models</artifactId>
+            <version>1.0.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <artifactId>bnd-baseline-maven-plugin</artifactId>
+        <configuration>
+          <failOnMissing>false</failOnMissing>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>baseline</goal>
+            </goals>
+            <id>baseline</id>
+          </execution>
+        </executions>
+        <groupId>biz.aQute.bnd</groupId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
+
+  </build>
+
   
 </project>

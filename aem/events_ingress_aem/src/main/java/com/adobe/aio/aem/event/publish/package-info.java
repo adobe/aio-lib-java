@@ -9,16 +9,8 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.aem.auth;
 
-import com.adobe.aio.aem.status.StatusSupplier;
-import com.adobe.aio.ims.feign.JWTAuthInterceptor;
+@Version("0.0.15")
+package com.adobe.aio.aem.event.publish;
 
-/**
- * Adobe I/O Events Auth service interface
- */
-public interface JWTAuthInterceptorSupplier extends StatusSupplier {
-
-  JWTAuthInterceptor getJWTAuthInterceptor();
-
-}
+import org.osgi.annotation.versioning.Version;

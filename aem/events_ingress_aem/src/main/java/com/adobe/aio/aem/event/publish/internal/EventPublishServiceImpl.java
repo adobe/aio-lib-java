@@ -11,17 +11,15 @@
  */
 package com.adobe.aio.aem.event.publish.internal;
 
-import static com.adobe.aio.aem.event.management.EventMetadataSupplier.PING_EVENT_CODE;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.adobe.aio.aem.auth.JWTAuthInterceptorSupplier;
 import com.adobe.aio.aem.event.management.EventProviderRegistrationService;
 import com.adobe.aio.aem.event.publish.EventPublishService;
 import com.adobe.aio.aem.event.publish.ocd.ApiPublishingConfig;
 import com.adobe.aio.aem.status.Status;
 import com.adobe.aio.event.publish.PublishService;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -29,6 +27,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static com.adobe.aio.aem.event.management.EventMetadataSupplier.*;
 
 
 @Component(service = EventPublishService.class, property = {
