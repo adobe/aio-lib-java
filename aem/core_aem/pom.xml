@@ -25,147 +25,150 @@
   <artifactId>aio-aem-core</artifactId>
   <name>Adobe I/O - AEM Core - OSGI bundle</name>
   <description>Adobe I/O - AEM Core - OSGI bundle</description>
-
+  
   <dependencies>
     <dependency>
       <groupId>com.adobe.aio</groupId>
-      <artifactId>aio-lib-java-ims</artifactId>
-      <scope>provided</scope>
+      <artifactId>aio-lib-java-core</artifactId>
       <version>${project.version}</version>
-    </dependency>
-
-    <!-- AEM related -->
-    <dependency>
-      <artifactId>uber-jar</artifactId>
-      <classifier>apis</classifier>
-      <groupId>com.adobe.aem</groupId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <artifactId>org.apache.sling.servlets.annotations</artifactId>
-      <groupId>org.apache.sling</groupId>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-ims</artifactId>
+      <version>${project.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
-      <artifactId>jcr</artifactId>
-      <groupId>javax.jcr</groupId>
-    </dependency>
-    <!-- osgi -->
-    <dependency>
-      <artifactId>org.osgi.service.metatype.annotations</artifactId>
-      <groupId>org.osgi</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>org.osgi.service.component.annotations</artifactId>
-      <groupId>org.osgi</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>org.osgi.service.component</artifactId>
-      <groupId>org.osgi</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>org.osgi.service.cm</artifactId>
-      <groupId>org.osgi</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>org.osgi.framework</artifactId>
-      <groupId>org.osgi</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>org.osgi.annotation.versioning</artifactId>
-      <groupId>org.osgi</groupId>
-    </dependency>
-    <!-- EOF AEM related -->
-
-    <!-- various -->
-    <dependency>
-      <artifactId>javax.servlet-api</artifactId>
-      <groupId>javax.servlet</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>slf4j-api</artifactId>
-      <groupId>org.slf4j</groupId>
-    </dependency>
-    <dependency>
+      <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <groupId>org.apache.commons</groupId>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
-      <groupId>org.apache.commons</groupId>
     </dependency>
     <dependency>
-      <artifactId>jackson-databind</artifactId>
       <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
     </dependency>
 
     <!-- test -->
     <dependency>
-      <artifactId>junit-dep</artifactId>
       <groupId>junit</groupId>
+      <artifactId>junit-dep</artifactId>
     </dependency>
     <dependency>
-      <artifactId>slf4j-simple</artifactId>
       <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-simple</artifactId>
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>sling-maven-plugin</artifactId>
-        <groupId>org.apache.sling</groupId>
-      </plugin>
-      <plugin>
-        <groupId>biz.aQute.bnd</groupId>
-        <artifactId>bnd-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <configuration>
-              <bndfile>src/main/bnd/aio-aem-core.bnd</bndfile>
-            </configuration>
-            <goals>
-              <goal>bnd-process</goal>
-            </goals>
-            <id>bnd-process</id>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
-            <groupId>org.apache.sling</groupId>
-            <version>1.0.2</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.bnd.models</artifactId>
-            <version>1.0.0</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-      <plugin>
-        <groupId>biz.aQute.bnd</groupId>
-        <artifactId>bnd-baseline-maven-plugin</artifactId>
-        <configuration>
-          <failOnMissing>false</failOnMissing>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>baseline</goal>
-            </goals>
-            <id>baseline</id>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-          </archive>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+  <profiles>
+    <profile>
+      <id>aemaacsDeps</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>com.adobe.aem</groupId>
+          <artifactId>aem-sdk-api</artifactId>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>aem65deps</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <dependencies>
+        <!-- OSGi Dependencies -->
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.annotation.versioning</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.annotation.bundle</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.service.metatype.annotations</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.service.component.annotations</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.service.component</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.service.cm</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.service.event</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.service.log</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.framework</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.resource</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.osgi</groupId>
+          <artifactId>org.osgi.util.tracker</artifactId>
+        </dependency>
+        <!-- Other Dependencies -->
+        <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>javax.jcr</groupId>
+          <artifactId>jcr</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>javax.servlet</groupId>
+          <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>javax.servlet.jsp</groupId>
+          <artifactId>jsp-api</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>javax.annotation</groupId>
+          <artifactId>javax.annotation-api</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>org.apache.sling.servlets.annotations</artifactId>
+        </dependency>
 
+        <dependency>
+          <groupId>org.apache.sling</groupId>
+          <artifactId>org.apache.sling.models.api</artifactId>
+        </dependency>
+
+        <dependency>
+          <groupId>com.adobe.aem</groupId>
+          <artifactId>uber-jar</artifactId>
+          <classifier>apis</classifier>
+        </dependency>
+        <dependency>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>jackson-core</artifactId>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+    </profile>
+  </profiles>
 </project>
