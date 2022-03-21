@@ -22,7 +22,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.0.15</version>
+    <version>0.0.16-SNAPSHOT</version>
   </parent>
 
   <artifactId>aio-aem-events</artifactId>
@@ -154,7 +154,7 @@
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
       <artifactId>aio-event-osgimapping</artifactId>
-      <version>0.0.15</version>
+      <version>0.0.16-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
@@ -164,7 +164,7 @@
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
       <artifactId>aio-event-management</artifactId>
-      <version>0.0.15</version>
+      <version>0.0.16-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
