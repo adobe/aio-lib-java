@@ -13,7 +13,23 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <!-- ====================================================================== -->
+  <!-- B U I L D   D E F I N I T I O N                                        -->
+  <!-- ====================================================================== -->
+  <parent>
+    <groupId>com.adobe.aio.aem</groupId>
+    <artifactId>aio-aem</artifactId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.0.15-SNAPSHOT</version>
+  </parent>
+
   <artifactId>aio-aem-events</artifactId>
+  <description>Adobe I/O - AEM Events Package</description>
+  <name>Adobe I/O - AEM Events Package</name>
+
+  <packaging>content-package</packaging>
 
   <build>
     <plugins>
@@ -54,28 +70,28 @@
           <accessControlHandling>merge</accessControlHandling>
           <embeddeds>
             <embedded>
-              <artifactId>com.adobe.aio.aem.core</artifactId>
-              <groupId>com.adobe</groupId>
+              <groupId>com.adobe.aio.aem</groupId>
+              <artifactId>aio-aem-core</artifactId>
               <target>/apps/aio/install</target>
             </embedded>
             <embedded>
-              <artifactId>com.adobe.aio.aem.lib-osgi</artifactId>
-              <groupId>com.adobe</groupId>
+              <groupId>com.adobe.aio.aem</groupId>
+              <artifactId>aio-lib-osgi</artifactId>
               <target>/apps/aio/install</target>
             </embedded>
             <embedded>
-              <artifactId>com.adobe.aio.aem.event.management</artifactId>
-              <groupId>com.adobe</groupId>
+              <groupId>com.adobe.aio.aem</groupId>
+              <artifactId>aio-event-management</artifactId>
               <target>/apps/aio/install</target>
             </embedded>
             <embedded>
-              <artifactId>com.adobe.aio.aem.event.publish</artifactId>
-              <groupId>com.adobe</groupId>
+              <groupId>com.adobe.aio.aem</groupId>
+              <artifactId>aio-event-publish</artifactId>
               <target>/apps/aio/install</target>
             </embedded>
             <embedded>
-              <artifactId>com.adobe.aio.aem.event.osgimapping</artifactId>
-              <groupId>com.adobe</groupId>
+              <groupId>com.adobe.aio.aem</groupId>
+              <artifactId>aio-event-osgimapping</artifactId>
               <target>/apps/aio/install</target>
             </embedded>
           </embeddeds>
@@ -136,45 +152,30 @@
 
   <dependencies>
     <dependency>
-      <artifactId>com.adobe.aio.aem.event.osgimapping</artifactId>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio.aem</groupId>
+      <artifactId>aio-event-osgimapping</artifactId>
+      <version>0.0.15-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.aio.aem</groupId>
+      <artifactId>aio-event-publish</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <artifactId>com.adobe.aio.aem.event.publish</artifactId>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio.aem</groupId>
+      <artifactId>aio-event-management</artifactId>
+      <version>0.0.15-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.aio.aem</groupId>
+      <artifactId>aio-aem-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <artifactId>com.adobe.aio.aem.event.management</artifactId>
-      <groupId>com.adobe</groupId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <artifactId>com.adobe.aio.aem.core</artifactId>
-      <groupId>com.adobe</groupId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <artifactId>com.adobe.aio.aem.lib-osgi</artifactId>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio.aem</groupId>
+      <artifactId>aio-lib-osgi</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
-  <description>Adobe I/O - AEM Events Package</description>
-  <modelVersion>4.0.0</modelVersion>
-  <name>Adobe I/O - AEM Events Package</name>
-
-  <packaging>content-package</packaging>
-
-  <!-- ====================================================================== -->
-  <!-- B U I L D   D E F I N I T I O N                                        -->
-  <!-- ====================================================================== -->
-  <parent>
-    <artifactId>aio-aem</artifactId>
-    <groupId>com.adobe</groupId>
-    <relativePath>../pom.xml</relativePath>
-    <version>0.0.15-SNAPSHOT</version>
-  </parent>
 
 </project>

@@ -17,16 +17,16 @@
 
 
   <parent>
+    <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java</artifactId>
-    <groupId>com.adobe</groupId>
     <relativePath>../pom.xml</relativePath>
     <version>0.0.15-SNAPSHOT</version>
   </parent>
 
+  <groupId>com.adobe.aio.aem</groupId>
   <artifactId>aio-aem</artifactId>
   <name>Adobe I/O - AEM - Java SDK - Parent Project</name>
   <description>Adobe I/O - AEM - Java SDK - Parent Project</description>
-  <groupId>com.adobe</groupId>
   <packaging>pom</packaging>
 
   <modules>

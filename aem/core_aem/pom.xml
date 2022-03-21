@@ -13,23 +13,23 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
 
   <parent>
+    <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
-    <groupId>com.adobe</groupId>
     <relativePath>../pom.xml</relativePath>
     <version>0.0.15-SNAPSHOT</version>
   </parent>
 
-  <artifactId>com.adobe.aio.aem.core</artifactId>
+  <artifactId>aio-aem-core</artifactId>
   <description>Adobe I/O - AEM Core - OSGI bundle</description>
-  <modelVersion>4.0.0</modelVersion>
   <name>Adobe I/O - AEM Core - OSGI bundle</name>
 
   <dependencies>
     <dependency>
       <artifactId>aio-lib-java-ims</artifactId>
-      <groupId>com.adobe</groupId>
+      <groupId>com.adobe.aio</groupId>
       <scope>provided</scope>
       <version>${project.version}</version>
     </dependency>
@@ -129,7 +129,7 @@
               <bnd><![CDATA[
 Bundle-Category: aio
 Bundle-Vendor: Adobe
-Bundle-SymbolicName: ${project.artifactId}
+Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
 Import-Package: javax.annotation;version=0.0.0,com.fasterxml.jackson.*;version="[2.3.0, 3.0.0)",*
  -exportcontents: ${packages;VERSIONED}
 Export-Package: com.adobe.aio.aem.workspace,com.adobe.aio.aem.auth,com.adobe.aio.aem.status,com.adobe.aio.aem.util
