@@ -11,6 +11,7 @@
  */
 package com.adobe.aio.aem.event.publish.internal;
 
+import com.adobe.aio.aem.workspace.WorkspaceSupplier;
 import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +38,9 @@ import static com.adobe.aio.aem.event.management.EventMetadataSupplier.*;
 public class EventPublishServiceImpl implements EventPublishService {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
+
+  @Reference
+  private WorkspaceSupplier workspaceSupplier;
   @Reference
   private EventProviderRegistrationService eventProviderRegistrationService;
   private String publishUrl;
@@ -54,6 +58,7 @@ public class EventPublishServiceImpl implements EventPublishService {
     details.put("aio_ping_published", false);
     try {
       details.put("aio_publish_url", publishUrl);
+      details.put("workspace_status", workspaceSupplier.getStatus());
       details.put("aio_event_provider_status", eventProviderRegistrationService.getStatus());
       this.publishEvent(
           "{\"publisher\":\"AEM status check\","
@@ -69,6 +74,7 @@ public class EventPublishServiceImpl implements EventPublishService {
   @Override
   public void publishEvent(String eventJsonPayload, String adobeIoEventCode) {
     PublishService publishService = PublishService.builder()
+        .workspace(workspaceSupplier.getWorkspace())
         .url(publishUrl)
         .build();
     publishService.publishRawEvent(

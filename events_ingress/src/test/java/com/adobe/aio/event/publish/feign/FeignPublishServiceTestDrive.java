@@ -61,6 +61,7 @@ public class FeignPublishServiceTestDrive {
       //String eventDataPayload = "   { \"key\" : \"value\" } ";
 
       PublishService publishService = PublishService.builder()
+          .workspace(workspace)
           .url(prop.getProperty(AIO_PUBLISH_URL)) // you can omit this if you target prod
           .build(); //
       CloudEvent cloudEvent = publishService.publishCloudEvent(

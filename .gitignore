@@ -100,3 +100,6 @@ reports/
 
 # Others
 /.java-version
+slingInstall.sh
+*.secret.properties
+secrets

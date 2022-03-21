@@ -46,7 +46,7 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
   private WorkspaceSupplier workspaceSupplier;
   
   @Reference
-  private EventProviderConfigSupplier eventProviderInputModelSupplier;
+  private EventProviderConfigSupplier eventProviderConfigSupplier;
 
   private ProviderService providerService;
   private String providerId;
@@ -67,11 +67,11 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
     Map<String, Object> details = new HashMap<>(1);
     try {
       details.put("workspace_status", workspaceSupplier.getStatus());
-      details.put("provider_input_status", eventProviderInputModelSupplier.getStatus());
+      details.put("provider_config_status", eventProviderConfigSupplier.getStatus());
       details.put("api_management_url", this.apiManagementUrl);
       //details.put("providers",providerService.getProviders());
       details.put("provider_already_registered", this.isProviderRegistered());
-      details.put("provider", this.getRegisteredProvider());
+      details.put("registered_provider", this.getRegisteredProvider());
       return new Status(Status.UP, details);
     } catch (Exception e) {
       return new Status(Status.DOWN, details, e);
@@ -89,7 +89,7 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
 
   private Provider registerProvider() {
     Optional<Provider> createdProvider = getProviderService().createOrUpdateProvider(
-        eventProviderInputModelSupplier.getProviderInputModel());
+        eventProviderConfigSupplier.getProviderInputModel());
     if (createdProvider.isPresent()) {
       this.providerId = createdProvider.get().getId();
       return createdProvider.get();
