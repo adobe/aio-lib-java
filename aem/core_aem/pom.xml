@@ -19,7 +19,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.0.15-SNAPSHOT</version>
+    <version>0.0.15</version>
   </parent>
 
   <artifactId>aio-aem-core</artifactId>

@@ -20,7 +20,7 @@
     <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.0.15-SNAPSHOT</version>
+    <version>0.0.15</version>
   </parent>
 
   <groupId>com.adobe.aio.aem</groupId>
