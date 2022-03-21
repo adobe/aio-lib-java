@@ -103,3 +103,5 @@ reports/
 slingInstall.sh
 *.secret.properties
 secrets
+*/docs
+*/*/docs
