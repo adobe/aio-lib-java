@@ -12,7 +12,8 @@
     governing permissions and limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <!-- ====================================================================== -->
@@ -32,94 +33,8 @@
   <packaging>content-package</packaging>
 
   <build>
-    <plugins>
-      <!--
-          we want to keep some of the META-INF files and not configure
-          everything in the plugin (mainly the filters).
 
-          copy the resource explicitly instead of attaching it to the default resources
-      -->
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <configuration>
-              <outputDirectory>${project.build.directory}/vault-work/META-INF</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${basedir}/META-INF</directory>
-                  <filtering>false</filtering>
-                </resource>
-              </resources>
-            </configuration>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <id>copy-metainf-vault-resources</id>
-            <phase>generate-resources</phase>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- ====================================================================== -->
-      <!-- V A U L T   P A C K A G E   P L U G I N S                              -->
-      <!-- ====================================================================== -->
-      <plugin>
-        <artifactId>filevault-package-maven-plugin</artifactId>
-        <configuration>
-          <accessControlHandling>merge</accessControlHandling>
-          <embeddeds>
-            <embedded>
-              <groupId>com.adobe.aio.aem</groupId>
-              <artifactId>aio-aem-core</artifactId>
-              <target>/apps/aio/install</target>
-            </embedded>
-            <embedded>
-              <groupId>com.adobe.aio.aem</groupId>
-              <artifactId>aio-lib-osgi</artifactId>
-              <target>/apps/aio/install</target>
-            </embedded>
-            <embedded>
-              <groupId>com.adobe.aio.aem</groupId>
-              <artifactId>aio-event-management</artifactId>
-              <target>/apps/aio/install</target>
-            </embedded>
-            <embedded>
-              <groupId>com.adobe.aio.aem</groupId>
-              <artifactId>aio-event-publish</artifactId>
-              <target>/apps/aio/install</target>
-            </embedded>
-            <embedded>
-              <groupId>com.adobe.aio.aem</groupId>
-              <artifactId>aio-event-osgimapping</artifactId>
-              <target>/apps/aio/install</target>
-            </embedded>
-          </embeddeds>
-          <group>com.adobe</group>
-          <name>aio-lib-java-aem-events</name>
-          <packageType>application</packageType>
-          <properties>
-            <cloudManagerTarget>none</cloudManagerTarget>
-          </properties>
-        </configuration>
-        <extensions>true</extensions>
-        <groupId>org.apache.jackrabbit</groupId>
-      </plugin>
-      <plugin>
-        <artifactId>content-package-maven-plugin</artifactId>
-        <configuration>
-          <failOnError>true</failOnError>
-          <verbose>true</verbose>
-        </configuration>
-        <extensions>true</extensions>
-        <groupId>com.day.jcr.vault</groupId>
-      </plugin>
-
-      <plugin>
-        <artifactId>htl-maven-plugin</artifactId>
-        <groupId>org.apache.sling</groupId>
-      </plugin>
-    </plugins>
+    <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
     <resources>
       <!-- define the resources that will go into the package -->
       <resource>
@@ -147,35 +62,225 @@
         </excludes>
       </resource>
     </resources>
-    <sourceDirectory>src/main/content/jcr_root</sourceDirectory>
+
+    <plugins>
+      <!--
+          we want to keep some of the META-INF files and not configure
+          everything in the plugin (mainly the filters).
+
+          copy the resource explicitly instead of attaching it to the default resources
+      -->
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-metainf-vault-resources</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/vault-work/META-INF</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${basedir}/META-INF</directory>
+                  <filtering>false</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- ====================================================================== -->
+      <!-- V A U L T   P A C K A G E   P L U G I N S                              -->
+      <!-- ====================================================================== -->
+      <plugin>
+        <groupId>org.apache.jackrabbit</groupId>
+        <artifactId>filevault-package-maven-plugin</artifactId>
+        <configuration>
+          <properties>
+            <cloudManagerTarget>none</cloudManagerTarget>
+          </properties>
+          <packageType>container</packageType>
+          <jcrRootSourceDirectory>${project.basedir}/src/${cfg.context}/content/jcr_root</jcrRootSourceDirectory>
+        </configuration>
+        <extensions>true</extensions>
+      </plugin>
+      <plugin>
+        <groupId>com.day.jcr.vault</groupId>
+        <artifactId>content-package-maven-plugin</artifactId>
+        <configuration>
+          <failOnError>true</failOnError>
+          <verbose>true</verbose>
+        </configuration>
+        <extensions>true</extensions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.sling</groupId>
+        <artifactId>htl-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
   </build>
 
-  <dependencies>
-    <dependency>
-      <groupId>com.adobe.aio.aem</groupId>
-      <artifactId>aio-event-osgimapping</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.adobe.aio.aem</groupId>
-      <artifactId>aio-event-publish</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.adobe.aio.aem</groupId>
-      <artifactId>aio-event-management</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.adobe.aio.aem</groupId>
-      <artifactId>aio-aem-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.adobe.aio.aem</groupId>
-      <artifactId>aio-lib-osgi</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-  </dependencies>
+  <profiles>
+    <profile>
+      <id>aemaacs</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <properties>
+        <cfg.context>cs</cfg.context>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.jackrabbit</groupId>
+            <artifactId>filevault-package-maven-plugin</artifactId>
+            <configuration>
+              <embeddeds>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-aem-core</artifactId>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-lib-osgi</artifactId>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-event-management</artifactId>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-event-publish</artifactId>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-event-osgimapping</artifactId>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+              </embeddeds>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <dependencies>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-event-osgimapping</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-event-publish</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-event-management</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-aem-core</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-lib-osgi</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+    <profile>
+      <id>aem65</id>
+      <activation>
+        <activeByDefault>false</activeByDefault>
+      </activation>
+      <properties>
+        <cfg.context>aem65</cfg.context>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.jackrabbit</groupId>
+            <artifactId>filevault-package-maven-plugin</artifactId>
+            <configuration>
+              <embeddeds>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-aem-core</artifactId>
+                  <classifier>aem65</classifier>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-lib-osgi</artifactId>
+                  <classifier>aem65</classifier>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-event-management</artifactId>
+                  <classifier>aem65</classifier>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-event-publish</artifactId>
+                  <classifier>aem65</classifier>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+                <embedded>
+                  <groupId>com.adobe.aio.aem</groupId>
+                  <artifactId>aio-event-osgimapping</artifactId>
+                  <classifier>aem65</classifier>
+                  <target>/apps/aio-aem-events/install</target>
+                </embedded>
+              </embeddeds>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <dependencies>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-event-osgimapping</artifactId>
+          <version>${project.version}</version>
+          <classifier>aem65</classifier>
+        </dependency>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-event-publish</artifactId>
+          <version>${project.version}</version>
+          <classifier>aem65</classifier>
+        </dependency>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-event-management</artifactId>
+          <version>${project.version}</version>
+          <classifier>aem65</classifier>
+        </dependency>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-aem-core</artifactId>
+          <version>${project.version}</version>
+          <classifier>aem65</classifier>
+        </dependency>
+        <dependency>
+          <groupId>com.adobe.aio.aem</groupId>
+          <artifactId>aio-lib-osgi</artifactId>
+          <version>${project.version}</version>
+          <classifier>aem65</classifier>
+        </dependency>
+      </dependencies>
 
+    </profile>
+  </profiles>
 </project>
