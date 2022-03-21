@@ -11,11 +11,11 @@
  */
 package com.adobe.aio.event.management;
 
+import com.adobe.aio.event.management.feign.FeignProviderService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.ProviderInputModel;
-import feign.RequestInterceptor;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,16 +85,10 @@ public interface ProviderService {
 
   class Builder {
 
-    private RequestInterceptor authInterceptor;
     private Workspace workspace;
     private String url;
 
     public Builder() {
-    }
-
-    public Builder authInterceptor(RequestInterceptor authInterceptor) {
-      this.authInterceptor = authInterceptor;
-      return this;
     }
 
     public Builder workspace(Workspace workspace) {
@@ -108,7 +102,7 @@ public interface ProviderService {
     }
 
     public ProviderService build() {
-      return new ProviderServiceImpl(authInterceptor, workspace, url);
+      return new FeignProviderService(workspace, url);
     }
   }
 }

@@ -13,5 +13,5 @@
 
 -->
 <jcr:root xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
-  user.mapping="[com.adobe.aio.aem.core:aio_service=[aio_service_user]]"
+  user.mapping="[com.adobe.aio.aem.aio-aem-core:aio_service=[aio_service_user]]"
   jcr:primaryType="sling:OsgiConfig"/>

@@ -23,8 +23,8 @@
   </parent>
 
   <artifactId>aio-event-publish</artifactId>
-  <description>Adobe I/O - AEM Events Publishing - OSGI bundle</description>
   <name>Adobe I/O - AEM Events Publishing - OSGI bundle</name>
+  <description>Adobe I/O - AEM Events Publishing - OSGI bundle</description>
 
   <dependencies>
     <dependency>
@@ -133,28 +133,12 @@
         <groupId>org.apache.sling</groupId>
       </plugin>
       <plugin>
+        <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-maven-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
-            <groupId>org.apache.sling</groupId>
-            <version>1.0.2</version>
-          </dependency>
-        </dependencies>
         <executions>
           <execution>
             <configuration>
-              <bnd><![CDATA[
-Bundle-Category: aio
-Bundle-Vendor: Adobe
-Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
-Import-Package: javax.annotation;version=0.0.0,com.fasterxml.jackson.*;version="[2.3.0, 3.0.0)",*
- -exportcontents: ${packages;VERSIONED}
-Export-Package: com.adobe.aio.aem.event.publish
- -snapshot: ${tstamp;yyyyMMddHHmmssSSS}
-Bundle-DocURL:
- -plugin org.apache.sling.caconfig.bndplugin.ConfigurationClassScannerPlugin
-                                ]]></bnd>
+              <bndfile>src/main/bnd/aio-event-publish.bnd</bndfile>
             </configuration>
             <goals>
               <goal>bnd-process</goal>
@@ -162,9 +146,21 @@ Bundle-DocURL:
             <id>bnd-process</id>
           </execution>
         </executions>
-        <groupId>biz.aQute.bnd</groupId>
+        <dependencies>
+          <dependency>
+            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
+            <groupId>org.apache.sling</groupId>
+            <version>1.0.2</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.bnd.models</artifactId>
+            <version>1.0.0</version>
+          </dependency>
+        </dependencies>
       </plugin>
       <plugin>
+        <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-baseline-maven-plugin</artifactId>
         <configuration>
           <failOnMissing>false</failOnMissing>
@@ -177,7 +173,6 @@ Bundle-DocURL:
             <id>baseline</id>
           </execution>
         </executions>
-        <groupId>biz.aQute.bnd</groupId>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
@@ -189,13 +184,6 @@ Bundle-DocURL:
         <groupId>org.apache.maven.plugins</groupId>
       </plugin>
     </plugins>
-
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
   </build>
 
 </project>

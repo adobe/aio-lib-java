@@ -11,10 +11,10 @@
  */
 package com.adobe.aio.event.management;
 
+import com.adobe.aio.event.management.feign.FeignRegistrationService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationInputModel;
-import feign.RequestInterceptor;
 import java.util.Optional;
 
 public interface RegistrationService {
@@ -33,14 +33,9 @@ public interface RegistrationService {
 
   class Builder {
 
-    private RequestInterceptor authInterceptor;
     private Workspace workspace;
     private String url;
 
-    public Builder authInterceptor(RequestInterceptor authInterceptor) {
-      this.authInterceptor = authInterceptor;
-      return this;
-    }
 
     public Builder workspace(Workspace workspace) {
       this.workspace = workspace;
@@ -53,7 +48,7 @@ public interface RegistrationService {
     }
 
     public RegistrationService build() {
-      return new RegistrationServiceImpl(authInterceptor, workspace, url);
+      return new FeignRegistrationService(workspace, url);
     }
   }
 }

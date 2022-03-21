@@ -1,31 +1,105 @@
-target
-*.iml
-.idea/
-temp
-*secret*
-**/secret
-**/*secret*
-.vscode/
+
+### Eclipse ###
+*.pydevproject
+.metadata
+.gradle
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
 .settings/
+.loadpath
+
+# Eclipse Core
 .project
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# CDT-specific
+.cproject
+
+# JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# Java annotation processor (APT)
 .factorypath
-**/.settings
-**/.classpath
-**/.factorypath
-**/*.iml
+
+# PDT-specific
+.buildpath
+
+# sbteclipse plugin
+.target
+
+# TeXlipse plugin
+.texlipse
 
 
-swagger_client
-LocalTest.java
-deptree.txt
-sample_cloud_event.json
-sample_entry.json
-ProviderServiceCleanTestDrive.java
-aem_events/src/main/content/jcr_root/apps/config.direct
-aem_events/src/main/content/jcr_root/apps/config.env
+### Java ###
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+
+### Maven ###
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+
+### Vault ###
+.vlt
+
+
+### IntelliJ ###
+.idea/
+*.iml
+
+
+### Node.js ###
+
+# Log files
+*.log
+
+# NPM
+node_modules/
+yarn.lock
+
+# Webpack
+build/
+dist/
+actions/common/
+
+# Frontend Maven Plugin
+node/
+
+# Tests
+coverage/
+reports/
+
+# Others
+/.java-version
 slingInstall.sh
-aio-aem-events/src/main/content/jcr_root/apps/config.direct
-aio-aem-events/src/main/content/jcr_root/apps/config.env
-aem/aio_aem_events/src/main/content/jcr_root/apps/config.direct
-aem/aio_aem_events/src/main/content/jcr_root/apps/config.env
+*.secret.properties
+secrets

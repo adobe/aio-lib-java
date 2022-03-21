@@ -11,17 +11,16 @@
  */
 package com.adobe.aio.aem.event.publish.internal;
 
-import static com.adobe.aio.aem.event.management.EventMetadataSupplier.PING_EVENT_CODE;
+import com.adobe.aio.aem.workspace.WorkspaceSupplier;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.adobe.aio.aem.auth.JWTAuthInterceptorSupplier;
 import com.adobe.aio.aem.event.management.EventProviderRegistrationService;
 import com.adobe.aio.aem.event.publish.EventPublishService;
 import com.adobe.aio.aem.event.publish.ocd.ApiPublishingConfig;
 import com.adobe.aio.aem.status.Status;
 import com.adobe.aio.event.publish.PublishService;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -29,6 +28,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static com.adobe.aio.aem.event.management.EventMetadataSupplier.*;
 
 
 @Component(service = EventPublishService.class, property = {
@@ -38,8 +38,9 @@ import org.slf4j.LoggerFactory;
 public class EventPublishServiceImpl implements EventPublishService {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
+
   @Reference
-  JWTAuthInterceptorSupplier jwtAuthInterceptorSupplier;
+  private WorkspaceSupplier workspaceSupplier;
   @Reference
   private EventProviderRegistrationService eventProviderRegistrationService;
   private String publishUrl;
@@ -57,8 +58,8 @@ public class EventPublishServiceImpl implements EventPublishService {
     details.put("aio_ping_published", false);
     try {
       details.put("aio_publish_url", publishUrl);
+      details.put("workspace_status", workspaceSupplier.getStatus());
       details.put("aio_event_provider_status", eventProviderRegistrationService.getStatus());
-      details.put("aio_jwt_status", jwtAuthInterceptorSupplier.getStatus());
       this.publishEvent(
           "{\"publisher\":\"AEM status check\","
               + "\"time\":\"" + Instant.now().toEpochMilli() + "\"}",
@@ -73,7 +74,7 @@ public class EventPublishServiceImpl implements EventPublishService {
   @Override
   public void publishEvent(String eventJsonPayload, String adobeIoEventCode) {
     PublishService publishService = PublishService.builder()
-        .authInterceptor(jwtAuthInterceptorSupplier.getJWTAuthInterceptor())
+        .workspace(workspaceSupplier.getWorkspace())
         .url(publishUrl)
         .build();
     publishService.publishRawEvent(

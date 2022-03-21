@@ -12,7 +12,8 @@
     governing permissions and limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
@@ -24,8 +25,6 @@
   <description>Adobe I/O - Java SDK - OSGI bundle</description>
   <modelVersion>4.0.0</modelVersion>
   <name>Adobe I/O - Java SDK - OSGI bundle</name>
-
-  <packaging>bundle</packaging>
 
   <dependencies>
     <dependency>
@@ -118,72 +117,80 @@
         <artifactId>sling-maven-plugin</artifactId>
       </plugin>
       <plugin>
-        <artifactId>maven-bundle-plugin</artifactId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>copy-dependency</id>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+          </execution>
+        </executions>
         <configuration>
-          <instructions>
-            <Bundle-Activator>com.adobe.aio.aem.activator.Activator</Bundle-Activator>
-            <Bundle-Name>${project.name}</Bundle-Name>
-            <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
-            <Bundle-Vendor>Adobe</Bundle-Vendor>
-            <Embed-Dependency>
-              aio-lib-java-ims,
-              aio-lib-java-core,
-              aio-lib-java-events-mgmt,
-              aio-lib-java-events-ingress,
-              aio-lib-java-events-journal,
-              xdm-event-model,
-              commons-text,
-              jjwt-api,
-              jjwt-impl,
-              jjwt-jackson,
-              feign-core,
-              feign-form,
-              feign-slf4j,
-              feign-jackson,
-              commons-lang3,
-              jakarta.xml.bind-api,
-              validation-api
-            </Embed-Dependency>
-            <Embed-Transitive>true</Embed-Transitive>
-            <Export-Package>
-              feign.*,
-              com.fasterxml.jackson.*,
-              com.adobe.xdm.*,
-              com.adobe.aio.workspace,
-              com.adobe.aio.exception,
-              com.adobe.aio.util,
-              com.adobe.aio.ims,
-              com.adobe.aio.ims.model,
-              com.adobe.aio.ims.util,
-              com.adobe.aio.event.publish,
-              com.adobe.aio.event.publish.api,
-              com.adobe.aio.event.publish.model,
-              com.adobe.aio.event.journal.api,
-              com.adobe.aio.event.journal,
-              com.adobe.aio.event.journal.model,
-              com.adobe.aio.event.management,
-              com.adobe.aio.event.management.api,
-              com.adobe.aio.event.management.model,
-              com.adobe.aio.aem.activator
-            </Export-Package>
-            <Import-Package>
-              !com.sun.tools.*,
-              !org.apache.tools.ant.*,
-              !org.eclipse.core.*,
-              !org.eclipse.jdt.core.*,
-              !org.eclipse.jdt.internal.*,
-              !com.sun.activation.*,
-              !sun.misc.*,
-              !lombok.*,
-              !jakarta.activation.*,
-              *
-            </Import-Package>
-            <_noee>true</_noee>
-          </instructions>
+          <excludeGroupIds>
+            com.fasterxml.jackson.core,
+            org.osgi,
+            org.apache.commons,
+            org.junit.platform,
+            org.junit.jupiter,
+            org.apiguardian,
+            org.opentest4j,
+            org.slf4j,
+            org.jetbrains,
+            org.projectlombok,
+          </excludeGroupIds>
         </configuration>
-        <extensions>true</extensions>
-        <groupId>org.apache.felix</groupId>
-        <version>3.5.0</version>
+      </plugin>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-maven-plugin</artifactId>
+        <configuration>
+          <bndfile>src/main/bnd/aio-lib-osgi.bnd</bndfile>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>bnd-process</goal>
+            </goals>
+            <id>bnd-process</id>
+          </execution>
+        </executions>
+        <dependencies>
+          <dependency>
+            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
+            <groupId>org.apache.sling</groupId>
+            <version>1.0.2</version>
+          </dependency>
+          <dependency>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.bnd.models</artifactId>
+            <version>1.0.0</version>
+          </dependency>
+        </dependencies>
+      </plugin>
+      <plugin>
+        <groupId>biz.aQute.bnd</groupId>
+        <artifactId>bnd-baseline-maven-plugin</artifactId>
+        <configuration>
+          <failOnMissing>false</failOnMissing>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>baseline</goal>
+            </goals>
+            <id>baseline</id>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+          </archive>
+        </configuration>
       </plugin>
     </plugins>
   </build>

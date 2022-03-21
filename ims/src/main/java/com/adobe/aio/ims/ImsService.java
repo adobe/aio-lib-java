@@ -12,6 +12,7 @@
 package com.adobe.aio.ims;
 
 
+import com.adobe.aio.ims.feign.FeignImsService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.model.AccessToken;
 
@@ -38,7 +39,7 @@ public interface ImsService {
     }
 
     public ImsService build() {
-      return new ImsServiceImpl(this.workspace);
+      return new FeignImsService(this.workspace);
     }
   }
 }

@@ -11,8 +11,12 @@
  */
 package com.adobe.aio.aem.event.management.internal;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
-import com.adobe.aio.aem.auth.JWTAuthInterceptorSupplier;
+import org.apache.commons.lang3.StringUtils;
+
 import com.adobe.aio.aem.event.management.EventProviderConfigSupplier;
 import com.adobe.aio.aem.event.management.EventProviderRegistrationService;
 import com.adobe.aio.aem.event.management.ocd.ApiManagementConfig;
@@ -22,10 +26,6 @@ import com.adobe.aio.event.management.ProviderService;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.exception.AIOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -44,12 +44,9 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
 
   @Reference
   private WorkspaceSupplier workspaceSupplier;
-
+  
   @Reference
-  private JWTAuthInterceptorSupplier jwtAuthInterceptorSupplier;
-
-  @Reference
-  private EventProviderConfigSupplier eventProviderInputModelSupplier;
+  private EventProviderConfigSupplier eventProviderConfigSupplier;
 
   private ProviderService providerService;
   private String providerId;
@@ -70,12 +67,11 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
     Map<String, Object> details = new HashMap<>(1);
     try {
       details.put("workspace_status", workspaceSupplier.getStatus());
-      details.put("jwt_status", jwtAuthInterceptorSupplier.getStatus());
-      details.put("provider_input_status", eventProviderInputModelSupplier.getStatus());
+      details.put("provider_config_status", eventProviderConfigSupplier.getStatus());
       details.put("api_management_url", this.apiManagementUrl);
       //details.put("providers",providerService.getProviders());
       details.put("provider_already_registered", this.isProviderRegistered());
-      details.put("provider", this.getRegisteredProvider());
+      details.put("registered_provider", this.getRegisteredProvider());
       return new Status(Status.UP, details);
     } catch (Exception e) {
       return new Status(Status.DOWN, details, e);
@@ -93,7 +89,7 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
 
   private Provider registerProvider() {
     Optional<Provider> createdProvider = getProviderService().createOrUpdateProvider(
-        eventProviderInputModelSupplier.getProviderInputModel());
+        eventProviderConfigSupplier.getProviderInputModel());
     if (createdProvider.isPresent()) {
       this.providerId = createdProvider.get().getId();
       return createdProvider.get();
@@ -124,7 +120,6 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
   private ProviderService getProviderService() {
     if (this.providerService == null) {
       this.providerService = ProviderService.builder()
-          .authInterceptor(jwtAuthInterceptorSupplier.getJWTAuthInterceptor())
           .workspace(workspaceSupplier.getWorkspace())
           .url(apiManagementUrl)
           .build();
