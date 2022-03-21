@@ -13,9 +13,11 @@ package com.adobe.aio.aem.event.management;
 
 import com.adobe.aio.aem.status.StatusSupplier;
 import com.adobe.aio.event.management.model.ProviderInputModel;
+import org.osgi.annotation.versioning.ProviderType;
+
 import java.net.URL;
 
-
+@ProviderType
 public interface EventProviderConfigSupplier extends StatusSupplier {
 
   ProviderInputModel getProviderInputModel();

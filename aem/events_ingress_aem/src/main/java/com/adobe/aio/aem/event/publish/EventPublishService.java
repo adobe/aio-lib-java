@@ -12,7 +12,9 @@
 package com.adobe.aio.aem.event.publish;
 
 import com.adobe.aio.aem.status.StatusSupplier;
+import org.osgi.annotation.versioning.ProviderType;
 
+@ProviderType
 public interface EventPublishService extends StatusSupplier {
 
   void publishEvent(String eventJsonPayload, String adobeIoEventCode);

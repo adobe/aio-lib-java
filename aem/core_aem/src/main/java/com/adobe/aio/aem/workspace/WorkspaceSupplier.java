@@ -13,7 +13,9 @@ package com.adobe.aio.aem.workspace;
 
 import com.adobe.aio.aem.status.StatusSupplier;
 import com.adobe.aio.workspace.Workspace;
+import org.osgi.annotation.versioning.ProviderType;
 
+@ProviderType
 public interface WorkspaceSupplier extends StatusSupplier {
 
   Workspace getWorkspace();

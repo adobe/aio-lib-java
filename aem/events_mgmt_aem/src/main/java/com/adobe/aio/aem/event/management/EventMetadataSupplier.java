@@ -12,7 +12,9 @@
 package com.adobe.aio.aem.event.management;
 
 import com.adobe.aio.event.management.model.EventMetadata;
+import org.osgi.annotation.versioning.ProviderType;
 
+@ProviderType
 public interface EventMetadataSupplier {
 
   /**
