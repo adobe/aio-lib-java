@@ -6,6 +6,12 @@
 
 ### 📁 Other pull requests
 
+- Bump javax.servlet-api from 3.1.0 to 4.0.1 [\#69](https://github.com/adobe/aio-lib-java/pull/69) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump wiremock-jre8 from 2.31.0 to 2.32.0 [\#68](https://github.com/adobe/aio-lib-java/pull/68) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump validation-api from 1.1.0.Final to 2.0.1.Final [\#67](https://github.com/adobe/aio-lib-java/pull/67) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump mockito-core from 3.11.1 to 4.4.0 [\#66](https://github.com/adobe/aio-lib-java/pull/66) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump sling-maven-plugin from 2.4.0 to 2.4.2 [\#65](https://github.com/adobe/aio-lib-java/pull/65) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump aem-nodetypes from 6.5.5.0 to 6.5.7.0 [\#64](https://github.com/adobe/aio-lib-java/pull/64) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Improve the Release Process [\#63](https://github.com/adobe/aio-lib-java/pull/63) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-java-0.0.19](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.19) (2022-03-21)
