@@ -19,7 +19,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.0.20</version>
+    <version>0.0.21-SNAPSHOT</version>
   </parent>
 
   <artifactId>aio-event-osgimapping</artifactId>
@@ -178,9 +178,4 @@
       </dependencies>
     </profile>
   </profiles>
-
-
-  <scm>
-    <tag>aio-lib-java-0.0.20</tag>
-  </scm>
 </project>
