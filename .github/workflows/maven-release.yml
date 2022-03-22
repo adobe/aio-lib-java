@@ -10,7 +10,7 @@
 # governing permissions and limitations under the License.
 #
 
-name: Release Deploy
+name: release
 
 # Run workflow on commits to default branch
 on:
@@ -25,11 +25,14 @@ jobs:
     runs-on: ubuntu-latest
     # Only release from main branch
     if: github.repository == 'adobe/aio-lib-java' && github.ref == 'refs/heads/main'
-    steps:
 
+    outputs:
+      version: ${{ steps.store-version.outputs.version }}
+
+    steps:
       # Check out Git repository
       - name: Checkout code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
       # Set up environment with Java and Maven
       - name: Set up JDK
