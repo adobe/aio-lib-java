@@ -347,25 +347,13 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.5.3</version>
+          <version>3.0.0-M5</version>
           <configuration>
             <useReleaseProfile>false</useReleaseProfile>
             <releaseProfiles>release</releaseProfiles>
             <autoVersionSubmodules>true</autoVersionSubmodules>
             <projectVersionPolicyId>OddEvenVersionPolicy</projectVersionPolicyId>
           </configuration>
-          <dependencies>
-            <dependency>
-              <groupId>org.apache.maven.shared</groupId>
-              <artifactId>maven-invoker</artifactId>
-              <version>3.1.0</version> <!-- Freeze until 3.0.0 of Maven Release Plugin is GA -->
-            </dependency>
-            <dependency>
-              <groupId>org.apache.maven.release</groupId>
-              <artifactId>maven-release-oddeven-policy</artifactId>
-              <version>2.5.3</version>
-            </dependency>
-          </dependencies>
         </plugin>
 
         <plugin>
