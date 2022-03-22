@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.19...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.20...HEAD)
+
+### 📁 Other pull requests
+
+- Fix missing output. [\#75](https://github.com/adobe/aio-lib-java/pull/75) ([bstopp](https://github.com/bstopp))
+
+## [aio-lib-java-0.0.20](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.20) (2022-03-22)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.19...aio-lib-java-0.0.20)
 
 ### 📁 Other pull requests
 
