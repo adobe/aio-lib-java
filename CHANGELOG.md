@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- Fix workflow [\#74](https://github.com/adobe/aio-lib-java/pull/74) ([francoisledroff](https://github.com/francoisledroff))
 - Bump maven-invoker from 2.2 to 3.1.0 [\#73](https://github.com/adobe/aio-lib-java/pull/73) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump maven-compiler-plugin from 3.10.0 to 3.10.1 [\#72](https://github.com/adobe/aio-lib-java/pull/72) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump license-maven-plugin from 3.0 to 4.1 [\#71](https://github.com/adobe/aio-lib-java/pull/71) ([dependabot[bot]](https://github.com/apps/dependabot))
