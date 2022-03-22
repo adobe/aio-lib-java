@@ -6,6 +6,10 @@
 
 ### 📁 Other pull requests
 
+- Bump maven-invoker from 2.2 to 3.1.0 [\#73](https://github.com/adobe/aio-lib-java/pull/73) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump maven-compiler-plugin from 3.10.0 to 3.10.1 [\#72](https://github.com/adobe/aio-lib-java/pull/72) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump license-maven-plugin from 3.0 to 4.1 [\#71](https://github.com/adobe/aio-lib-java/pull/71) ([dependabot[bot]](https://github.com/apps/dependabot))
+- Bump org.osgi.service.log from 1.4.0 to 1.5.0 [\#70](https://github.com/adobe/aio-lib-java/pull/70) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump javax.servlet-api from 3.1.0 to 4.0.1 [\#69](https://github.com/adobe/aio-lib-java/pull/69) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump wiremock-jre8 from 2.31.0 to 2.32.0 [\#68](https://github.com/adobe/aio-lib-java/pull/68) ([dependabot[bot]](https://github.com/apps/dependabot))
 - Bump validation-api from 1.1.0.Final to 2.0.1.Final [\#67](https://github.com/adobe/aio-lib-java/pull/67) ([dependabot[bot]](https://github.com/apps/dependabot))
