@@ -10,43 +10,37 @@
 # governing permissions and limitations under the License.
 #
 
-name: build
+name: Build & Verify
 
 on:
-  push:
   pull_request:
+    branches:
+      - main
 
 jobs:
-  build:
-
-    runs-on: ${{ matrix.os }}
+  verify:
+    runs-on: ubuntu-latest
     strategy:
+      fail-fast: true
       matrix:
-        os: [ ubuntu-latest ]
-        java: [11]
+        profile:
+          - 'aemaacsDeps,aemaacs'
+          - 'aem65deps,aem65'
 
     steps:
       # Check out Git repository
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Set up environment with Java and Maven
       - name: Setup JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: ${{ matrix.java }}
-
-      # Set up dependency cache
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          distribution: 'temurin'
+          java-version: 11
+          cache: maven
 
       # Build & Test
       - name: Build & Test with Maven
-        env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-        run: mvn -B -U clean install ${{ matrix.profile }} ${{ fromJSON('["-Prelease", ""]')[matrix.java == 11 || matrix.profile == ''] }} -s ./.github/workflows/settings.xml
+        run: mvn -U clean verify -P${{ matrix.profile }}
+

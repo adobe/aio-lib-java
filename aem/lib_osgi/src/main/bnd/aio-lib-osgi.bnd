@@ -23,19 +23,19 @@ Import-Package: \
     com.fasterxml.jackson.databind.node;version="[2.9,3)",\
     com.fasterxml.jackson.databind.type;version="[2.9,3)",\
     *
-Export-Package: com.adobe.aio.workspace;version="${project.version}",\
-    com.adobe.aio.exception;version="${project.version}",\
-    com.adobe.aio.util;version="${project.version}",\
-    com.adobe.aio.ims;version="${project.version}",\
-    com.adobe.aio.ims.model;version="${project.version}",\
-    com.adobe.aio.ims.util;version="${project.version}",\
-    com.adobe.aio.event.management;version="${project.version}",\
-    com.adobe.aio.event.management.model;version="${project.version}",\
-    com.adobe.aio.event.journal;version="${project.version}",\
-    com.adobe.aio.event.journal.model;version="${project.version}",\
-    com.adobe.aio.event.publish;version="${project.version}",\
-    com.adobe.aio.event.publish.model;version="${project.version}",\
-    com.adobe.xdm.*;version="${project.version}",
+Export-Package: com.adobe.aio.workspace;version="${project.version}";provide:=true,\
+    com.adobe.aio.exception;version="${project.version}";provide:=true,\
+    com.adobe.aio.util;version="${project.version}";provide:=true,\
+    com.adobe.aio.ims;version="${project.version}";provide:=true,\
+    com.adobe.aio.ims.model;version="${project.version}";provide:=true,\
+    com.adobe.aio.ims.util;version="${project.version}";provide:=true,\
+    com.adobe.aio.event.management;version="${project.version}";provide:=true,\
+    com.adobe.aio.event.management.model;version="${project.version}";provide:=true,\
+    com.adobe.aio.event.journal;version="${project.version}";provide:=true,\
+    com.adobe.aio.event.journal.model;version="${project.version}";provide:=true,\
+    com.adobe.aio.event.publish;version="${project.version}";provide:=true,\
+    com.adobe.aio.event.publish.model;version="${project.version}";provide:=true,\
+    com.adobe.xdm.*;version="${project.version}";provide:=true
 Bundle-DocURL:
 
 -noextraheaders: true

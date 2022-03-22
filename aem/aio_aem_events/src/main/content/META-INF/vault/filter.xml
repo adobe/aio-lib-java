@@ -13,5 +13,5 @@
 
 -->
 <workspaceFilter version="1.0">
-  <filter root="/apps/aio"/>
+  <filter root="/apps/aio-aem-events"/>
 </workspaceFilter>

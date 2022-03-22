@@ -19,36 +19,183 @@ on:
       releaseVersion:
         description: 'Release version (major.minor.patch)'
         required: false
-        default: ''
-      dryRun:
-        description: 'Dry Run? (false to do an actual release)'
-        required: true
-        default: 'true'
+
 jobs:
-  release:
+  tag:
     runs-on: ubuntu-latest
     # Only release from main branch
-    if: github.ref == 'refs/heads/main'
+    if: github.repository == 'adobe/aio-lib-java' && github.ref == 'refs/heads/main'
     steps:
       # Check out Git repository
-      - uses: actions/checkout@v2
+      - name: Checkout code
+      - uses: actions/checkout@v3
 
       # Set up environment with Java and Maven
       - name: Set up JDK
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
+          distribution: 'temurin'
           java-version: 11
+          cache: maven
 
-      # Set up dependency cache
-      - name: Cache local Maven repository
-        uses: actions/cache@v2
+      - name: Initialize mandatory git config
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email noreply@github.com
+
+      - name: Release with Maven
+        run: mvn -B release:clean release:prepare -DreleaseVersion=${{ github.event.inputs.version }}
+
+      - name: Store Version
+        id: store-version
+        run: echo "::set-output name=version::$(grep ^scm.tag= release.properties | sed -e 's/scm.tag=aio-lib-java-//g')"
+
+  github-release:
+    needs: tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          fetch-depth: 0 # Work around for https://github.com/heinrichreimer/action-github-changelog-generator/issues/21
+          ref: aio-lib-java-${{ needs.tag.outputs.version }}
 
-      # Import GPG key from env variable into keychain
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 11
+          cache: maven
+
+      - name: Maven Verify
+        run: mvn -U clean verify
+
+      - name: Generate Release Changelog
+        id: generate-release-changelog
+        uses: heinrichreimer/github-changelog-generator-action@v2.3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          breakingLabel: '### 💥 Breaking'
+          enhancementLabel: '### 🚀 Enhancements'
+          bugsLabel: '### 🐛 Bug fixes'
+          securityLabel: '### 🛡️ Security'
+          issuesLabel: '### 📁 Other issues'
+          prLabel: '### 📁 Other pull requests'
+          addSections: '{"documentation":{"prefix":"### 📖 Documentation","labels":["documentation"]},"tests":{"prefix":"### ✅ Testing","labels":["tests"]}}'
+          issues: false
+          issuesWoLabels: false
+          pullRequests: true
+          prWoLabels: true
+          author: true
+          compareLink: true
+          onlyLastTag: true
+          stripHeaders: true
+          stripGeneratorNotice: true
+
+      - name: Create Release
+        id: create-release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: aio-lib-java-${{ needs.tag.outputs.version }}
+          release_name: aio-lib-java-${{ needs.tag.outputs.version }}
+          body: ${{ steps.generate-release-changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Artifacts
+        id: upload-release-artifacts
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: aio-lib-java-${{ needs.tag.outputs.version }}
+          files: |
+            target/aio-lib-java-*.pom
+            core/target/aio-lib-java-core-*.jar 
+            ims/target/aio-lib-java-ims-*.jar
+            events_mgmt/target/aio-lib-java-events-mgmt-*.jar
+            events_journal/target/aio-lib-java-events-journal-*.jar
+            events_ingress/target/aio-lib-java-events-ingress-*.jar
+            aem/lib_osgi/target/aio-lib-osgi-*.jar
+            aem/core_aem/target/aio-aem-core-*.jar
+            aem/events_mgmt_aem/target/aio-event-management-*.jar
+            aem/events_ingress_aem/target/aio-event-publish-*.jar
+            aem/events_osgi_mapping/target/aio-event-osgimapping-*.jar
+            aem/aio_aem_events/target/aio-aem-events-*.zip
+
+ 
+  additional-release-artifacts-aem:
+    needs: [tag, github-release]
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        profile:
+          - 'aem65deps,aem65'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Work around for https://github.com/heinrichreimer/action-github-changelog-generator/issues/21
+          ref: aio-lib-java-${{ needs.tag.outputs.version }}
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 11
+          cache: maven
+
+      - name: Maven Verify
+        run: mvn clean verify -P${{ matrix.profile }}
+
+      - name: Upload Release Artifacts
+        id: upload-release-artifacts
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: aio-lib-java-${{ needs.tag.outputs.version }}
+          files: |
+            target/aio-lib-java-*.pom
+            core/target/aio-lib-java-core-*.jar 
+            ims/target/aio-lib-java-ims-*.jar
+            events_mgmt/target/aio-lib-java-events-mgmt-*.jar
+            events_journal/target/aio-lib-java-events-journal-*.jar
+            events_ingress/target/aio-lib-java-events-ingress-*.jar
+            aem/lib_osgi/target/aio-lib-osgi-*.jar
+            aem/core_aem/target/aio-aem-core-*.jar
+            aem/events_mgmt_aem/target/aio-event-management-*.jar
+            aem/events_ingress_aem/target/aio-event-publish-*.jar
+            aem/events_osgi_mapping/target/aio-event-osgimapping-*.jar
+            aem/aio_aem_events/target/aio-aem-events-*.zip
+
+  maven-central-deploy:
+    needs: tag
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: aio-lib-java-${{ needs.tag.outputs.version }}
+
+      - name: Setup JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: 11
+          cache: maven
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
       - name: Import GPG key
         env:
           GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
@@ -57,19 +204,23 @@ jobs:
           echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
           echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
 
-      - name: Configure git user for release commits
+      - name: AEM6.5 Build
+        run: mvn clean deploy -DskipRemoteStaging=true -Dmaven.test.skip -Paem65deps,aem65,release
         env:
-          X_GITHUB_USERNAME: ${{ secrets.ADOBE_BOT_GITHUB_USERNAME  }}
-        run: |
-          git config user.email "Grp-opensourceoffice@adobe.com"
-          git config user.name "${X_GITHUB_USERNAME}"
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
-      # Build and deploy to OSSRH, which will automatically sync to Central Repository
-      - name: Deploy to Central Repository
+      - name: AEMaaCS Build
+        run: mvn clean deploy -DskipRemoteStaging=true -PaemaacsDeps,aemaacs,release,attach-javadoc,attach-source
         env:
-          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-          X_GITHUB_USERNAME: ${{ secrets.ADOBE_BOT_GITHUB_USERNAME  }}
-          X_GITHUB_PASSWORD: ${{ secrets.ADOBE_BOT_GITHUB_PASSWORD }}
-        run: mvn -B -V -Prelease,ossrh --settings ./.github/workflows/settings.xml clean release:prepare release:perform -DuseReleaseProfile=false -Darguments="-Dmaven.javadoc.skip=true" -Dmaven.javadoc.skip=true -DreleaseVersion=${{ github.event.inputs.releaseVersion }} -DdryRun=${{ github.event.inputs.dryRun }}
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+
+      - name: Deploy to Central
+        run: mvn nexus-staging:deploy-staged -DautoReleaseAfterClose=true
+        env:
+          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}

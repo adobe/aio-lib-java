@@ -13,7 +13,9 @@ package com.adobe.aio.aem.event.management;
 
 
 import com.adobe.aio.aem.status.StatusSupplier;
+import org.osgi.annotation.versioning.ProviderType;
 
+@ProviderType
 public interface EventMetadataStatusSupplier extends StatusSupplier {
 
 }

@@ -26,36 +26,42 @@
   <name>Adobe I/O - Java SDK - OSGI bundle</name>
 
   <dependencies>
-    <dependency>
-      <artifactId>aio-lib-java-ims</artifactId>
-      <groupId>com.adobe.aio</groupId>
-      <version>${project.version}</version>
+    <dependency> <!-- TODO: Remove this when xdm-event-model no longer depends on it -->
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>1.1.0.Final</version>
     </dependency>
     <dependency>
-      <artifactId>aio-lib-java-core</artifactId>
-      <groupId>com.adobe.aio</groupId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <artifactId>aio-lib-java-events-mgmt</artifactId>
-      <groupId>com.adobe.aio</groupId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <artifactId>aio-lib-java-events-ingress</artifactId>
-      <groupId>com.adobe.aio</groupId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <artifactId>aio-lib-java-events-journal</artifactId>
-      <groupId>com.adobe.aio</groupId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <artifactId>xdm-event-model</artifactId>
       <groupId>com.adobe.event</groupId>
+      <artifactId>xdm-event-model</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-ims</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-mgmt</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-ingress</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-journal</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    
     <dependency>
       <artifactId>jjwt-api</artifactId>
       <groupId>io.jsonwebtoken</groupId>
@@ -73,15 +79,7 @@
       <artifactId>jakarta.xml.bind-api</artifactId>
       <groupId>jakarta.xml.bind</groupId>
     </dependency>
-    <dependency>
-      <artifactId>validation-api</artifactId>
-      <groupId>javax.validation</groupId>
-    </dependency>
 
-    <dependency>
-      <artifactId>jackson-databind</artifactId>
-      <groupId>com.fasterxml.jackson.core</groupId>
-    </dependency>
     <dependency>
       <artifactId>feign-core</artifactId>
       <groupId>io.github.openfeign</groupId>
@@ -99,22 +97,10 @@
       <groupId>io.github.openfeign.form</groupId>
     </dependency>
 
-    <dependency>
-      <artifactId>org.osgi.framework</artifactId>
-      <groupId>org.osgi</groupId>
-    </dependency>
-
   </dependencies>
 
   <build>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.sling</groupId>
-        <artifactId>sling-maven-plugin</artifactId>
-      </plugin>
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
@@ -123,12 +109,18 @@
             <goals>
               <goal>copy-dependencies</goal>
             </goals>
+            <phase>prepare-package</phase>
           </execution>
         </executions>
         <configuration>
           <excludeGroupIds>
             com.fasterxml.jackson.core,
             org.osgi,
+            javax.annotation,
+            javax.jcr,
+            javax.servlet,
+            javax.servlet.jsp,
+            org.apache.sling,
             org.apache.commons,
             org.junit.platform,
             org.junit.jupiter,
@@ -137,61 +129,24 @@
             org.slf4j,
             org.jetbrains,
             org.projectlombok,
+            com.adobe.aem,
           </excludeGroupIds>
         </configuration>
       </plugin>
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-maven-plugin</artifactId>
-        <configuration>
-          <bndfile>src/main/bnd/aio-lib-osgi.bnd</bndfile>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>bnd-process</goal>
-            </goals>
-            <id>bnd-process</id>
-          </execution>
-        </executions>
-        <dependencies>
-          <dependency>
-            <artifactId>org.apache.sling.caconfig.bnd-plugin</artifactId>
-            <groupId>org.apache.sling</groupId>
-            <version>1.0.2</version>
-          </dependency>
-          <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.bnd.models</artifactId>
-            <version>1.0.0</version>
-          </dependency>
-        </dependencies>
+        <extensions>true</extensions>
       </plugin>
       <plugin>
         <groupId>biz.aQute.bnd</groupId>
         <artifactId>bnd-baseline-maven-plugin</artifactId>
-        <configuration>
-          <failOnMissing>false</failOnMissing>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>baseline</goal>
-            </goals>
-            <id>baseline</id>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
-          </archive>
-        </configuration>
       </plugin>
     </plugins>
   </build>
-
+  
 </project>

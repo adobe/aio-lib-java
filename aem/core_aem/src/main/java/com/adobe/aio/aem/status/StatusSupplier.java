@@ -11,6 +11,9 @@
  */
 package com.adobe.aio.aem.status;
 
+import org.osgi.annotation.versioning.ProviderType;
+
+@ProviderType
 public interface StatusSupplier {
 
   Status getStatus();

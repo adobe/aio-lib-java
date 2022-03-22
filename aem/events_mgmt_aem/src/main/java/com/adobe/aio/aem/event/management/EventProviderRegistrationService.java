@@ -14,11 +14,13 @@ package com.adobe.aio.aem.event.management;
 import com.adobe.aio.aem.status.StatusSupplier;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
+import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * AEM has to register against Adobe I/O Events API management, in order to be assigned a
  * providerId, and then to be able to register its event metadata
  */
+@ProviderType
 public interface EventProviderRegistrationService extends StatusSupplier {
 
   Provider getRegisteredProvider();
