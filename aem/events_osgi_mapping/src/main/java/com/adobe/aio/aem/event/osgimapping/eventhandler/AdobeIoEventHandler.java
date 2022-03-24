@@ -76,12 +76,12 @@ public abstract class AdobeIoEventHandler<T extends XdmObject> implements EventH
       if (xdmEvents != null && !xdmEvents.isEmpty()) {
         for (XdmEvent xdmEvent : xdmEvents) {
           Map<String, Object> jobProperties = new HashMap();
-          jobProperties.put(EventPublishJobConsumer.AIO_JOB_EVENT_CODE_PROPERTY,
+          jobProperties.put(EventPublishJobConsumer.AIO_EVENT_CODE_PROPERTY,
               osgiEventMappingConfig.aio_event_code());
           jobProperties
-              .put(EventPublishJobConsumer.AIO_JOB_EVENT_PROPERTY,
+              .put(EventPublishJobConsumer.AIO_EVENT_PROPERTY,
                   OBJECT_MAPPER.writeValueAsString(xdmEvent));
-          jobManager.addJob(EventPublishJobConsumer.AIO_JOB_TOPIC, jobProperties);
+          jobManager.addJob(EventPublishJobConsumer.AIO_EVENTS_JOB_TOPIC, jobProperties);
           logger.debug("Adobe I/O Event Job {} added.", jobProperties);
         }
       } else {

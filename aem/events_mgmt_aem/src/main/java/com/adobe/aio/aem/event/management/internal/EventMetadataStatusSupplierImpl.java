@@ -13,47 +13,34 @@ package com.adobe.aio.aem.event.management.internal;
 
 import com.adobe.aio.aem.event.management.EventMetadataStatus;
 import com.adobe.aio.aem.event.management.EventMetadataStatusSupplier;
-import com.adobe.aio.aem.event.management.EventMetadataSupplier;
+import com.adobe.aio.aem.event.management.ocd.ApiManagementConfig;
 import com.adobe.aio.aem.status.Status;
-import com.adobe.aio.event.management.model.EventMetadata;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(property = {
+@Component(immediate = true, service = EventMetadataStatusSupplier.class,
+    property = {
     "label = Adobe I/O Events' Event Metadata Status Supplier Service",
     "description = Adobe I/O Events' Event Metadata Status Supplier Service"
-}
-)
+})
 public class EventMetadataStatusSupplierImpl implements EventMetadataStatusSupplier {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
   private final Map<String, EventMetadataStatus> eventMetadataStatusByEventCode = new ConcurrentHashMap<>();
-  @Reference(
-      service = EventMetadataSupplier.class,
-      policy = ReferencePolicy.DYNAMIC,
-      cardinality = ReferenceCardinality.MULTIPLE,
-      bind = "bindEventMetadata",
-      unbind = "unbindEventMetadata")
-  private volatile List<EventMetadataSupplier> eventMetadataSuppliers;
 
-  protected synchronized void bindEventMetadata(
-      final EventMetadataSupplier eventMetadataSupplier) {
-    EventMetadata eventMetadata = eventMetadataSupplier.getConfiguredEventMetadata();
-    eventMetadataStatusByEventCode.put(eventMetadata.getEventCode(),
-        new EventMetadataStatus(eventMetadataSupplier));
+  @Activate
+  protected void activate(ApiManagementConfig config) {
+    log.info("activating");
   }
 
-  protected void unbindEventMetadata(
-      final EventMetadataSupplier eventMetadataBuilder) {
-    log.debug("won't delete I/O event metadata when unbinding/shutting-down");
+  @Override
+  public void addStatus(String eventCode, EventMetadataStatus eventMetadataStatus) {
+    eventMetadataStatusByEventCode.put(eventCode,eventMetadataStatus);
   }
 
   @Override

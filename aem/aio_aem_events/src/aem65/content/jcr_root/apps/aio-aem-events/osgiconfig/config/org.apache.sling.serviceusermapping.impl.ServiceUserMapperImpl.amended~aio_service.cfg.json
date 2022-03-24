@@ -1,0 +1,5 @@
+{
+  "user.mapping": [
+    "com.adobe.aio.aem.aio-aem-core:aio_service=[aio_service_user]"
+  ]
+}
