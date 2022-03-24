@@ -11,30 +11,24 @@
  */
 package com.adobe.aio.aem.event.osgimapping;
 
-import com.adobe.aio.event.management.model.EventMetadata;
+import com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventMapping;
 
 public class OsgiEventMappingStatus {
 
-  private final EventMetadata configuredEventMetadata;
-  private final EventMetadata registeredEventMetadata;
+  private final OsgiEventMapping osgiEventMapping;
   private final Throwable error;
 
-  public OsgiEventMappingStatus(final OsgiEventMappingSupplier eventMetadataSupplier) {
-    configuredEventMetadata = eventMetadataSupplier.getConfiguredEventMetadata();
-    registeredEventMetadata = eventMetadataSupplier.getRegisteredEventMetadata();
-    error = eventMetadataSupplier.getError();
-  }
-
-  public EventMetadata getConfiguredEventMetadata() {
-    return configuredEventMetadata;
+  public OsgiEventMappingStatus(final OsgiEventMapping osgiEventMapping, final Throwable error) {
+    this.osgiEventMapping = osgiEventMapping;
+    this.error = error;
   }
 
   public boolean isUp() {
-    return (error == null && configuredEventMetadata != null && registeredEventMetadata != null);
+    return (error == null && osgiEventMapping != null);
   }
 
-  public EventMetadata getRegisteredEventMetadata() {
-    return registeredEventMetadata;
+  public OsgiEventMapping getOsgiEventMapping() {
+    return osgiEventMapping;
   }
 
   public String getError() {

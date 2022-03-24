@@ -11,7 +11,6 @@
  */
 package com.adobe.aio.aem.event.osgimapping.eventhandler;
 
-import com.adobe.aio.aem.event.osgimapping.ocd.OsgiEventMappingConfig;
 import com.adobe.aio.aem.event.xdm.aem.XdmUtil;
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
 import com.adobe.aio.exception.AIOException;
@@ -38,10 +37,10 @@ public class PageModificationEventHandler extends
 
   public PageModificationEventHandler(ModificationType modificationType,
       JobManager jobManager, URL rootUrl, String imsOrgId,
-      OsgiEventMappingConfig osgiEventMappingConfig,
+      OsgiEventMapping osgiEventMapping,
       ResourceResolverWrapper resourceResolverWrapper) {
     super(jobManager, rootUrl, imsOrgId,
-        osgiEventMappingConfig, resourceResolverWrapper);
+        osgiEventMapping, resourceResolverWrapper);
     this.modificationType = modificationType;
   }
 

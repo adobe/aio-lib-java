@@ -11,7 +11,6 @@
  */
 package com.adobe.aio.aem.event.osgimapping.eventhandler;
 
-import com.adobe.aio.aem.event.osgimapping.ocd.OsgiEventMappingConfig;
 import com.adobe.aio.aem.event.xdm.aem.XdmUtil;
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
 import com.adobe.xdm.content.Page;
@@ -26,10 +25,10 @@ import org.osgi.service.event.Event;
 public class PageReplicationEventHandler extends ReplicationEventHandler<Page> {
 
   public PageReplicationEventHandler(JobManager jobManager, URL rootUrl, String imsOrgId,
-      OsgiEventMappingConfig osgiEventMappingConfig,
+      OsgiEventMapping osgiEventMapping,
       ResourceResolverWrapper resourceResolverWrapper) {
     super(jobManager, rootUrl, imsOrgId,
-        osgiEventMappingConfig, resourceResolverWrapper);
+        osgiEventMapping, resourceResolverWrapper);
   }
 
   @Override

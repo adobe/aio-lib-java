@@ -13,17 +13,11 @@ package com.adobe.aio.aem.event.osgimapping.internal;
 
 import com.adobe.aio.aem.event.osgimapping.OsgiEventMappingStatus;
 import com.adobe.aio.aem.event.osgimapping.OsgiEventMappingStatusSupplier;
-import com.adobe.aio.aem.event.osgimapping.OsgiEventMappingSupplier;
 import com.adobe.aio.aem.status.Status;
-import com.adobe.aio.event.management.model.EventMetadata;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,24 +31,11 @@ public class OsgiEventMappingStatusSupplierImpl implements OsgiEventMappingStatu
 
   private final Logger log = LoggerFactory.getLogger(getClass());
   private final Map<String, OsgiEventMappingStatus> osgiEventMappingStatusByEventCode = new ConcurrentHashMap<>();
-  @Reference(
-      service = OsgiEventMappingSupplier.class,
-      policy = ReferencePolicy.DYNAMIC,
-      cardinality = ReferenceCardinality.MULTIPLE,
-      bind = "bindEventMetadata",
-      unbind = "unbindEventMetadata")
-  private volatile List<OsgiEventMappingSupplier> eventMetadataSuppliers;
 
-  protected synchronized void bindEventMetadata(
-      final OsgiEventMappingSupplier eventMetadataSupplier) {
-    EventMetadata eventMetadata = eventMetadataSupplier.getConfiguredEventMetadata();
-    osgiEventMappingStatusByEventCode.put(eventMetadata.getEventCode(),
-        new OsgiEventMappingStatus(eventMetadataSupplier));
-  }
 
-  protected void unbindEventMetadata(
-      final OsgiEventMappingSupplier eventMappingSupplier) {
-    log.debug("won't delete I/O event metadata when unbinding/shutting-down");
+  @Override
+  public void addStatus(String eventCode, OsgiEventMappingStatus eventMetadataStatus) {
+    osgiEventMappingStatusByEventCode.put(eventCode, eventMetadataStatus);
   }
 
   @Override
@@ -62,7 +43,7 @@ public class OsgiEventMappingStatusSupplierImpl implements OsgiEventMappingStatu
     Map<String, Object> details = new HashMap<>(1);
     try {
       if (osgiEventMappingStatusByEventCode.isEmpty()) {
-        return new Status(Status.INVALID_CONFIG, null, "Missing event metadata configuration");
+        return new Status(Status.INVALID_CONFIG, null, "Missing Osgi Event Mapping configuration");
       } else {
         details.putAll(osgiEventMappingStatusByEventCode);
         boolean isUp = osgiEventMappingStatusByEventCode.values().stream()

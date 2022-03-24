@@ -18,4 +18,5 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface OsgiEventMappingStatusSupplier extends StatusSupplier {
 
+  void addStatus(String eventCode, OsgiEventMappingStatus eventMetadataStatus);
 }

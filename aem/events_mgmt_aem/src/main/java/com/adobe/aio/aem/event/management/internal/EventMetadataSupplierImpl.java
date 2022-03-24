@@ -11,7 +11,7 @@
  */
 package com.adobe.aio.aem.event.management.internal;
 
-import com.adobe.aio.aem.event.management.EventMetadataConfigJobConsumer;
+import com.adobe.aio.aem.event.management.EventMetadataRegistrationJobConsumer;
 import com.adobe.aio.aem.event.management.EventMetadataSupplier;
 import com.adobe.aio.aem.event.management.ocd.EventMetadataConfig;
 import com.adobe.aio.event.management.model.EventMetadata;
@@ -40,32 +40,31 @@ public class EventMetadataSupplierImpl implements EventMetadataSupplier {
   @Reference
   JobManager jobManager;
 
-  private EventMetadata configuredEventMetadata;
-
   @Activate
   protected void activate(EventMetadataConfig eventMetadataConfig) {
     Map<String, Object> jobProperties = new HashMap();
-    jobProperties.put(EventMetadataConfigJobConsumer.AIO_EVENT_CODE_PROPERTY,
+    jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_CODE_PROPERTY,
         eventMetadataConfig.aio_event_code());
     try {
-      configuredEventMetadata = EventMetadata.builder()
+      EventMetadata configuredEventMetadata = EventMetadata.builder()
           .description(eventMetadataConfig.aio_event_description())
           .label(eventMetadataConfig.aio_event_label())
           .eventCode(eventMetadataConfig.aio_event_code())
           .build();
-      jobProperties.put(EventMetadataConfigJobConsumer.AIO_EVENT_METADATA_PROPERTY,
+      jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_METADATA_PROPERTY,
           objectMapper.writeValueAsString(configuredEventMetadata));
-      jobManager.addJob(EventMetadataConfigJobConsumer.AIO_CONFIG_EVENT_METADA_JOB_TOPIC, jobProperties);
+      jobManager.addJob(EventMetadataRegistrationJobConsumer.AIO_CONFIG_EVENT_METADA_JOB_TOPIC, jobProperties);
       log.debug("Adobe I/O Events Metadata Config Job {} added.", jobProperties);
     } catch (Exception e) {
       log.error("Adobe I/O Events' Event Metadata Supplier Service Activation Error: {}",
           e.getMessage(), e);
-      //TODO add error in job to get status
-      //  error.getClass().getSimpleName() + ":" + error.getMessage();
+      jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_ERROR_PROPERTY,
+          e.getClass().getSimpleName() + ":" + e.getMessage());
+      jobManager.addJob(EventMetadataRegistrationJobConsumer.AIO_CONFIG_EVENT_METADA_JOB_TOPIC, jobProperties);
     } finally {
       log.info("Adobe I/O Events' Event Metadata Supplier Service Activation Complete with config : {}",
           eventMetadataConfig);
     }
   }
-  
+
 }
