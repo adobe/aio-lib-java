@@ -11,16 +11,14 @@
  */
 package com.adobe.aio.ims.feign;
 
-import static com.adobe.aio.util.Constants.API_KEY_HEADER;
-import static com.adobe.aio.util.Constants.AUTHORIZATION_HEADER;
-import static com.adobe.aio.util.Constants.BEARER_PREFIX;
-
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.model.AccessToken;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.apache.commons.lang3.StringUtils;
+
+import static com.adobe.aio.util.Constants.*;
 
 public class JWTAuthInterceptor implements RequestInterceptor {
 
@@ -29,20 +27,19 @@ public class JWTAuthInterceptor implements RequestInterceptor {
 
   private final ImsService imsService;
   private final String apiKey;
+  private final String imsOrgId;
 
-  private JWTAuthInterceptor(final ImsService imsService, final String apiKey) {
+  private JWTAuthInterceptor(final ImsService imsService, final String apiKey, final String imsOrgId) {
     this.imsService = imsService;
     this.apiKey = apiKey;
+    this.imsOrgId = imsOrgId;
   }
 
   @Override
   public void apply(RequestTemplate requestTemplate) {
     applyAuthorization(requestTemplate);
-    if (requestTemplate.headers().containsKey(API_KEY_HEADER)) {
-      return;
-    } else if (!StringUtils.isEmpty(apiKey)) {
-      requestTemplate.header(API_KEY_HEADER, apiKey);
-    }
+    applyApiKey(requestTemplate);
+    applyImsOrg(requestTemplate);
   }
 
   public boolean isUp(){
@@ -60,6 +57,18 @@ public class JWTAuthInterceptor implements RequestInterceptor {
     }
   }
 
+  private void applyApiKey(RequestTemplate requestTemplate) {
+    if (!requestTemplate.headers().containsKey(API_KEY_HEADER) && !StringUtils.isEmpty(apiKey)) {
+      requestTemplate.header(API_KEY_HEADER, apiKey);
+    }
+  }
+  
+  private void applyImsOrg(RequestTemplate requestTemplate) {
+    if (!requestTemplate.headers().containsKey(IMS_ORG_HEADER) && !StringUtils.isEmpty(imsOrgId)) {
+      requestTemplate.header(IMS_ORG_HEADER, imsOrgId);
+    }
+  }
+  
   private synchronized void updateAccessToken() {
     this.accessToken = imsService.getJwtExchangeAccessToken();
     this.expirationTimeMillis = System.currentTimeMillis() + accessToken.getExpiresIn();
@@ -81,6 +90,7 @@ public class JWTAuthInterceptor implements RequestInterceptor {
 
     private ImsService imsService;
     private String apiKey;
+    private String imsOrgId;
 
     private Builder() {
     }
@@ -100,9 +110,14 @@ public class JWTAuthInterceptor implements RequestInterceptor {
       this.apiKey = apiKey;
       return this;
     }
+    
+    public Builder imsOrg(String imsOrgId) {
+      this.imsOrgId = imsOrgId;
+      return this;
+    }
 
     public JWTAuthInterceptor build() {
-      return new JWTAuthInterceptor(imsService, apiKey);
+      return new JWTAuthInterceptor(imsService, apiKey, imsOrgId);
     }
   }
 

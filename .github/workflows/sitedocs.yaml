@@ -5,7 +5,7 @@ concurrency: ci-aio-lib-java
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Tag & Release"]
+    workflows: ["Release Deploy"]
     types:
       - completed
 
