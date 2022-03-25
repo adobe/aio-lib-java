@@ -26,20 +26,14 @@ public class JWTAuthInterceptor implements RequestInterceptor {
   private volatile AccessToken accessToken;
 
   private final ImsService imsService;
-  private final String apiKey;
-  private final String imsOrgId;
 
-  private JWTAuthInterceptor(final ImsService imsService, final String apiKey, final String imsOrgId) {
+  private JWTAuthInterceptor(final ImsService imsService) {
     this.imsService = imsService;
-    this.apiKey = apiKey;
-    this.imsOrgId = imsOrgId;
   }
 
   @Override
   public void apply(RequestTemplate requestTemplate) {
     applyAuthorization(requestTemplate);
-    applyApiKey(requestTemplate);
-    applyImsOrg(requestTemplate);
   }
 
   public boolean isUp(){
@@ -54,18 +48,6 @@ public class JWTAuthInterceptor implements RequestInterceptor {
     // If first time or of expired, get the token
     if (getAccessToken() != null) {
       requestTemplate.header(AUTHORIZATION_HEADER, BEARER_PREFIX + getAccessToken());
-    }
-  }
-
-  private void applyApiKey(RequestTemplate requestTemplate) {
-    if (!requestTemplate.headers().containsKey(API_KEY_HEADER) && !StringUtils.isEmpty(apiKey)) {
-      requestTemplate.header(API_KEY_HEADER, apiKey);
-    }
-  }
-  
-  private void applyImsOrg(RequestTemplate requestTemplate) {
-    if (!requestTemplate.headers().containsKey(IMS_ORG_HEADER) && !StringUtils.isEmpty(imsOrgId)) {
-      requestTemplate.header(IMS_ORG_HEADER, imsOrgId);
     }
   }
   
@@ -89,35 +71,17 @@ public class JWTAuthInterceptor implements RequestInterceptor {
   public static class Builder {
 
     private ImsService imsService;
-    private String apiKey;
-    private String imsOrgId;
 
     private Builder() {
     }
 
     public Builder workspace(Workspace workspace) {
       this.imsService = ImsService.builder().workspace(workspace).build();
-      this.apiKey = workspace.getApiKey();
-      return this;
-    }
-
-    public Builder imsService(ImsService imsService) {
-      this.imsService = imsService;
-      return this;
-    }
-
-    public Builder apiKey(String apiKey) {
-      this.apiKey = apiKey;
-      return this;
-    }
-    
-    public Builder imsOrg(String imsOrgId) {
-      this.imsOrgId = imsOrgId;
       return this;
     }
 
     public JWTAuthInterceptor build() {
-      return new JWTAuthInterceptor(imsService, apiKey, imsOrgId);
+      return new JWTAuthInterceptor(imsService);
     }
   }
 

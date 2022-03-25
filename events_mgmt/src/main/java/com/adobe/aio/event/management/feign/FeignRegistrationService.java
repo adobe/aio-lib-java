@@ -14,6 +14,7 @@ package com.adobe.aio.event.management.feign;
 import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 
 import com.adobe.aio.event.management.RegistrationService;
+import com.adobe.aio.feign.AIOHeaderInterceptor;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.api.RegistrationApi;
@@ -51,6 +52,7 @@ public class FeignRegistrationService implements RegistrationService {
     RequestInterceptor authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
     this.registrationApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
+        .requestInterceptor(AIOHeaderInterceptor.builder().workspace(workspace).build())
         .target(RegistrationApi.class, apiUrl);
     this.workspace = workspace;
   }
