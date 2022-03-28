@@ -91,7 +91,7 @@
 
     <license.header.path>${maven.multiModuleProjectDirectory}/copyright_header.txt</license.header.path>
 
-    <jacoco.version>0.8.3</jacoco.version> <!-- See https://github.com/jacoco/jacoco/issues/896#issuecomment-500944865 -->
+    <jacoco.version>0.8.7</jacoco.version> <!-- See https://github.com/jacoco/jacoco/issues/896#issuecomment-500944865 -->
 
     <commons-text.version>1.6</commons-text.version>
     <commons-lang3.version>3.6</commons-lang3.version>
