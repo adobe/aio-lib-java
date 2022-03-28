@@ -117,6 +117,10 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
     Dictionary props = new Hashtable();
     String[] eventTopics = {osgiEventMapping.getOsgiTopic()};
     props.put(EventConstants.EVENT_TOPIC, eventTopics);
+    props.put("aio.event.code",osgiEventMapping.getEventCode());
+    props.put("aio.event.handler",osgiEventMapping.getEventHandlerType());
+    props.put("aio.event.path.filter",osgiEventMapping.getPathFilter());
+    props.put("aio.event.xdm.type",osgiEventMapping.getXdmEventType());
     String osgiFilter = osgiEventMapping.getOsgiFilter();
     if (null != osgiFilter && !osgiFilter.isEmpty()) {
       props.put(EventConstants.EVENT_FILTER, osgiFilter);
