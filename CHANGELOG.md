@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.20...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.22...HEAD)
+
+### 📁 Other pull requests
+
+- GH 55 adding osgi event mapping [\#83](https://github.com/adobe/aio-lib-java/pull/83) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.22](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.22) (2022-03-22)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.20...aio-lib-java-0.0.22)
 
 ### 📁 Other pull requests
 
