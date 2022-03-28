@@ -22,9 +22,4 @@ public interface EventMetadataSupplier {
    */
   String PING_EVENT_CODE = "ping";
 
-  EventMetadata getRegisteredEventMetadata();
-
-  EventMetadata getConfiguredEventMetadata();
-
-  Throwable getError();
 }

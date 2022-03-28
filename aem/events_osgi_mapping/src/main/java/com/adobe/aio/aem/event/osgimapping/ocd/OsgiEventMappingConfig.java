@@ -19,7 +19,7 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 public @interface OsgiEventMappingConfig {
 
   String EMPTY = "";
-  String OSGI_EVENT_HANDLER_CLASS_NAME_DEFAULT = "com.adobe.io.event.osgi.eventhandler.OsgiEventHandler";
+  String OSGI_EVENT_HANDLER_CLASS_NAME_DEFAULT = "com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventHandler";
   String IO_XDM_EVENT_CLASS_NAME_DEFAULT = "com.adobe.xdm.event.OsgiEmittedEvent";
 
   @AttributeDefinition(name = "Adobe I/O Event Code",

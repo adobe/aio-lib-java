@@ -11,15 +11,15 @@
  */
 package com.adobe.aio.aem.event.osgimapping.internal;
 
-import com.adobe.aio.aem.event.management.EventProviderConfigSupplier;
-import com.adobe.aio.aem.event.management.EventProviderRegistrationService;
+import com.adobe.aio.aem.event.management.EventMetadataRegistrationJobConsumer;
+import com.adobe.aio.aem.event.osgimapping.EventHandlerRegistrationJobConsumer;
 import com.adobe.aio.aem.event.osgimapping.OsgiEventMappingSupplier;
-import com.adobe.aio.aem.event.osgimapping.eventhandler.AdobeIOEventHandlerFactory;
-import com.adobe.aio.aem.event.osgimapping.eventhandler.AdobeIoEventHandler;
+import com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventMapping;
 import com.adobe.aio.aem.event.osgimapping.ocd.OsgiEventMappingConfig;
-import com.adobe.aio.aem.util.ResourceResolverWrapperFactory;
-import com.adobe.aio.aem.workspace.WorkspaceSupplier;
 import com.adobe.aio.event.management.model.EventMetadata;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.sling.event.jobs.JobManager;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -28,7 +28,7 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Component(service = OsgiEventMappingSupplier.class, property = {
+@Component(immediate = true, service = OsgiEventMappingSupplier.class, property = {
     "label = Adobe I/O Events' Osgi Event Mapping Supplier Service",
     "description = Adobe I/O Events' Osgi Event Mapping Supplier Service"
 }
@@ -37,66 +37,43 @@ import org.slf4j.LoggerFactory;
 public class OsgiEventMappingSupplierImpl implements OsgiEventMappingSupplier {
 
   private final Logger log = LoggerFactory.getLogger(getClass());
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Reference
-  EventProviderRegistrationService eventProviderRegistrationService;
-
-  @Reference
-  private JobManager jobManager;
-
-  @Reference
-  private EventProviderConfigSupplier eventProviderConfigSupplier;
-
-  @Reference
-  private WorkspaceSupplier workspaceSupplier;
-
-  @Reference
-  private ResourceResolverWrapperFactory resourceResolverWrapperFactory;
-
-  private EventMetadata configuredEventMetadata;
-  private EventMetadata registeredEventMetadata;
-  private AdobeIoEventHandler adobeIoEventHandler;
-  private Throwable error;
+  JobManager jobManager;
 
   @Activate
-  protected void activate(OsgiEventMappingConfig osgiEventMappingConfig) {
+  protected void activate(OsgiEventMappingConfig eventMetadataConfig) {
+    Map<String, Object> jobProperties = new HashMap();
+    jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_CODE_PROPERTY,
+        eventMetadataConfig.aio_event_code());
     try {
-      configuredEventMetadata = EventMetadata.builder()
-          .description(osgiEventMappingConfig.aio_event_description())
-          .label(osgiEventMappingConfig.aio_event_label())
-          .eventCode(osgiEventMappingConfig.aio_event_code())
+      EventMetadata configuredEventMetadata = EventMetadata.builder()
+          .description(eventMetadataConfig.aio_event_description())
+          .label(eventMetadataConfig.aio_event_label())
+          .eventCode(eventMetadataConfig.aio_event_code())
           .build();
-      registeredEventMetadata = eventProviderRegistrationService.registerEventMetadata(
-          configuredEventMetadata);
-      adobeIoEventHandler = AdobeIOEventHandlerFactory.getEventHandler(
-          jobManager, eventProviderConfigSupplier.getRootUrl(),
-          workspaceSupplier.getWorkspace().getImsOrgId(),
-          osgiEventMappingConfig,
-          resourceResolverWrapperFactory.getWrapper());
+      jobProperties.put(EventHandlerRegistrationJobConsumer.AIO_OSGI_EVENT_MAPPING_PROPERTY,
+          objectMapper.writeValueAsString(new OsgiEventMapping(eventMetadataConfig)));
+      jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_METADATA_PROPERTY,
+          objectMapper.writeValueAsString(configuredEventMetadata));
+      jobManager.addJob(EventMetadataRegistrationJobConsumer.AIO_CONFIG_EVENT_METADA_JOB_TOPIC,
+          jobProperties);
+      jobManager.addJob(EventHandlerRegistrationJobConsumer.AIO_CONFIG_OSGI_EVENT_METADA_JOB_TOPIC,
+          jobProperties);
+      log.debug("Adobe I/O Events Metadata Config Job {} added.", jobProperties);
     } catch (Exception e) {
-      log.error("Adobe I/O Events' Osgi Event Mapping Supplier Service Activation Error: {}",
+      log.error("Adobe I/O Events' Event Metadata Supplier Service Activation Error: {}",
           e.getMessage(), e);
-      this.error = e;
+      jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_ERROR_PROPERTY,
+          e.getClass().getSimpleName() + ":" + e.getMessage());
+      jobManager.addJob(EventMetadataRegistrationJobConsumer.AIO_CONFIG_EVENT_METADA_JOB_TOPIC,
+          jobProperties);
+    } finally {
+      log.info(
+          "Adobe I/O Events' Event Metadata Supplier Service Activation Complete with config : {}",
+          eventMetadataConfig);
     }
-  }
-
-  @Override
-  public EventMetadata getRegisteredEventMetadata() {
-    return this.registeredEventMetadata;
-  }
-
-  @Override
-  public EventMetadata getConfiguredEventMetadata() {
-    return this.configuredEventMetadata;
-  }
-
-  @Override
-  public Throwable getError() {
-    return null;
-  }
-
-  public AdobeIoEventHandler getOsgiEventHandler() {
-    return adobeIoEventHandler;
   }
 
 }

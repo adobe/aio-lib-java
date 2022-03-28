@@ -47,10 +47,8 @@ public class EventProviderConfigSupplierImpl implements EventProviderConfigSuppl
   @Reference
   private ResourceResolverWrapperFactory resourceResolverWrapperFactory;
 
-  private String externalizerName;
+  private EventProviderConfig eventProviderConfig;
   private URL rootUrl;
-  private ProviderInputModel providerInputModel;
-  private Throwable error;
 
   static String getInstanceId(URL url) {
     int indexOfAdobeAemCloudDomain = url.getHost().lastIndexOf(AEM_CLOUD_DOMAIN_SUFFIX);
@@ -67,42 +65,44 @@ public class EventProviderConfigSupplierImpl implements EventProviderConfigSuppl
 
   @Activate
   @Modified
-  protected void activate(EventProviderConfig configuration) {
-    try {
-      this.externalizerName = configuration.externalizerName();
-      this.rootUrl = resolveRootUrl();
-      this.providerInputModel = getProviderInputModel(configuration, rootUrl);
-    } catch (Exception e) {
-      log.error("Adobe I/O Events' Provider Config Supplier activation error: {}"
-          , e.getMessage(), e);
-      error = e;
-    }
+  protected void activate(EventProviderConfig eventProviderConfig) {
+    this.eventProviderConfig = eventProviderConfig;
   }
 
   @Override
   public Status getStatus() {
     Map<String, Object> details = new HashMap<>(1);
-    details.put("externalizer_name", externalizerName);
-    details.put("root_url", rootUrl != null ? rootUrl.toString() : null);
-    details.put("provider_input_model", providerInputModel);
+    Throwable error = null;
+    try {
+      details.put("externalizer_name", eventProviderConfig.externalizer_name());
+      details.put("root_url", getRootUrl() != null ? getRootUrl().toString() : null);
+      details.put("provider_input_model", getProviderInputModel());
+    } catch (Exception e) {
+      log.error("Adobe I/O Events' Provider Config Supplier activation error: {}"
+          , e.getMessage(), e);
+      error = e;
+    }
     return new Status(details, error);
   }
 
   @Override
   public ProviderInputModel getProviderInputModel() {
-    return this.providerInputModel;
+    return this.getProviderInputModel(eventProviderConfig, getRootUrl());
   }
 
   @Override
   public URL getRootUrl() {
+    if (this.rootUrl == null) {
+      this.rootUrl = resolveRootUrl();
+    }
     return rootUrl;
   }
 
   private URL resolveRootUrl() {
     try (ResourceResolverWrapper resourceResolverWrapper = resourceResolverWrapperFactory.getWrapper()) {
       return new URL(
-          externalizerService.externalLink(resourceResolverWrapper.getResolver(), externalizerName,
-              "/"));
+          externalizerService.externalLink(resourceResolverWrapper.getResolver(),
+              eventProviderConfig.externalizer_name(), "/"));
     } catch (Exception e) {
       throw new AIOException
           ("Cannot look up the Adobe I/O Event providers instanceId due to " + e.getMessage(), e);

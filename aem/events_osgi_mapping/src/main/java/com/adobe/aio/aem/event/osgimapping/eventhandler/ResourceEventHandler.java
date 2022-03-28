@@ -11,7 +11,6 @@
  */
 package com.adobe.aio.aem.event.osgimapping.eventhandler;
 
-import com.adobe.aio.aem.event.osgimapping.ocd.OsgiEventMappingConfig;
 import com.adobe.aio.aem.event.xdm.aem.XdmUtil;
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
 import com.adobe.xdm.assets.Asset;
@@ -32,10 +31,10 @@ public class ResourceEventHandler extends AdobeIoEventHandler<Asset> {
   private static final String USER_ID_PROPERTY_KEY = "userid";
 
   public ResourceEventHandler(JobManager jobManager, URL rootUrl, String imsOrgId,
-      OsgiEventMappingConfig osgiEventMappingConfig,
+      OsgiEventMapping osgiEventMapping,
       ResourceResolverWrapper resourceResolverWrapper) {
     super(jobManager, rootUrl, imsOrgId,
-        osgiEventMappingConfig, resourceResolverWrapper);
+        osgiEventMapping, resourceResolverWrapper);
   }
 
   @Override

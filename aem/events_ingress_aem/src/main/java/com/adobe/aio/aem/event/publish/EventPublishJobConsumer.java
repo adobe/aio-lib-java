@@ -19,15 +19,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Component(service = JobConsumer.class, immediate = true, property = {
-    JobConsumer.PROPERTY_TOPICS + "=" + EventPublishJobConsumer.AIO_JOB_TOPIC,
+    JobConsumer.PROPERTY_TOPICS + "=" + EventPublishJobConsumer.AIO_EVENTS_JOB_TOPIC,
     "label = Adobe I/O Events Publish Job Consumer",
     "description =Adobe I/O Events Publish Job Consumer"
 })
 public class EventPublishJobConsumer implements JobConsumer {
 
-  public static final String AIO_JOB_TOPIC = "aio/events";
-  public static final String AIO_JOB_EVENT_PROPERTY = "event";
-  public static final String AIO_JOB_EVENT_CODE_PROPERTY = "eventCode";
+  public static final String AIO_EVENTS_JOB_TOPIC = "aio/events";
+  public static final String AIO_EVENT_PROPERTY = "event";
+  public static final String AIO_EVENT_CODE_PROPERTY = "event_code";
 
   private final Logger log = LoggerFactory.getLogger(this.getClass());
   private String lastErrorMessage;
@@ -45,8 +45,8 @@ public class EventPublishJobConsumer implements JobConsumer {
       // If you have guaranteed VERY FAST processing, it may be better to tie into an event
       // For information on all the data tied to the Job object
       // > http://sling.apache.org/apidocs/sling7/org/apache/sling/event/jobs/Job.html
-      String eventPayload = (String) job.getProperty(AIO_JOB_EVENT_PROPERTY);
-      String eventCode = (String) job.getProperty(AIO_JOB_EVENT_CODE_PROPERTY);
+      String eventPayload = (String) job.getProperty(AIO_EVENT_PROPERTY);
+      String eventCode = (String) job.getProperty(AIO_EVENT_CODE_PROPERTY);
       if (eventPayload == null || eventPayload.isEmpty()) {
         log.error(
             "Adobe I/O Events Publish Job Consumer `{}` is missing an event payload. Marking it as `CANCEL`",

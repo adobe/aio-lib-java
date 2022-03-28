@@ -11,7 +11,6 @@
  */
 package com.adobe.aio.aem.event.osgimapping.eventhandler;
 
-import com.adobe.aio.aem.event.osgimapping.ocd.OsgiEventMappingConfig;
 import com.adobe.aio.aem.event.xdm.aem.XdmUtil;
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
 import com.adobe.xdm.XdmObject;
@@ -37,10 +36,10 @@ public abstract class ReplicationEventHandler<T extends XdmObject> extends Adobe
   private static final String DELETE_TYPE = "DELETE";
 
   public ReplicationEventHandler(JobManager jobManager, URL rootUrl, String imsOrgId,
-      OsgiEventMappingConfig osgiEventMappingConfig,
+      OsgiEventMapping osgiEventMapping,
       ResourceResolverWrapper resourceResolverWrapper) {
     super(jobManager, rootUrl, imsOrgId,
-        osgiEventMappingConfig, resourceResolverWrapper);
+        osgiEventMapping, resourceResolverWrapper);
   }
 
   public List<Triple<T, String, Date>> getXdmObjectActorDateTriples(Event event,

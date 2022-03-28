@@ -11,7 +11,6 @@
  */
 package com.adobe.aio.aem.event.osgimapping.eventhandler;
 
-import com.adobe.aio.aem.event.osgimapping.ocd.OsgiEventMappingConfig;
 import com.adobe.aio.aem.event.xdm.aem.XdmUtil;
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
 import com.adobe.xdm.assets.Asset;
@@ -34,10 +33,10 @@ public class DamEventHandler extends AdobeIoEventHandler<Asset> {
   private static final String ASSET_PATH_PROPERTY_KEY = "assetPath";
 
   public DamEventHandler(JobManager jobManager, URL rootUrl, String imsOrgId,
-      OsgiEventMappingConfig osgiEventMappingConfig,
+      OsgiEventMapping osgiEventMapping,
       ResourceResolverWrapper resourceResolverWrapper) {
     super(jobManager, rootUrl, imsOrgId,
-        osgiEventMappingConfig, resourceResolverWrapper);
+        osgiEventMapping, resourceResolverWrapper);
   }
 
   @Override

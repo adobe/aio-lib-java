@@ -26,84 +26,83 @@ public class AdobeIOEventHandlerFactory {
       JobManager jobManager,
       URL rootUrl,
       String imsOrgId,
-      OsgiEventMappingConfig osgiEventMappingConfig,
+      OsgiEventMapping osgiEventMapping,
       ResourceResolverWrapper resourceResolverWrapper) {
     /*
      * CloudManager won't let us use dynamic class loading:
      * hence all these ifs and elses below
      */
-    String eventHandlerClass = osgiEventMappingConfig.osgi_event_handler_type();
+    String eventHandlerClass = osgiEventMapping.getEventHandlerType();
     if (eventHandlerClass.equals(OsgiEventMappingConfig.OSGI_EVENT_HANDLER_CLASS_NAME_DEFAULT)) {
       return new OsgiEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(PageReplicationEventHandler.class.getCanonicalName())) {
       return new PageReplicationEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(DamEventHandler.class.getCanonicalName())) {
       return new DamEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(AssetReplicationEventHandler.class.getCanonicalName())) {
       return new AssetReplicationEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(ResourceEventHandler.class.getCanonicalName())) {
       return new ResourceEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(PageCreatedEventHandler.class.getCanonicalName())) {
       return new PageCreatedEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(ResourceEventHandler.class.getCanonicalName())) {
       return new ResourceEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(PageCreatedEventHandler.class.getCanonicalName())) {
       return new PageCreatedEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(PageDeletedEventHandler.class.getCanonicalName())) {
-
       return new PageDeletedEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(PageVersionedEventHandler.class.getCanonicalName())) {
       return new PageVersionedEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(PageMovedEventHandler.class.getCanonicalName())) {
       return new PageMovedEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else if (eventHandlerClass.equals(PageUpdatedEventHandler.class.getCanonicalName())) {
       return new PageUpdatedEventHandler(jobManager, rootUrl,
           imsOrgId,
-          osgiEventMappingConfig,
+          osgiEventMapping,
           resourceResolverWrapper
       );
     } else {

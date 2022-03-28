@@ -20,7 +20,7 @@ public @interface EventProviderConfig {
 
   @AttributeDefinition(name = "AEM Externalizer Name",
       description = "AEM Link externalizer name (used to compute the aio provider instanceId")
-  String externalizerName() default "author";
+  String externalizer_name() default "author";
 
   // Event Provider related
   @AttributeDefinition(name = "Event Provider Label (Optional)",

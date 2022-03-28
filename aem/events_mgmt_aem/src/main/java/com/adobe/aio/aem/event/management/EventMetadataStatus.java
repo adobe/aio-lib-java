@@ -17,12 +17,20 @@ public class EventMetadataStatus {
 
   private final EventMetadata configuredEventMetadata;
   private final EventMetadata registeredEventMetadata;
-  private final Throwable error;
+  private final String error;
 
-  public EventMetadataStatus(final EventMetadataSupplier eventMetadataSupplier) {
-    configuredEventMetadata = eventMetadataSupplier.getConfiguredEventMetadata();
-    registeredEventMetadata = eventMetadataSupplier.getRegisteredEventMetadata();
-    error = eventMetadataSupplier.getError();
+  public EventMetadataStatus(final EventMetadata configured, final EventMetadata registered) {
+    this(configured, registered, (String) null);
+  }
+
+  public EventMetadataStatus(final EventMetadata configured, final EventMetadata registered, final Throwable error) {
+    this(configured, registered, error!=null ? error.getClass().getSimpleName() + ":" + error.getMessage() : null);
+  }
+
+  public EventMetadataStatus(final EventMetadata configured, final EventMetadata registered, final String error) {
+    this.configuredEventMetadata = configured;
+    this.registeredEventMetadata = registered;
+    this.error = error;
   }
 
   public EventMetadata getConfiguredEventMetadata() {
@@ -38,10 +46,6 @@ public class EventMetadataStatus {
   }
 
   public String getError() {
-    if (error != null) {
-      return error.getClass().getSimpleName() + ":" + error.getMessage();
-    } else {
-      return null;
-    }
+    return error;
   }
 }

@@ -11,7 +11,6 @@
  */
 package com.adobe.aio.aem.event.osgimapping.eventhandler;
 
-import com.adobe.aio.aem.event.osgimapping.ocd.OsgiEventMappingConfig;
 import com.adobe.aio.aem.event.publish.EventPublishJobConsumer;
 import com.adobe.aio.aem.event.xdm.aem.XdmUtil;
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
@@ -42,15 +41,16 @@ public abstract class AdobeIoEventHandler<T extends XdmObject> implements EventH
   private final JobManager jobManager;
   private final URL rootUrl;
   private final String imsOrgId;
-  private final OsgiEventMappingConfig osgiEventMappingConfig;
+  private final OsgiEventMapping osgiEventMapping;
   private final ResourceResolverWrapper resourceResolverWrapper;
+
   protected AdobeIoEventHandler(JobManager jobManager, URL rootUrl, String imsOrgId,
-      OsgiEventMappingConfig osgiEventMappingConfig,
+      OsgiEventMapping osgiEventMapping,
       ResourceResolverWrapper resourceResolverWrapper) {
     this.jobManager = jobManager;
     this.rootUrl = rootUrl;
     this.imsOrgId = imsOrgId;
-    this.osgiEventMappingConfig = osgiEventMappingConfig;
+    this.osgiEventMapping = osgiEventMapping;
     this.resourceResolverWrapper = resourceResolverWrapper;
   }
 
@@ -76,12 +76,12 @@ public abstract class AdobeIoEventHandler<T extends XdmObject> implements EventH
       if (xdmEvents != null && !xdmEvents.isEmpty()) {
         for (XdmEvent xdmEvent : xdmEvents) {
           Map<String, Object> jobProperties = new HashMap();
-          jobProperties.put(EventPublishJobConsumer.AIO_JOB_EVENT_CODE_PROPERTY,
-              osgiEventMappingConfig.aio_event_code());
+          jobProperties.put(EventPublishJobConsumer.AIO_EVENT_CODE_PROPERTY,
+              osgiEventMapping.getEventCode());
           jobProperties
-              .put(EventPublishJobConsumer.AIO_JOB_EVENT_PROPERTY,
+              .put(EventPublishJobConsumer.AIO_EVENT_PROPERTY,
                   OBJECT_MAPPER.writeValueAsString(xdmEvent));
-          jobManager.addJob(EventPublishJobConsumer.AIO_JOB_TOPIC, jobProperties);
+          jobManager.addJob(EventPublishJobConsumer.AIO_EVENTS_JOB_TOPIC, jobProperties);
           logger.debug("Adobe I/O Event Job {} added.", jobProperties);
         }
       } else {
@@ -103,7 +103,7 @@ public abstract class AdobeIoEventHandler<T extends XdmObject> implements EventH
                 triple.getRight(),
                 imsOrgId,
                 rootUrl.toString(),
-                osgiEventMappingConfig.aio_xdm_event_type()))
+                osgiEventMapping.getXdmEventType()))
         .collect(Collectors.toList());
   }
 
@@ -113,7 +113,7 @@ public abstract class AdobeIoEventHandler<T extends XdmObject> implements EventH
   }
 
   protected boolean isPathOfInterest(String path) {
-    String observedPath = osgiEventMappingConfig.osgi_jcr_path_filter();
+    String observedPath = osgiEventMapping.getPathFilter();
     return (null == observedPath || observedPath.isEmpty() || path.startsWith(observedPath));
   }
 

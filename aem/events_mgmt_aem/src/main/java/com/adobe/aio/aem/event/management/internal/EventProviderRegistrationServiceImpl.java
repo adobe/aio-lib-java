@@ -33,7 +33,6 @@ import org.osgi.service.metatype.annotations.Designate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 @Component(property = {
     "label = Adobe I/O Events' Provider Registration Service",
     "description = Adobe I/O Events' Provider Provider Registration Servic"})
@@ -55,11 +54,6 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
   @Activate
   protected void activate(ApiManagementConfig config) {
     this.apiManagementUrl = config.aio_api_management_url();
-    try {
-      registerProvider();
-    } catch (Exception e) {
-      log.error("Adobe I/O Events Provider Registration Error: {}", e.getMessage(), e);
-    }
   }
 
   @Override
@@ -80,7 +74,7 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
 
   @Override
   public EventMetadata registerEventMetadata(final EventMetadata eventMetadata) {
-    return getProviderService().createEventMetadata(this.providerId, eventMetadata)
+    return getProviderService().createEventMetadata(getRegisteredProvider().getId(), eventMetadata)
         .orElseThrow(() -> new AIOException("Error creating a new Adobe I/O Events Metadata, "
             + "your workspace or provider metadata are unknown to Adobe I/O Events."
             + " Please check your configurations."));
@@ -116,7 +110,6 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
     return !StringUtils.isEmpty(this.providerId);
   }
 
-
   private ProviderService getProviderService() {
     if (this.providerService == null) {
       this.providerService = ProviderService.builder()
@@ -126,6 +119,5 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
     }
     return this.providerService;
   }
-
 
 }
