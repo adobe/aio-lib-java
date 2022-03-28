@@ -99,7 +99,7 @@
     <wiremock.version>2.32.0</wiremock.version>
     <okhttp3.mockwebserver.version>4.9.1</okhttp3.mockwebserver.version>
     <mockito.version>4.4.0</mockito.version>
-    <slf4j.version>1.7.21</slf4j.version>
+    <slf4j.version>1.7.36</slf4j.version>
     <slf4j-api.version>[1.7.21,1.7.25]</slf4j-api.version>
     <jackson.version>2.12.3</jackson.version>
     <jjwt.version>0.11.2</jjwt.version>
