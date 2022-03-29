@@ -5,6 +5,6 @@
   "aio.xdm.event.type": "com.adobe.xdm.event.AemAssetCreatedEvent",
   "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.ResourceEventHandler",
   "osgi.topic": "org/apache/sling/api/resource/Resource/ADDED",
-  "osgi.filter": "(&amp;(resourceType=dam:Asset)(!(event.application=*)))",
+  "osgi.filter": "(&(resourceType=dam:Asset)(!(event.application=*)))",
   "osgi.jcr.path.filter": "/content/dam/"
 }

@@ -1,0 +1,10 @@
+{
+  "aio.event.code": "asset_updated",
+  "aio.event.label": "Asset Updated",
+  "aio.event.description": "Asset Updated Event",
+  "aio.xdm.event.type": "com.adobe.xdm.event.AemAssetUpdatedEvent",
+  "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.DamEventHandler",
+  "osgi.topic": "com/day/cq/dam",
+  "osgi.filter": "(&(type=VERSIONED)(!(event.application=*)))",
+  "osgi.jcr.path.filter": "/content/dam/"
+}
