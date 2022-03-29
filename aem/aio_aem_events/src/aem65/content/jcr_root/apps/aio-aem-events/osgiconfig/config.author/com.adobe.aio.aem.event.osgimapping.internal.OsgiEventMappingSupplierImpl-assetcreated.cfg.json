@@ -1,0 +1,10 @@
+{
+  "aio.event.code": "asset_created",
+  "aio.event.label": "Asset Created",
+  "aio.event.description": "Asset Created Event",
+  "aio.xdm.event.type": "com.adobe.xdm.event.AemAssetCreatedEvent",
+  "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.ResourceEventHandler",
+  "osgi.topic": "org/apache/sling/api/resource/Resource/ADDED",
+  "osgi.filter": "(&(resourceType=dam:Asset)(!(event.application=*)))",
+  "osgi.jcr.path.filter": "/content/dam/"
+}

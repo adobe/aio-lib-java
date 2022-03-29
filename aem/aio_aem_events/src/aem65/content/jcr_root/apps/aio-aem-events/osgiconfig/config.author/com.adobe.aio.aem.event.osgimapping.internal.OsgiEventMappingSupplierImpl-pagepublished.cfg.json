@@ -1,0 +1,10 @@
+{
+  "aio.event.code": "page_published",
+  "aio.event.label": "Page Published",
+  "aio.event.description": "Page Published Event",
+  "aio.xdm.event.type": "com.adobe.xdm.event.AemPagePublishedEvent",
+  "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.PageReplicationEventHandler",
+  "osgi.topic": "com/day/cq/replication",
+  "osgi.filter": "(&(type=ACTIVATE)(!(event.application=*)))",
+  "osgi.jcr.path.filter": "/content/"
+}

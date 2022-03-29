@@ -1,0 +1,10 @@
+{
+  "aio.event.code": "asset_deleted",
+  "aio.event.label": "Asset Deleted",
+  "aio.event.description": "Asset Deleted Event",
+  "aio.xdm.event.type": "com.adobe.xdm.event.AemAssetDeletedEvent",
+  "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.AssetReplicationEventHandler",
+  "osgi.topic": "com/day/cq/replication",
+  "osgi.filter": "(&(type=DELETE)(!(event.application=*)))",
+  "osgi.jcr.path.filter": "/content/dam/"
+}

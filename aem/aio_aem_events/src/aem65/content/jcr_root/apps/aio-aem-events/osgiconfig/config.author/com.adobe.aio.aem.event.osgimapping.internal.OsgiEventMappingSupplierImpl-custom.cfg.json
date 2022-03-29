@@ -1,0 +1,10 @@
+{
+  "aio.event.code": "com.adobe.aio.aem.osgi.custom",
+  "aio.event.label": "Osgi Custom Event",
+  "aio.event.description": "Osgi Custom Event",
+  "aio.xdm.event.type": "com.adobe.xdm.event.OsgiEmittedEvent",
+  "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventHandler",
+  "osgi.topic": "aio/event/custom",
+  "osgi.filter": "",
+  "osgi.jcr.path.filter": ""
+}

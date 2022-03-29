@@ -1,0 +1,10 @@
+{
+  "aio.event.code": "page_deleted",
+  "aio.event.label": "Page Deleted",
+  "aio.event.description": "Page Deleted Event",
+  "aio.xdm.event.type": "com.adobe.aio.aem.event.xdm.event.AemPageModificationEvent",
+  "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.PageDeletedEventHandler",
+  "osgi.topic": "com/day/cq/wcm/core/page",
+  "osgi.filter": "(!(event.application=*))",
+  "osgi.jcr.path.filter": "/content/"
+}

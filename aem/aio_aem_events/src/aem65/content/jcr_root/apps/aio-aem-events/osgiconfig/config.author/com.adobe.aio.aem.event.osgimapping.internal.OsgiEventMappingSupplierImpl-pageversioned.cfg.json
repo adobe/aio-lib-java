@@ -1,0 +1,10 @@
+{
+  "aio.event.code": "page_versioned",
+  "aio.event.label": "Page Versioned",
+  "aio.event.description": "Page Versioned Event",
+  "aio.xdm.event.type": "com.adobe.aio.aem.event.xdm.event.AemPageModificationEvent",
+  "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.PageVersionedEventHandler",
+  "osgi.topic": "com/day/cq/wcm/core/page",
+  "osgi.filter": "(!(event.application=*))",
+  "osgi.jcr.path.filter": "/content/"
+}

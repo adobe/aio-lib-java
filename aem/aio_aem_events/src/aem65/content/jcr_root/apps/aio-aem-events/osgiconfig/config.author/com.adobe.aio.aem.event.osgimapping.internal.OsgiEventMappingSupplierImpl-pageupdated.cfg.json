@@ -1,0 +1,10 @@
+{
+  "aio.event.code": "page_updated",
+  "aio.event.label": "Page Updated",
+  "aio.event.description": "Page Updated Event",
+  "aio.xdm.event.type": "com.adobe.aio.aem.event.xdm.event.AemPageModificationEvent",
+  "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.PageUpdatedEventHandler",
+  "osgi.topic": "com/day/cq/wcm/core/page",
+  "osgi.filter": "(!(event.application=*))",
+  "osgi.jcr.path.filter": "/content/"
+}
