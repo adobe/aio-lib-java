@@ -19,7 +19,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.0.23-SNAPSHOT</version>
+    <version>0.0.24</version>
   </parent>
 
   <artifactId>aio-event-management</artifactId>
@@ -159,4 +159,8 @@
       </dependencies>
     </profile>
   </profiles>
+
+  <scm>
+    <tag>aio-lib-java-0.0.24</tag>
+  </scm>
 </project>
