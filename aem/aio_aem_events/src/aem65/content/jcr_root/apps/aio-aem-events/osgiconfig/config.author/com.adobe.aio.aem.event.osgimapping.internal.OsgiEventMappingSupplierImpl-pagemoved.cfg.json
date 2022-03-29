@@ -1,0 +1,10 @@
+{
+  "aio.event.code": "page_moved",
+  "aio.event.label": "Page Moved",
+  "aio.event.description": "Page Moved Event",
+  "aio.xdm.event.type": "com.adobe.aio.aem.event.xdm.event.AemPageModificationEvent",
+  "osgi.event.handler.type": "com.adobe.aio.aem.event.osgimapping.eventhandler.PageMovedEventHandler",
+  "osgi.topic": "com/day/cq/wcm/core/page",
+  "osgi.filter": "(!(event.application=*))",
+  "osgi.jcr.path.filter": "/content/"
+}
