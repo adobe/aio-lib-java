@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-55 adding the missing osgi to I/O Event mapping configurations [\#84](https://github.com/adobe/aio-lib-java/pull/84) ([francoisledroff](https://github.com/francoisledroff))
 - GH 55 adding osgi event mapping [\#83](https://github.com/adobe/aio-lib-java/pull/83) ([francoisledroff](https://github.com/francoisledroff))
 
 ## [aio-lib-java-0.0.22](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.22) (2022-03-22)
