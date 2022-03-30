@@ -19,6 +19,7 @@ import com.adobe.aio.workspace.Workspace;
 import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -66,7 +67,7 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
    */
   @Override
   public Workspace getWorkspace() {
-    if (!workspaceConfig.aio_encoded_pkcs8().isEmpty()) {
+    if (!StringUtils.isEmpty(workspaceConfig.aio_encoded_pkcs8())) {
       PrivateKey privateKey = new PrivateKeyBuilder()
           .encodedPkcs8Key(workspaceConfig.aio_encoded_pkcs8()).build();
       return Workspace.builder()

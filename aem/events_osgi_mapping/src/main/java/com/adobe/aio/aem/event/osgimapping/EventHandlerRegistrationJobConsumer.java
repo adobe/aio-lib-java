@@ -77,9 +77,10 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
   public JobResult process(final Job job) {
     if (job.getProperty(AIO_EVENT_CODE_PROPERTY) != null) {
       String eventCode = (String) job.getProperty(AIO_EVENT_CODE_PROPERTY);
-
       if (job.getProperty(AIO_OSGI_EVENT_MAPPING_PROPERTY) != null) {
         try {
+          // we don't want to register sling event handlers if the config is buggy
+          workspaceSupplier.getWorkspace().validateAll();
           OsgiEventMapping osgiEventMapping = new ObjectMapper().readValue
               ((String) job.getProperty(AIO_OSGI_EVENT_MAPPING_PROPERTY), OsgiEventMapping.class);
           this.registerEventHandler(osgiEventMapping);
@@ -104,7 +105,7 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
     }
   }
 
-  public AdobeIoEventHandler getEventHanlder(OsgiEventMapping osgiEventMapping) {
+  private AdobeIoEventHandler getEventHandler(OsgiEventMapping osgiEventMapping) {
     return AdobeIOEventHandlerFactory.getEventHandler(
         jobManager, eventProviderConfigSupplier.getRootUrl(),
         workspaceSupplier.getWorkspace().getImsOrgId(),
@@ -112,8 +113,8 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
         resourceResolverWrapperFactory.getWrapper());
   }
 
-  public void registerEventHandler(OsgiEventMapping osgiEventMapping) {
-    AdobeIoEventHandler eventHandler = getEventHanlder(osgiEventMapping);
+  private void registerEventHandler(OsgiEventMapping osgiEventMapping) {
+    AdobeIoEventHandler eventHandler = getEventHandler(osgiEventMapping);
     Dictionary props = new Hashtable();
     String[] eventTopics = {osgiEventMapping.getOsgiTopic()};
     props.put(EventConstants.EVENT_TOPIC, eventTopics);
