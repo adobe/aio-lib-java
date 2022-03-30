@@ -11,8 +11,6 @@
  */
 package com.adobe.aio.aem.workspace.ocd;
 
-import com.adobe.aio.ims.util.PrivateKeyBuilder;
-import com.adobe.aio.workspace.Workspace;
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
@@ -26,43 +24,42 @@ public @interface WorkspaceConfig {
 
   @AttributeDefinition(name = "Meta Scopes",
       description = "Comma separated list of metascopes associated with your API (`/s/event_receiver_api,/s/ent_adobeio_sdk` for instance) (project.workspace.details.credentials.jwt.meta_scopes)")
-  String aio_meta_scopes() default "$[env:" + Workspace.META_SCOPES
-      + ";default=/s/event_receiver_api,/s/ent_adobeio_sdk]";
+  String aio_meta_scopes() default "/s/ent_adobeio_sdk";
 
   @AttributeDefinition(name = "IMS ORG ID",
       description = "Adobe IMS Organization ID as shown in your Adobe Developer Console workspace (project.org.ims_org_id)")
-  String aio_ims_org_id() default "$[env:" + Workspace.IMS_ORG_ID + "]";
+  String aio_ims_org_id();
 
   @AttributeDefinition(name = "Consumer ORG ID",
       description = "Adobe I/O Consumer Organization ID as shown in your Adobe Developer Console workspace (project.org.id)")
-  String aio_consumer_org_id() default "$[env:" + Workspace.CONSUMER_ORG_ID + "]";
+  String aio_consumer_org_id();
 
   @AttributeDefinition(name = "Project ID",
       description = "Adobe I/O Project ID as shown in your Adobe Developer Console workspace (project.id)")
-  String aio_project_id() default "$[env:" + Workspace.PROJECT_ID + "]";
+  String aio_project_id();
 
   @AttributeDefinition(name = "Project Workspace ID",
       description = "Adobe I/O Workspace ID as shown in your Adobe Developer Console workspace (project.workspace.id)")
-  String aio_workspace_id() default "$[env:" + Workspace.WORKSPACE_ID + "]";
+  String aio_workspace_id();
 
   @AttributeDefinition(name = "API Key (Client ID)",
       description = "Adobe I/O API Key (Client ID) as shown in in your Adobe Developer Console workspace (project.workspace.details.credentials.jwt.client_id)")
-  String aio_api_key() default "$[env:" + Workspace.API_KEY + "]";
+  String aio_api_key();
 
   @AttributeDefinition(name = "Credential ID",
       description = "Adobe I/O Credential ID as shown in your Adobe Developer Console workspace (project.workspace.details.credentials.id)")
-  String aio_credential_id() default "$[env:" + Workspace.CREDENTIAL_ID + "]";
+  String aio_credential_id();
 
   @AttributeDefinition(name = "Technical Account ID",
       description = "Technical account ID as shown in your Adobe Developer Console workspace (project.workspace.details.credentials.jwt.technical_account_id)")
-  String aio_technical_account_id() default "$[env:" + Workspace.TECHNICAL_ACCOUNT_ID + "]";
+  String aio_technical_account_id();
 
   @AttributeDefinition(name = "Client Secret",
       description = "Adobe I/O Client Secret as shown in your Adobe Developer Console workspace (project.workspace.details.credentials.jwt.client_secret)")
-  String aio_client_secret() default "$[secret:" + Workspace.CLIENT_SECRET + "]";
+  String aio_client_secret();
 
   @AttributeDefinition(name = "Private Key",
       description = "Base64 encoded pkcs8 Private Key.")
-  String aio_encoded_pkcs8() default "$[secret:" + PrivateKeyBuilder.AIO_ENCODED_PKCS_8 + "]";
+  String aio_encoded_pkcs8();
 
 }
