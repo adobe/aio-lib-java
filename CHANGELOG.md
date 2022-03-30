@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.22...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.24...HEAD)
+
+### 📁 Other pull requests
+
+- GH-55 removing default workspace configuration leveraging environment variables [\#86](https://github.com/adobe/aio-lib-java/pull/86) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.24](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.24) (2022-03-29)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.22...aio-lib-java-0.0.24)
 
 ### 📁 Other pull requests
 
