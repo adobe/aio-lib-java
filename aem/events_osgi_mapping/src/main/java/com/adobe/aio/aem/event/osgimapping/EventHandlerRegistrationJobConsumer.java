@@ -13,6 +13,7 @@ package com.adobe.aio.aem.event.osgimapping;
 
 import com.adobe.aio.aem.event.management.EventMetadataRegistrationJobConsumer;
 import com.adobe.aio.aem.event.management.EventProviderConfigSupplier;
+import com.adobe.aio.aem.event.management.EventProviderRegistrationService;
 import com.adobe.aio.aem.event.osgimapping.eventhandler.AdobeIOEventHandlerFactory;
 import com.adobe.aio.aem.event.osgimapping.eventhandler.AdobeIoEventHandler;
 import com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventMapping;
@@ -60,6 +61,9 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
   private EventProviderConfigSupplier eventProviderConfigSupplier;
 
   @Reference
+  private EventProviderRegistrationService eventProviderRegistrationService;
+
+  @Reference
   private WorkspaceSupplier workspaceSupplier;
 
   @Reference
@@ -79,8 +83,11 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
       String eventCode = (String) job.getProperty(AIO_EVENT_CODE_PROPERTY);
       if (job.getProperty(AIO_OSGI_EVENT_MAPPING_PROPERTY) != null) {
         try {
-          // we don't want to register sling event handlers if the config is buggy
+          // we don't want to register sling event handlers if the config is invalid
           workspaceSupplier.getWorkspace().validateAll();
+          // we don't want to register sling event handlers if the provider can't be registered
+          eventProviderRegistrationService.getRegisteredProvider();
+
           OsgiEventMapping osgiEventMapping = new ObjectMapper().readValue
               ((String) job.getProperty(AIO_OSGI_EVENT_MAPPING_PROPERTY), OsgiEventMapping.class);
           this.registerEventHandler(osgiEventMapping);
@@ -91,7 +98,7 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
           log.error("Adobe I/O Events Handler Registration Job Consumer `{}`"
               + " processing failed: `{}", job, e.getMessage(), e);
           osgiEventMappingStatusSupplier.addStatus(eventCode, new OsgiEventMappingStatus(null, e));
-          return JobResult.CANCEL;
+          return JobResult.FAILED;
         }
       } else {
         log.error("Adobe I/O Events Handler Registration Job Consumer `{}` is missing a `{}", job,
