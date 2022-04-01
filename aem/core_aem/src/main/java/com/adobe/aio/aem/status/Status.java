@@ -15,8 +15,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Status {
 
-  public static final String VALID_CONFIG = "valid_config";
-  public static final String INVALID_CONFIG = "invalid_config";
   public static final String UP = "up";
   public static final String DOWN = "down";
 

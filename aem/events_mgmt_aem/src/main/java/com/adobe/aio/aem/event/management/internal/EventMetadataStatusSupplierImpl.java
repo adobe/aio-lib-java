@@ -48,7 +48,7 @@ public class EventMetadataStatusSupplierImpl implements EventMetadataStatusSuppl
     Map<String, Object> details = new HashMap<>(1);
     try {
       if (eventMetadataStatusByEventCode.isEmpty()) {
-        return new Status(Status.INVALID_CONFIG, null, "Missing event metadata configuration");
+        return new Status(Status.DOWN, null, "Missing event metadata configuration");
       } else {
         details.putAll(eventMetadataStatusByEventCode);
         boolean isUp = eventMetadataStatusByEventCode.values().stream()
