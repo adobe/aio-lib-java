@@ -48,9 +48,9 @@ public class EventMetadataRegistrationJobConsumer implements JobConsumer {
         String error = (String) job.getProperty(AIO_ERROR_PROPERTY);
         eventMetadataStatusSupplier.addStatus(eventCode,
             new EventMetadataStatus(null, null, error));
-        log.error("Adobe I/O Events Metadata Registration Job Consumer cancelled:"
+        log.error("Adobe I/O Events Metadata Registration will not occur:"
             + " due to a event metadata configuration error`{}`", error);
-        return JobResult.CANCEL;
+        return JobResult.OK;
       } else {
         EventMetadata configuredEventMetadata = null;
         EventMetadata registeredEventMetadata = null;
@@ -70,7 +70,7 @@ public class EventMetadataRegistrationJobConsumer implements JobConsumer {
               e.getMessage(), e);
           eventMetadataStatusSupplier.addStatus(eventCode,
               new EventMetadataStatus(configuredEventMetadata, registeredEventMetadata, e));
-          return JobResult.CANCEL;
+          return JobResult.FAILED;
         }
       }
     } else {

@@ -53,9 +53,9 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
       Workspace workspace = getWorkspace();
       details.put("workspace", workspace);
       workspace.validateAll();
-      return new Status(Status.VALID_CONFIG, details);
+      return new Status(Status.UP, details);
     } catch (IllegalArgumentException e) {
-      return new Status(Status.INVALID_CONFIG, details, e);
+      return new Status(Status.DOWN, details, e);
     }
   }
 

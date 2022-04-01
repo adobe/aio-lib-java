@@ -19,32 +19,11 @@ token and must be signed with the private key that is associated with a public k
 This Java library will help you implement this JWT exchange token flow, to get a valid access token
 and start interacting with the many Adobe I/O API that support such authentication.
 
-### Test Drive
-
-    PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build(); // [1]
-    Workspace workspace = Workspace.builder()
-        .systemEnv()
-        .privateKey(privateKey)
-        .build(); // [2]
-    ImsService imsService = ImsService.builder().workspace(workspace).build(); // [3]
-
-    AccessToken accessToken = imsService.getJwtExchangeAccessToken(); // [4]
-
-    // [1] Build your PrivateKey looking up the key indicated by you System Environment variables
-    // [2] build your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace)
-    //     looking up other System Environment variables. 
-    //     Note that our fluent workspace and private Key builders offers many ways to have your workspace configured,
-    //     we are showing here the most concise
-    // [3] build the Ims Service wrapper and have it use this workspace context
-    // [4] use this service to retrieve an access token using a jwt exchange token flow
-       
-                      
-Have a look at our [ImsService `main()` Test Drive](./src/test/java/com/adobe/aio/ims/ImsServiceTestDrive.java)
-
 ### Configurations
 
 Browse our [Service Account Integration (JWT authentication flow) doc](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md), 
 our fluent workspace builder offers many ways to have your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace) configured.
+
 To get you started quickly you could use a `.properties` file, 
 see our [sample config file](./src/test/resources/workspace.properties)
 
@@ -81,6 +60,29 @@ It can be leverage to add the authentication headers expected by many Adobe APIs
 * an `Authorization` header with a `Bearer` access token (generated from a JWT exchange flow)
   * renewing it only when expired (after 24 hours) or when not present in memory yet
 * a `x-api-key` header matching your JWT token
+
+### Test Drive
+
+    PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build(); // [1]
+    Workspace workspace = Workspace.builder()
+        .systemEnv()
+        .privateKey(privateKey)
+        .build(); // [2]
+    ImsService imsService = ImsService.builder().workspace(workspace).build(); // [3]
+
+    AccessToken accessToken = imsService.getJwtExchangeAccessToken(); // [4]
+
+    // [1] Build your PrivateKey looking up the key indicated by you System Environment variables
+    // [2] build your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace)
+    //     looking up other System Environment variables. 
+    //     Note that our fluent workspace and private Key builders offers many ways to have your workspace configured,
+    //     we are showing here the most concise
+    // [3] build the Ims Service wrapper and have it use this workspace context
+    // [4] use this service to retrieve an access token using a jwt exchange token flow
+
+
+Have a look at our [ImsService `main()` Test Drive](./src/test/java/com/adobe/aio/ims/ImsServiceTestDrive.java)
+
 
 ## Builds
 

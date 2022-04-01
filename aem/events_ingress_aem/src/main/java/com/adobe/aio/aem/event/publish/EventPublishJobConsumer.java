@@ -30,7 +30,6 @@ public class EventPublishJobConsumer implements JobConsumer {
   public static final String AIO_EVENT_CODE_PROPERTY = "event_code";
 
   private final Logger log = LoggerFactory.getLogger(this.getClass());
-  private String lastErrorMessage;
 
   @Reference
   private EventPublishService eventPublishService;
@@ -71,25 +70,11 @@ public class EventPublishJobConsumer implements JobConsumer {
        * > CANCEL: Processed unsuccessfully and do NOT reschedule
        * > ASYNC: Process through the JobConsumer.AsyncHandler interface
        */
-    } catch (RuntimeException e) {
+    } catch (Exception e) {
       log.error("Adobe I/O Events Publish Job Consumer `{}` processing failed: `{}", job,
           e.getMessage(), e);
-      if (lastErrorMessage == null || !lastErrorMessage.equals(e.getMessage())) {
-        // to avoid flooding logs and job queues
-        // see https://jira.corp.adobe.com/browse/GRANITE-27455
-        setLastErrorMessage(e.getMessage());
-        return JobResult.FAILED;
-      } else {
-        log.warn(
-            "Adobe I/O Events Publish Job Consumer `{}` marked as `CANCEL`, as it looks like we are facing a non resolvable error: `{}`",
-            job, e.getMessage());
-        setLastErrorMessage(e.getMessage());
-        return JobResult.CANCEL;
-      }
+      return JobResult.FAILED;
     }
   }
 
-  private synchronized void setLastErrorMessage(String lastErrorMessage) {
-    this.lastErrorMessage = lastErrorMessage;
-  }
 }

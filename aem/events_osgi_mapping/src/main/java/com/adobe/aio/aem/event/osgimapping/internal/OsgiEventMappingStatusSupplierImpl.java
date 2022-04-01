@@ -43,7 +43,7 @@ public class OsgiEventMappingStatusSupplierImpl implements OsgiEventMappingStatu
     Map<String, Object> details = new HashMap<>(1);
     try {
       if (osgiEventMappingStatusByEventCode.isEmpty()) {
-        return new Status(Status.INVALID_CONFIG, null, "Missing Osgi Event Mapping configuration");
+        return new Status(Status.DOWN, null, "Missing Osgi Event Mapping configuration");
       } else {
         details.putAll(osgiEventMappingStatusByEventCode);
         boolean isUp = osgiEventMappingStatusByEventCode.values().stream()
