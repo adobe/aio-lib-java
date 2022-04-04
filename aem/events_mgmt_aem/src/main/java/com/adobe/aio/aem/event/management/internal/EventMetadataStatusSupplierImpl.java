@@ -13,12 +13,10 @@ package com.adobe.aio.aem.event.management.internal;
 
 import com.adobe.aio.aem.event.management.EventMetadataStatus;
 import com.adobe.aio.aem.event.management.EventMetadataStatusSupplier;
-import com.adobe.aio.aem.event.management.ocd.ApiManagementConfig;
 import com.adobe.aio.aem.status.Status;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,10 +30,16 @@ public class EventMetadataStatusSupplierImpl implements EventMetadataStatusSuppl
 
   private final Logger log = LoggerFactory.getLogger(getClass());
   private final Map<String, EventMetadataStatus> eventMetadataStatusByEventCode = new ConcurrentHashMap<>();
+  private Boolean isJobConsumerReady = false;
 
-  @Activate
-  protected void activate(ApiManagementConfig config) {
-    log.info("activating");
+  @Override
+  public Boolean isJobConsumerReady() {
+    return this.isJobConsumerReady;
+  }
+
+  @Override
+  public void setJobConsumerReady(Boolean ready) {
+    this.isJobConsumerReady = ready;
   }
 
   @Override

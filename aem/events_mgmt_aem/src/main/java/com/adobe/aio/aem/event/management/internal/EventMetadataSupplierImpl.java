@@ -12,12 +12,16 @@
 package com.adobe.aio.aem.event.management.internal;
 
 import com.adobe.aio.aem.event.management.EventMetadataRegistrationJobConsumer;
+import com.adobe.aio.aem.event.management.EventMetadataStatusSupplier;
 import com.adobe.aio.aem.event.management.EventMetadataSupplier;
+import com.adobe.aio.aem.event.management.EventProviderRegistrationService;
 import com.adobe.aio.aem.event.management.ocd.EventMetadataConfig;
+import com.adobe.aio.aem.util.Util;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import org.apache.sling.event.jobs.JobManager;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -40,12 +44,20 @@ public class EventMetadataSupplierImpl implements EventMetadataSupplier {
   @Reference
   JobManager jobManager;
 
+  @Reference
+  EventMetadataStatusSupplier eventMetadataStatusSupplier;
+
+  @Reference
+  EventProviderRegistrationService eventProviderRegistrationService;
+
   @Activate
   protected void activate(EventMetadataConfig eventMetadataConfig) {
     Map<String, Object> jobProperties = new HashMap();
     jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_CODE_PROPERTY,
         eventMetadataConfig.aio_event_code());
     try {
+      Util.waitFor(eventMetadataStatusSupplier::isJobConsumerReady,
+          "Adobe I/O Events Metadata Registration Job Consumer");
       EventMetadata configuredEventMetadata = EventMetadata.builder()
           .description(eventMetadataConfig.aio_event_description())
           .label(eventMetadataConfig.aio_event_label())
@@ -66,5 +78,6 @@ public class EventMetadataSupplierImpl implements EventMetadataSupplier {
           eventMetadataConfig);
     }
   }
+
 
 }

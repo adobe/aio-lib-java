@@ -5,11 +5,20 @@ configurations, enabling AEM and Adobe I/O Events integration.
 
 ## Configuration
 
-* The package expects [`Workspace`](./src/main/java/com/adobe/io/workspace/ocd/WorkspaceConfig.java)
-  configuration to be resolved from CloudManager/System environment variables
-    * cf
-      the [Configuring OSGi for Adobe Experience Manager as a Cloud Service](https://experienceleague.adobe.com/docs/experience-manager-cloud-service/content/implementing/deploying/configuring-osgi.html%3Flang%3Den#environment-specific-configuration-values)
-      guide
+This package expects your Adobe Developer Console configured with OSGI configuration
+see [core_aem documentation](../core_aem/README.md)
+
+## Status Checks
+
+This packages holds bundles that come with status servlet:
+* from [/bin/aio/workspace.json](http://localhost:4502/bin/aio/workspace.json) 
+you can `GET` the status of your workspace configuration (see [core_aem documentation](../core_aem/README.md))
+
+http://localhost:4502/bin/aio/provider_config.json
+http://localhost:4502/bin/aio/provider.json
+http://localhost:4502/bin/aio/publish_event.json
+http://localhost:4502/bin/aio/event_metadata.json
+http://localhost:4502/bin/aio/osgi_event_metadata.json
 
 ## Builds
 

@@ -75,6 +75,7 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
   protected void activate(BundleContext context, Map<String, Object> config) {
     log.info("activating");
     this.bundleContext = context;
+    osgiEventMappingStatusSupplier.setJobConsumerReady(true);
   }
 
   @Override
@@ -87,6 +88,13 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
           workspaceSupplier.getWorkspace().validateAll();
           // we don't want to register sling event handlers if the provider can't be registered
           eventProviderRegistrationService.getRegisteredProvider();
+          /**
+           * Return the proper JobResult based on the work done...
+           *
+           * > OK : Processed successfully
+           * > FAILED: Processed unsuccessfully and reschedule
+           * > CANCEL: Processed unsuccessfully and do NOT reschedule
+           */
 
           OsgiEventMapping osgiEventMapping = new ObjectMapper().readValue
               ((String) job.getProperty(AIO_OSGI_EVENT_MAPPING_PROPERTY), OsgiEventMapping.class);

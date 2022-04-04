@@ -95,7 +95,7 @@ public class EventProviderRegistrationServiceImpl implements EventProviderRegist
   }
 
   @Override
-  public Provider getRegisteredProvider() {
+  public synchronized Provider getRegisteredProvider() {
     if (!isProviderRegistered()) {
       log.warn("The Adobe I/O Events Provider was not registered yet, trying registering it...");
       return registerProvider();

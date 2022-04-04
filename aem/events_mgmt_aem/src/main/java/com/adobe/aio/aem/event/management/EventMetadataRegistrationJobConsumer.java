@@ -15,6 +15,7 @@ import com.adobe.aio.event.management.model.EventMetadata;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.sling.event.jobs.Job;
 import org.apache.sling.event.jobs.consumer.JobConsumer;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 import org.slf4j.Logger;
@@ -39,6 +40,12 @@ public class EventMetadataRegistrationJobConsumer implements JobConsumer {
   @Reference
   EventMetadataStatusSupplier eventMetadataStatusSupplier;
   private String lastErrorMessage;
+
+  @Activate
+  protected void activate() {
+    log.info("activating");
+    eventMetadataStatusSupplier.setJobConsumerReady(true);
+  }
 
   @Override
   public JobResult process(final Job job) {
