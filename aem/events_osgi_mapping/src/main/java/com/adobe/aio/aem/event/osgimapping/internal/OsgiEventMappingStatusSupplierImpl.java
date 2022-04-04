@@ -32,6 +32,17 @@ public class OsgiEventMappingStatusSupplierImpl implements OsgiEventMappingStatu
   private final Logger log = LoggerFactory.getLogger(getClass());
   private final Map<String, OsgiEventMappingStatus> osgiEventMappingStatusByEventCode = new ConcurrentHashMap<>();
 
+  private boolean isJobConsumerReady = false;
+
+  @Override
+  public boolean isJobConsumerReady() {
+    return this.isJobConsumerReady;
+  }
+
+  @Override
+  public void setJobConsumerReady(boolean ready) {
+    this.isJobConsumerReady =ready;
+  }
 
   @Override
   public void addStatus(String eventCode, OsgiEventMappingStatus eventMetadataStatus) {

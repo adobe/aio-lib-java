@@ -12,14 +12,18 @@
 package com.adobe.aio.aem.event.osgimapping.internal;
 
 import com.adobe.aio.aem.event.management.EventMetadataRegistrationJobConsumer;
+import com.adobe.aio.aem.event.management.EventMetadataStatusSupplier;
 import com.adobe.aio.aem.event.osgimapping.EventHandlerRegistrationJobConsumer;
+import com.adobe.aio.aem.event.osgimapping.OsgiEventMappingStatusSupplier;
 import com.adobe.aio.aem.event.osgimapping.OsgiEventMappingSupplier;
 import com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventMapping;
 import com.adobe.aio.aem.event.osgimapping.ocd.OsgiEventMappingConfig;
+import com.adobe.aio.aem.util.Util;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 import org.apache.sling.event.jobs.JobManager;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -42,12 +46,22 @@ public class OsgiEventMappingSupplierImpl implements OsgiEventMappingSupplier {
   @Reference
   JobManager jobManager;
 
+  @Reference
+  EventMetadataStatusSupplier eventMetadataStatusSupplier;
+
+  @Reference
+  OsgiEventMappingStatusSupplier osgiEventMappingStatusSupplier;
+
   @Activate
   protected void activate(OsgiEventMappingConfig eventMetadataConfig) {
     Map<String, Object> jobProperties = new HashMap();
     jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_CODE_PROPERTY,
         eventMetadataConfig.aio_event_code());
     try {
+      Util.waitFor(eventMetadataStatusSupplier::isJobConsumerReady,
+          "Adobe I/O Events Metadata Registration Job Consumer");
+      Util.waitFor(osgiEventMappingStatusSupplier::isJobConsumerReady,
+          "Adobe I/O Events Handler Registration Job Consumer");
       EventMetadata configuredEventMetadata = EventMetadata.builder()
           .description(eventMetadataConfig.aio_event_description())
           .label(eventMetadataConfig.aio_event_label())
