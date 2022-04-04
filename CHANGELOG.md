@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.24...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.26...HEAD)
+
+### 📁 Other pull requests
+
+- GH-55 doc update - Status simplified - JobResult revisited [\#87](https://github.com/adobe/aio-lib-java/pull/87) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.26](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.26) (2022-03-30)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.24...aio-lib-java-0.0.26)
 
 ### 📁 Other pull requests
 
