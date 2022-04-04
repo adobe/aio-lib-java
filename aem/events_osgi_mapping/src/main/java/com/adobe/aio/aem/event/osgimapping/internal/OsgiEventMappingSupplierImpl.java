@@ -11,6 +11,8 @@
  */
 package com.adobe.aio.aem.event.osgimapping.internal;
 
+import static org.apache.sling.event.dea.DEAConstants.PROPERTY_DISTRIBUTE;
+
 import com.adobe.aio.aem.event.management.EventMetadataRegistrationJobConsumer;
 import com.adobe.aio.aem.event.management.EventMetadataStatusSupplier;
 import com.adobe.aio.aem.event.osgimapping.EventHandlerRegistrationJobConsumer;
@@ -18,11 +20,12 @@ import com.adobe.aio.aem.event.osgimapping.OsgiEventMappingStatusSupplier;
 import com.adobe.aio.aem.event.osgimapping.OsgiEventMappingSupplier;
 import com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventMapping;
 import com.adobe.aio.aem.event.osgimapping.ocd.OsgiEventMappingConfig;
-import com.adobe.aio.aem.util.Util;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.ThreadLocalRandom;
 import org.apache.sling.event.jobs.JobManager;
 import org.osgi.service.component.annotations.Activate;
@@ -54,40 +57,52 @@ public class OsgiEventMappingSupplierImpl implements OsgiEventMappingSupplier {
 
   @Activate
   protected void activate(OsgiEventMappingConfig eventMetadataConfig) {
-    Map<String, Object> jobProperties = new HashMap();
-    jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_CODE_PROPERTY,
-        eventMetadataConfig.aio_event_code());
-    try {
-      Util.waitFor(eventMetadataStatusSupplier::isJobConsumerReady,
-          "Adobe I/O Events Metadata Registration Job Consumer");
-      Util.waitFor(osgiEventMappingStatusSupplier::isJobConsumerReady,
-          "Adobe I/O Events Handler Registration Job Consumer");
-      EventMetadata configuredEventMetadata = EventMetadata.builder()
-          .description(eventMetadataConfig.aio_event_description())
-          .label(eventMetadataConfig.aio_event_label())
-          .eventCode(eventMetadataConfig.aio_event_code())
-          .build();
-      jobProperties.put(EventHandlerRegistrationJobConsumer.AIO_OSGI_EVENT_MAPPING_PROPERTY,
-          objectMapper.writeValueAsString(new OsgiEventMapping(eventMetadataConfig)));
-      jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_METADATA_PROPERTY,
-          objectMapper.writeValueAsString(configuredEventMetadata));
-      jobManager.addJob(EventMetadataRegistrationJobConsumer.AIO_CONFIG_EVENT_METADA_JOB_TOPIC,
-          jobProperties);
-      jobManager.addJob(EventHandlerRegistrationJobConsumer.AIO_CONFIG_OSGI_EVENT_METADA_JOB_TOPIC,
-          jobProperties);
-      log.debug("Adobe I/O Events Metadata Config Job {} added.", jobProperties);
-    } catch (Exception e) {
-      log.error("Adobe I/O Events' Event Metadata Supplier Service Activation Error: {}",
-          e.getMessage(), e);
-      jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_ERROR_PROPERTY,
-          e.getClass().getSimpleName() + ":" + e.getMessage());
-      jobManager.addJob(EventMetadataRegistrationJobConsumer.AIO_CONFIG_EVENT_METADA_JOB_TOPIC,
-          jobProperties);
-    } finally {
-      log.info(
-          "Adobe I/O Events' Event Metadata Supplier Service Activation Complete with config : {}",
-          eventMetadataConfig);
-    }
+    new Timer(this.getClass().getSimpleName() + "_" + eventMetadataConfig.aio_event_code())
+        .schedule(getTask(eventMetadataConfig),
+            ThreadLocalRandom.current().nextInt(3000, 4000));
+    // waiting a bit for the JobConsumer to be ready ... not sure if necessary
   }
+
+  public TimerTask getTask(OsgiEventMappingConfig eventMetadataConfig) {
+    return new TimerTask() {
+      public void run() {
+        Map<String, Object> jobProperties = new HashMap();
+        jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_CODE_PROPERTY,
+            eventMetadataConfig.aio_event_code());
+        try {
+          EventMetadata configuredEventMetadata = EventMetadata.builder()
+              .description(eventMetadataConfig.aio_event_description())
+              .label(eventMetadataConfig.aio_event_label())
+              .eventCode(eventMetadataConfig.aio_event_code())
+              .build();
+          // we want the event to be distributed in the cluster
+          jobProperties.put(PROPERTY_DISTRIBUTE,"");
+          jobProperties.put(EventHandlerRegistrationJobConsumer.AIO_OSGI_EVENT_MAPPING_PROPERTY,
+              objectMapper.writeValueAsString(new OsgiEventMapping(eventMetadataConfig)));
+          jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_EVENT_METADATA_PROPERTY,
+              objectMapper.writeValueAsString(configuredEventMetadata));
+          jobManager.addJob(EventMetadataRegistrationJobConsumer.AIO_CONFIG_EVENT_METADA_JOB_TOPIC,
+              jobProperties);
+          jobManager.addJob(
+              EventHandlerRegistrationJobConsumer.AIO_CONFIG_OSGI_EVENT_METADA_JOB_TOPIC,
+              jobProperties);
+          log.debug("Adobe I/O Events Metadata Config Job {} added.", jobProperties);
+        } catch (Exception e) {
+          log.error("Adobe I/O Events' Event Metadata Supplier Service Activation Error: {}",
+              e.getMessage(), e);
+          jobProperties.put(EventMetadataRegistrationJobConsumer.AIO_ERROR_PROPERTY,
+              e.getClass().getSimpleName() + ":" + e.getMessage());
+          jobManager.addJob(EventMetadataRegistrationJobConsumer.AIO_CONFIG_EVENT_METADA_JOB_TOPIC,
+              jobProperties);
+        } finally {
+          log.info(
+              "Adobe I/O Events' Event Metadata Supplier Service Activation Complete with config : {}",
+              eventMetadataConfig);
+        }
+      }
+
+    };
+  }
+
 
 }

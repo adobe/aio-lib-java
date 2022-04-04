@@ -75,7 +75,6 @@ public class EventHandlerRegistrationJobConsumer implements JobConsumer {
   protected void activate(BundleContext context, Map<String, Object> config) {
     log.info("activating");
     this.bundleContext = context;
-    osgiEventMappingStatusSupplier.setJobConsumerReady(true);
   }
 
   @Override

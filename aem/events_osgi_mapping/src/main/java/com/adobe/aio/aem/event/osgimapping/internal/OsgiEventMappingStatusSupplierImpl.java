@@ -32,18 +32,6 @@ public class OsgiEventMappingStatusSupplierImpl implements OsgiEventMappingStatu
   private final Logger log = LoggerFactory.getLogger(getClass());
   private final Map<String, OsgiEventMappingStatus> osgiEventMappingStatusByEventCode = new ConcurrentHashMap<>();
 
-  private boolean isJobConsumerReady = false;
-
-  @Override
-  public boolean isJobConsumerReady() {
-    return this.isJobConsumerReady;
-  }
-
-  @Override
-  public void setJobConsumerReady(boolean ready) {
-    this.isJobConsumerReady =ready;
-  }
-
   @Override
   public void addStatus(String eventCode, OsgiEventMappingStatus eventMetadataStatus) {
     osgiEventMappingStatusByEventCode.put(eventCode, eventMetadataStatus);
@@ -54,9 +42,10 @@ public class OsgiEventMappingStatusSupplierImpl implements OsgiEventMappingStatu
     Map<String, Object> details = new HashMap<>(1);
     try {
       if (osgiEventMappingStatusByEventCode.isEmpty()) {
-        return new Status(Status.DOWN, null, "Missing Osgi Event Mapping configuration");
+        return new Status(Status.DOWN, null, "No Osgi Event Mapping configuration found (yet?)");
       } else {
-        details.putAll(osgiEventMappingStatusByEventCode);
+        details.put("size",""+osgiEventMappingStatusByEventCode.size());
+        details.put("event_metadata",osgiEventMappingStatusByEventCode);
         boolean isUp = osgiEventMappingStatusByEventCode.values().stream()
             .allMatch(OsgiEventMappingStatus::isUp);
         return new Status(isUp, details);

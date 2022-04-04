@@ -30,17 +30,6 @@ public class EventMetadataStatusSupplierImpl implements EventMetadataStatusSuppl
 
   private final Logger log = LoggerFactory.getLogger(getClass());
   private final Map<String, EventMetadataStatus> eventMetadataStatusByEventCode = new ConcurrentHashMap<>();
-  private Boolean isJobConsumerReady = false;
-
-  @Override
-  public Boolean isJobConsumerReady() {
-    return this.isJobConsumerReady;
-  }
-
-  @Override
-  public void setJobConsumerReady(Boolean ready) {
-    this.isJobConsumerReady = ready;
-  }
 
   @Override
   public void addStatus(String eventCode, EventMetadataStatus eventMetadataStatus) {
@@ -52,9 +41,10 @@ public class EventMetadataStatusSupplierImpl implements EventMetadataStatusSuppl
     Map<String, Object> details = new HashMap<>(1);
     try {
       if (eventMetadataStatusByEventCode.isEmpty()) {
-        return new Status(Status.DOWN, null, "Missing event metadata configuration");
+        return new Status(Status.DOWN, null, "No event metadata configuration found (yet?)");
       } else {
-        details.putAll(eventMetadataStatusByEventCode);
+        details.put("size",""+eventMetadataStatusByEventCode.size());
+        details.put("event_metadata",eventMetadataStatusByEventCode);
         boolean isUp = eventMetadataStatusByEventCode.values().stream()
             .allMatch(EventMetadataStatus::isUp);
         return new Status(isUp, details);
