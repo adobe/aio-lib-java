@@ -18,7 +18,6 @@ import org.osgi.annotation.versioning.ProviderType;
 @ProviderType
 public interface EventMetadataStatusSupplier extends StatusSupplier {
 
-  Boolean isJobConsumerReady();
-  void setJobConsumerReady(Boolean ready);
   void addStatus(String eventCode, EventMetadataStatus eventMetadataStatus);
+
 }

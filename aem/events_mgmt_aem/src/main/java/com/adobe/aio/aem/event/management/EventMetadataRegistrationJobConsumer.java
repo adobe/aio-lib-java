@@ -44,7 +44,6 @@ public class EventMetadataRegistrationJobConsumer implements JobConsumer {
   @Activate
   protected void activate() {
     log.info("activating");
-    eventMetadataStatusSupplier.setJobConsumerReady(true);
   }
 
   @Override
