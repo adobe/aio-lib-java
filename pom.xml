@@ -18,7 +18,7 @@
 
   <groupId>com.adobe.aio</groupId>
   <artifactId>aio-lib-java</artifactId>
-  <version>0.0.31-SNAPSHOT</version>
+  <version>0.0.32</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -71,7 +71,7 @@
     <connection>scm:git:https://github.com/adobe/aio-lib-java.git</connection>
     <developerConnection>scm:git:https://github.com/adobe/aio-lib-java.git</developerConnection>
     <url>https://github.com/adobe/aio-lib-java/tree/master</url>
-    <tag>HEAD</tag>
+    <tag>aio-lib-java-0.0.32</tag>
   </scm>
 
   <distributionManagement>
