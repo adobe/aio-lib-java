@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.26...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.28...HEAD)
+
+### 📁 Other pull requests
+
+- GH-91  waiting for the JobConsumers to be ready before publishing job [\#92](https://github.com/adobe/aio-lib-java/pull/92) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.28](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.28) (2022-04-01)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.26...aio-lib-java-0.0.28)
 
 ### 📁 Other pull requests
 
