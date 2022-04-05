@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.28...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.30...HEAD)
+
+### 📁 Other pull requests
+
+- GH-91 pushing bootstrap events accross the cluster [\#93](https://github.com/adobe/aio-lib-java/pull/93) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.30](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.30) (2022-04-04)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.28...aio-lib-java-0.0.30)
 
 ### 📁 Other pull requests
 

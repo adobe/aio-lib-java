@@ -18,7 +18,7 @@
 
   <groupId>com.adobe.aio</groupId>
   <artifactId>aio-lib-java</artifactId>
-  <version>0.0.31-SNAPSHOT</version>
+  <version>0.0.33-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
