@@ -19,7 +19,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 @Component(immediate = true, service = Servlet.class)
-@SlingServletPaths("/bin/aio/osgi_event_metadata.json")
+@SlingServletPaths("/bin/aio/events/osgi_event_mapping.json")
 public class OsgiEventMappingStatusServlet extends StatusServlet {
 
   @Reference

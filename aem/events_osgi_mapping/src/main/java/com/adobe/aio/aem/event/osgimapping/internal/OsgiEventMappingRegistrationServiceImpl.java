@@ -99,6 +99,7 @@ public class OsgiEventMappingRegistrationServiceImpl implements OsgiEventMapping
     eventMetadataStatusSupplier.registerEventMetadata(
             osgiEventMappingSupplier.getConfiguredEventMetadata());
     // making this async and with delay in order to avoid workspace config resolution issue
+    // it looks like bind is called before activation
     Executors.newSingleThreadScheduledExecutor().schedule(
         () -> this.registerSlingEventHandler(osgiEventMappingSupplier.getOsgiEventMapping()),
         (ThreadLocalRandom.current().nextInt(3000, 4000)),

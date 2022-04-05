@@ -1,11 +1,16 @@
-# `com.adobe.aio.aem.core`
+# `aio-aem-core`
 
-`com.adobe.aio.aem.core` is a Java OSGI bundle hosting OSGI Components
+`aio-aem-core` is a Java OSGI bundle hosting OSGI Components
 wrapping [`aio-lib-java-core`](../../core) and [`aio-lib-java-ims`](../../ims)
 
-## Expected `Workspace` osgi configuration
+It hosts the services to 
+* get the Adobe Developer Console Workspace
+* get Access token (from JWT exchange token flow) from Adobe Identity Management System (IMS)
 
-This bundle expects a [`Workspace Configuration`](src/main/java/com/adobe/aio/aem/workspace/ocd/WorkspaceConfig.java)
+
+## Configuration
+
+This bundle expects a Adobe Developer Console [`Workspace` Configuration](src/main/java/com/adobe/aio/aem/workspace/ocd/WorkspaceConfig.java)
 defined as an OSGI configuration.  
 * for more details about the `Worskspace` configuration: check our [`aio-lib-java-core` documentation](../../core/README.md).
 * for more details about the `aio.encoded.pkcs8` private key configuration: check our [`aio-lib-java-ims` documentation](../../ims/README.md)
@@ -31,7 +36,7 @@ This bundle comes with a status servlet:
  from [/bin/aio/workspace.json](http://localhost:4502/bin/aio/workspace.json)
 you can `GET` the status of your workspace configuration.
 
-If valid, the status json payload should like that :
+The response json payload should like this:
 
     {
         "status": "up",

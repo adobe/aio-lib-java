@@ -22,7 +22,7 @@
     <version>0.0.35-SNAPSHOT</version>
   </parent>
 
-  <artifactId>aio-event-management</artifactId>
+  <artifactId>aio-aem-events-mgmt</artifactId>
   <name>Adobe I/O - AEM Events Management - OSGI bundle</name>
   <description>Adobe I/O - AEM Events Management - OSGI bundle</description>
 
