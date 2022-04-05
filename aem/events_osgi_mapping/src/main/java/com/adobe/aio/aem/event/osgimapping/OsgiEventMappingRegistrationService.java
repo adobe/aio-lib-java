@@ -9,15 +9,12 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.aem.event.management;
-
+package com.adobe.aio.aem.event.osgimapping;
 
 import com.adobe.aio.aem.status.StatusSupplier;
 import org.osgi.annotation.versioning.ProviderType;
 
 @ProviderType
-public interface EventMetadataStatusSupplier extends StatusSupplier {
-
-  void addStatus(String eventCode, EventMetadataStatus eventMetadataStatus);
+public interface OsgiEventMappingRegistrationService extends StatusSupplier {
 
 }

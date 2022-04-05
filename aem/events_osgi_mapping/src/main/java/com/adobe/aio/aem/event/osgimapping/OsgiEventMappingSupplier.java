@@ -11,6 +11,8 @@
  */
 package com.adobe.aio.aem.event.osgimapping;
 
+import com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventMapping;
+import com.adobe.aio.event.management.model.EventMetadata;
 import org.osgi.annotation.versioning.ProviderType;
 
 @ProviderType
@@ -21,4 +23,7 @@ public interface OsgiEventMappingSupplier {
    */
   String OSGI_PING_EVENT_CODE = "osgi_ping";
 
+  EventMetadata getConfiguredEventMetadata();
+
+  OsgiEventMapping getOsgiEventMapping();
 }

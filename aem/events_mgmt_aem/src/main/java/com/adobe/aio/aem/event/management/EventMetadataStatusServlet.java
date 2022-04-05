@@ -23,11 +23,10 @@ import org.osgi.service.component.annotations.Reference;
 public class EventMetadataStatusServlet extends StatusServlet {
 
   @Reference
-  private EventMetadataStatusSupplier eventMetadataSupplier;
+  private EventMetadataRegistrationService eventMetadataRegistrationService;
 
   @Override
   public Status getStatus() {
-    return eventMetadataSupplier.getStatus();
+    return eventMetadataRegistrationService.getStatus();
   }
 }
-
