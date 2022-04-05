@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.30...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.32...HEAD)
+
+### 📁 Other pull requests
+
+- GH-91 got rid of Jobs for registration, used dynamic binding and async registration executors instead [\#94](https://github.com/adobe/aio-lib-java/pull/94) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.32](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.32) (2022-04-04)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.30...aio-lib-java-0.0.32)
 
 ### 📁 Other pull requests
 
