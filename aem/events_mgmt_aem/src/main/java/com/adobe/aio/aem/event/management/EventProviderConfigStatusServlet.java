@@ -19,7 +19,7 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 @Component(immediate = true, service = Servlet.class)
-@SlingServletPaths("/bin/aio/provider_config.json")
+@SlingServletPaths("/bin/aio/events/provider_config.json")
 public class EventProviderConfigStatusServlet extends StatusServlet {
 
   @Reference

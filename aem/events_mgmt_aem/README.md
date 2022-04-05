@@ -13,10 +13,11 @@ Adobe I/O Events provider instanceId, label and description
 
 This bundle leverages [aio-aem-core](../core_aem) which expects a Workspace Adobe Developer Console `Workspace` Configuration
 
-This bundle also expects a set of [Adobe I/O Event Metadata OSGI configuration](src/main/java/com/adobe/aio/aem/event/management/ocd/EventMetadataConfig.java) defined: 
-these drive the event metadata registration against Adobe I/O Events.
+This bundle will look up [Adobe I/O Event Metadata OSGI configuration](src/main/java/com/adobe/aio/aem/event/management/ocd/EventMetadataConfig.java): 
+to drive the event metadata registration against Adobe I/O Events.
 
-Confer the [aem-io-events](../aio_aem_events) package, where we added a `ping` Event Metadata configuration.
+Confer the [aem-io-events](../aio_aem_events) package, 
+where we added a [`ping` Event Metadata configuration](../aio_aem_events/src/cs/content/jcr_root/apps/aio-aem-events/osgiconfig/config/com.adobe.aio.aem.event.management.internal.EventMetadataSupplierImpl-ping.cfg.json)
 
     {
     "aio.event.code": "ping",
@@ -32,7 +33,7 @@ This bundle comes with a few status endpoints:
 
 ### Adobe I/O Events Provider configuration check
 
-From [bin/aio/provider_config.json](http://localhost:4502/bin/aio/provider_config.json)
+From [bin/aio/events/provider_config.json](http://localhost:4502/bin/aio/events/provider_config.json)
 you can `GET` the status of your Adobe I/O Events provider configuration.
 
 The response json payload should like this:
@@ -55,7 +56,7 @@ The response json payload should like this:
 
 ### Adobe I/O Events Provider registration check
 
-From [bin/aio/provider.json](http://localhost:4502/bin/aio/provider.json)
+From [bin/aio/events/provider.json](http://localhost:4502/bin/aio/events/provider.json)
 you can `GET` the status of your Adobe I/O Events provider registration.
 
 The response json payload should like this:
@@ -75,7 +76,7 @@ The response json payload should like this:
 
 ### Adobe I/O Events Event Metadata registration check
 
-From [bin/aio/event_metadata.json](http://localhost:4502/bin/aio/event_metadata.json)
+From [bin/aio/events/event_metadata.json](http://localhost:4502/bin/aio/events/event_metadata.json)
 you can `GET` the status of your Adobe I/O Events Event Metadata registration.
 
 The response json payload should like this:

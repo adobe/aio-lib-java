@@ -22,7 +22,7 @@
     <version>0.0.33-SNAPSHOT</version>
   </parent>
 
-  <artifactId>aio-event-osgimapping</artifactId>
+  <artifactId>aio-aem-events-osgi-mapping</artifactId>
   <name>Adobe I/O - AEM OSGI Events Mapper - OSGI bundle</name>
   <description>Adobe I/O - AEM OSGI Events Mapper - OSGI bundle</description>
 
@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
-      <artifactId>aio-event-publish</artifactId>
+      <artifactId>aio-aem-events-publish</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
     </dependency>

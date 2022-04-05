@@ -156,12 +156,12 @@
                 </embedded>
                 <embedded>
                   <groupId>com.adobe.aio.aem</groupId>
-                  <artifactId>aio-event-publish</artifactId>
+                  <artifactId>aio-aem-events-publish</artifactId>
                   <target>/apps/aio-aem-events/install</target>
                 </embedded>
                 <embedded>
                   <groupId>com.adobe.aio.aem</groupId>
-                  <artifactId>aio-event-osgimapping</artifactId>
+                  <artifactId>aio-aem-events-osgi-mapping</artifactId>
                   <target>/apps/aio-aem-events/install</target>
                 </embedded>
               </embeddeds>
@@ -172,12 +172,12 @@
       <dependencies>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
-          <artifactId>aio-event-osgimapping</artifactId>
+          <artifactId>aio-aem-events-osgi-mapping</artifactId>
           <version>${project.version}</version>
         </dependency>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
-          <artifactId>aio-event-publish</artifactId>
+          <artifactId>aio-aem-events-publish</artifactId>
           <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -232,13 +232,13 @@
                 </embedded>
                 <embedded>
                   <groupId>com.adobe.aio.aem</groupId>
-                  <artifactId>aio-event-publish</artifactId>
+                  <artifactId>aio-aem-events-publish</artifactId>
                   <classifier>aem65</classifier>
                   <target>/apps/aio-aem-events/install</target>
                 </embedded>
                 <embedded>
                   <groupId>com.adobe.aio.aem</groupId>
-                  <artifactId>aio-event-osgimapping</artifactId>
+                  <artifactId>aio-aem-events-osgi-mapping</artifactId>
                   <classifier>aem65</classifier>
                   <target>/apps/aio-aem-events/install</target>
                 </embedded>
@@ -250,13 +250,13 @@
       <dependencies>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
-          <artifactId>aio-event-osgimapping</artifactId>
+          <artifactId>aio-aem-events-osgi-mapping</artifactId>
           <version>${project.version}</version>
           <classifier>aem65</classifier>
         </dependency>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
-          <artifactId>aio-event-publish</artifactId>
+          <artifactId>aio-aem-events-publish</artifactId>
           <version>${project.version}</version>
           <classifier>aem65</classifier>
         </dependency>

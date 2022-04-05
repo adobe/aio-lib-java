@@ -22,7 +22,7 @@
     <version>0.0.33-SNAPSHOT</version>
   </parent>
 
-  <artifactId>aio-event-publish</artifactId>
+  <artifactId>aio-aem-events-publish</artifactId>
   <name>Adobe I/O - AEM Events Publishing - OSGI bundle</name>
   <description>Adobe I/O - AEM Events Publishing - OSGI bundle</description>
 
