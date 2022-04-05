@@ -11,22 +11,14 @@
  */
 package com.adobe.aio.aem.event.management;
 
-import com.adobe.aio.aem.status.Status;
-import com.adobe.aio.aem.status.StatusServlet;
-import javax.servlet.Servlet;
-import org.apache.sling.servlets.annotations.SlingServletPaths;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
-@Component(immediate = true, service = Servlet.class)
-@SlingServletPaths("/bin/aio/event_metadata.json")
-public class EventMetadataStatusServlet extends StatusServlet {
+import com.adobe.aio.aem.status.StatusSupplier;
+import com.adobe.aio.event.management.model.EventMetadata;
+import org.osgi.annotation.versioning.ProviderType;
 
-  @Reference
-  private EventMetadataRegistrationService eventMetadataRegistrationService;
+@ProviderType
+public interface EventMetadataRegistrationService extends StatusSupplier {
 
-  @Override
-  public Status getStatus() {
-    return eventMetadataRegistrationService.getStatus();
-  }
+  void registerEventMetadata(EventMetadata configuredEventMetadata);
+
 }

@@ -23,7 +23,7 @@ import org.osgi.service.component.annotations.Reference;
 public class OsgiEventMappingStatusServlet extends StatusServlet {
 
   @Reference
-  private OsgiEventMappingStatusSupplier osgiEventMappingStatusSupplier;
+  private OsgiEventMappingRegistrationService osgiEventMappingStatusSupplier;
 
   @Override
   public Status getStatus() {

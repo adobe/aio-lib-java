@@ -11,19 +11,10 @@
  */
 package com.adobe.aio.aem.event.osgimapping;
 
-import com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventMapping;
-import com.adobe.aio.event.management.model.EventMetadata;
+import com.adobe.aio.aem.status.StatusSupplier;
 import org.osgi.annotation.versioning.ProviderType;
 
 @ProviderType
-public interface OsgiEventMappingSupplier {
+public interface OsgiEventMappingRegistrationService extends StatusSupplier {
 
-  /**
-   * defined in aio-evem-events package default osgi cfg.json file: com.adobe.io.event.osgi.internal.OsgiEventMappingSupplierImpl-osgi_ping.cfg.json
-   */
-  String OSGI_PING_EVENT_CODE = "osgi_ping";
-
-  EventMetadata getConfiguredEventMetadata();
-
-  OsgiEventMapping getOsgiEventMapping();
 }
