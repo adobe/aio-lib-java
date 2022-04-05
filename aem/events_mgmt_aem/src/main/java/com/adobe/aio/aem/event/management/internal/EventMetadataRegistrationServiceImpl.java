@@ -43,7 +43,7 @@ public class EventMetadataRegistrationServiceImpl implements EventMetadataRegist
   private final Map<String, EventMetadataStatus> eventMetadataStatusByEventCode = new ConcurrentHashMap<>();
 
   /**
-   * TODO Ideally the annotation should be placed on the bind Method And we could make this List non
+   * Ideally the annotation should be placed on the bind Method And we could make this List non
    * volatile and the bind and unbind method non synchronized. Whereas this worked in the
    * AdobeIoAuthProxyImpl, this failed here: the bind method was never called by the OSGI engine...
    */
@@ -70,6 +70,7 @@ public class EventMetadataRegistrationServiceImpl implements EventMetadataRegist
   @Override
   public void registerEventMetadata(EventMetadata configuredEventMetadata) {
     // making this async and with delay in order to avoid workspace config resolution issue
+    // it looks like bind is called before activation
     Executors.newSingleThreadScheduledExecutor().schedule(
         () -> this.registerEventMetadataSync(configuredEventMetadata),
         (ThreadLocalRandom.current().nextInt(3000, 4000)),

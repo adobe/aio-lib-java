@@ -35,7 +35,7 @@
     </dependency>
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
-      <artifactId>aio-event-management</artifactId>
+      <artifactId>aio-aem-events-mgmt</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
     </dependency>

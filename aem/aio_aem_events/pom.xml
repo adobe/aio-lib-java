@@ -151,7 +151,7 @@
                 </embedded>
                 <embedded>
                   <groupId>com.adobe.aio.aem</groupId>
-                  <artifactId>aio-event-management</artifactId>
+                  <artifactId>aio-aem-events-mgmt</artifactId>
                   <target>/apps/aio-aem-events/install</target>
                 </embedded>
                 <embedded>
@@ -182,7 +182,7 @@
         </dependency>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
-          <artifactId>aio-event-management</artifactId>
+          <artifactId>aio-aem-events-mgmt</artifactId>
           <version>${project.version}</version>
         </dependency>
         <dependency>
@@ -226,7 +226,7 @@
                 </embedded>
                 <embedded>
                   <groupId>com.adobe.aio.aem</groupId>
-                  <artifactId>aio-event-management</artifactId>
+                  <artifactId>aio-aem-events-mgmt</artifactId>
                   <classifier>aem65</classifier>
                   <target>/apps/aio-aem-events/install</target>
                 </embedded>
@@ -262,7 +262,7 @@
         </dependency>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
-          <artifactId>aio-event-management</artifactId>
+          <artifactId>aio-aem-events-mgmt</artifactId>
           <version>${project.version}</version>
           <classifier>aem65</classifier>
         </dependency>
