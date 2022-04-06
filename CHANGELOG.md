@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.34...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.36...HEAD)
+
+### 📁 Other pull requests
+
+- GH-98 adding support for AEM 6.5.x [\#99](https://github.com/adobe/aio-lib-java/pull/99) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.36](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.36) (2022-04-05)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.34...aio-lib-java-0.0.36)
 
 ### 📁 Other pull requests
 
