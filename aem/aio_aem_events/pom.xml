@@ -22,7 +22,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.0.37-SNAPSHOT</version>
+    <version>0.0.38</version>
   </parent>
 
   <artifactId>aio-aem-events</artifactId>
@@ -282,4 +282,8 @@
 
     </profile>
   </profiles>
+
+  <scm>
+    <tag>aio-lib-java-0.0.38</tag>
+  </scm>
 </project>
