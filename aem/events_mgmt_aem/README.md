@@ -9,15 +9,20 @@ It hosts the services to
 Adobe I/O Events provider instanceId, label and description
 * register its various event metadata (see configuration below) against Adobe I/O Events
 
-## Configuration
+## Configurations
 
-This bundle leverages [aio-aem-core](../core_aem) which expects a Workspace Adobe Developer Console `Workspace` Configuration
+### `Workspace` configuration
 
-This bundle will look up [Adobe I/O Event Metadata OSGI configuration](src/main/java/com/adobe/aio/aem/event/management/ocd/EventMetadataConfig.java): 
+This bundle leverages [aio-aem-core](../core_aem) which expects an Adobe Developer Console `Workspace` Configuration.
+Confer  [aio-aem-core](../core_aem) documentation.
+
+### `Event Metadata` configurations
+
+This bundle will look up [Adobe I/O Event Metadata OSGI configurations](src/main/java/com/adobe/aio/aem/event/management/ocd/EventMetadataConfig.java): 
 to drive the event metadata registration against Adobe I/O Events.
 
 Confer the [aem-io-events](../aio_aem_events) package, 
-where we added a [`ping` Event Metadata configuration](../aio_aem_events/src/cs/content/jcr_root/apps/aio-aem-events/osgiconfig/config/com.adobe.aio.aem.event.management.internal.EventMetadataSupplierImpl-ping.cfg.json)
+where we added one [`ping` Event Metadata configuration](../aio_aem_events/src/cs/content/jcr_root/apps/aio-aem-events/osgiconfig/config/com.adobe.aio.aem.event.management.internal.EventMetadataSupplierImpl-ping.cfg.json)
 
     {
     "aio.event.code": "ping",
@@ -25,7 +30,20 @@ where we added a [`ping` Event Metadata configuration](../aio_aem_events/src/cs/
     "aio.event.description": "ping event"
     }
 
-For advanced use case you may also tune various other configurations: set for instance the externalizer name to `publish` instead of `author`.
+### `AEM Link Externalizer` Configuration (on-premise only)
+
+The AEM Link Externalizer `author` url is used by Adobe I/O Events to create a unique identifier
+of the associated AEM author instance/cluster within an IMS organization.
+**For AEM as a Cloud Service this configuration is not needed,
+as the AEM Link Externalizer is already set for you by the Adobe `cloudmanager`.**
+
+However, for `on premise` version of AEM, you need to make sure the AEM Link Externalizer is properly configured:
+* Open the Web Console, or select the **Tools** icon, then select **Operations** and **Web Console**.
+* Scroll down the list to find **Day CQ Link Externalizer**, update the `author` url, and select **Save** when done.
+
+Note that this base URL will be reflected in the Adobe Developer Console in the AEM event provider label.
+If you keep it default, that is `http://localhost:4502`
+
 
 ## Status Check
 

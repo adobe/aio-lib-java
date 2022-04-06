@@ -8,16 +8,11 @@ It hosts the services to
 * get Access token (from JWT exchange token flow) from Adobe Identity Management System (IMS)
 
 
-## Configuration
+## `Workspace` Configuration
 
 This bundle expects a Adobe Developer Console [`Workspace` Configuration](src/main/java/com/adobe/aio/aem/workspace/ocd/WorkspaceConfig.java)
-defined as an OSGI configuration.  
-* for more details about the `Worskspace` configuration: check our [`aio-lib-java-core` documentation](../../core/README.md).
-* for more details about the `aio.encoded.pkcs8` private key configuration: check our [`aio-lib-java-ims` documentation](../../ims/README.md)
-
-Please [choose the appropriate OSGi configuration value types](https://experienceleague.adobe.com/docs/experience-manager-cloud-service/content/implementing/deploying/configuring-osgi.html%3Flang%3Den#how-to-choose-the-appropriate-osgi-configuration-value-type), 
-use environment variables for the following:
-* `aio.consumer.org.id` 
+defined as an OSGI configuration, with have the following values defined:
+* `aio.consumer.org.id`
 * `aio.ims.org.id`
 * `aio.meta.scopes`
 * `aio.project.id`
@@ -25,10 +20,20 @@ use environment variables for the following:
 * `aio.api.key`
 * `aio.credential.id`
 * `aio.technical.account.id`
-
-Use secret environment variables for the following:
 * `aio.client.secret`
 * `aio.encoded.pkcs8`
+
+For more details about the above, check our [`aio-lib-java-core` documentation](../../core/README.md).
+as for the `aio.encoded.pkcs8` private key configuration, please check our [`aio-lib-java-ims` documentation](../../ims/README.md)
+
+For `on premise` version of AEM: 
+* Open the Web Console, or select the **Tools** icon, then select **Operations** and **Web Console**.
+* Scroll down the list to find **Adobe I/O Events' Workspace Configuration**, update all the values mentioned above, and select **Save** when done.
+
+When running on AEM as a cloud service, you'll have to use Cloud Manager to deploy these configurations,
+[choose the appropriate OSGi configuration value types](https://experienceleague.adobe.com/docs/experience-manager-cloud-service/content/implementing/deploying/configuring-osgi.html%3Flang%3Den#how-to-choose-the-appropriate-osgi-configuration-value-type), 
+mix environment variables, and secret environments variables (for `aio.client.secret` and `aio.encoded.pkcs8`).
+
 
 ## Status Check
 
