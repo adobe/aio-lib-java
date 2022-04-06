@@ -43,9 +43,9 @@ public class EventMetadataRegistrationServiceImpl implements EventMetadataRegist
   private final Map<String, EventMetadataStatus> eventMetadataStatusByEventCode = new ConcurrentHashMap<>();
 
   /**
-   * Ideally the annotation should be placed on the bind Method And we could make this List non
-   * volatile and the bind and unbind method non synchronized. Whereas this worked in the
-   * AdobeIoAuthProxyImpl, this failed here: the bind method was never called by the OSGI engine...
+   * Ideally the annotation should be placed on the bind Method
+   * and we could make this List non-volatile
+   * and the bind and unbind method non synchronized.
    */
   @Reference(
       service = EventMetadataSupplier.class,

@@ -57,8 +57,9 @@ public class OsgiEventMappingRegistrationServiceImpl implements OsgiEventMapping
   private final Map<String, OsgiEventMappingStatus> osgiEventMappingStatusByEventCode = new ConcurrentHashMap<>();
 
   /**
-   * In theory the annotation could be placed on the bind Method: we could make this List
-   * non-volatile and the bind and unbind method non synchronized.
+   * Ideally the annotation should be placed on the bind Method
+   * and we could make this List non-volatile
+   * and the bind and unbind method non synchronized.
    */
   @Reference(
       service = OsgiEventMappingSupplier.class,
