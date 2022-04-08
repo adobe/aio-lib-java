@@ -3,7 +3,7 @@
 
 `aio-lib-java-ims` is an Adobe I/O - Java SDK - IMS Library.
 This Java library wraps http API endpoints exposed by 
-[Adobe Identity Management System (IMS)](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
+[Adobe Identity Management System (IMS)](https://developer.adobe.com/developer-console/docs/guides/#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md)
 
 ## Service Account Integration (JWT authentication flow)
 
@@ -16,41 +16,65 @@ your credentials and begin each API session by exchanging the JWT for an access 
 The JWT encodes all of the identity and security information required to obtain an access 
 token and must be signed with the private key that is associated with a public key certificate specified on your integration.
 
+Browse our [JWT authentication documentation](https://developer.adobe.com/developer-console/docs/guides/authentication/JWT/)
+for more details.
+
 This Java library will help you implement this JWT exchange token flow, to get a valid access token
 and start interacting with the many Adobe I/O API that support such authentication.
 
 ### Configurations
 
-Browse our [Service Account Integration (JWT authentication flow) doc](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/ServiceAccountIntegration.md), 
-our fluent workspace builder offers many ways to have your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace) configured.
+This library fluent workspace builder API offers many ways to have your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace) configured.
 
 To get you started quickly you could use a `.properties` file, 
 see our [sample config file](./src/test/resources/workspace.properties)
 
 #### Create and configure your public and private key
 
-First, use openssl to create an RSA private/public certificate pair
+As introduced above the authentication flow signs the JWT request and therefore requires private-public keys configurations
+, therefore you will need to
 
-     openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout private.key -out certificate_pub.crt
+* First, create this  RSA private/public certificate pair, using openssl:
 
-Our [`PrivateKeyBuilder`](./src/main/java/com/adobe/util/PrivateKeyBuilder.java) 
-offer 3 options to configure/use this privateKey:
-* Option 1: use a pcks8 file
-* Option 2: use a base 64 encoded pcks8 key
-* Option 3: use a keystore 
+     `openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout private.key -out certificate_pub.crt`
 
-For option 1, to convert your private key to a PKCS8 format, use the following command: 
+* Then, upload the public key in your Adobe Developer Workspace, see our [JWT authentication documentation](https://developer.adobe.com/developer-console/docs/guides/authentication/JWT/)
+* Finally, configure this library (and its [`PrivateKeyBuilder`](./src/main/java/com/adobe/util/PrivateKeyBuilder.java)) with your privateKey, you may either
+  * use a pcks8 file
+  * use a base 64 encoded pcks8 key
+  * use a keystore file 
+
+##### Option 1: Use a pcks8 file
+
+First, convert your private key to a PKCS8 format, use the following command:
 
     openssl pkcs8 -topk8 -inform PEM -outform DER -in private.key -nocrypt > private.pkcs8.key
 
-For option 2, to base 64 encode it, use the following command: 
+Then, set your workspace `aio_pkcs8_file_path` properties 
+to match the `private.pkcs8.key` file path (you generated using the previous command)
+
+
+##### Option 2: use a base 64 encoded pcks8 key
+
+First, convert your private key to a PKCS8 format, use the following command:
+
+    openssl pkcs8 -topk8 -inform PEM -outform DER -in private.key -nocrypt > private.pkcs8.key
+
+Then, base 64 encode it, use the following command:
 
     base64 private.pkcs8.key 
-    
-For option 3, Use the following commands to set the alias (as `myalias` here)  and a non-empty keystore password.
+
+Finally, set your workspace `aio_encoded_pkcs8` properties value using the string you generated with the above command
+
+##### Option 3: use a keystore
+
+First, use the following commands to set the alias (as `myalias` here)  and a non-empty keystore password.
 
     cat private.key certificate_pub.crt > private-key-crt
     openssl pkcs12 -export -in private-key-crt -out keystore.p12 -name myalias -noiter -nomaciter
+
+Then fill the associated `aio_pkcs12_file_path`, `aio_pkcs12_alias` and `aio_pkcs12_password` workspace properties.
+
 
 ### Our reusable `OpenFeign` JWT (exchange token flow) Authentication `RequestInterceptor`
 
