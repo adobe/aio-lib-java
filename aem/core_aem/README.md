@@ -23,7 +23,7 @@ service looks up the following OSGI configuration keys:
 * `aio.client.secret` your Adobe Developer Console jwt credential client secret (`project.workspace.details.credentials[i].jwt.client_secret`)
 * `aio.meta.scopes` a comma separated list of metascopes associated with your API, see your Adobe Developer Console jwt credential metascopes (`project.workspace.details.credentials[i].jwt.meta_scopes`)
 * `aio.technical.account.id` your Adobe Developer Console jwt credential technical account id (`project.workspace.details.credentials[i].jwt.technical_account_id`)
-* `aio.encoded.pkcs8` your private key (in a base64 encoded pkcs8 format) see our [JWT public/private key management guide](aem_key_setup.md).
+* `aio.encoded.pkcs8` your private key (in a base64 encoded pkcs8 format) see our [aio-lib-java ims public/private key management guide](https://github.com/adobe/aio-lib-java/tree/main/ims#option-2-use-a-base-64-encoded-pcks8-key).
 
 
 ### `aio.encoded.pkcs8` 
