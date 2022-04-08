@@ -11,8 +11,7 @@ It hosts the services to
 ## `Workspace` Configuration
 
 This bundle expects your Adobe Developer Console [`Workspace` Configuration](src/main/java/com/adobe/aio/aem/workspace/ocd/WorkspaceConfig.java)
-defined as an OSGI configuratio
-Its [WorkspaceSupplier](https://github.com/adobe/aio-lib-java/blob/main/aem/core_aem/src/main/java/com/adobe/aio/aem/workspace/internal/WorkspaceSupplierImpl.java)
+defined as an OSGI configuration. Its [WorkspaceSupplier](https://github.com/adobe/aio-lib-java/blob/main/aem/core_aem/src/main/java/com/adobe/aio/aem/workspace/internal/WorkspaceSupplierImpl.java)
 service looks up the following OSGI configuration keys:
 
 * `aio.project.id` your Adobe Developer Console project id (`project.id`)
@@ -30,7 +29,7 @@ service looks up the following OSGI configuration keys:
 ### `aio.encoded.pkcs8` 
 
 `aio.encoded.pkcs8` configuration value is associated with your Adobe Developer Console private key.
-It is a string: your private key in a pkcs8 format, base64 encoded, here is how to generate it.
+It is a string: your private key in a pkcs8 format, base64 encoded, here is how to generate it:
 
 First, convert your private key to a PKCS8 format, use the following command:
 
@@ -40,7 +39,7 @@ Then, base 64 encode it, use the following command:
 
     base64 private.pkcs8.key 
 
-for more details check our [`aio-lib-java-ims` documentation](../../ims/README.md)
+For more details check our [`aio-lib-java-ims` documentation](../../ims/README.md)
 
 ### `on premise` AEM configuration:
 When running AEM on premise:
