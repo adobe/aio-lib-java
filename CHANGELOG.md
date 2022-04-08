@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.36...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.38...HEAD)
+
+### 📁 Other pull requests
+
+- GH-96 doc update [\#105](https://github.com/adobe/aio-lib-java/pull/105) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.38](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.38) (2022-04-06)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.36...aio-lib-java-0.0.38)
 
 ### 📁 Other pull requests
 
