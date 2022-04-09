@@ -13,6 +13,7 @@ package com.adobe.aio.aem.event.osgimapping.eventhandler;
 
 import com.adobe.aio.aem.event.xdm.aem.XdmUtil;
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
+import com.adobe.aio.aem.util.ResourceResolverWrapperFactory;
 import com.adobe.xdm.XdmObject;
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,9 +38,9 @@ public abstract class ReplicationEventHandler<T extends XdmObject> extends Adobe
 
   public ReplicationEventHandler(JobManager jobManager, URL rootUrl, String imsOrgId,
       OsgiEventMapping osgiEventMapping,
-      ResourceResolverWrapper resourceResolverWrapper) {
+      ResourceResolverWrapperFactory resourceResolverWrapperFactory) {
     super(jobManager, rootUrl, imsOrgId,
-        osgiEventMapping, resourceResolverWrapper);
+        osgiEventMapping, resourceResolverWrapperFactory);
   }
 
   public List<Triple<T, String, Date>> getXdmObjectActorDateTriples(Event event,

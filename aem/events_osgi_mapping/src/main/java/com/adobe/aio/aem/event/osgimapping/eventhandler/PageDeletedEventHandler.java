@@ -12,6 +12,7 @@
 package com.adobe.aio.aem.event.osgimapping.eventhandler;
 
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
+import com.adobe.aio.aem.util.ResourceResolverWrapperFactory;
 import com.day.cq.wcm.api.PageModification.ModificationType;
 import java.net.URL;
 import org.apache.sling.event.jobs.JobManager;
@@ -20,8 +21,8 @@ public class PageDeletedEventHandler extends PageModificationEventHandler {
 
   public PageDeletedEventHandler(JobManager jobManager, URL rootUrl, String imsOrgId,
       OsgiEventMapping osgiEventMapping,
-      ResourceResolverWrapper resourceResolverWrapper) {
+      ResourceResolverWrapperFactory resourceResolverWrapperFactory) {
     super(ModificationType.DELETED, jobManager, rootUrl, imsOrgId,
-        osgiEventMapping, resourceResolverWrapper);
+        osgiEventMapping, resourceResolverWrapperFactory);
   }
 }
