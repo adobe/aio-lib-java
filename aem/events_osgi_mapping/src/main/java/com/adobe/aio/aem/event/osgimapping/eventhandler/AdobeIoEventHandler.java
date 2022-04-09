@@ -14,6 +14,7 @@ package com.adobe.aio.aem.event.osgimapping.eventhandler;
 import com.adobe.aio.aem.event.publish.EventPublishJobConsumer;
 import com.adobe.aio.aem.event.xdm.aem.XdmUtil;
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
+import com.adobe.aio.aem.util.ResourceResolverWrapperFactory;
 import com.adobe.xdm.XdmObject;
 import com.adobe.xdm.common.XdmEvent;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,16 +43,16 @@ public abstract class AdobeIoEventHandler<T extends XdmObject> implements EventH
   private final URL rootUrl;
   private final String imsOrgId;
   private final OsgiEventMapping osgiEventMapping;
-  private final ResourceResolverWrapper resourceResolverWrapper;
+  private final ResourceResolverWrapperFactory resourceResolverWrapperFactory;
 
   protected AdobeIoEventHandler(JobManager jobManager, URL rootUrl, String imsOrgId,
       OsgiEventMapping osgiEventMapping,
-      ResourceResolverWrapper resourceResolverWrapper) {
+      ResourceResolverWrapperFactory resourceResolverWrapperFactory) {
     this.jobManager = jobManager;
     this.rootUrl = rootUrl;
     this.imsOrgId = imsOrgId;
     this.osgiEventMapping = osgiEventMapping;
-    this.resourceResolverWrapper = resourceResolverWrapper;
+    this.resourceResolverWrapperFactory = resourceResolverWrapperFactory;
   }
 
   /**
@@ -65,7 +66,7 @@ public abstract class AdobeIoEventHandler<T extends XdmObject> implements EventH
       ResourceResolverWrapper resourceResolverWrapper);
 
   public void handleEvent(final Event event) {
-    try (resourceResolverWrapper) {
+    try (ResourceResolverWrapper resourceResolverWrapper = resourceResolverWrapperFactory.getWrapper()) {
       if (!EventUtil.isEventLocal(event)) {
         //This should not happen as the event is supposed to be filtered upstream using the `osgiFilter` configuration
         logger.info("This Event `{}` is not local: Adobe I/O will ignore it, "

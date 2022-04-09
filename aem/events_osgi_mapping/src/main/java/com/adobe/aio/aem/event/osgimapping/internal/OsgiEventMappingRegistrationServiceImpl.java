@@ -155,7 +155,7 @@ public class OsgiEventMappingRegistrationServiceImpl implements OsgiEventMapping
         jobManager, eventProviderConfigSupplier.getRootUrl(),
         workspaceSupplier.getWorkspace().getImsOrgId(),
         osgiEventMapping,
-        resourceResolverWrapperFactory.getWrapper());
+        resourceResolverWrapperFactory);
   }
 
   private void addStatus(String eventCode, OsgiEventMappingStatus eventMetadataStatus) {

@@ -12,6 +12,7 @@
 package com.adobe.aio.aem.event.osgimapping.eventhandler;
 
 import com.adobe.aio.aem.util.ResourceResolverWrapper;
+import com.adobe.aio.aem.util.ResourceResolverWrapperFactory;
 import com.adobe.xdm.extensions.aem.OsgiEvent;
 import java.net.URL;
 import java.util.Arrays;
@@ -27,9 +28,9 @@ public class OsgiEventHandler extends AdobeIoEventHandler<OsgiEvent> {
 
   public OsgiEventHandler(JobManager jobManager, URL rootUrl, String imsOrgId,
       OsgiEventMapping osgiEventMapping,
-      ResourceResolverWrapper resourceResolverWrapper) {
+      ResourceResolverWrapperFactory resourceResolverWrapperFactory) {
     super(jobManager, rootUrl, imsOrgId,
-        osgiEventMapping, resourceResolverWrapper);
+        osgiEventMapping, resourceResolverWrapperFactory);
   }
 
   @Override

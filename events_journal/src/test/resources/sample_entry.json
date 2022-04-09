@@ -1,0 +1,9 @@
+{
+  "data": "your event payload",
+  "id": "0b3f509d-d5b5-46e0-8c56-c9902d9d361f",
+  "source": "urn:uuid:508dc3f7-05b0-4cb7-964c-f505a7c72488",
+  "specversion": "1.0",
+  "type": "com.adobe.events.egqa.code1",
+  "datacontenttype": "application/json",
+  "event_id": "b6430251-14ec-454e-b49a-f8d9c41026be"
+}
