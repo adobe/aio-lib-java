@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-106 passing one ResourceResolverWrapperFactory per eventHandler so we have one ResourceResolverWrapper per eventHandler [\#107](https://github.com/adobe/aio-lib-java/pull/107) ([francoisledroff](https://github.com/francoisledroff))
 - GH-96 doc update [\#105](https://github.com/adobe/aio-lib-java/pull/105) ([francoisledroff](https://github.com/francoisledroff))
 
 ## [aio-lib-java-0.0.38](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.38) (2022-04-06)
