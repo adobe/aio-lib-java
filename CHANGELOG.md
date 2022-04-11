@@ -2,7 +2,15 @@
 
 ## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.38...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.40...HEAD)
+
+### 📁 Other pull requests
+
+- GH-106 adding resiliency with retries during event metada registrations \(during bundle bootstrapping\) [\#108](https://github.com/adobe/aio-lib-java/pull/108) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.40](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.40) (2022-04-09)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.38...aio-lib-java-0.0.40)
 
 ### 📁 Other pull requests
 
