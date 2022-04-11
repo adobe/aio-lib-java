@@ -23,6 +23,7 @@ import com.adobe.aio.aem.event.osgimapping.eventhandler.OsgiEventMapping;
 import com.adobe.aio.aem.status.Status;
 import com.adobe.aio.aem.util.ResourceResolverWrapperFactory;
 import com.adobe.aio.aem.workspace.WorkspaceSupplier;
+import java.time.Instant;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -30,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import org.apache.sling.event.jobs.JobManager;
@@ -53,7 +55,10 @@ import org.slf4j.LoggerFactory;
 )
 public class OsgiEventMappingRegistrationServiceImpl implements OsgiEventMappingRegistrationService {
 
+  private final static int TIME_OUT_MILLISECONDS = 60000;
   private final Logger log = LoggerFactory.getLogger(getClass());
+  private final ScheduledExecutorService scheduledExecutorService =
+      Executors.newScheduledThreadPool(12);
   private final Map<String, OsgiEventMappingStatus> osgiEventMappingStatusByEventCode = new ConcurrentHashMap<>();
 
   /**
@@ -99,11 +104,11 @@ public class OsgiEventMappingRegistrationServiceImpl implements OsgiEventMapping
       final OsgiEventMappingSupplier osgiEventMappingSupplier) {
     eventMetadataStatusSupplier.registerEventMetadata(
             osgiEventMappingSupplier.getConfiguredEventMetadata());
-    // making this async and with delay in order to avoid workspace config resolution issue
+    // making this async with retry and with delay in order to avoid workspace config resolution issue
     // it looks like bind is called before activation
-    Executors.newSingleThreadScheduledExecutor().schedule(
-        () -> this.registerSlingEventHandler(osgiEventMappingSupplier.getOsgiEventMapping()),
-        (ThreadLocalRandom.current().nextInt(3000, 4000)),
+    scheduledExecutorService.schedule(
+        () -> this.registerSlingEventHandlerWithRetry(osgiEventMappingSupplier.getOsgiEventMapping()),
+        (ThreadLocalRandom.current().nextInt(500, 1000)),
         TimeUnit.MILLISECONDS);
 
     log.debug("binding Adobe I/O Events' Osgi Event Mapping : {} ",
@@ -117,7 +122,28 @@ public class OsgiEventMappingRegistrationServiceImpl implements OsgiEventMapping
         osgiEventMappingSupplier.getConfiguredEventMetadata());
   }
 
-  private void registerSlingEventHandler(OsgiEventMapping osgiEventMapping) {
+  public void registerSlingEventHandlerWithRetry(OsgiEventMapping osgiEventMapping) {
+    long start = Instant.now().toEpochMilli();
+    boolean isUp = false;
+    try {
+      while (!isUp &&  (Instant.now().toEpochMilli()-start< TIME_OUT_MILLISECONDS)) {
+        OsgiEventMappingStatus osgiEventMappingStatus = registerSlingEventHandler(
+            osgiEventMapping);
+        osgiEventMappingStatusByEventCode.put(osgiEventMapping.getEventCode(),
+            osgiEventMappingStatus);
+        isUp = osgiEventMappingStatus.isUp();
+        Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 2000));
+      }
+    } catch (InterruptedException e) {
+      log.error("Adobe I/O Events' OSGI Handler Registration got interrupted : `{}",
+          e.getMessage(), e);
+      osgiEventMappingStatusByEventCode.put(osgiEventMapping.getEventCode(),
+          new OsgiEventMappingStatus(osgiEventMapping, e));
+    }
+  }
+
+
+  private OsgiEventMappingStatus registerSlingEventHandler(OsgiEventMapping osgiEventMapping) {
     try {
       // we don't want to register sling event handlers if the config is invalid
       workspaceSupplier.getWorkspace().validateAll();
@@ -142,11 +168,10 @@ public class OsgiEventMappingRegistrationServiceImpl implements OsgiEventMapping
       log.info("Registered a new Adobe I/O Events' OSGI Event Handler ({}) "
               + "with Adobe I/O Event Metadata: {}", eventHandler.getClass().getName(),
           osgiEventMapping);
-      this.addStatus(osgiEventMapping.getEventCode(),
-          new OsgiEventMappingStatus(osgiEventMapping, null));
+      return new OsgiEventMappingStatus(osgiEventMapping, null);
     } catch (Exception e) {
       log.error("Adobe I/O Events' OSGI Handler Registration failed: `{}", e.getMessage(), e);
-      this.addStatus(osgiEventMapping.getEventCode(), new OsgiEventMappingStatus(null, e));
+      return new OsgiEventMappingStatus(osgiEventMapping, e);
     }
   }
 

@@ -17,11 +17,13 @@ import com.adobe.aio.aem.event.management.EventMetadataSupplier;
 import com.adobe.aio.aem.event.management.EventProviderRegistrationService;
 import com.adobe.aio.aem.status.Status;
 import com.adobe.aio.event.management.model.EventMetadata;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import org.osgi.framework.BundleContext;
@@ -39,7 +41,10 @@ import org.slf4j.LoggerFactory;
     })
 public class EventMetadataRegistrationServiceImpl implements EventMetadataRegistrationService {
 
+  private final static int TIME_OUT_MILLISECONDS = 60000;
   private final Logger log = LoggerFactory.getLogger(getClass());
+  private final ScheduledExecutorService scheduledExecutorService =
+      Executors.newScheduledThreadPool(12);
   private final Map<String, EventMetadataStatus> eventMetadataStatusByEventCode = new ConcurrentHashMap<>();
 
   /**
@@ -69,28 +74,46 @@ public class EventMetadataRegistrationServiceImpl implements EventMetadataRegist
 
   @Override
   public void registerEventMetadata(EventMetadata configuredEventMetadata) {
-    // making this async and with delay in order to avoid workspace config resolution issue
+    // making this async, with retry and with delay in order to avoid workspace config resolution issue
     // it looks like bind is called before activation
-    Executors.newSingleThreadScheduledExecutor().schedule(
-        () -> this.registerEventMetadataSync(configuredEventMetadata),
-        (ThreadLocalRandom.current().nextInt(3000, 4000)),
+    scheduledExecutorService.schedule(
+        () -> this.registerEventMetadataWithRetry(configuredEventMetadata),
+        (ThreadLocalRandom.current().nextInt(500, 1000)),
         TimeUnit.MILLISECONDS);
   }
 
-  private void registerEventMetadataSync(EventMetadata configuredEventMetadata) {
+  public void registerEventMetadataWithRetry(EventMetadata configuredEventMetadata) {
+    long start = Instant.now().toEpochMilli();
+    boolean isUp = false;
+    try {
+      while (!isUp &&  (Instant.now().toEpochMilli()-start< TIME_OUT_MILLISECONDS)) {
+        EventMetadataStatus eventMetadataStatus = registerEventMetadataSync(
+            configuredEventMetadata);
+        eventMetadataStatusByEventCode.put(configuredEventMetadata.getEventCode(),
+            eventMetadataStatus);
+        isUp = eventMetadataStatus.isUp();
+        Thread.sleep(ThreadLocalRandom.current().nextInt(1000, 2000));
+      }
+    } catch (InterruptedException e) {
+      log.error("Adobe I/O Events Metadata Registration got interrupted : `{}",
+          e.getMessage(), e);
+      eventMetadataStatusByEventCode.put(configuredEventMetadata.getEventCode(),
+          new EventMetadataStatus(configuredEventMetadata, null, e));
+    }
+  }
+
+  private EventMetadataStatus registerEventMetadataSync(EventMetadata configuredEventMetadata) {
     EventMetadata registeredEventMetadata = null;
     try {
       registeredEventMetadata =
           eventProviderRegistrationService.registerEventMetadata(configuredEventMetadata);
-      this.addStatus(configuredEventMetadata.getEventCode(),
-          new EventMetadataStatus(configuredEventMetadata, registeredEventMetadata));
       log.info("Adobe I/O Events Metadata Registration completed:"
           + " registered event metadata `{}`", registeredEventMetadata);
+      return new EventMetadataStatus(configuredEventMetadata, registeredEventMetadata);
     } catch (Exception e) {
-      this.addStatus(configuredEventMetadata.getEventCode(),
-          new EventMetadataStatus(configuredEventMetadata, registeredEventMetadata, e));
       log.error("Adobe I/O Events Metadata Registration processing failed: `{}",
           e.getMessage(), e);
+      return new EventMetadataStatus(configuredEventMetadata, registeredEventMetadata, e);
     }
   }
 
