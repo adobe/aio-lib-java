@@ -6,7 +6,7 @@ It also holds the core `Adobe Developer Console` Workspace Builder.
 
 ## Workspace
 
-This library holds a [`Workspace`](./src/main/java/com/adobe/aio/Workspace.java) POJO modeling
+This library holds a [`Workspace`](./src/main/java/com/adobe/aio/workspace/Workspace.java) POJO modeling
 your [Adobe Developer Console Project Workspace](https://www.adobe.io/apis/experienceplatform/console/docs.html#!AdobeDocs/adobeio-console/master/projects.md),
 
 To get you started quickly use a `.properties` file,
