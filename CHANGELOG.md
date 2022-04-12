@@ -1,8 +1,8 @@
 # 📑 Changelog
 
-## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+## [aio-lib-java-0.0.42](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.42) (2022-04-11)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.40...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.40...aio-lib-java-0.0.42)
 
 ### 📁 Other pull requests
 
