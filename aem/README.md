@@ -9,6 +9,8 @@ This project is a multi-modules project hosting Adobe I/O Events and AEM connect
 * [`aio-aem-events-publish`](./events_ingress_aem) a Java OSGI bundle wrapping [`aio-lib-java-events-ingress`](../events_ingress)
 * [`aio-aem-events-osgi-mapping`](./events_osgi_mapping) a Java OSGI bundle mapping osgi events to Adobe I/O Events 
 
+To get started refer to our guide at https://developer.adobe.com/events/docs/guides/using/aem/ 
+
 ## Builds
 
 This project is a [maven](https://maven.apache.org/) multi-module project.
