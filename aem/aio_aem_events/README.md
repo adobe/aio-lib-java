@@ -8,6 +8,8 @@ configurations, enabling AEM and Adobe I/O Events integration.
 This package expects your Adobe Developer Console defined with an OSGI configuration
 see [aio-aem-core documentation](../core_aem/README.md)
 
+To get started refer to our guide at https://developer.adobe.com/events/docs/guides/using/aem/
+
 ## Status Checks
 
 This packages holds bundles that come with a few status endpoints
