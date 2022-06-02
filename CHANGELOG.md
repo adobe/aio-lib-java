@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.42...HEAD)
+
+### 📁 Other pull requests
+
+- Updates to Feign Header Processing [\#77](https://github.com/adobe/aio-lib-java/pull/77) ([bstopp](https://github.com/bstopp))
+
 ## [aio-lib-java-0.0.42](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.42) (2022-04-11)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.40...aio-lib-java-0.0.42)
