@@ -18,10 +18,6 @@ import java.util.Set;
 
 public class Registration {
 
-  public enum Type {
-    USER, APP
-  }
-
   public enum Status {
     ACCEPTED,
     DELETED,
@@ -56,9 +52,6 @@ public class Registration {
 
   @JsonProperty("status")
   private Status status;
-
-  @JsonProperty("type")
-  private Type type;
 
   @JsonProperty("integration_status")
   private IntegrationStatus integrationStatus;
@@ -107,10 +100,6 @@ public class Registration {
     return this.status;
   }
 
-  public Type getType() {
-    return type;
-  }
-
   public IntegrationStatus getIntegrationStatus() {
     return integrationStatus;
   }
@@ -147,7 +136,6 @@ public class Registration {
         Objects.equals(eventsOfInterests, that.eventsOfInterests) &&
         Objects.equals(webhookUrl, that.webhookUrl) &&
         status == that.status &&
-        type == that.type &&
         integrationStatus == that.integrationStatus &&
         deliveryType == that.deliveryType &&
         Objects.equals(journalUrl, that.journalUrl) &&
@@ -160,7 +148,7 @@ public class Registration {
   public int hashCode() {
     return Objects
         .hash(registrationId, clientId, name, description, eventsOfInterests,
-            webhookUrl, status, type, integrationStatus, deliveryType, journalUrl, traceUrl,
+            webhookUrl, status, integrationStatus, deliveryType, journalUrl, traceUrl,
             createdDate, updatedDate);
   }
 
@@ -174,7 +162,6 @@ public class Registration {
         ", deliveryType=" + deliveryType +
         ", clientId='" + clientId + '\'' +
         ", status=" + status +
-        ", type=" + type +
         ", integrationStatus=" + integrationStatus +
         ", webhookUrl='" + webhookUrl + '\'' +
         ", journalUrl='" + journalUrl + '\'' +
