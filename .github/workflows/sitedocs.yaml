@@ -5,7 +5,7 @@ concurrency: ci-aio-lib-java
 on:
   workflow_dispatch:
   workflow_run:
-    workflows: ["Tag & Release"]
+    workflows: ["Release Deploy"]
     types:
       - completed
 
@@ -62,7 +62,7 @@ jobs:
         run: |
           git config user.name "GitHub Actions"
           git config user.email noreply@github.com
-          git add docs/_apidocs
+          git add docs/apidocs
           git add docs/index.md
           git commit -m 'Updating Docs.'
           git push

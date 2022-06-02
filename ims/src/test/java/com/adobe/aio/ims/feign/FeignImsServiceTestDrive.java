@@ -46,12 +46,6 @@ public class FeignImsServiceTestDrive {
 
     // here is one way you can build the related IMS Feign JWT Auth Interceptor
     RequestInterceptor authInterceptor = JWTAuthInterceptor.builder()
-        .imsService(imsService)
-        .apiKey(workspace.getApiKey())
-        .build();
-
-    // or you could also do
-    RequestInterceptor authInterceptor2 = JWTAuthInterceptor.builder()
         .workspace(workspace)
         .build();
   }

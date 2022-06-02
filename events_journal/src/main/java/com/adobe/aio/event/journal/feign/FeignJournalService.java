@@ -12,6 +12,7 @@
 package com.adobe.aio.event.journal.feign;
 
 import com.adobe.aio.event.journal.JournalService;
+import com.adobe.aio.feign.AIOHeaderInterceptor;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.journal.api.JournalApi;
@@ -27,6 +28,7 @@ public class FeignJournalService implements JournalService {
   private final JournalApi journalApi;
   private final String imsOrgId;
   private final RequestInterceptor authInterceptor;
+  private final RequestInterceptor aioHeaderInterceptor;
 
   public FeignJournalService(final Workspace workspace, final String journalUrl) {
     if (StringUtils.isEmpty(journalUrl)) {
@@ -42,9 +44,11 @@ public class FeignJournalService implements JournalService {
     workspace.validateWorkspaceContext();
     this.imsOrgId = workspace.getImsOrgId();
     authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
+    aioHeaderInterceptor = AIOHeaderInterceptor.builder().workspace(workspace).build();
     this.journalApi = FeignUtil.getBaseBuilder()
         .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .requestInterceptor(authInterceptor)
+        .requestInterceptor(aioHeaderInterceptor)
         .target(JournalApi.class, journalUrl);
   }
 
@@ -73,6 +77,7 @@ public class FeignJournalService implements JournalService {
     JournalApi linkJournalApi = FeignUtil.getBaseBuilder()
         .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .requestInterceptor(authInterceptor)
+        .requestInterceptor(aioHeaderInterceptor)
         .target(JournalApi.class, linkUrl);
     return linkJournalApi.get(this.imsOrgId);
   }

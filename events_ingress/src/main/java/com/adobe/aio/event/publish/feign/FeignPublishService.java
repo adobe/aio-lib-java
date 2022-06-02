@@ -15,6 +15,7 @@ import com.adobe.aio.event.publish.PublishService;
 import com.adobe.aio.event.publish.api.PublishApi;
 import com.adobe.aio.event.publish.model.CloudEvent;
 import com.adobe.aio.exception.AIOException;
+import com.adobe.aio.feign.AIOHeaderInterceptor;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.util.feign.FeignUtil;
 import com.adobe.aio.util.JacksonUtil;
@@ -40,6 +41,7 @@ public class FeignPublishService implements PublishService {
     RequestInterceptor authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
     this.publishApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
+        .requestInterceptor(AIOHeaderInterceptor.builder().workspace(workspace).build())
         .target(PublishApi.class, apiUrl);
   }
 

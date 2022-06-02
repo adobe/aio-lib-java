@@ -11,10 +11,6 @@
  */
 package com.adobe.aio.ims.feign;
 
-import static com.adobe.aio.util.Constants.API_KEY_HEADER;
-import static com.adobe.aio.util.Constants.AUTHORIZATION_HEADER;
-import static com.adobe.aio.util.Constants.BEARER_PREFIX;
-
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.model.AccessToken;
@@ -22,27 +18,22 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import org.apache.commons.lang3.StringUtils;
 
+import static com.adobe.aio.util.Constants.*;
+
 public class JWTAuthInterceptor implements RequestInterceptor {
 
   private volatile Long expirationTimeMillis;
   private volatile AccessToken accessToken;
 
   private final ImsService imsService;
-  private final String apiKey;
 
-  private JWTAuthInterceptor(final ImsService imsService, final String apiKey) {
+  private JWTAuthInterceptor(final ImsService imsService) {
     this.imsService = imsService;
-    this.apiKey = apiKey;
   }
 
   @Override
   public void apply(RequestTemplate requestTemplate) {
     applyAuthorization(requestTemplate);
-    if (requestTemplate.headers().containsKey(API_KEY_HEADER)) {
-      return;
-    } else if (!StringUtils.isEmpty(apiKey)) {
-      requestTemplate.header(API_KEY_HEADER, apiKey);
-    }
   }
 
   public boolean isUp(){
@@ -59,7 +50,7 @@ public class JWTAuthInterceptor implements RequestInterceptor {
       requestTemplate.header(AUTHORIZATION_HEADER, BEARER_PREFIX + getAccessToken());
     }
   }
-
+  
   private synchronized void updateAccessToken() {
     this.accessToken = imsService.getJwtExchangeAccessToken();
     this.expirationTimeMillis = System.currentTimeMillis() + accessToken.getExpiresIn();
@@ -80,29 +71,17 @@ public class JWTAuthInterceptor implements RequestInterceptor {
   public static class Builder {
 
     private ImsService imsService;
-    private String apiKey;
 
     private Builder() {
     }
 
     public Builder workspace(Workspace workspace) {
       this.imsService = ImsService.builder().workspace(workspace).build();
-      this.apiKey = workspace.getApiKey();
-      return this;
-    }
-
-    public Builder imsService(ImsService imsService) {
-      this.imsService = imsService;
-      return this;
-    }
-
-    public Builder apiKey(String apiKey) {
-      this.apiKey = apiKey;
       return this;
     }
 
     public JWTAuthInterceptor build() {
-      return new JWTAuthInterceptor(imsService, apiKey);
+      return new JWTAuthInterceptor(imsService);
     }
   }
 

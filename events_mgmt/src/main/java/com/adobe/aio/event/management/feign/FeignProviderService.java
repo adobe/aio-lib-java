@@ -14,6 +14,7 @@ package com.adobe.aio.event.management.feign;
 import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 
 import com.adobe.aio.event.management.ProviderService;
+import com.adobe.aio.feign.AIOHeaderInterceptor;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.api.EventMetadataApi;
@@ -49,12 +50,16 @@ public class FeignProviderService implements ProviderService {
     }
     workspace.validateWorkspaceContext();
     RequestInterceptor authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
+    RequestInterceptor aioHeaderInterceptor = AIOHeaderInterceptor.builder().workspace(workspace).build();
+
     this.providerApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
+        .requestInterceptor(aioHeaderInterceptor)
         .errorDecoder(new ConflictErrorDecoder())
         .target(ProviderApi.class, apiUrl);
     this.eventMetadataApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
+        .requestInterceptor(aioHeaderInterceptor)
         .target(EventMetadataApi.class, apiUrl);
     this.workspace = workspace;
   }
