@@ -89,6 +89,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+    <!--suppress UnresolvedMavenProperty -->
     <license.header.path>${maven.multiModuleProjectDirectory}/copyright_header.txt</license.header.path>
 
     <jacoco.version>0.8.3</jacoco.version> <!-- See https://github.com/jacoco/jacoco/issues/896#issuecomment-500944865 -->

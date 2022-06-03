@@ -11,6 +11,7 @@
  */
 package com.adobe.aio.event.management.model;
 
+import com.adobe.aio.util.Constants;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -40,8 +41,8 @@ public class ProviderInputModel {
    * Optional provider providerMetadataId/type when creating/POST-ing a new provider.
    * Note it will be ignored when updating/PUT-ing it.
    * If none is provided our API will assume you want to create a `Custom Events` Provider
-   * and hence will use the associated providerMetadataId.
-   * @see com.adobe.util.Constants#CUSTOM_EVENTS_PROVIDER_METADATA_ID
+   * and hence will use the associated CUSTOM_EVENTS_PROVIDER_METADATA_ID.
+   * @see com.adobe.aio.util.Constants#CUSTOM_EVENTS_PROVIDER_METADATA_ID
    */
   @JsonProperty("provider_metadata")
   private final String providerMetadataId;
@@ -63,10 +64,11 @@ public class ProviderInputModel {
       throw new IllegalArgumentException(
           "ProviderUpdateModel is missing a label");
     }
+    this.providerMetadataId = (StringUtils.isEmpty(providerMetadataId)) ?
+        Constants.CUSTOM_EVENTS_PROVIDER_METADATA_ID : providerMetadataId;
     this.label = label;
     this.description = description;
     this.docsUrl = docsUrl;
-    this.providerMetadataId = providerMetadataId;
     this.instanceId = instanceId;
   }
 
