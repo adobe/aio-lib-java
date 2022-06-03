@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-110 removing the deprecated Registration Type [\#111](https://github.com/adobe/aio-lib-java/pull/111) ([francoisledroff](https://github.com/francoisledroff))
 - Updates to Feign Header Processing [\#77](https://github.com/adobe/aio-lib-java/pull/77) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-java-0.0.42](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.42) (2022-04-11)
