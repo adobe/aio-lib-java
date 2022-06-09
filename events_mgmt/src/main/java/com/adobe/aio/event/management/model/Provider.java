@@ -32,6 +32,9 @@ public class Provider {
   @JsonProperty("description")
   private String description;
 
+  @JsonProperty("instance_id")
+  protected String instanceId;
+
   @JsonProperty("source")
   private String source;
 
@@ -73,6 +76,16 @@ public class Provider {
   public String getDescription() {
     return description;
   }
+
+  /**
+   * The instanceId of this Events Provider, this can be null/NA
+   *
+   * @return instanceId
+   **/
+  public String getInstanceId() {
+    return instanceId;
+  }
+
 
   /**
    * A URI-reference (this provider id prefixed with &#x60;urn:uuid:&#x60;), identifying the context
@@ -129,6 +142,7 @@ public class Provider {
     return Objects.equals(id, provider.id) &&
         Objects.equals(label, provider.label) &&
         Objects.equals(description, provider.description) &&
+        Objects.equals(instanceId, provider.instanceId) &&
         Objects.equals(source, provider.source) &&
         Objects.equals(docsUrl, provider.docsUrl) &&
         Objects.equals(publisher, provider.publisher) &&
@@ -138,7 +152,7 @@ public class Provider {
   @Override
   public int hashCode() {
     return Objects
-        .hash(id, label, description, source, docsUrl, publisher, embeddedEventMetadata);
+        .hash(id, label, description, instanceId, source, docsUrl, publisher, embeddedEventMetadata);
   }
 
   @Override
@@ -147,6 +161,7 @@ public class Provider {
         "id='" + id + '\'' +
         ", label='" + label + '\'' +
         ", description='" + description + '\'' +
+        ", instanceId='" + instanceId + '\'' +
         ", source='" + source + '\'' +
         ", docsUrl='" + docsUrl + '\'' +
         ", publisher='" + publisher + '\'' +
