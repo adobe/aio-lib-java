@@ -19,10 +19,13 @@ import java.security.PrivateKey;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TestUtil {
 
   public static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
+  private static final Logger logger = LoggerFactory.getLogger(TestUtil.class);
 
   private TestUtil() {
   }
@@ -41,6 +44,7 @@ public class TestUtil {
         configMap.get(Workspace.PROJECT_ID),
         configMap.get(Workspace.TECHNICAL_ACCOUNT_ID)
     )) {
+      logger.info("loading test Workspace from systemEnv()");
       PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build();
       return Workspace.builder()
           .systemEnv()
@@ -56,6 +60,7 @@ public class TestUtil {
 
   public static Workspace getTestWorkspace(String propertyFileClassPath) {
     try {
+      logger.info("loading test Workspace from classpath {}",propertyFileClassPath);
       Properties prop = FileUtil.readPropertiesFromClassPath(DEFAULT_TEST_PROPERTIES);
       PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
       return Workspace.builder()
