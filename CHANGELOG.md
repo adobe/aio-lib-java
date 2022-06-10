@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.44...HEAD)
+
+### 📁 Other pull requests
+
+- GH-112 adding the Provider model's instanceId [\#113](https://github.com/adobe/aio-lib-java/pull/113) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-0.0.44](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.44) (2022-06-03)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.42...aio-lib-java-0.0.44)
