@@ -18,9 +18,11 @@ on:
       - main
 
 jobs:
-  verify:
+  deployment:
     runs-on: ubuntu-latest
     environment: aio_stage
+  verify:
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: true
 
