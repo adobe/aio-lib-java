@@ -25,6 +25,14 @@ jobs:
       fail-fast: true
 
     steps:
+
+      - name: "Testing env and secrets"
+        run: echo "testing env values $env1 $env2 $env3"
+        env:
+          env1: value1
+          env2: ${{ secrets.env2 }}
+          env3: ${{ secrets.env3 }}
+
       # Check out Git repository
       - name: Checkout code
         uses: actions/checkout@v3
@@ -36,6 +44,24 @@ jobs:
           distribution: 'temurin'
           java-version: 11
           cache: maven
+       
+      # listing env var
+      - name: listing env
+        run: env
+        env:
+          aio_ims_url: ${{ secrets.aio_ims_url }}
+          aio_meta_scopes: ${{ secrets.aio_meta_scopes }}
+          aio_ims_org_id: ${{ secrets.aio_ims_org_id }}
+          aio_consumer_org_id: ${{ secrets.aio_consumer_org_id }}
+          aio_project_id: ${{ secrets.aio_project_id }}
+          aio_workspace_id: ${{ secrets.aio_workspace_id }}
+          aio_credential_id: ${{ secrets.aio_credential_id }}
+          aio_technical_account_id: ${{ secrets.aio_technical_account_id }}
+          aio_api_key: ${{ secrets.aio_api_key }}
+          aio_client_secret: ${{ secrets.aio_client_secret }}
+          aio_encoded_pkcs8: ${{ secrets.aio_encoded_pkcs8 }}
+          aio_api_url: ${{ secrets.aio_api_url }}
+          aio_publish_url: ${{ secrets.aio_publish_url }}    
 
       # Build & Test
       - name: Stage Integration Test with Maven
