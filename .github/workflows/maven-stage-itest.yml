@@ -16,6 +16,21 @@ on:
   pull_request:
     branches:
       - main
+env:
+  aio_ims_url: ${{ secrets.AIO_IMS_URL }}
+  aio_meta_scopes: ${{ secrets.aio_meta_scopes }}
+  aio_ims_org_id: ${{ secrets.aio_ims_org_id }}
+  aio_consumer_org_id: ${{ secrets.aio_consumer_org_id }}
+  aio_project_id: ${{ secrets.aio_project_id }}
+  aio_workspace_id: ${{ secrets.aio_workspace_id }}
+  aio_credential_id: ${{ secrets.aio_credential_id }}
+  aio_technical_account_id: ${{ secrets.aio_technical_account_id }}
+  aio_api_key: ${{ secrets.aio_api_key }}
+  aio_client_secret: ${{ secrets.aio_client_secret }}
+  aio_encoded_pkcs8: ${{ secrets.aio_encoded_pkcs8 }}
+  aio_api_url: ${{ secrets.aio_api_url }}
+  aio_publish_url: ${{ secrets.aio_publish_url }}    
+
 
 jobs:
   itest:
@@ -49,7 +64,7 @@ jobs:
       - name: listing env
         run: env
         env:
-          aio_ims_url: ${{ secrets.aio_ims_url }}
+          aio_ims_url: ${{ secrets.AIO_IMS_URL }}
           aio_meta_scopes: ${{ secrets.aio_meta_scopes }}
           aio_ims_org_id: ${{ secrets.aio_ims_org_id }}
           aio_consumer_org_id: ${{ secrets.aio_consumer_org_id }}
