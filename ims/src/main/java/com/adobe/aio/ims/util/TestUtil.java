@@ -31,6 +31,8 @@ public class TestUtil {
   }
 
   public static Workspace getDefaultTestWorkspace() {
+    logger.info("aio_test:",System.getenv("aio_test"));
+    logger.info("aio_ims_url:",System.getenv("aio_ims_url"));
     Map<String, String> configMap = System.getenv();
     if (StringUtils.isNoneBlank(
         configMap.get(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
