@@ -12,6 +12,7 @@
 package com.adobe.aio.ims.feign;
 
 import com.adobe.aio.ims.ImsService;
+import com.adobe.aio.ims.util.TestUtil;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
@@ -34,7 +35,6 @@ public class FeignImsServiceTestDrive {
     ImsService imsService = ImsService.builder().workspace(workspace).build(); // [3]
 
     AccessToken accessToken = imsService.getJwtExchangeAccessToken(); // [4]
-
 
     // [1] Build your PrivateKey looking up the key indicated by you System Environment variables
     // [2] build your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace)
@@ -59,18 +59,12 @@ public class FeignImsServiceTestDrive {
 
   public static void main(String[] args) {
     try {
-      PrivateKey privateKey = new PrivateKeyBuilder().configPath(DEFAULT_TEST_PROPERTIES).build();
-
-      Workspace workspace = Workspace.builder()
-          .propertiesPath(DEFAULT_TEST_PROPERTIES)
-          .privateKey(privateKey)
-          .build();
+      Workspace workspace = TestUtil.getDefaultTestWorkspace();
       ImsService imsService = ImsService.builder().workspace(workspace).build();
 
       AccessToken accessToken = imsService.getJwtExchangeAccessToken();
-      logger.info("accessToken: {}", accessToken.getAccessToken());
-      logger.info(imsService.validateAccessToken(accessToken.getAccessToken()).toString());
-
+      logger.info("accessToken: {}", accessToken);
+      logger.info("accessToken validated: {}:",imsService.validateAccessToken(accessToken.getAccessToken()));
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
