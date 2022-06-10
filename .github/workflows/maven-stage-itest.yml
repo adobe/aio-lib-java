@@ -10,7 +10,7 @@
 # governing permissions and limitations under the License.
 #
 
-name: Build & Verify
+name: Stage Integration Test
 
 on:
   pull_request:
