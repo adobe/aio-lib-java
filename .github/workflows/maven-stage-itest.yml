@@ -39,6 +39,7 @@ jobs:
 
       # Build & Test
       - name: Stage Integration Test with Maven
+        run: mvn verify -Pitest
         with:
           aio_ims_url: ${{ secrets.aio_ims_url }}
           aio_meta_scopes: ${{ secrets.aio_meta_scopes }}
@@ -67,7 +68,7 @@ jobs:
           aio_encoded_pkcs8: ${{ secrets.aio_encoded_pkcs8 }}
           aio_api_url: ${{ secrets.aio_api_url }}
           aio_publish_url: ${{ secrets.aio_publish_url }}
-        run: mvn verify -Pitest
+        
 
 
 
