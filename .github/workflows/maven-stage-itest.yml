@@ -18,9 +18,9 @@ on:
       - main
 
 jobs:
-  integration_test:
-    environment: aio_stage
+  itest:
     runs-on: ubuntu-latest
+    environment: aio_stage
     strategy:
       fail-fast: true
 
