@@ -11,7 +11,7 @@ Example:
 <dependency>
     <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java-ims</artifactId>
-    <version>0.0.44</version>
+    <version>0.0.46</version>
 </dependency>
 ```
 
