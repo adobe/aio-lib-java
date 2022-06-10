@@ -26,7 +26,7 @@ public class FeignImsServiceIntegrationTest {
 
   @Test
   public void getAndValidateJwtExchangeAccessToken() {
-    Workspace workspace = TestUtil.getDefaultTestWorkspace();
+    Workspace workspace = TestUtil.getSystemEnvWorkspace();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     AccessToken accessToken = imsService.getJwtExchangeAccessToken();
     logger.info("JWT Exchange token flow complete");

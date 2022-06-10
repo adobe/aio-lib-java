@@ -44,18 +44,22 @@ public class TestUtil {
         configMap.get(Workspace.PROJECT_ID),
         configMap.get(Workspace.TECHNICAL_ACCOUNT_ID)
     )) {
-      logger.info("loading test Workspace from systemEnv()");
-      PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build();
-      return Workspace.builder()
-          .systemEnv()
-          .privateKey(privateKey)
-          .build();
+      return getSystemEnvWorkspace();
     } else {
       /**
        * WARNING: don't push back your workspace secrets to github
        */
       return getTestWorkspace(DEFAULT_TEST_PROPERTIES);
     }
+  }
+
+  public static Workspace getSystemEnvWorkspace() {
+    logger.info("loading test Workspace from systemEnv()");
+    PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build();
+    return Workspace.builder()
+        .systemEnv()
+        .privateKey(privateKey)
+        .build();
   }
 
   public static Workspace getTestWorkspace(String propertyFileClassPath) {
