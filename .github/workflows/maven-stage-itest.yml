@@ -26,8 +26,8 @@ jobs:
 
     steps:
 
-      - name: "Testing env and secrets"
-        run: echo "testing env values $env1 $env2 $env3"
+      - name: "Testing env1 env2 env3 and secrets"
+        run: env
         env:
           env1: value1
           env2: ${{ secrets.env2 }}
