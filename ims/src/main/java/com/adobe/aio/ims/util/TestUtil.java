@@ -31,22 +31,19 @@ public class TestUtil {
   }
 
   public static Workspace getDefaultTestWorkspace() {
-    logger.info("aio_test:",System.getenv("aio_test"));
-    logger.info("aio_ims_url:",System.getenv("aio_ims_url"));
-    Map<String, String> configMap = System.getenv();
+    Properties systemProperties = System.getProperties();
     if (StringUtils.isNoneBlank(
-        configMap.get(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
-        configMap.get(Workspace.API_KEY),
-        configMap.get(Workspace.WORKSPACE_ID),
-        configMap.get(Workspace.CLIENT_SECRET),
-        configMap.get(Workspace.CONSUMER_ORG_ID),
-        configMap.get(Workspace.CREDENTIAL_ID),
-        configMap.get(Workspace.IMS_ORG_ID),
-        configMap.get(Workspace.META_SCOPES),
-        configMap.get(Workspace.PROJECT_ID),
-        configMap.get(Workspace.TECHNICAL_ACCOUNT_ID)
-    )) {
-      return getSystemEnvWorkspace();
+        systemProperties.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
+        systemProperties.getProperty(Workspace.API_KEY),
+        systemProperties.getProperty(Workspace.WORKSPACE_ID),
+        systemProperties.getProperty(Workspace.CLIENT_SECRET),
+        systemProperties.getProperty(Workspace.CONSUMER_ORG_ID),
+        systemProperties.getProperty(Workspace.CREDENTIAL_ID),
+        systemProperties.getProperty(Workspace.IMS_ORG_ID),
+        systemProperties.getProperty(Workspace.META_SCOPES),
+        systemProperties.getProperty(Workspace.PROJECT_ID),
+        systemProperties.getProperty(Workspace.TECHNICAL_ACCOUNT_ID))) {
+      return getSystemPropertiesWorkspace();
     } else {
       /**
        * WARNING: don't push back your workspace secrets to github
@@ -55,11 +52,11 @@ public class TestUtil {
     }
   }
 
-  public static Workspace getSystemEnvWorkspace() {
-    logger.info("loading test Workspace from systemEnv()");
-    PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build();
+  public static Workspace getSystemPropertiesWorkspace() {
+    logger.info("loading test Workspace from JVM System Properties");
+    PrivateKey privateKey = new PrivateKeyBuilder().encodedPkcs8Key(System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8)).build();
     return Workspace.builder()
-        .systemEnv()
+        .properties(System.getProperties())
         .privateKey(privateKey)
         .build();
   }

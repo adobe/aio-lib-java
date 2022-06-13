@@ -330,7 +330,7 @@ public class Workspace {
               .orElse(readPropertiesFromClassPath(propertiesPath)));
     }
 
-    public Builder properties(final Properties properties) throws IOException {
+    public Builder properties(final Properties properties)  {
       return configMap(getMapFromProperties(properties));
     }
 
