@@ -16,6 +16,7 @@ import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.ims.util.TestUtil;
 import com.adobe.aio.workspace.Workspace;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -27,8 +28,15 @@ public class FeignImsServiceIntegrationTest {
 
   @Test
   public void getAndValidateJwtExchangeAccessToken() {
-    logger.warn("param1 : ", System.getProperty("param1"));
-    logger.warn("param2 : ", System.getProperty("param2"));
+    logger.warn("param1 system property: ", System.getProperty("param1"));
+    logger.warn("param2 system property: ", System.getProperty("param2"));
+    logger.warn("param1 system property present: ", !StringUtils.isBlank(System.getProperty("param1")));
+    logger.warn("param2 system property present: ", !StringUtils.isBlank(System.getProperty("param2")));
+    logger.warn("param1 env property: ", System.getenv("param1"));
+    logger.warn("param2 env property: ", System.getenv("param2"));
+    logger.warn("param1 env property present: ",  !StringUtils.isBlank(System.getenv("param1")));
+    logger.warn("param2 env property present: ", !StringUtils.isBlank(System.getenv("param2")));
+
 
     Workspace workspace = TestUtil.getDefaultTestWorkspace();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
