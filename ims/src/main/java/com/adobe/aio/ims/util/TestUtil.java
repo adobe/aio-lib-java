@@ -31,18 +31,17 @@ public class TestUtil {
   }
 
   public static Workspace getDefaultTestWorkspace() {
-    Properties systemProperties = System.getProperties();
     if (StringUtils.isNoneBlank(
-        systemProperties.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
-        systemProperties.getProperty(Workspace.API_KEY),
-        systemProperties.getProperty(Workspace.WORKSPACE_ID),
-        systemProperties.getProperty(Workspace.CLIENT_SECRET),
-        systemProperties.getProperty(Workspace.CONSUMER_ORG_ID),
-        systemProperties.getProperty(Workspace.CREDENTIAL_ID),
-        systemProperties.getProperty(Workspace.IMS_ORG_ID),
-        systemProperties.getProperty(Workspace.META_SCOPES),
-        systemProperties.getProperty(Workspace.PROJECT_ID),
-        systemProperties.getProperty(Workspace.TECHNICAL_ACCOUNT_ID))) {
+        System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
+        System.getProperty(Workspace.API_KEY),
+        System.getProperty(Workspace.WORKSPACE_ID),
+        System.getProperty(Workspace.CLIENT_SECRET),
+        System.getProperty(Workspace.CONSUMER_ORG_ID),
+        System.getProperty(Workspace.CREDENTIAL_ID),
+        System.getProperty(Workspace.IMS_ORG_ID),
+        System.getProperty(Workspace.META_SCOPES),
+        System.getProperty(Workspace.PROJECT_ID),
+        System.getProperty(Workspace.TECHNICAL_ACCOUNT_ID))) {
       return getSystemPropertiesWorkspace();
     } else {
       /**

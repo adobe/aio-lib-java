@@ -13,6 +13,7 @@ package com.adobe.aio.ims.feign;
 
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
+import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.ims.util.TestUtil;
 import com.adobe.aio.workspace.Workspace;
 import org.junit.Assert;
@@ -26,6 +27,9 @@ public class FeignImsServiceIntegrationTest {
 
   @Test
   public void getAndValidateJwtExchangeAccessToken() {
+    logger.warn("param1 : ", System.getProperty("param1"));
+    logger.warn("param2 : ", System.getProperty("param2"));
+
     Workspace workspace = TestUtil.getDefaultTestWorkspace();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     AccessToken accessToken = imsService.getJwtExchangeAccessToken();
