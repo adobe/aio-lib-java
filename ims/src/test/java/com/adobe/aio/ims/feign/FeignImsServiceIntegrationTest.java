@@ -28,14 +28,14 @@ public class FeignImsServiceIntegrationTest {
 
   @Test
   public void getAndValidateJwtExchangeAccessToken() {
-    logger.warn("param1 system property: ", System.getProperty("param1"));
-    logger.warn("param2 system property: ", System.getProperty("param2"));
-    logger.warn("param1 system property present: ", !StringUtils.isBlank(System.getProperty("param1")));
-    logger.warn("param2 system property present: ", !StringUtils.isBlank(System.getProperty("param2")));
-    logger.warn("param1 env property: ", System.getenv("param1"));
-    logger.warn("param2 env property: ", System.getenv("param2"));
-    logger.warn("param1 env property present: ",  !StringUtils.isBlank(System.getenv("param1")));
-    logger.warn("param2 env property present: ", !StringUtils.isBlank(System.getenv("param2")));
+    logger.warn("param1 system property: {}", System.getProperty("param1"));
+    logger.warn("param2 system property: {}", System.getProperty("param2"));
+    logger.warn("param1 system property present: {}", !StringUtils.isBlank(System.getProperty("param1")));
+    logger.warn("param2 system property present: {}", !StringUtils.isBlank(System.getProperty("param2")));
+    logger.warn("param1 env property: {}", System.getenv("param1"));
+    logger.warn("param2 env property: {}", System.getenv("param2"));
+    logger.warn("param1 env property present: {}",  !StringUtils.isBlank(System.getenv("param1")));
+    logger.warn("param2 env property present: {}", !StringUtils.isBlank(System.getenv("param2")));
 
 
     Workspace workspace = TestUtil.getDefaultTestWorkspace();
