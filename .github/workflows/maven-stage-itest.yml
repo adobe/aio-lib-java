@@ -23,9 +23,11 @@ jobs:
     environment: aio_stage
     strategy:
       fail-fast: true
-
+    env:
+      param1: param1_env_job 
+      param2: ${{ secrets.PARAM2 }}
+      
     steps:
-
       # Check out Git repository
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,8 +43,11 @@ jobs:
       # Build & Test
       - name: Stage Integration Test with Maven
         env:
-          param1: param1 
+          param1: param1_env_step
           param2: ${{ secrets.PARAM2 }}
+        with:
+          param1: param1_with
+          param2: ${{ secrets.PARAM2 }}          
         run: |
           mvn verify -Pitest -Dparam1=$param1 -Dparam2=$param2 -Daio_ims_url=${{ secrets.aio_ims_url }} -Daio_api_url=${{ secrets.aio_api_url }} -Daio_publish_url=${{ secrets.aio_publish_url }} -Daio_meta_scopes=${{ secrets.aio_meta_scopes }} -Daio_ims_org_id=${{ secrets.aio_ims_org_id }}  -Daio_consumer_org_id=${{ secrets.aio_consumer_org_id }} -Daio_project_id=${{ secrets.aio_project_id }} -Daio_workspace_id=${{ secrets.aio_workspace_id }} -Daio_credential_id=${{ secrets.aio_credential_id }} -Daio_technical_account_id=${{ secrets.aio_technical_account_id }} -Daio_api_key= ${{ secrets.aio_api_key }} -Daio_client_secret=${{ secrets.aio_client_secret }} -Daio_encoded_pkcs8=${{ secrets.aio_encoded_pkcs8 }}
 
