@@ -59,7 +59,7 @@ public class FeignImsServiceTestDrive {
 
   public static void main(String[] args) {
     try {
-      Workspace workspace = TestUtil.getDefaultTestWorkspace();
+      Workspace workspace = TestUtil.getTestWorkspaceBuilder().build();
       ImsService imsService = ImsService.builder().workspace(workspace).build();
 
       AccessToken accessToken = imsService.getJwtExchangeAccessToken();

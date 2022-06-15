@@ -12,17 +12,13 @@
 package com.adobe.aio.event.management.feign;
 
 import com.adobe.aio.event.management.ProviderService;
-import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.ProviderInputModel;
-import com.adobe.aio.util.FileUtil;
-import com.adobe.aio.ims.util.PrivateKeyBuilder;
-
-import java.security.PrivateKey;
+import com.adobe.aio.ims.util.TestUtil;
+import com.adobe.aio.workspace.Workspace;
 import java.util.List;
 import java.util.Optional;
-import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,37 +26,15 @@ public class FeignProviderServiceTestDrive {
 
   private static final Logger logger = LoggerFactory.getLogger(FeignProviderServiceTestDrive.class);
 
-  // use your own property file filePath or classpath and don't push back to git
-  private static final String DEFAULT_TEST_DRIVE_PROPERTIES = "workspace.secret.properties";
-  private static final String API_URL = "aio_api_url";
-
-  /**
-   * use your own property file filePath or classpath. WARNING: don't push back to github as it
-   * contains many secrets. We do provide a sample/template workspace.properties file in the
-   * ./src/test/resources folder
-   */
-  private static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
-
-
   public static void main(String[] args) {
     try {
-
-      Properties prop =
-          FileUtil.readPropertiesFromClassPath(
-              (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
-
-      PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
-
-      Workspace workspace = Workspace.builder()
-          .properties(prop)
-          .privateKey(privateKey)
-          .build();
+      Workspace workspace = TestUtil.getTestWorkspaceBuilder().build();
 
       ProviderService providerService = ProviderService.builder()
-          .workspace(workspace) // [2]
-          .url(prop.getProperty(API_URL)) // you can omit this if you target prod
-          .build(); //
-      Optional<Provider> provider = providerService.findProviderById("someProviderId"); //[3]
+          .workspace(workspace) // [1]
+          .url(TestUtil.getTestProperty(TestUtil.API_URL)) // you can omit this if you target prod
+          .build();
+      Optional<Provider> provider = providerService.findProviderById("someProviderId"); // [2]
       logger.info("someProvider: {}", provider);
 
       List<Provider> providers = providerService.getProviders();
@@ -84,14 +58,15 @@ public class FeignProviderServiceTestDrive {
           .description("aio-java-lib Test Drive Event")
           .build();
       logger
-          .info("added EventMetadata :{}", providerService.createEventMetadata(providerId, eventMetadata1));
+          .info("added EventMetadata :{}",
+              providerService.createEventMetadata(providerId, eventMetadata1));
 
       Optional<Provider> aboutToBeDeleted = providerService.findProviderById(created.get().getId());
       logger.info("aboutToBeDeleted: {}", aboutToBeDeleted);
 
       providerService.deleteProvider(aboutToBeDeleted.get().getId());
       logger.info("deleted: {}", aboutToBeDeleted.get().getId());
-      logger.info("FeignProviderServiceTestDrive completed successfully.");
+
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

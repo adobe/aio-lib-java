@@ -36,6 +36,18 @@
 
     <!--  test -->
     <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-mgmt</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-ingress</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit-dep</artifactId>
     </dependency>

@@ -16,7 +16,6 @@ import com.adobe.aio.util.FileUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.io.IOException;
 import java.security.PrivateKey;
-import java.util.Map;
 import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -24,13 +23,15 @@ import org.slf4j.LoggerFactory;
 
 public class TestUtil {
 
+  public static final String API_URL = "aio_api_url";
+  public static final String PUBLISH_URL = "aio_publish_url";
   public static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
   private static final Logger logger = LoggerFactory.getLogger(TestUtil.class);
 
   private TestUtil() {
   }
 
-  public static Workspace getDefaultTestWorkspace() {
+  public static Workspace.Builder getTestWorkspaceBuilder() {
     if (StringUtils.isNoneBlank(
         System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
         System.getProperty(Workspace.API_KEY),
@@ -42,37 +43,50 @@ public class TestUtil {
         System.getProperty(Workspace.META_SCOPES),
         System.getProperty(Workspace.PROJECT_ID),
         System.getProperty(Workspace.TECHNICAL_ACCOUNT_ID))) {
-      return getSystemPropertiesWorkspace();
+      return getSystemPropertiesWorkspaceBuilder();
     } else {
       /**
        * WARNING: don't push back your workspace secrets to github
        */
-      return getTestWorkspace(DEFAULT_TEST_PROPERTIES);
+      return getTestWorkspaceBuilder(DEFAULT_TEST_PROPERTIES);
     }
   }
 
-  public static Workspace getSystemPropertiesWorkspace() {
-    logger.info("loading test Workspace from JVM System Properties");
-    PrivateKey privateKey = new PrivateKeyBuilder().encodedPkcs8Key(System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8)).build();
+  public static Workspace.Builder getSystemPropertiesWorkspaceBuilder() {
+    logger.debug("loading test Workspace from JVM System Properties");
+    PrivateKey privateKey = new PrivateKeyBuilder().encodedPkcs8Key(
+        System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8)).build();
     return Workspace.builder()
         .properties(System.getProperties())
-        .privateKey(privateKey)
-        .build();
+        .privateKey(privateKey);
   }
 
-  public static Workspace getTestWorkspace(String propertyFileClassPath) {
+  private static Workspace.Builder getTestWorkspaceBuilder(String propertyFileClassPath) {
     try {
-      logger.info("loading test Workspace from classpath {}",propertyFileClassPath);
-      Properties prop = FileUtil.readPropertiesFromClassPath(DEFAULT_TEST_PROPERTIES);
+      logger.debug("loading test Workspace from classpath {}", propertyFileClassPath);
+      Properties prop = FileUtil.readPropertiesFromClassPath(propertyFileClassPath);
       PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
       return Workspace.builder()
           .properties(prop)
-          .privateKey(privateKey)
-          .build();
+          .privateKey(privateKey);
     } catch (IOException e) {
       throw new AIOException(
           "Unable to load your Workspace from class path " + propertyFileClassPath,
           e);
+    }
+  }
+
+  public static String getTestProperty(String key) {
+    try {
+      String value = System.getProperty(key);
+      if (StringUtils.isBlank(value)) {
+        value = FileUtil.readPropertiesFromClassPath(DEFAULT_TEST_PROPERTIES).getProperty(key);
+      }
+      return value;
+    } catch (IOException e) {
+      throw new AIOException(
+          "Unable to load Property: " + key
+              + "from class path Properties: " + DEFAULT_TEST_PROPERTIES, e);
     }
   }
 

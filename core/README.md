@@ -29,6 +29,17 @@ The `Workspace` POJO holds your Adobe Developer Console Project configurations
 * `aio_meta_scopes` a comma separated list of metascopes associated with your API, see your Adobe Developer Console jwt credential metascopes (`project.workspace.details.credentials[i].jwt.meta_scopes`)
 * `aio_technical_account_id` your Adobe Developer Console jwt credential technical account id (`project.workspace.details.credentials[i].jwt.technical_account_id`)
 
+### Private Key
+
+On top of these, the [`Workspace`](./src/main/java/com/adobe/aio/workspace/Workspace.java) POJO 
+can also hold your private Key 
+(associated with the public key you uploaded in your Adobe Developer Console Workspace)
+this will help to power Adobe JWT authentication flow and transparently add the proper `Bearer`
+authentication token to all your request, 
+Note the easiest way is to stuff your Private Key as a `pkcs8` base64 encoded String 
+using the `aio_encoded_pkcs8` property key.
+confer  [aio-lib-java-ims](../ims) documentation for more details.
+
 ## Builds
 
 This Library is build with [maven](https://maven.apache.org/) (it also runs the unit tests):

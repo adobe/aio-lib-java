@@ -8,39 +8,25 @@ by [`Adobe I/O Events` Provider and Registration APIs](https://www.adobe.io/apis
 ## ProviderService Test Drive
 
      ProviderService providerService = ProviderService.builder()
-          .authInterceptor(authInterceptor) // [1]
-          .workspace(workspace) // [2]
-          .build(); //
-      Optional<Provider> provider = providerService.findById("someProviderId"); //[3]    Optional<Provider> provider = providerService.findById("someProviderId"); //[3]
+          .workspace(workspace) // [1]
+          .build(); 
+      Optional<Provider> provider = providerService.findById("someProviderId"); //[2]   
 
- * [1] build your ProviderService by passing a OpenFeign Authentication Request Interceptor.
- You can use interceptors that our [ims](../ims) library provides,
- or any other [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors)
- adding :
-   * an `Authorization` header with a valid `Bearer` access token
-   * a `x-api-key` header associated with the above token
- * [2] set the workspace context expected by the ProviderService
- * [3] have this service retrieve one of your event provider by passing a provider id.
+ * [1] build your ProviderService by passing your workspace context  (cf. the [aio-lib-java-core](../core) for workspace documentation)
+ * [2] have this service retrieve one of your event provider by passing a provider id.
 
 See our [`main()` Test Drive](./src/test/java/com/adobe/aio/event/management/ProviderServiceTestDrive.java)
 
 ## RegistrationService Test Drive
 
       RegistrationService registrationService = RegistrationService.builder()
-          .authInterceptor(authInterceptor) // [1]
-          .workspace(workspace) // [2]
+          .workspace(workspace) // [1]
           .build(); //
       Optional<Registration> registration =
-          registrationService.findById("someRegistrationId"); // [3]
+          registrationService.findById("someRegistrationId"); // [2]
 
- * [1] build your RegistrationService by passing a OpenFeign Authentication Request Interceptor.
- You can use interceptors that our [ims](../ims) library provides,
- or any other [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors)
- adding :
-   * an `Authorization` header with a valid `Bearer` access token
-   * a `x-api-key` header associated with the above token
- * [2] set the workspace context expected by the ProviderService
- * [3] have this service retrieve one of your registration by passing a registration id.
+ * [1] build your RegistrationService by passing your workspace context  (cf. the [aio-lib-java-core](../core) for workspace documentation)
+ * [2] have this service retrieve one of your registration by passing a registration id.
 
 See our [`main()` Test Drive](./src/test/java/com/adobe/event/management/RegistrationServiceTestDrive.java)
 
