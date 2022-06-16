@@ -21,7 +21,7 @@ public class ProviderInputModelTest {
   public static final String TEST_EVENT_PROVIDER_LABEL = "com.adobe.aio.event.management.test";
   public static final String TEST_EVENT_PROVIDER_DESC = TEST_EVENT_PROVIDER_LABEL + " description";
   
-  public static ProviderInputModel.Builder getProviderInputModelBuilder(){
+  public static ProviderInputModel.Builder getTestProviderInputModelBuilder(){
     return ProviderInputModel.builder()
         .label(TEST_EVENT_PROVIDER_LABEL)
         .description(TEST_EVENT_PROVIDER_DESC)
@@ -35,7 +35,7 @@ public class ProviderInputModelTest {
 
   @Test
   public void valid(){
-    ProviderInputModel providerInputModel = getProviderInputModelBuilder().build();
+    ProviderInputModel providerInputModel = getTestProviderInputModelBuilder().build();
     Assert.assertEquals(TEST_EVENT_PROVIDER_DESC,providerInputModel.getDescription());
     Assert.assertEquals(TEST_EVENT_PROVIDER_LABEL,providerInputModel.getLabel());
     Assert.assertEquals(CUSTOM_EVENTS_PROVIDER_METADATA_ID,providerInputModel.getProviderMetadataId());

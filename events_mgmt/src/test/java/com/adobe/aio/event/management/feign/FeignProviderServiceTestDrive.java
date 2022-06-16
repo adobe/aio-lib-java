@@ -15,7 +15,7 @@ import com.adobe.aio.event.management.ProviderService;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.ProviderInputModel;
-import com.adobe.aio.ims.util.TestUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.util.List;
 import java.util.Optional;
@@ -28,11 +28,11 @@ public class FeignProviderServiceTestDrive {
 
   public static void main(String[] args) {
     try {
-      Workspace workspace = TestUtil.getTestWorkspaceBuilder().build();
+      Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().build();
 
       ProviderService providerService = ProviderService.builder()
           .workspace(workspace) // [1]
-          .url(TestUtil.getTestProperty(TestUtil.API_URL)) // you can omit this if you target prod
+          .url(WorkspaceUtil.getSystemProperty(WorkspaceUtil.API_URL)) // you can omit this if you target prod
           .build();
       Optional<Provider> provider = providerService.findProviderById("someProviderId"); // [2]
       logger.info("someProvider: {}", provider);

@@ -12,17 +12,13 @@
 package com.adobe.aio.event.management.feign;
 
 import com.adobe.aio.event.management.RegistrationService;
-import com.adobe.aio.ims.util.TestUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.EventsOfInterest;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationInputModel;
-import com.adobe.aio.util.FileUtil;
-import com.adobe.aio.ims.util.PrivateKeyBuilder;
 
-import java.security.PrivateKey;
 import java.util.Optional;
-import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,11 +32,11 @@ public class FeignRegistrationServiceTestDrive {
   public static void main(String[] args) {
     try {
 
-      Workspace workspace = TestUtil.getTestWorkspaceBuilder().build();
+      Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().build();
 
       RegistrationService registrationService = RegistrationService.builder()
           .workspace(workspace) // [1]
-          .url(TestUtil.getTestProperty(TestUtil.API_URL)) // you can omit this if you target prod
+          .url(WorkspaceUtil.getSystemProperty(WorkspaceUtil.API_URL)) // you can omit this if you target prod
           .build(); //
       Optional<Registration> registration =
           registrationService.findById("someRegistrationId"); // [2]
@@ -51,8 +47,8 @@ public class FeignRegistrationServiceTestDrive {
               .description("your registration description")
               .name("your registration name")
               .addEventsOfInterests(EventsOfInterest.builder()
-                  .setEventCode(SOME_EVENT_CODE)
-                  .setProviderId(SOME_PROVIDER_ID).build())
+                  .eventCode(SOME_EVENT_CODE)
+                  .providerId(SOME_PROVIDER_ID).build())
       );
       String createdId = created.get().getRegistrationId();
       logger.info("created: {}", created.get());

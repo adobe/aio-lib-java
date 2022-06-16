@@ -16,7 +16,7 @@ import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.EventMetadataModelTest;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.ProviderInputModelTest;
-import com.adobe.aio.ims.util.TestUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
@@ -28,15 +28,15 @@ import org.slf4j.LoggerFactory;
 
 public class FeignProviderServiceIntegrationTest {
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final static Logger logger = LoggerFactory.getLogger(FeignProviderServiceIntegrationTest.class);
 
   private ProviderService providerService;
 
   @Before
   public void setUp() {
     providerService = ProviderService.builder()
-        .workspace(TestUtil.getTestWorkspaceBuilder().build())
-        .url(TestUtil.getTestProperty(TestUtil.API_URL))
+        .workspace(WorkspaceUtil.getSystemWorkspaceBuilder().build())
+        .url(WorkspaceUtil.getSystemProperty(WorkspaceUtil.API_URL))
         .build();
   }
 
@@ -48,9 +48,9 @@ public class FeignProviderServiceIntegrationTest {
   @Test
   public void getProvidersWithInvalidConsumerOrgId() {
     ProviderService providerService = ProviderService.builder()
-        .workspace(TestUtil.getTestWorkspaceBuilder()
+        .workspace(WorkspaceUtil.getSystemWorkspaceBuilder()
             .consumerOrgId("invalid").build())
-        .url(TestUtil.getTestProperty(TestUtil.API_URL))
+        .url(WorkspaceUtil.getSystemProperty(WorkspaceUtil.API_URL))
         .build();
     Assert.assertTrue(providerService.getProviders().isEmpty());
   }
@@ -69,29 +69,33 @@ public class FeignProviderServiceIntegrationTest {
         providerService.findCustomEventsProviderByInstanceId(idNotToBeFound).isEmpty());
   }
 
-  @Test
-  public void createGetUpdateDelete() {
+  public static Provider createTestProvider(ProviderService providerService){
     Optional<Provider> provider = providerService.createProvider(
-        ProviderInputModelTest.getProviderInputModelBuilder().build());
+        ProviderInputModelTest.getTestProviderInputModelBuilder().build());
     Assert.assertTrue(provider.isPresent());
     logger.info("Created AIO Events Provider: {}", provider);
     String providerId = provider.get().getId();
-    String instanceId = provider.get().getInstanceId();
     Assert.assertTrue(StringUtils.isNotBlank(providerId));
-
-    Assert.assertTrue(providerService.getEventMetadata(providerId).isEmpty());
-    logger.info("Fetched All EventMetadata `{}` of AIO Events Provider `{}`", providerId);
+    Assert.assertTrue(StringUtils.isNotBlank(provider.get().getInstanceId()));
 
     Optional<EventMetadata> eventMetadata = providerService.createEventMetadata(providerId,
         EventMetadataModelTest.getTestEventMetadataBuilder().build());
     Assert.assertTrue(eventMetadata.isPresent());
     logger.info("Added EventMetadata `{}` to AIO Events Provider `{}`", eventMetadata, providerId);
+    return provider.get();
+  }
+
+  @Test
+  public void createGetUpdateDelete() {
+    Provider provider = createTestProvider(providerService);
+    String providerId = provider.getId();
+    String instanceId = provider.getInstanceId();
 
     Assert.assertEquals(1, providerService.getEventMetadata(providerId).size());
     logger.info("Fetched All EventMetadata `{}` of AIO Events Provider `{}`", providerId);
 
     String updatedEventMetadataDescription = "updated EventMetadata Description";
-    eventMetadata = providerService.updateEventMetadata(providerId,
+    Optional<EventMetadata> eventMetadata = providerService.updateEventMetadata(providerId,
         EventMetadataModelTest.getTestEventMetadataBuilder()
             .description(updatedEventMetadataDescription).build());
     Assert.assertTrue(eventMetadata.isPresent());
@@ -126,15 +130,25 @@ public class FeignProviderServiceIntegrationTest {
     logger.info("Deleted EventMetadata {} from AIO Events Provider `{}`",
         EventMetadataModelTest.TEST_EVENT_CODE, providerById);
 
+    try {
+      providerService.createProvider
+          (ProviderInputModelTest.getTestProviderInputModelBuilder()
+              .instanceId(instanceId).build());
+      Assert.fail("We should have had a ConflictException thrown");
+    } catch (ConflictException ex) {
+      logger.info("Cannot create an AIO Events provider with the same instanceId: {}",
+          ex.getMessage());
+    }
+
     String updatedProviderDescription = "updated Provider Description";
-    provider = providerService.createOrUpdateProvider
-        (ProviderInputModelTest.getProviderInputModelBuilder()
+    Optional<Provider> updatedProvider = providerService.createOrUpdateProvider
+        (ProviderInputModelTest.getTestProviderInputModelBuilder()
             .instanceId(instanceId)
             .description(updatedProviderDescription).build());
-    Assert.assertTrue(provider.isPresent());
+    Assert.assertTrue(updatedProvider.isPresent());
     logger.info("Updated AIO Events Provider: {}", provider);
-    Assert.assertEquals(providerId, provider.get().getId());
-    Assert.assertEquals(updatedProviderDescription, provider.get().getDescription());
+    Assert.assertEquals(providerId, updatedProvider.get().getId());
+    Assert.assertEquals(updatedProviderDescription, updatedProvider.get().getDescription());
 
     providerService.createEventMetadata(providerId,
         EventMetadataModelTest.getTestEventMetadataBuilder().build());
@@ -142,10 +156,10 @@ public class FeignProviderServiceIntegrationTest {
     logger.info("Added EventMetadata `{}` to AIO Events Provider `{}`", eventMetadata, providerId);
     providerService.deleteAllEventMetadata(providerId);
     Assert.assertTrue(providerService.getEventMetadata(providerId).isEmpty());
-    logger.info("Deleted All EventMetadata from AIO Events Provider `{}`", providerById);
+    logger.info("Deleted All EventMetadata from AIO Events Provider `{}`", providerId);
 
     providerService.deleteProvider(providerId);
-    logger.info("Deleted AIO Events Provider: {}", providerById);
+    logger.info("Deleted AIO Events Provider: {}", providerId);
 
     providerById = providerService.findProviderById(providerId);
     Assert.assertTrue(providerById.isEmpty());

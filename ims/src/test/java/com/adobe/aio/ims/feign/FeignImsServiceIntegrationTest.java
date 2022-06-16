@@ -14,7 +14,7 @@ package com.adobe.aio.ims.feign;
 import com.adobe.aio.exception.feign.IOUpstreamError;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
-import com.adobe.aio.ims.util.TestUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class FeignImsServiceIntegrationTest {
 
   @Test
   public void getAndValidateJwtExchangeAccessToken() {
-    Workspace workspace = TestUtil.getTestWorkspaceBuilder().build();
+    Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     AccessToken accessToken = imsService.getJwtExchangeAccessToken();
     logger.info("JWT Exchange token flow complete");
@@ -40,28 +40,28 @@ public class FeignImsServiceIntegrationTest {
 
   @Test(expected = IOUpstreamError.class)
   public void getAndValidateJwtExchangeAccessTokenWithBadApiKey() {
-    Workspace workspace = TestUtil.getTestWorkspaceBuilder().apiKey("bad_api_key").build();
+    Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().apiKey("bad_api_key").build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     imsService.getJwtExchangeAccessToken();
   }
 
   @Test(expected = IOUpstreamError.class)
   public void getAndValidateJwtExchangeAccessTokenWithBadSecret() {
-    Workspace workspace = TestUtil.getTestWorkspaceBuilder().clientSecret("bad_secret").build();
+    Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().clientSecret("bad_secret").build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     imsService.getJwtExchangeAccessToken();
   }
 
   @Test(expected = IOUpstreamError.class)
   public void getAndValidateJwtExchangeAccessTokenWithBadTechAccount() {
-    Workspace workspace = TestUtil.getTestWorkspaceBuilder().technicalAccountId("bad_tech_account_id@techacct.adobe.com").build();
+    Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().technicalAccountId("bad_tech_account_id@techacct.adobe.com").build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     imsService.getJwtExchangeAccessToken();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void getAndValidateJwtExchangeAccessTokenWithMissingPrivateKey() {
-    Workspace workspace = TestUtil.getTestWorkspaceBuilder().privateKey(null).build();
+    Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().privateKey(null).build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     imsService.getJwtExchangeAccessToken();
   }

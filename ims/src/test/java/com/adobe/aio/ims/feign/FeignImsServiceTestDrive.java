@@ -12,7 +12,7 @@
 package com.adobe.aio.ims.feign;
 
 import com.adobe.aio.ims.ImsService;
-import com.adobe.aio.ims.util.TestUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
@@ -59,7 +59,7 @@ public class FeignImsServiceTestDrive {
 
   public static void main(String[] args) {
     try {
-      Workspace workspace = TestUtil.getTestWorkspaceBuilder().build();
+      Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().build();
       ImsService imsService = ImsService.builder().workspace(workspace).build();
 
       AccessToken accessToken = imsService.getJwtExchangeAccessToken();
