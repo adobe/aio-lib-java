@@ -18,26 +18,23 @@ import org.junit.Test;
 
 public class ProviderInputModelTest {
 
-  public static final String TEST_EVENT_PROVIDER_LABEL = "com.adobe.aio.event.management.test";
-  public static final String TEST_EVENT_PROVIDER_DESC = TEST_EVENT_PROVIDER_LABEL + " description";
-  
-  public static ProviderInputModel.Builder getTestProviderInputModelBuilder(){
-    return ProviderInputModel.builder()
-        .label(TEST_EVENT_PROVIDER_LABEL)
-        .description(TEST_EVENT_PROVIDER_DESC)
-        .docsUrl("https://github.com/adobe/aio-lib-java");
-  }
-
   @Test(expected = IllegalArgumentException.class)
-  public void invalid(){
+  public void invalid() {
     ProviderInputModel.builder().build();
   }
 
   @Test
-  public void valid(){
-    ProviderInputModel providerInputModel = getTestProviderInputModelBuilder().build();
-    Assert.assertEquals(TEST_EVENT_PROVIDER_DESC,providerInputModel.getDescription());
-    Assert.assertEquals(TEST_EVENT_PROVIDER_LABEL,providerInputModel.getLabel());
-    Assert.assertEquals(CUSTOM_EVENTS_PROVIDER_METADATA_ID,providerInputModel.getProviderMetadataId());
+  public void valid() {
+    String label = "com.adobe.aio.event.management.test";
+    String description = label + " description";
+    ProviderInputModel providerInputModel = ProviderInputModel.builder()
+        .label(label)
+        .description(description)
+        .docsUrl("https://github.com/adobe/aio-lib-java")
+        .build();
+    Assert.assertEquals(description, providerInputModel.getDescription());
+    Assert.assertEquals(label, providerInputModel.getLabel());
+    Assert.assertEquals(CUSTOM_EVENTS_PROVIDER_METADATA_ID,
+        providerInputModel.getProviderMetadataId());
   }
 }

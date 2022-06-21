@@ -11,40 +11,35 @@
  */
 package com.adobe.aio.event.management.model;
 
-import static com.adobe.aio.event.management.model.EventMetadataModelTest.TEST_EVENT_CODE;
-
 import org.junit.Assert;
 import org.junit.Test;
 
 public class EventsOfInterestTest {
 
-  public static EventsOfInterest.Builder getTestEventsOfInterestBuilder(String providerId){
-    return EventsOfInterest.builder()
-        .eventCode(TEST_EVENT_CODE)
-        .providerId(providerId);
-  }
-
   @Test(expected = IllegalArgumentException.class)
-  public void invalidEmpty(){
+  public void invalidEmpty() {
     EventsOfInterest.builder().build();
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void invalidMissingProviderId(){
-    EventsOfInterest.builder().eventCode(TEST_EVENT_CODE).build();
+  public void invalidMissingProviderId() {
+    EventsOfInterest.builder().eventCode("some.event.code").build();
   }
 
   @Test(expected = IllegalArgumentException.class)
-  public void invalidMissingEventCode(){
+  public void invalidMissingEventCode() {
     EventsOfInterest.builder().providerId("someId").build();
   }
 
   @Test
-  public void valid(){
+  public void valid() {
+    String eventCode = "com.adobe.aio.event.management.test.event";
     String providerId = "some_provider_id";
-    EventsOfInterest eventsOfInterest = getTestEventsOfInterestBuilder(providerId).build();
-    Assert.assertEquals(TEST_EVENT_CODE,eventsOfInterest.getEventCode());
-    Assert.assertEquals(providerId,eventsOfInterest.getProviderId());
+    EventsOfInterest eventsOfInterest = EventsOfInterest.builder()
+        .eventCode(eventCode)
+        .providerId(providerId).build();
+    Assert.assertEquals(eventCode, eventsOfInterest.getEventCode());
+    Assert.assertEquals(providerId, eventsOfInterest.getProviderId());
   }
 
 }

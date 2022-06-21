@@ -12,69 +12,42 @@
 package com.adobe.aio.event.publish.feign;
 
 import com.adobe.aio.event.publish.PublishService;
-import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.publish.model.CloudEvent;
-import com.adobe.aio.ims.feign.JWTAuthInterceptor;
-import com.adobe.aio.util.FileUtil;
 import com.adobe.aio.util.JacksonUtil;
-import com.adobe.aio.ims.util.PrivateKeyBuilder;
-import feign.RequestInterceptor;
-import java.security.PrivateKey;
-import java.util.Properties;
+import com.adobe.aio.util.WorkspaceUtil;
+import com.adobe.aio.workspace.Workspace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class FeignPublishServiceTestDrive {
 
-  private static final Logger logger = LoggerFactory.getLogger(FeignPublishServiceTestDrive.class);
-
-  // use your own property file filePath or classpath and don't push back to git
-  private static final String DEFAULT_TEST_DRIVE_PROPERTIES = "workspace.secret.properties";
-  private static final String AIO_PUBLISH_URL = "aio_publish_url";
-
   public static final String AIO_PROVIDER_ID = "aio_provider_id";
   public static final String AIO_EVENT_CODE = "aio_event_code";
-
-  /**
-   * use your own property file filePath or classpath. WARNING: don't push back to github as it
-   * contains many secrets. We do provide a sample/template workspace.properties file in the
-   * ./src/test/resources folder
-   */
-  private static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
-
+  private static final Logger logger = LoggerFactory.getLogger(FeignPublishServiceTestDrive.class);
+  private static final String AIO_PUBLISH_URL = "aio_publish_url";
 
   public static void main(String[] args) {
     try {
+      Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().build();
+      String providerId = WorkspaceUtil.getSystemProperty(AIO_PROVIDER_ID);
+      String eventCode = WorkspaceUtil.getSystemProperty(AIO_EVENT_CODE);
 
-      Properties prop =
-          FileUtil.readPropertiesFromClassPath(
-              (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
-
-      PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
-
-      Workspace workspace = Workspace.builder()
-          .properties(prop)
-          .privateKey(privateKey)
-          .build();
-      
-      String eventDataPayload =  "your event payload";
+      String eventDataPayload = "your event payload";
       //String eventDataPayload = "   { \"key\" : \"value\" } ";
 
       PublishService publishService = PublishService.builder()
           .workspace(workspace)
-          .url(prop.getProperty(AIO_PUBLISH_URL)) // you can omit this if you target prod
+          .url(WorkspaceUtil.getSystemProperty(
+              AIO_PUBLISH_URL)) // you can omit this if you target prod
           .build(); //
-      CloudEvent cloudEvent = publishService.publishCloudEvent(
-          prop.getProperty(AIO_PROVIDER_ID),
-          prop.getProperty(AIO_EVENT_CODE),
+      CloudEvent cloudEvent = publishService.publishCloudEvent(providerId, eventCode,
           eventDataPayload);
-      logger.info("published Cloud Event{}", JacksonUtil.DEFAULT_OBJECT_MAPPER.writeValueAsString(cloudEvent));
+      logger.info("published Cloud Event{}",
+          JacksonUtil.DEFAULT_OBJECT_MAPPER.writeValueAsString(cloudEvent));
 
       // Adobe I/O Events Publishing API also allows the publication of simple/raw event json payload
-      publishService.publishRawEvent(prop.getProperty(AIO_PROVIDER_ID),
-          prop.getProperty(AIO_EVENT_CODE),
-          eventDataPayload);
-      logger.info("published Raw Event{}",eventDataPayload);
+      publishService.publishRawEvent(providerId, eventCode, eventDataPayload);
+      logger.info("published Raw Event{}", eventDataPayload);
 
       System.exit(0);
     } catch (Exception e) {

@@ -16,15 +16,6 @@ import org.junit.Test;
 
 public class RegistrationInputModelTest {
 
-  public static final String TEST_REGISTRATION_NAME = "com.adobe.aio.event.management.test.registration";
-  public static final String TEST_REGISTRATION_DESC = TEST_REGISTRATION_NAME + " description";
-
-  public static RegistrationInputModel.Builder getRegistrationInputModelBuilder() {
-    return RegistrationInputModel.builder()
-        .name(TEST_REGISTRATION_NAME)
-        .description(TEST_REGISTRATION_DESC);
-  }
-
   @Test(expected = IllegalArgumentException.class)
   public void invalidEmpty() {
     RegistrationInputModel.builder().build();
@@ -32,23 +23,29 @@ public class RegistrationInputModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidMissingClientId() {
-    getRegistrationInputModelBuilder().build();
+    RegistrationInputModel registrationInputModel = RegistrationInputModel.builder()
+        .name("some name")
+        .description("some description").build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidMissingName() {
     RegistrationInputModel.builder()
-        .description(TEST_REGISTRATION_DESC)
+        .description("some description")
         .clientId("some client Id").build();
   }
 
   @Test
   public void valid() {
+    String name = "com.adobe.aio.event.management.test.registration";
+    String description = name + " description";
     String clientId = "some_clientId";
-    RegistrationInputModel registrationInputModel = getRegistrationInputModelBuilder().clientId(
-        clientId).build();
+    RegistrationInputModel registrationInputModel = RegistrationInputModel.builder()
+        .name(name)
+        .description(description)
+        .clientId(clientId).build();
     Assert.assertEquals(clientId, registrationInputModel.getClientId());
-    Assert.assertEquals(TEST_REGISTRATION_NAME, registrationInputModel.getName());
-    Assert.assertEquals(TEST_REGISTRATION_DESC, registrationInputModel.getDescription());
+    Assert.assertEquals(name, registrationInputModel.getName());
+    Assert.assertEquals(description, registrationInputModel.getDescription());
   }
 }
