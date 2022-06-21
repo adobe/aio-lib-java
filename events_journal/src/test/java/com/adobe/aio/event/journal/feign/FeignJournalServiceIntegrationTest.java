@@ -90,7 +90,7 @@ public class FeignJournalServiceIntegrationTest {
   }
 
   @Test
-  public void end2EndApiTest()
+  public void testJournalPolling()
       throws InterruptedException {
     Provider provider = FeignProviderServiceIntegrationTest.createTestProvider(providerService);
     Registration registration = FeignRegistrationServiceIntegrationTest.createRegistration(
@@ -115,7 +115,6 @@ public class FeignJournalServiceIntegrationTest {
         wasCloudEventPolled);
     Assert.assertTrue("The published Raw Event was not retrieved in the Journal",
         wasRawEventPolled);
-    logger.info("End2EndApiTest completed successfully");
   }
 
   private static boolean pollJournalForEvent(Workspace workspace,

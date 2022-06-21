@@ -87,6 +87,7 @@ public class FeignRegistrationServiceIntegrationTest {
       String registrationId) {
     registrationService.delete(registrationId);
     Assert.assertTrue(registrationService.findById(registrationId).isEmpty());
+    logger.info("Deleted AIO Event Registration: {}", registrationId);
   }
 
   private static void assertUrl(String stringUrl) {
