@@ -193,11 +193,20 @@ public class EventVerifier {
    * @param pubKeyPath - relative path in the format /prod/keys/pub-key-voy5XEbWmT.pem
    * @return public key file name
    */
-  String getPublicKeyFileName(String pubKeyPath) {
+  private String getPublicKeyFileName(String pubKeyPath) {
     return pubKeyPath.substring(pubKeyPath.lastIndexOf('/') + 1);
   }
 
   private boolean isValidUrl(String url) {
     return new UrlValidator().isValid(url);
+  }
+
+  // ----------------------- Instance Builder ---------------------------
+
+  public static class EventVerifierBuilder {
+    public EventVerifier build() {
+      EventVerifier eventVerifier = new EventVerifier();
+      return eventVerifier;
+    }
   }
 }
