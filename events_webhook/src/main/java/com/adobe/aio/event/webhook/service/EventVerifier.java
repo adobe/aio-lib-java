@@ -131,6 +131,7 @@ public class EventVerifier {
     } catch (JsonProcessingException e) {
       throw new AIOException("error parsing the event payload during target recipient check..");
     }
+    return false;
   }
 
   private PublicKey getPublic(String pubKey)
