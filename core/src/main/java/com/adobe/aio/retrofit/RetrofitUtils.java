@@ -21,7 +21,7 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 
-public class RetrofitUtility {
+public class RetrofitUtils {
 
   /**
    * Scalars converter supports converting strings and both primitives and their boxed types to

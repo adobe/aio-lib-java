@@ -17,11 +17,11 @@ import java.util.concurrent.TimeUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class CaffeinCacheUtility {
+public class CaffeinCacheUtils {
 
-  private static final Logger logger = LoggerFactory.getLogger(CaffeinCacheUtility.class);
+  private static final Logger logger = LoggerFactory.getLogger(CaffeinCacheUtils.class);
 
-  private CaffeinCacheUtility() {
+  private CaffeinCacheUtils() {
     throw new IllegalStateException("This class is not meant to be instantiated.");
   }
 

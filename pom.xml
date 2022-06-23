@@ -28,7 +28,7 @@
     <module>events_mgmt</module>
     <module>events_ingress</module>
     <module>events_journal</module>
-
+    <module>events_webhook</module>
     <module>aem</module>
 
   </modules>
@@ -104,6 +104,16 @@
     <slf4j-api.version>[1.7.21,1.7.25]</slf4j-api.version>
     <jackson.version>2.12.3</jackson.version>
     <jjwt.version>0.11.2</jjwt.version>
+    <adapter-rxjava2.version>2.7.2</adapter-rxjava2.version>
+    <retrofit.version>2.5.0</retrofit.version>
+    <converter-jackson.version>2.7.2</converter-jackson.version>
+    <converter-scalars.version>2.7.2</converter-scalars.version>
+    <caffeine.version>2.6.2</caffeine.version>
+    <guava.version>29.0-jre</guava.version>
+    <h2.version>1.4.200</h2.version>
+    <commons-validator.version>1.6</commons-validator.version>
+    <commons-codec.version>1.15</commons-codec.version>
+    <spring-boot-test.version>2.5.6</spring-boot-test.version>
 
     <feign.version>11.2</feign.version>
     <feign-form.version>3.8.0</feign-form.version>
@@ -123,6 +133,31 @@
       </dependency>
 
       <dependency>
+        <groupId>com.squareup.retrofit2</groupId>
+        <artifactId>converter-scalars</artifactId>
+        <version>${converter-scalars.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.squareup.retrofit2</groupId>
+        <artifactId>converter-jackson</artifactId>
+        <version>${converter-jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.squareup.retrofit2</groupId>
+        <artifactId>retrofit</artifactId>
+        <version>${retrofit.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.ben-manes.caffeine</groupId>
+        <artifactId>caffeine</artifactId>
+        <version>${caffeine.version}</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-text</artifactId>
         <version>${commons-text.version}</version>
@@ -136,10 +171,35 @@
       </dependency>
 
       <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>${commons-codec.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+        <scope>compile</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-validator</groupId>
+        <artifactId>commons-validator</artifactId>
+        <version>${commons-validator.version}</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
         <version>${slf4j-api.version}</version>
         <scope>provided</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>${h2.version}</version>
       </dependency>
 
       <dependency>
@@ -199,6 +259,20 @@
       </dependency>
 
       <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-test</artifactId>
+        <version>${spring-boot-test.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>com.github.tomakehurst</groupId>
         <artifactId>wiremock-jre8</artifactId>
         <version>${wiremock.version}</version>
@@ -225,6 +299,8 @@
         <version>${mockito.version}</version>
         <scope>test</scope>
       </dependency>
+
+
 
     </dependencies>
   </dependencyManagement>
