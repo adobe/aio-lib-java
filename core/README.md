@@ -38,7 +38,7 @@ this will help to power Adobe JWT authentication flow and transparently add the 
 authentication token to all your request, 
 Note the easiest way is to stuff your Private Key as a `pkcs8` base64 encoded String 
 using the `aio_encoded_pkcs8` property key.
-confer  [aio-lib-java-ims](../ims) documentation for more details.
+confer  [aio-lib-java-ims](../ims/README.md#Create-and-configure-your-public-and-private-key) documentation for more details.
 
 ## Builds
 

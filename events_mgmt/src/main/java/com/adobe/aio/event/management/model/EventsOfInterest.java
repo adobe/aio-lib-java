@@ -29,7 +29,7 @@ public class EventsOfInterest {
 
   private EventsOfInterest(String providerId, String eventCode) {
     if (StringUtils.isBlank(providerId) || StringUtils.isBlank(eventCode)){
-      throw new IllegalArgumentException("Invalid EventsOfInterest, nor providerId, nor eventCode can be empty/blank");
+      throw new IllegalArgumentException("Invalid EventsOfInterest, neither providerId, nor eventCode can be empty/blank");
     }
     this.providerId = providerId;
     this.eventCode = eventCode;
