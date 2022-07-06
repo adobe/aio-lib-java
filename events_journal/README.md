@@ -18,7 +18,7 @@ by [`Adobe I/O Events` Journaling API](https://www.adobe.io/apis/experienceplatf
         entry = journalService.get(entry.getNextLink()); // [4]
         }
 
- * [1] build your ProviderService by passing your workspace context  (cf. the [aio-lib-java-core](../core) for workspace documentation)
+ * [1] build your JournalService by passing your workspace context  (cf. the [aio-lib-java-core](../core) for workspace documentation)
  * [2] pass your registration journaling endpoint URL 
  * [3] have this service retrieve the oldest entry available in your registration journal 
  * [4] you can then loop to retrieve them all following entries' `next` links
