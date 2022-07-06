@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.46...HEAD)
+
+### 📁 Other pull requests
+
+- GH-114 adding unit and integration tests [\#117](https://github.com/adobe/aio-lib-java/pull/117) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-0.0.46](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.46) (2022-06-10)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.44...aio-lib-java-0.0.46)
