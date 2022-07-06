@@ -43,7 +43,7 @@ public class WorkspaceUtil {
         System.getProperty(Workspace.META_SCOPES),
         System.getProperty(Workspace.PROJECT_ID),
         System.getProperty(Workspace.TECHNICAL_ACCOUNT_ID))) {
-      logger.debug("loading test Workspace from JVM System Properties");
+      logger.info("loading test Workspace from JVM System Properties");
       PrivateKey privateKey = new PrivateKeyBuilder().encodedPkcs8Key(
           System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8)).build();
       return Workspace.builder()
@@ -53,7 +53,7 @@ public class WorkspaceUtil {
       /**
        * WARNING: don't push back your workspace secrets to github
        */
-      logger.debug("loading test Workspace from classpath {}", DEFAULT_TEST_PROPERTIES);
+      logger.info("loading test Workspace from classpath {}", DEFAULT_TEST_PROPERTIES);
       return getWorkspaceBuilder(DEFAULT_TEST_PROPERTIES);
     }
   }

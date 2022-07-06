@@ -11,6 +11,10 @@
  */
 package com.adobe.aio.event.management.feign;
 
+import static com.adobe.aio.event.management.model.ProviderInputModel.DELIVERY_FORMAT_ADOBE_IO;
+import static com.adobe.aio.event.management.model.ProviderInputModel.DELIVERY_FORMAT_CLOUD_EVENTS_V1;
+import static com.adobe.aio.util.Constants.CUSTOM_EVENTS_PROVIDER_METADATA_ID;
+
 import com.adobe.aio.event.management.ProviderService;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
@@ -69,6 +73,8 @@ public class FeignProviderServiceIntegrationTest {
     Assert.assertEquals(WorkspaceUtil.getSystemProperty(Workspace.IMS_ORG_ID),
         provider.get().getPublisher());
     Assert.assertEquals(CloudEvent.SOURCE_URN_PREFIX + provider.get().getId(), provider.get().getSource());
+    Assert.assertEquals(DELIVERY_FORMAT_CLOUD_EVENTS_V1,provider.get().getEventDeliveryFormat());
+    Assert.assertEquals(CUSTOM_EVENTS_PROVIDER_METADATA_ID,provider.get().getProviderMetadata());
 
     Optional<EventMetadata> eventMetadata = providerService.createEventMetadata(providerId,
         getTestEventMetadataBuilder().build());
@@ -181,11 +187,14 @@ public class FeignProviderServiceIntegrationTest {
     Optional<Provider> updatedProvider = providerService.createOrUpdateProvider
         (getTestProviderInputModelBuilder()
             .instanceId(instanceId)
-            .description(updatedProviderDescription).build());
+            .description(updatedProviderDescription)
+            .eventDeliveryFormat(DELIVERY_FORMAT_ADOBE_IO)
+            .build());
     Assert.assertTrue(updatedProvider.isPresent());
     logger.info("Updated AIO Events Provider: {}", provider);
     Assert.assertEquals(providerId, updatedProvider.get().getId());
     Assert.assertEquals(updatedProviderDescription, updatedProvider.get().getDescription());
+    Assert.assertEquals(DELIVERY_FORMAT_ADOBE_IO, updatedProvider.get().getEventDeliveryFormat());
 
     providerService.createEventMetadata(providerId, getTestEventMetadataBuilder().build());
     Assert.assertTrue(eventMetadata.isPresent());
