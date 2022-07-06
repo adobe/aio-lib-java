@@ -39,6 +39,14 @@ public class RegistrationInputModel {
   private RegistrationInputModel(final String clientId, final String name, final String description,
       final DeliveryType deliveryType, final Set<EventsOfInterest> eventsOfInterests,
       final String webhookUrl) {
+    if (StringUtils.isBlank(name)){
+      throw new IllegalArgumentException(
+          "RegistrationInputModel is missing a name");
+    }
+    if (StringUtils.isBlank(clientId)){
+      throw new IllegalArgumentException(
+          "RegistrationInputModel is missing a clientId");
+    }
     if (deliveryType == null && StringUtils.isEmpty(webhookUrl)) {
       this.deliveryType = DeliveryType.JOURNAL;
     } else if (deliveryType == null && !StringUtils.isEmpty(webhookUrl)) {

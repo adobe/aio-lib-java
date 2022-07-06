@@ -12,16 +12,13 @@
 package com.adobe.aio.event.management.feign;
 
 import com.adobe.aio.event.management.RegistrationService;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.EventsOfInterest;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationInputModel;
-import com.adobe.aio.util.FileUtil;
-import com.adobe.aio.ims.util.PrivateKeyBuilder;
 
-import java.security.PrivateKey;
 import java.util.Optional;
-import java.util.Properties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,58 +26,35 @@ public class FeignRegistrationServiceTestDrive {
 
   private static final Logger logger = LoggerFactory.getLogger(FeignRegistrationServiceTestDrive.class);
 
-  // use your own property file filePath or classpath and don't push back to git
-  private static final String DEFAULT_TEST_DRIVE_PROPERTIES = "workspace.secret.properties";
-  private static final String API_URL = "aio_api_url";
-
-  public static final String PROVIDER_ID = "aio_provider_id";
-  public static final String EVENT_CODE = "aio_event_code";
-
-  /**
-   * use your own property file filePath or classpath. WARNING: don't push back to github as it
-   * contains many secrets. We do provide a sample/template workspace.properties file in the
-   * ./src/test/resources folder
-   */
-  private static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
-
+  public static final String SOME_PROVIDER_ID = "some_aio_provider_id";
+  public static final String SOME_EVENT_CODE = "some_aio_event_code";
 
   public static void main(String[] args) {
     try {
 
-      Properties prop =
-          FileUtil.readPropertiesFromClassPath(
-              (args != null && args.length > 0) ? args[0] : DEFAULT_TEST_DRIVE_PROPERTIES);
-
-      PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
-
-      Workspace workspace = Workspace.builder()
-          .properties(prop)
-          .privateKey(privateKey)
-          .build();
-
+      Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().build();
 
       RegistrationService registrationService = RegistrationService.builder()
-          .workspace(workspace) // [2]
-          .url(prop.getProperty(API_URL)) // you can omit this if you target prod
+          .workspace(workspace) // [1]
+          .url(WorkspaceUtil.getSystemProperty(WorkspaceUtil.API_URL)) // you can omit this if you target prod
           .build(); //
       Optional<Registration> registration =
-          registrationService.findById("someRegistrationId"); // [3]
+          registrationService.findById("someRegistrationId"); // [2]
       logger.info("someRegistration: {}", registration);
 
       Optional<Registration> created = registrationService.createRegistration(
           RegistrationInputModel.builder()
-              .description("aio-lib-java registration description")
-              .name("aio-lib-java registration name")
+              .description("your registration description")
+              .name("your registration name")
               .addEventsOfInterests(EventsOfInterest.builder()
-                  .setEventCode(prop.getProperty(EVENT_CODE))
-                  .setProviderId(prop.getProperty(PROVIDER_ID)).build())
+                  .eventCode(SOME_EVENT_CODE)
+                  .providerId(SOME_PROVIDER_ID).build())
       );
       String createdId = created.get().getRegistrationId();
       logger.info("created: {}", created.get());
       registrationService.delete(createdId);
       logger.info("deleted: {}", createdId);
 
-      logger.info("FeignRegistrationServiceTestDrive completed successfully.");
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

@@ -9,26 +9,19 @@ by [`Adobe I/O Events` Journaling API](https://www.adobe.io/apis/experienceplatf
 ## JournalService Test Drive
 
       JournalService journalService = JournalService.builder()
-          .authInterceptor(authInterceptor) // [1]
-          .workspace(workspace) // [2]
-          .url(journalUrl) // [3]
+          .workspace(workspace) // [1]
+          .url(journalUrl) // [2]
           .build(); //
 
-      Entry entry = journalService.getOldest(); // [4]
+      Entry entry = journalService.getOldest(); // [3]
       while (!entry.isEmpty()) {
-        entry = journalService.get(entry.getNextLink()); // [5]
+        entry = journalService.get(entry.getNextLink()); // [4]
         }
 
- * [1] build your JournalService by passing a OpenFeign Authentication Request Interceptor.
- You can use interceptors that our [ims](../ims) library provides,
- or any other [Open Feign RequestInterceptor](https://github.com/OpenFeign/feign#request-interceptors)
- adding :
-   * an `Authorization` header with a valid `Bearer` access token
-   * a `x-api-key` header associated with the above token
- * [2] set the workspace context expected by the ProviderService
- * [3] pass your registration journaling endpoint URL 
- * [4] have this service retrieve the oldest entry available in your registration journal 
- * [5] you can then loop to retrieve them all following entries' `next` links
+ * [1] build your JournalService by passing your workspace context  (cf. the [aio-lib-java-core](../core) for workspace documentation)
+ * [2] pass your registration journaling endpoint URL 
+ * [3] have this service retrieve the oldest entry available in your registration journal 
+ * [4] you can then loop to retrieve them all following entries' `next` links
  
 See our [`main()` Test Drive](./src/test/java/com/adobe/event/journal/JournalServiceTestDrive.java)
  

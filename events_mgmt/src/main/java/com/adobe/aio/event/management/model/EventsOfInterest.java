@@ -14,6 +14,7 @@ package com.adobe.aio.event.management.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
+import org.apache.commons.lang3.StringUtils;
 
 public class EventsOfInterest {
 
@@ -27,6 +28,9 @@ public class EventsOfInterest {
   }
 
   private EventsOfInterest(String providerId, String eventCode) {
+    if (StringUtils.isBlank(providerId) || StringUtils.isBlank(eventCode)){
+      throw new IllegalArgumentException("Invalid EventsOfInterest, neither providerId, nor eventCode can be empty/blank");
+    }
     this.providerId = providerId;
     this.eventCode = eventCode;
   }
@@ -75,12 +79,12 @@ public class EventsOfInterest {
     private String providerId;
     private String eventCode;
 
-    public Builder setProviderId(String providerId) {
+    public Builder providerId(String providerId) {
       this.providerId = providerId;
       return this;
     }
 
-    public Builder setEventCode(String eventCode) {
+    public Builder eventCode(String eventCode) {
       this.eventCode = eventCode;
       return this;
     }
