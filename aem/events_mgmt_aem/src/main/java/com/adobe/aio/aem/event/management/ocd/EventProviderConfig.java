@@ -11,6 +11,8 @@
  */
 package com.adobe.aio.aem.event.management.ocd;
 
+import static com.adobe.aio.event.management.model.ProviderInputModel.DELIVERY_FORMAT_CLOUD_EVENTS_V1;
+
 import org.osgi.service.metatype.annotations.AttributeDefinition;
 import org.osgi.service.metatype.annotations.ObjectClassDefinition;
 
@@ -34,5 +36,10 @@ public @interface EventProviderConfig {
   @AttributeDefinition(name = "Event Provider Documentation URL (Optional)",
       description = "your custom documentation URL")
   String aio_provider_docs_url() default "https://developer.adobe.com/events/docs/guides/using/aem/";
+
+  @AttributeDefinition(name = "Event Delivery Format",
+      description = "Event Delivery Format: either the old legacy`adobe_io` format (used in AIO former AEM integration)"
+          + " or better the `cloud_events_v1` open specification (see https://github.com/cloudevents/spec/blob/v1.0/spec.md)")
+  String event_delivery_format() default DELIVERY_FORMAT_CLOUD_EVENTS_V1;
 
 }

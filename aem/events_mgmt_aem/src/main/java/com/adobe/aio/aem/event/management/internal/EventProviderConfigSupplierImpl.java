@@ -121,6 +121,7 @@ public class EventProviderConfigSupplierImpl implements EventProviderConfigSuppl
         .description(providerConfig.aio_provider_description().isEmpty() ? "AEM " + instanceId
             : providerConfig.aio_provider_description())
         .docsUrl(providerConfig.aio_provider_docs_url())
+        .eventDeliveryFormat(providerConfig.event_delivery_format())
         .build();
   }
 
