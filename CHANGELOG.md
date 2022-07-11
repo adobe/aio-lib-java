@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-102 mapping the new Provider Registration input model allowing to specify the `event_delivery_format` [\#120](https://github.com/adobe/aio-lib-java/pull/120) ([francoisledroff](https://github.com/francoisledroff))
 - GH-114 adding unit and integration tests [\#117](https://github.com/adobe/aio-lib-java/pull/117) ([francoisledroff](https://github.com/francoisledroff))
 
 ## [aio-lib-java-0.0.46](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.46) (2022-06-10)
