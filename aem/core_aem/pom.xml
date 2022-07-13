@@ -19,7 +19,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.0.47-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
 
   <artifactId>aio-aem-core</artifactId>
@@ -163,4 +163,8 @@
       </dependencies>
     </profile>
   </profiles>
+
+  <scm>
+    <tag>aio-lib-java-0.1.0</tag>
+  </scm>
 </project>
