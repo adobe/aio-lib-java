@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.0...HEAD)
+
+### 📁 Other pull requests
+
+- GH-121 fixing the javadocs [\#122](https://github.com/adobe/aio-lib-java/pull/122) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-0.1.0](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.0) (2022-07-13)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.46...aio-lib-java-0.1.0)
