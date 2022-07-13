@@ -42,7 +42,8 @@ public class PrivateKeyBuilder {
   }
 
   /**
-   * will first look on the file system, if not found, in the classpath
+   * @param configPath: will first look on the file system, if not found, in the classpath
+   * @return a PrivateKeyBuilder loaded with the provided config
    */
   public PrivateKeyBuilder configPath(String configPath) throws IOException {
     this.configMap = getMapFromProperties(

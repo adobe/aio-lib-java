@@ -30,11 +30,11 @@ import org.apache.commons.lang3.StringUtils;
 public class ProviderInputModel {
 
   /**
-   * Default legacy Adobe I/O Event envelope format (`event_id` --> UUID and `event` --> payload)
+   * Default legacy Adobe I/O Events envelope format
    */
   public static final String DELIVERY_FORMAT_ADOBE_IO = "adobe_io";
   /**
-   * CloudEvents V1 Event envelop format see https://github.com/cloudevents/spec/blob/v1.0/spec.md
+   * CloudEvents V1 envelop format see https://github.com/cloudevents/spec/blob/v1.0/spec.md
    */
   public static final String DELIVERY_FORMAT_CLOUD_EVENTS_V1 = "cloud_events_v1";
 

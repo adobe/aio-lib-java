@@ -138,7 +138,7 @@ public class Provider {
    * @return the Event Delivery Format, either: the old legacy`adobe_io` format
    * or better `cloud_events_v1` (see https://github.com/cloudevents/spec/blob/v1.0/spec.md),
    * @see ProviderInputModel#DELIVERY_FORMAT_ADOBE_IO
-   * @see ProviderInputModel##DELIVERY_FORMAT_CLOUD_EVENTS_V1
+   * @see ProviderInputModel#DELIVERY_FORMAT_CLOUD_EVENTS_V1
    */
   public String getEventDeliveryFormat() {
     return eventDeliveryFormat;
