@@ -11,15 +11,15 @@
  */
 package com.adobe.aio.event.webhook.service;
 
-import static com.adobe.aio.cache.CaffeinCacheUtils.buildCacheWithExpiryAfterWrite;
-import static com.adobe.aio.retrofit.RetrofitUtils.getRetrofitWithJacksonConverterFactory;
+import static com.adobe.aio.event.webhook.cache.CacheServiceImpl.cacheBuilder;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
+import com.adobe.aio.event.webhook.cache.CacheServiceImpl;
+import com.adobe.aio.event.webhook.feign.FeignPubKeyService;
 import com.adobe.aio.exception.AIOException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.benmanes.caffeine.cache.Cache;
 import java.security.InvalidKeyException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -34,30 +34,26 @@ import org.apache.commons.validator.routines.UrlValidator;
 import org.h2.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import retrofit2.Call;
-import retrofit2.Response;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class EventVerifier {
 
   private static Logger logger = LoggerFactory.getLogger(EventVerifier.class);
 
-  private static final String ADOBE_IOEVENTS_SECURITY_DOMAIN = "https://static.adobeioevents.com";
-  private static final Long CACHE_EXPIRY_IN_MINUTES = 1440L; // expiry of 24 hrs
-  private static final Long CACHE_MAX_ENTRY_COUNT = 100L;
+  public static final String ADOBE_IOEVENTS_SECURITY_DOMAIN = "https://static.adobeioevents.com/";
   public static final String ADOBE_IOEVENTS_DIGI_SIGN_1 = "x-adobe-digital-signature-1";
   public static final String ADOBE_IOEVENTS_DIGI_SIGN_2 = "x-adobe-digital-signature-2";
   public static final String ADOBE_IOEVENTS_PUB_KEY_1_PATH = "x-adobe-public-key1-path";
   public static final String ADOBE_IOEVENTS_PUB_KEY_2_PATH = "x-adobe-public-key2-path";
+  private static final int CACHE_EXPIRY_IN_MINUTES = 1440; // expiry of 24 hrs
 
-  private final Cache<String, String> pubKeyCache;
-  private PubKeyService pubKeyService;
+  private final CacheServiceImpl pubKeyCache;
+  private FeignPubKeyService pubKeyService;
 
   public EventVerifier() {
-    this.pubKeyCache = buildCacheWithExpiryAfterWrite("publicKeyCache",
-        CACHE_EXPIRY_IN_MINUTES, CACHE_MAX_ENTRY_COUNT);
-    this.pubKeyService = getRetrofitWithJacksonConverterFactory(ADOBE_IOEVENTS_SECURITY_DOMAIN, 60)
-        .create(PubKeyService.class);
+    this.pubKeyCache = cacheBuilder().buildWithExpiry(CACHE_EXPIRY_IN_MINUTES);
+    this.pubKeyService = new FeignPubKeyService(ADOBE_IOEVENTS_SECURITY_DOMAIN);
   }
 
   /**
@@ -70,7 +66,7 @@ public class EventVerifier {
    * @throws Exception
    */
   public boolean authenticateEvent(String message, String clientId,
-      Map<String, String> headers) throws Exception {
+      Map<String, String> headers) {
     if(!isValidTargetRecipient(message, clientId)) {
       logger.error("target recipient {} is not valid for message {}", clientId, message);
       return false;
@@ -148,7 +144,7 @@ public class EventVerifier {
     return keyFactory.generatePublic(keySpec);
   }
 
-  private String fetchPemEncodedPublicKey(String publicKeyPath) {
+  String fetchPemEncodedPublicKey(String publicKeyPath) {
     return fetchKeyFromCacheOrApi(publicKeyPath);
   }
 
@@ -165,26 +161,24 @@ public class EventVerifier {
     try {
       logger.warn("public key {} not present in cache, fetching directly from the cdn url {}",
           pubKeyFileName, ADOBE_IOEVENTS_SECURITY_DOMAIN + pubKeyPath);
-      String pubKey = "";
-      Call<String> pubKeyFetchCall = pubKeyService.getPubKeyFromCDN(pubKeyPath);
-      Response<String> response = pubKeyFetchCall.execute();
-      if (response.isSuccessful()) {
-        pubKey = response.body();
-        pubKeyCache.put(pubKeyFileName, pubKey);
+      String pubKeyFetchResponse = pubKeyService.getPubKeyFromCDN(pubKeyPath);
+      if (!StringUtils.isNullOrEmpty(pubKeyFetchResponse)) {
+        pubKeyCache.put(pubKeyFileName, pubKeyFetchResponse);
       }
-      return pubKey;
+      return pubKeyFetchResponse;
     } catch (Exception e) {
-      throw new AIOException("error fetching public key from CDN url"
+      throw new AIOException("error fetching public key from CDN url -> "
           + ADOBE_IOEVENTS_SECURITY_DOMAIN + pubKeyPath + " due to " + e.getMessage());
     }
   }
 
   private String getKeyFromCache(String pubKeyFileNameAsKey) {
-    String pubKey = pubKeyCache.getIfPresent(pubKeyFileNameAsKey);
+    Object pubKey = pubKeyCache.get(pubKeyFileNameAsKey);
     if (pubKey != null) {
       logger.debug("fetched key successfully for pub key path {} from cache", pubKeyFileNameAsKey);
+      return String.valueOf(pubKey);
     }
-    return pubKey;
+    return null;
   }
 
   /**
@@ -199,14 +193,5 @@ public class EventVerifier {
 
   private boolean isValidUrl(String url) {
     return new UrlValidator().isValid(url);
-  }
-
-  // ----------------------- Instance Builder ---------------------------
-
-  public static class EventVerifierBuilder {
-    public EventVerifier build() {
-      EventVerifier eventVerifier = new EventVerifier();
-      return eventVerifier;
-    }
   }
 }
