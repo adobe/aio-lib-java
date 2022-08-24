@@ -15,7 +15,7 @@ import com.adobe.aio.event.webhook.model.CacheableObject;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface CacheService<K, V> {
+public interface CacheService {
 
   @Nullable
   Object get(@Nonnull String key);
