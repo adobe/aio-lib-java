@@ -21,27 +21,28 @@ import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.runner.RunWith;
+import org.mockito.junit.MockitoJUnitRunner;
 
-@SpringBootTest
+@RunWith(MockitoJUnitRunner.class)
 public class EventVerifierTest {
 
   private static final String TEST_CLIENT_ID = "client_id1";
   private static final String INVALID_TEST_CLIENT_ID = "invalid_client_id";
   private static final String TEST_DIGI_SIGN_1 = "mvEj6rEiJK9QFtX5QNl1bc9AJW7sOFAHgUk25ytroi8yqrRAPtijCu19vS6o96eANnjHQzS76p+sA1Y4giQ+DnQOZz35AJwvnDmK2FVkbaiupinCjRK4pnwd0aY88HI6o8Fmj6zomAKcF46D8IHglirCjiUHT3gENFHnuro55rgnJ3eWrT4ldcruKHSKAopapAhqQBr1BhrHVqtoz8Zg+ZWGsSgY+tAje3m59mTjWPSC1/KfjgpjhADDKHz+I1eT/z5k0667hlLSgYvHGhmhh8aAcLKgM5tzcXWpYQz4xCZgSF/MqAIUkmnVVWHhs18rr1WSaJ4j2ZTO6vaj8XoHng==";
   private static final String TEST_DIGI_SIGN_2 = "GpMONiPMHY51vpHF3R9SSs9ogRn8i2or/bvV3R+PYXGgDzAxDhRdl9dIUp/qQ3vsxDGEv045IV4GQ2f4QbsFvWLJsBNyCqLs6KL8LsRoGfEC4Top6c1VVjrEEQ1MOoFcoq/6riXzg4h09lRTfARllVv+icgzAiuv/JW2HNg5yQ4bqenFELD6ipCStuaI/OGS0A9s0Hc6o3aoHz3r5d5DecwE6pUdpG8ODhKBM+34CvcvMDNdrj8STYWHsEUqGdR9klpaqaC1QRYFIO7WgbgdwsuGULz6Sjm+q5s5Wh++fz5E+gXkizFviD389gDIUylFTig/1h7WTLRDuSz69Q+C5w==";
-  private static final String TEST_PUB_KEY1_PATH = "/qe/keys/pub-key-voy5XEbWmT.pem";
-  private static final String TEST_PUB_KEY2_PATH = "/qe/keys/pub-key-maAv3Tg6ZH.pem";
+  private static final String TEST_PUB_KEY1_PATH = "qe/keys/pub-key-voy5XEbWmT.pem";
+  private static final String TEST_PUB_KEY2_PATH = "qe/keys/pub-key-maAv3Tg6ZH.pem";
 
   private EventVerifier underTest;
 
   @Before
-  public void setup() throws Exception {
+  public void setup() {
     underTest = new EventVerifier();
   }
 
   @Test
-  public void testVerifyValidSignature() throws Exception {
+  public void testVerifyValidSignature() {
     String message = getTestMessage();
     Map<String, String> headers = getTestHeadersWithValidSignature();
     boolean result = underTest.authenticateEvent(message, TEST_CLIENT_ID, headers);
@@ -49,7 +50,7 @@ public class EventVerifierTest {
   }
 
   @Test
-  public void testVerifyInvalidSignature() throws Exception {
+  public void testVerifyInvalidSignature() {
     String message = getTestMessage();
     Map<String, String> headers = getTestHeadersWithInvalidSignature();
     boolean result = underTest.authenticateEvent(message, TEST_CLIENT_ID, headers);
@@ -57,7 +58,7 @@ public class EventVerifierTest {
   }
 
   @Test
-  public void testVerifyInvalidPublicKey() throws Exception {
+  public void testVerifyInvalidPublicKey() {
     String message = getTestMessage();
     Map<String, String> headers = getTestHeadersWithInvalidPubKey();
     boolean result = underTest.authenticateEvent(message, TEST_CLIENT_ID, headers);
@@ -65,7 +66,7 @@ public class EventVerifierTest {
   }
 
   @Test
-  public void testVerifyInvalidRecipientClient() throws Exception {
+  public void testVerifyInvalidRecipientClient() {
     String message = getTestMessage();
     Map<String, String> headers = getTestHeadersWithInvalidPubKey();
     boolean result = underTest.authenticateEvent(message, INVALID_TEST_CLIENT_ID, headers);
@@ -103,5 +104,4 @@ public class EventVerifierTest {
     signHeaders.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, TEST_PUB_KEY1_PATH);
     return signHeaders;
   }
-
 }
