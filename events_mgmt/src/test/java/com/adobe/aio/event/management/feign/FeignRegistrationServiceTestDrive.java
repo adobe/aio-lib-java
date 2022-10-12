@@ -12,11 +12,11 @@
 package com.adobe.aio.event.management.feign;
 
 import com.adobe.aio.event.management.RegistrationService;
+import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
-import com.adobe.aio.event.management.model.EventsOfInterest;
+import com.adobe.aio.event.management.model.EventsOfInterestInputModel;
 import com.adobe.aio.event.management.model.Registration;
-import com.adobe.aio.event.management.model.RegistrationInputModel;
 
 import java.util.Optional;
 import org.slf4j.Logger;
@@ -43,10 +43,10 @@ public class FeignRegistrationServiceTestDrive {
       logger.info("someRegistration: {}", registration);
 
       Optional<Registration> created = registrationService.createRegistration(
-          RegistrationInputModel.builder()
+          RegistrationCreateModel.builder()
               .description("your registration description")
               .name("your registration name")
-              .addEventsOfInterests(EventsOfInterest.builder()
+              .addEventsOfInterests(EventsOfInterestInputModel.builder()
                   .eventCode(SOME_EVENT_CODE)
                   .providerId(SOME_PROVIDER_ID).build())
       );

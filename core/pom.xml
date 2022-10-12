@@ -54,6 +54,14 @@
       <groupId>io.github.openfeign.form</groupId>
       <artifactId>feign-form</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.openapitools.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-hal</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.cloudevents</groupId>
+      <artifactId>cloudevents-api</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>

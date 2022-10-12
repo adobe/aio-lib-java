@@ -93,23 +93,24 @@ public class FeignJournalServiceIntegrationTest {
   public void testJournalPolling()
       throws InterruptedException {
     Provider provider = FeignProviderServiceIntegrationTest.createTestProvider(providerService);
+    String providerId = provider.getId();
     Registration registration = FeignRegistrationServiceIntegrationTest.createRegistration(
-        registrationService, provider.getId());
+        registrationService, providerId);
 
-    String cloudEventId = FeignPublishServiceIntegrationTest.publishCloudEvent(publishService, provider.getId(), TEST_EVENT_CODE);
+    String cloudEventId = FeignPublishServiceIntegrationTest.publishCloudEvent(publishService, providerId, TEST_EVENT_CODE);
 
     boolean wasCloudEventPolled = pollJournalForEvent(workspace,
-        registration.getJournalUrl(), cloudEventId, isEventIdTheCloudEventId);
+        registration.getEventsUrl().getHref(), cloudEventId, isEventIdTheCloudEventId);
 
-    String rawEventId = FeignPublishServiceIntegrationTest.publishRawEvent(publishService, provider.getId(), TEST_EVENT_CODE);
+    String rawEventId = FeignPublishServiceIntegrationTest.publishRawEvent(publishService, providerId, TEST_EVENT_CODE);
 
     boolean wasRawEventPolled = pollJournalForEvent(workspace,
-        registration.getJournalUrl(), rawEventId, isEventIdInTheCloudEventData);
+        registration.getEventsUrl().getHref(), rawEventId, isEventIdInTheCloudEventData);
 
     // we want to clean up the provider and registration even if the journal polling failed.
     FeignRegistrationServiceIntegrationTest.deleteRegistration(registrationService,
         registration.getRegistrationId());
-    FeignProviderServiceIntegrationTest.deleteProvider(providerService, provider.getId());
+    FeignProviderServiceIntegrationTest.deleteProvider(providerService, providerId);
 
     Assert.assertTrue("The published CloudEvent was not retrieved in the Journal",
         wasCloudEventPolled);

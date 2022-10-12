@@ -14,13 +14,10 @@ package com.adobe.aio.event.management.feign;
 
 import com.adobe.aio.event.management.ProviderService;
 import com.adobe.aio.event.management.RegistrationService;
-import com.adobe.aio.event.management.model.DeliveryType;
-import com.adobe.aio.event.management.model.EventsOfInterest;
+import com.adobe.aio.event.management.model.EventsOfInterestInputModel;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.Registration;
-import com.adobe.aio.event.management.model.Registration.IntegrationStatus;
-import com.adobe.aio.event.management.model.Registration.Status;
-import com.adobe.aio.event.management.model.RegistrationInputModel;
+import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.net.MalformedURLException;
@@ -41,14 +38,8 @@ public class FeignRegistrationServiceIntegrationTest {
   private ProviderService providerService;
   private RegistrationService registrationService;
 
-  public static RegistrationInputModel.Builder getRegistrationInputModelBuilder() {
-    return RegistrationInputModel.builder()
-        .name(TEST_REGISTRATION_NAME)
-        .description(TEST_REGISTRATION_DESC);
-  }
-
-  public static EventsOfInterest.Builder getTestEventsOfInterestBuilder(String providerId) {
-    return EventsOfInterest.builder()
+  public static EventsOfInterestInputModel.Builder getTestEventsOfInterestBuilder(String providerId) {
+    return EventsOfInterestInputModel.builder()
         .eventCode(FeignProviderServiceIntegrationTest.TEST_EVENT_CODE)
         .providerId(providerId);
   }
@@ -56,27 +47,29 @@ public class FeignRegistrationServiceIntegrationTest {
   public static Registration createRegistration(RegistrationService registrationService,
       String providerId) {
     Optional<Registration> registration = registrationService.createRegistration(
-        getRegistrationInputModelBuilder()
-            .addEventsOfInterests(
-                getTestEventsOfInterestBuilder(providerId).build()));
+      RegistrationCreateModel.builder()
+        .name(TEST_REGISTRATION_NAME)
+        .description(TEST_REGISTRATION_DESC)
+        .deliveryType("journal")
+        .addEventsOfInterests(getTestEventsOfInterestBuilder(providerId).build())
+    );
     Assert.assertTrue(registration.isPresent());
     logger.info("Created AIO Event Registration: {}", registration.get());
     String registrationId = registration.get().getRegistrationId();
     Assert.assertNotNull(registrationId);
-    String createdId = registration.get().getRegistrationId();
     Assert.assertEquals(TEST_REGISTRATION_DESC, registration.get().getDescription());
     Assert.assertEquals(TEST_REGISTRATION_NAME, registration.get().getName());
-    Assert.assertEquals(DeliveryType.JOURNAL, registration.get().getDeliveryType());
+    Assert.assertEquals("journal", registration.get().getDeliveryType());
     Assert.assertEquals(1, registration.get().getEventsOfInterests().size());
     Assert.assertEquals(FeignProviderServiceIntegrationTest.TEST_EVENT_CODE,
         registration.get().getEventsOfInterests().iterator().next().getEventCode());
     Assert.assertEquals(providerId,
         registration.get().getEventsOfInterests().iterator().next().getProviderId());
-    Assert.assertEquals(Status.VERIFIED, registration.get().getStatus());
-    Assert.assertEquals(IntegrationStatus.ENABLED, registration.get().getIntegrationStatus());
+    Assert.assertEquals("verified", registration.get().getWebhookStatus());
+    Assert.assertEquals(true, registration.get().isEnabled());
     Assert.assertNull(registration.get().getWebhookUrl());
-    assertUrl(registration.get().getJournalUrl());
-    assertUrl(registration.get().getTraceUrl());
+    assertUrl(registration.get().getEventsUrl().getHref());
+    assertUrl(registration.get().getTraceUrl().getHref());
     Assert.assertNotNull(registration.get().getCreatedDate());
     Assert.assertNotNull(registration.get().getUpdatedDate());
     Assert.assertEquals(registration.get().getUpdatedDate(), registration.get().getCreatedDate());
@@ -142,12 +135,12 @@ public class FeignRegistrationServiceIntegrationTest {
     Assert.assertEquals(registration.getDeliveryType(), found.get().getDeliveryType());
     Assert.assertEquals(registration.getEventsOfInterests(),
         found.get().getEventsOfInterests());
-    Assert.assertEquals(registration.getStatus(), found.get().getStatus());
-    Assert.assertEquals(registration.getIntegrationStatus(),
-        found.get().getIntegrationStatus());
+    Assert.assertEquals(registration.getWebhookStatus(), found.get().getWebhookStatus());
+    Assert.assertEquals(registration.isEnabled(),
+        found.get().isEnabled());
     Assert.assertEquals(registration.getWebhookUrl(), found.get().getWebhookUrl());
-    Assert.assertEquals(registration.getJournalUrl(), found.get().getJournalUrl());
-    Assert.assertEquals(registration.getTraceUrl(), found.get().getTraceUrl());
+    Assert.assertEquals(registration.getEventsUrl().getHref(), found.get().getEventsUrl().getHref());
+    Assert.assertEquals(registration.getTraceUrl().getHref(), found.get().getTraceUrl().getHref());
 
     deleteRegistration(registrationService, registrationId);
 

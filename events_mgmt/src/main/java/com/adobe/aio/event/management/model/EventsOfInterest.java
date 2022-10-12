@@ -11,11 +11,14 @@
  */
 package com.adobe.aio.event.management.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Objects;
-import org.apache.commons.lang3.StringUtils;
 
+@JsonInclude(Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EventsOfInterest {
 
   @JsonProperty("event_code")
@@ -24,14 +27,29 @@ public class EventsOfInterest {
   @JsonProperty("provider_id")
   String providerId;
 
-  private EventsOfInterest() {
+  @JsonProperty("event_label")
+  protected String eventLabel;
+
+  @JsonProperty("event_description")
+  protected String eventDescription;
+
+  @JsonProperty("provider_label")
+  protected String providerLabel;
+
+  @JsonProperty("provider_description")
+  protected String providerDescription;
+
+  @JsonProperty("provider_docs_url")
+  protected String providerDocsUrl;
+
+  @JsonProperty("event_delivery_format")
+  protected String eventDeliveryFormat;
+
+  public String getEventCode() {
+    return eventCode;
   }
 
-  private EventsOfInterest(String providerId, String eventCode) {
-    if (StringUtils.isBlank(providerId) || StringUtils.isBlank(eventCode)){
-      throw new IllegalArgumentException("Invalid EventsOfInterest, neither providerId, nor eventCode can be empty/blank");
-    }
-    this.providerId = providerId;
+  public void setEventCode(String eventCode) {
     this.eventCode = eventCode;
   }
 
@@ -39,8 +57,56 @@ public class EventsOfInterest {
     return providerId;
   }
 
-  public String getEventCode() {
-    return eventCode;
+  public void setProviderId(String providerId) {
+    this.providerId = providerId;
+  }
+
+  public String getEventDeliveryFormat() {
+    return eventDeliveryFormat;
+  }
+
+  public void setEventDeliveryFormat(String eventDeliveryFormat) {
+    this.eventDeliveryFormat = eventDeliveryFormat;
+  }
+
+  public String getEventLabel() {
+    return eventLabel;
+  }
+
+  public void setEventLabel(String eventLabel) {
+    this.eventLabel = eventLabel;
+  }
+
+  public String getEventDescription() {
+    return eventDescription;
+  }
+
+  public void setEventDescription(String eventDescription) {
+    this.eventDescription = eventDescription;
+  }
+
+  public String getProviderLabel() {
+    return providerLabel;
+  }
+
+  public void setProviderLabel(String providerLabel) {
+    this.providerLabel = providerLabel;
+  }
+
+  public String getProviderDescription() {
+    return providerDescription;
+  }
+
+  public void setProviderDescription(String providerDescription) {
+    this.providerDescription = providerDescription;
+  }
+
+  public String getProviderDocsUrl() {
+    return providerDocsUrl;
+  }
+
+  public void setProviderDocsUrl(String providerDocsUrl) {
+    this.providerDocsUrl = providerDocsUrl;
   }
 
   @Override
@@ -48,49 +114,37 @@ public class EventsOfInterest {
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (!(o instanceof EventsOfInterest)) {
       return false;
     }
     EventsOfInterest that = (EventsOfInterest) o;
     return Objects.equals(eventCode, that.eventCode) &&
-        Objects.equals(providerId, that.providerId);
+                    Objects.equals(providerId, that.providerId) &&
+                    Objects.equals(eventLabel, that.eventLabel) &&
+                    Objects.equals(eventDescription, that.eventDescription) &&
+                    Objects.equals(providerLabel, that.providerLabel) &&
+                    Objects.equals(providerDescription, that.providerDescription) &&
+                    Objects.equals(providerDocsUrl, that.providerDocsUrl) &&
+                    Objects.equals(eventDeliveryFormat, that.eventDeliveryFormat);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(eventCode, providerId);
+    return Objects.hash(eventCode, providerId, eventLabel, eventDescription, providerLabel, providerDescription, providerDocsUrl,
+                    eventDeliveryFormat);
   }
 
   @Override
   public String toString() {
     return "EventsOfInterest{" +
-        "eventCode='" + eventCode + '\'' +
-        ", providerId='" + providerId + '\'' +
-        '}';
-  }
-
-  @JsonIgnore
-  public static Builder builder() {
-    return new Builder();
-  }
-
-  public static class Builder {
-
-    private String providerId;
-    private String eventCode;
-
-    public Builder providerId(String providerId) {
-      this.providerId = providerId;
-      return this;
-    }
-
-    public Builder eventCode(String eventCode) {
-      this.eventCode = eventCode;
-      return this;
-    }
-
-    public EventsOfInterest build() {
-      return new EventsOfInterest(providerId, eventCode);
-    }
+                    "eventCode='" + eventCode + '\'' +
+                    ", providerId='" + providerId + '\'' +
+                    ", eventLabel='" + eventLabel + '\'' +
+                    ", eventDescription='" + eventDescription + '\'' +
+                    ", providerLabel='" + providerLabel + '\'' +
+                    ", providerDescription='" + providerDescription + '\'' +
+                    ", providerDocsUrl='" + providerDocsUrl + '\'' +
+                    ", eventDeliveryFormat='" + eventDeliveryFormat + '\'' +
+                    '}';
   }
 }
