@@ -12,6 +12,7 @@
 package com.adobe.aio.event.management.api;
 
 import com.adobe.aio.event.management.model.Registration;
+import com.adobe.aio.event.management.model.RegistrationCollection;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.event.management.model.RegistrationUpdateModel;
 import feign.Headers;
@@ -88,7 +89,7 @@ public interface RegistrationApi {
      */
     @RequestLine("GET /events/{consumerOrgId}/{projectId}/{workspaceId}/registrations")
     @Headers({"Content-Type: application/json"})
-    Optional<Registration> getAllForWorkspace(
+    Optional<RegistrationCollection> getAllForWorkspace(
       @Param("consumerOrgId") String consumerOrgId,
       @Param("projectId") String projectId,
       @Param("workspaceId") String workspaceId);

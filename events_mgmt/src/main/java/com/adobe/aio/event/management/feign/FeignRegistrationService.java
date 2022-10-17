@@ -23,7 +23,11 @@ import com.adobe.aio.event.management.api.RegistrationApi;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.util.feign.FeignUtil;
 import feign.RequestInterceptor;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 public class FeignRegistrationService implements RegistrationService {
@@ -67,7 +71,7 @@ public class FeignRegistrationService implements RegistrationService {
   @Override
   public Optional<Registration> createRegistration(
       RegistrationCreateModel.Builder registrationCreateModelBuilder) {
-    RegistrationCreateModel inputModel = registrationCreateModelBuilder
+    var inputModel = registrationCreateModelBuilder
         .clientId(workspace.getApiKey()).build();
     return registrationApi.post(workspace.getConsumerOrgId(), workspace.getProjectId(),
         workspace.getWorkspaceId(), inputModel);
@@ -76,9 +80,15 @@ public class FeignRegistrationService implements RegistrationService {
   @Override
   public Optional<Registration> updateRegistration(String registrationId,
                   RegistrationUpdateModel.Builder registrationUpdateModelBuilder) {
-    RegistrationUpdateModel inputModel = registrationUpdateModelBuilder.build();
+    var inputModel = registrationUpdateModelBuilder.build();
     return registrationApi.put(workspace.getConsumerOrgId(), workspace.getProjectId(),
                     workspace.getWorkspaceId(), registrationId, inputModel);
   }
 
+  @Override public List<Registration> getRegistrationsForWorkspace() {
+    var registrationCollection = registrationApi.getAllForWorkspace(workspace.getConsumerOrgId(), workspace.getProjectId(),
+                    workspace.getWorkspaceId());
+    return registrationCollection.map(collection -> new ArrayList<>(collection.getRegistrationHalModels()))
+                    .orElseGet(ArrayList::new);
+  }
 }

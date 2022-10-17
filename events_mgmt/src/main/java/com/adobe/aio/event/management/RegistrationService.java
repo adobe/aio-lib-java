@@ -16,6 +16,7 @@ import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.event.management.model.RegistrationUpdateModel;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.Registration;
+import java.util.List;
 import java.util.Optional;
 
 public interface RegistrationService {
@@ -27,6 +28,8 @@ public interface RegistrationService {
   Optional<Registration> createRegistration(RegistrationCreateModel.Builder registrationCreateModelBuilder);
 
   Optional<Registration> updateRegistration(String registrationId, RegistrationUpdateModel.Builder registrationUpdateModelBuilder);
+
+  List<Registration> getRegistrationsForWorkspace();
 
   static Builder builder() {
     return new Builder();

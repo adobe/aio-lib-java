@@ -22,6 +22,7 @@ import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import org.junit.Assert;
 import org.junit.Before;
@@ -141,6 +142,9 @@ public class FeignRegistrationServiceIntegrationTest {
     Assert.assertEquals(registration.getWebhookUrl(), found.get().getWebhookUrl());
     Assert.assertEquals(registration.getEventsUrl().getHref(), found.get().getEventsUrl().getHref());
     Assert.assertEquals(registration.getTraceUrl().getHref(), found.get().getTraceUrl().getHref());
+
+    List<Registration> registrations = registrationService.getRegistrationsForWorkspace();
+    Assert.assertTrue(registrations.size() > 0);
 
     deleteRegistration(registrationService, registrationId);
 
