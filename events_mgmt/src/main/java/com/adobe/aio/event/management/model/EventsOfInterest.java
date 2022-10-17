@@ -11,6 +11,7 @@
  */
 package com.adobe.aio.event.management.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -22,91 +23,78 @@ import java.util.Objects;
 public class EventsOfInterest {
 
   @JsonProperty("event_code")
-  String eventCode;
+  protected final String eventCode;
 
   @JsonProperty("provider_id")
-  String providerId;
+  protected final String providerId;
 
   @JsonProperty("event_label")
-  protected String eventLabel;
+  protected final String eventLabel;
 
   @JsonProperty("event_description")
-  protected String eventDescription;
+  protected final String eventDescription;
 
   @JsonProperty("provider_label")
-  protected String providerLabel;
+  protected final String providerLabel;
 
   @JsonProperty("provider_description")
-  protected String providerDescription;
+  protected final String providerDescription;
 
   @JsonProperty("provider_docs_url")
-  protected String providerDocsUrl;
+  protected final String providerDocsUrl;
 
   @JsonProperty("event_delivery_format")
-  protected String eventDeliveryFormat;
+  protected final String eventDeliveryFormat;
+
+  @JsonCreator
+  public EventsOfInterest(@JsonProperty("event_code") String eventCode,
+                  @JsonProperty("provider_id") String providerId,
+                  @JsonProperty("event_label") String eventLabel,
+                  @JsonProperty("event_description") String eventDescription,
+                  @JsonProperty("provider_label") String providerLabel,
+                  @JsonProperty("provider_description") String providerDescription,
+                  @JsonProperty("provider_docs_url") String providerDocsUrl,
+                  @JsonProperty("event_delivery_format") String eventDeliveryFormat) {
+    this.eventCode = eventCode;
+    this.providerId = providerId;
+    this.eventLabel = eventLabel;
+    this.eventDescription = eventDescription;
+    this.providerLabel = providerLabel;
+    this.providerDescription = providerDescription;
+    this.providerDocsUrl = providerDocsUrl;
+    this.eventDeliveryFormat = eventDeliveryFormat;
+  }
 
   public String getEventCode() {
     return eventCode;
-  }
-
-  public void setEventCode(String eventCode) {
-    this.eventCode = eventCode;
   }
 
   public String getProviderId() {
     return providerId;
   }
 
-  public void setProviderId(String providerId) {
-    this.providerId = providerId;
-  }
-
   public String getEventDeliveryFormat() {
     return eventDeliveryFormat;
-  }
-
-  public void setEventDeliveryFormat(String eventDeliveryFormat) {
-    this.eventDeliveryFormat = eventDeliveryFormat;
   }
 
   public String getEventLabel() {
     return eventLabel;
   }
 
-  public void setEventLabel(String eventLabel) {
-    this.eventLabel = eventLabel;
-  }
-
   public String getEventDescription() {
     return eventDescription;
-  }
-
-  public void setEventDescription(String eventDescription) {
-    this.eventDescription = eventDescription;
   }
 
   public String getProviderLabel() {
     return providerLabel;
   }
 
-  public void setProviderLabel(String providerLabel) {
-    this.providerLabel = providerLabel;
-  }
-
   public String getProviderDescription() {
     return providerDescription;
   }
 
-  public void setProviderDescription(String providerDescription) {
-    this.providerDescription = providerDescription;
-  }
-
   public String getProviderDocsUrl() {
     return providerDocsUrl;
-  }
-
-  public void setProviderDocsUrl(String providerDocsUrl) {
-    this.providerDocsUrl = providerDocsUrl;
   }
 
   @Override

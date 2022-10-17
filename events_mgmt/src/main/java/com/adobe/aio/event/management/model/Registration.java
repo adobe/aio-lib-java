@@ -11,6 +11,7 @@
  */
 package com.adobe.aio.event.management.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -18,7 +19,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.openapitools.jackson.dataformat.hal.HALLink;
 import io.openapitools.jackson.dataformat.hal.annotation.Link;
 import io.openapitools.jackson.dataformat.hal.annotation.Resource;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -36,50 +36,91 @@ public class Registration {
   @Link("rel:trace")
   private HALLink traceUrl;
 
-  private Long id;
+  private final Long id;
 
-  private String name;
+  private final String name;
 
-  private String description;
+  private final String description;
 
   @JsonProperty("client_id")
-  private String clientId;
+  private final String clientId;
 
   @JsonProperty("registration_id")
-  private String registrationId;
+  private final String registrationId;
 
   @JsonProperty("delivery_type")
-  private String deliveryType;
+  private final String deliveryType;
 
   @JsonProperty("webhook_status")
-  private String webhookStatus;
+  private final String webhookStatus;
 
   @JsonProperty(value = "created_date")
-  private String createdDate;
+  private final String createdDate;
 
   @JsonProperty(value = "updated_date")
-  private String updatedDate;
+  private final String updatedDate;
 
   @JsonProperty("consumer_id")
-  private String consumerId;
+  private final String consumerId;
 
   @JsonProperty("project_id")
-  private String projectId;
+  private final String projectId;
 
   @JsonProperty("workspace_id")
-  private String workspaceId;
+  private final String workspaceId;
 
   @JsonProperty("webhook_url")
-  private String webhookUrl;
+  private final String webhookUrl;
 
   @JsonProperty("runtime_action")
-  private String runtimeAction;
+  private final String runtimeAction;
 
   @JsonProperty("enabled")
-  private boolean enabled;
+  private final boolean enabled;
 
   @JsonProperty("events_of_interest")
-  private Set<EventsOfInterest> eventsOfInterests = new HashSet<>();
+  private final Set<EventsOfInterest> eventsOfInterests;
+
+  @JsonCreator
+  public Registration(
+                  @JsonProperty("id") Long id,
+                  @JsonProperty("name") String name,
+                  @JsonProperty("description") String description,
+                  @JsonProperty("client_id") String clientId,
+                  @JsonProperty("registration_id") String registrationId,
+                  @JsonProperty("delivery_type") String deliveryType,
+                  @JsonProperty("webhook_status") String webhookStatus,
+                  @JsonProperty(value = "created_date") String createdDate,
+                  @JsonProperty(value = "updated_date") String updatedDate,
+                  @JsonProperty("consumer_id") String consumerId,
+                  @JsonProperty("project_id") String projectId,
+                  @JsonProperty("workspace_id") String workspaceId,
+                  @JsonProperty("webhook_url") String webhookUrl,
+                  @JsonProperty("runtime_action") String runtimeAction,
+                  @JsonProperty("enabled") boolean enabled,
+                  @JsonProperty("events_of_interest") Set<EventsOfInterest> eventsOfInterests) {
+    this.id = id;
+    this.name = name;
+    this.description = description;
+    this.clientId = clientId;
+    this.registrationId = registrationId;
+    this.deliveryType = deliveryType;
+    this.webhookStatus = webhookStatus;
+    this.createdDate = createdDate;
+    this.updatedDate = updatedDate;
+    this.consumerId = consumerId;
+    this.projectId = projectId;
+    this.workspaceId = workspaceId;
+    this.webhookUrl = webhookUrl;
+    this.runtimeAction = runtimeAction;
+    this.enabled = enabled;
+    this.eventsOfInterests = eventsOfInterests;
+    this.self = self;
+    this.traceUrl = traceUrl;
+    this.eventsUrl = eventsUrl;
+  }
+
+
 
   public HALLink getSelf() {
     return self;
