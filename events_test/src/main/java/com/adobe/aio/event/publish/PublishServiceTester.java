@@ -63,7 +63,7 @@ public class PublishServiceTester {
     return eventId;
   }
 
-  private static String getEventDataNode(String eventId) {
+  public static String getEventDataNode(String eventId) {
     return "{\"" + DATA_EVENT_ID_NODE + "\" : \"" + eventId + "\"}";
   }
 

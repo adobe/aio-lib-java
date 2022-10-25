@@ -11,6 +11,8 @@
  */
 package com.adobe.aio.event.journal;
 
+import static com.adobe.aio.event.publish.PublishServiceTester.DATA_EVENT_ID_NODE;
+
 import com.adobe.aio.event.journal.model.Event;
 import com.adobe.aio.event.journal.model.JournalEntry;
 import com.adobe.aio.util.WorkspaceUtil;
@@ -24,6 +26,19 @@ public class JournalServiceTester {
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private static final long JOURNAL_POLLING_TIME_OUT_IN_MILLISECONDS = 1000l * 60l * 2l;
+
+  private static final String CLOUD_EVENT_ID_FIELD = "id";
+  private static final String CLOUD_EVENT_DATA_FIELD = "data";
+
+  public static final BiPredicate<Event, String> isEventIdInTheCloudEventData = (event, eventId) ->
+      event.getEvent().has(CLOUD_EVENT_DATA_FIELD) &&
+          event.getEvent().get(CLOUD_EVENT_DATA_FIELD).has(DATA_EVENT_ID_NODE) &&
+          event.getEvent().get(CLOUD_EVENT_DATA_FIELD).get(DATA_EVENT_ID_NODE).asText()
+              .contains(eventId);
+  public static final BiPredicate<Event, String> isEventIdTheCloudEventId = (event, eventId) ->
+      event.getEvent().has(CLOUD_EVENT_ID_FIELD) && event.getEvent().get(CLOUD_EVENT_ID_FIELD)
+          .asText().equals(eventId);
+
 
   private final Workspace workspace;
 

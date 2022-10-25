@@ -30,18 +30,6 @@ import org.junit.Test;
 
 public class JournalServiceIntegrationTest extends JournalServiceTester {
 
-  private static final String CLOUD_EVENT_ID_FIELD = "id";
-  private static final String CLOUD_EVENT_DATA_FIELD = "data";
-
-  private static final BiPredicate<Event, String> isEventIdInTheCloudEventData = (event, eventId) ->
-      event.getEvent().has(CLOUD_EVENT_DATA_FIELD) &&
-          event.getEvent().get(CLOUD_EVENT_DATA_FIELD).has(DATA_EVENT_ID_NODE) &&
-          event.getEvent().get(CLOUD_EVENT_DATA_FIELD).get(DATA_EVENT_ID_NODE).asText()
-              .contains(eventId);
-  private static final BiPredicate<Event, String> isEventIdTheCloudEventId = (event, eventId) ->
-      event.getEvent().has(CLOUD_EVENT_ID_FIELD) && event.getEvent().get(CLOUD_EVENT_ID_FIELD)
-          .asText().equals(eventId);
-
   private ProviderServiceTester providerServiceTester;
   private RegistrationServiceTester registrationServiceTester;
   private PublishServiceTester publishServiceTester;

@@ -67,7 +67,7 @@ public class WorkspaceUtil {
     }
     return value;
   }
-  
+
   private static Workspace.Builder getWorkspaceBuilder(String propertyFileClassPath) {
     Properties prop = FileUtil.readPropertiesFromClassPath(propertyFileClassPath);
     PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
