@@ -27,7 +27,7 @@ public class WorkspaceTest {
   private static final String TEST_PROPERTIES = "workspace.properties";
   private static final String TEST_VALUE = "_changeMe";
 
-  private static Workspace getTestWorkspaceFromProperties() throws IOException {
+  private static Workspace getTestWorkspaceFromProperties() {
     return Workspace.builder()
         .propertiesPath(TEST_PROPERTIES)
         .build();

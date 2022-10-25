@@ -11,10 +11,8 @@
  */
 package com.adobe.aio.util;
 
-import com.adobe.aio.exception.AIOException;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.workspace.Workspace;
-import java.io.IOException;
 import java.security.PrivateKey;
 import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
@@ -59,32 +57,23 @@ public class WorkspaceUtil {
   }
 
   public static String getSystemProperty(String key) {
-    try {
-      String value = System.getProperty(key);
-      if (StringUtils.isBlank(value)) {
-        value = FileUtil.readPropertiesFromClassPath(DEFAULT_TEST_PROPERTIES).getProperty(key);
-      }
-      return value;
-    } catch (IOException e) {
-      throw new AIOException(
-          "Unable to load Property: " + key
-              + "from class path Properties: " + DEFAULT_TEST_PROPERTIES, e);
-    }
+    return getSystemProperty(key,DEFAULT_TEST_PROPERTIES);
   }
 
+  public static String getSystemProperty(String key, String propertyClassPath) {
+    String value = System.getProperty(key);
+    if (StringUtils.isBlank(value)) {
+      value = FileUtil.readPropertiesFromClassPath(propertyClassPath).getProperty(key);
+    }
+    return value;
+  }
+  
   private static Workspace.Builder getWorkspaceBuilder(String propertyFileClassPath) {
-    try {
-      Properties prop = FileUtil.readPropertiesFromClassPath(propertyFileClassPath);
-      PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
-      return Workspace.builder()
-          .properties(prop)
-          .privateKey(privateKey);
-    } catch (IOException e) {
-      throw new AIOException(
-          "Unable to load your Workspace from class path " + propertyFileClassPath,
-          e);
-    }
+    Properties prop = FileUtil.readPropertiesFromClassPath(propertyFileClassPath);
+    PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
+    return Workspace.builder()
+        .properties(prop)
+        .privateKey(privateKey);
   }
-
 
 }
