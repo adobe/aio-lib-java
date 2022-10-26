@@ -125,9 +125,9 @@ public class FeignProviderServiceIntegrationTest {
   @Test
   public void getNotFound() {
     String idNotToBeFound = "this_id_should_not_exist";
-//    Assert.assertTrue(providerService.findProviderById(idNotToBeFound).isEmpty());
-    //Assert.assertTrue(providerService.getEventMetadata(idNotToBeFound).isEmpty());
-    //Assert.assertTrue(providerService.findCustomEventsProviderByInstanceId(idNotToBeFound).isEmpty());
+    Assert.assertFalse(providerService.findProviderById(idNotToBeFound).isPresent());
+    Assert.assertTrue(providerService.getEventMetadata(idNotToBeFound).isEmpty());
+    Assert.assertFalse(providerService.findCustomEventsProviderByInstanceId(idNotToBeFound).isPresent());
   }
 
   @Test
