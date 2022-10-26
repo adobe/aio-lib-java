@@ -90,7 +90,7 @@ public class FeignProviderServiceIntegrationTest {
     providerService.deleteProvider(providerId);
     logger.info("Deleted AIO Events Provider: {}", providerId);
     Optional deleted = providerService.findProviderById(providerId);
-//    Assert.assertTrue(deleted.isEmpty());
+    Assert.assertFalse(deleted.isPresent());
     logger.info("No more AIO Events Provider with id: {}", providerId);
   }
 
