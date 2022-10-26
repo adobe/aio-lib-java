@@ -59,7 +59,7 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
   @Test
   public void testJournalPolling()
       throws InterruptedException {
-    Provider provider = providerServiceTester.createProvider(TEST_EVENT_PROVIDER_LABEL,
+    Provider provider = providerServiceTester.createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL,
         ProviderServiceIntegrationTest.TEST_EVENT_CODE);
     String providerId = provider.getId();
     Registration registration = registrationServiceTester.createJournalRegistration(

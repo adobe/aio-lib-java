@@ -42,7 +42,7 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
 
   @Test
   public void publishEventTest() {
-    Provider provider = providerServiceTester.createProvider(TEST_EVENT_PROVIDER_LABEL, TEST_EVENT_CODE);
+    Provider provider = providerServiceTester.createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL, TEST_EVENT_CODE);
     String providerId = provider.getId();
     Registration registration = registrationServiceTester.createJournalRegistration(
         TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE);

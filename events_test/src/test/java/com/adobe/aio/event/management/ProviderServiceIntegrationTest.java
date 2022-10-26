@@ -62,7 +62,7 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
 
   @Test
   public void createGetUpdateDelete() {
-    Provider provider = createProvider(TEST_EVENT_PROVIDER_LABEL, TEST_EVENT_CODE);
+    Provider provider = createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL, TEST_EVENT_CODE);
 
     String providerId = provider.getId();
     String instanceId = provider.getInstanceId();

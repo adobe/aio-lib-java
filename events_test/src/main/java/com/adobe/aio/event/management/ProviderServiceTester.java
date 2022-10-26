@@ -19,6 +19,7 @@ import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.slf4j.Logger;
@@ -52,15 +53,26 @@ public class ProviderServiceTester {
         .docsUrl(DEFAULT_PROVIDER_DOCS_URL);
   }
 
-  public Provider createProvider(String providerLabel, String eventCode) {
-    return createProvider(getTestProviderInputModelBuilder(providerLabel).build(),
+  public Provider createOrUpdateProvider(String providerLabel, String eventCode) {
+    return createOrUpdateProvider(getTestProviderInputModelBuilder(providerLabel).build(),
         Set.of(getTestEventMetadataBuilder(eventCode).build()));
+  }
+
+  public Provider createOrUpdateProvider(ProviderInputModel providerInputModel,
+      Set<EventMetadata> eventMetadataSet) {
+    return assertProviderResponseAndCreateEventMetadata(providerInputModel, eventMetadataSet,
+        () -> providerService.createOrUpdateProvider(providerInputModel));
   }
 
   public Provider createProvider(ProviderInputModel providerInputModel,
       Set<EventMetadata> eventMetadataSet) {
-    Optional<Provider> provider = providerService.createProvider(
-        providerInputModel);
+    return assertProviderResponseAndCreateEventMetadata(providerInputModel, eventMetadataSet,
+        () -> providerService.createProvider(providerInputModel));
+  }
+
+  private Provider assertProviderResponseAndCreateEventMetadata(ProviderInputModel providerInputModel,
+      Set<EventMetadata> eventMetadataSet, Supplier<Optional<Provider>> providerSupplier) {
+    Optional<Provider> provider = providerSupplier.get();
     Assert.assertTrue(provider.isPresent());
     logger.info("Created AIO Events Provider: {}", provider);
     String providerId = provider.get().getId();
@@ -91,6 +103,7 @@ public class ProviderServiceTester {
     }
     return provider.get();
   }
+
 
   public void deleteProvider(String providerId) {
     providerService.deleteProvider(providerId);
