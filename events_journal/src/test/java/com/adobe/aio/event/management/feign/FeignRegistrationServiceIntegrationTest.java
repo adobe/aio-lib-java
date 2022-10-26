@@ -86,7 +86,7 @@ public class FeignRegistrationServiceIntegrationTest {
   public static void deleteRegistration(RegistrationService registrationService,
       String registrationId) {
     registrationService.delete(registrationId);
-    Assert.assertTrue(registrationService.findById(registrationId).isEmpty());
+    Assert.assertFalse(registrationService.findById(registrationId).isPresent());
     logger.info("Deleted AIO Event Registration: {}", registrationId);
   }
 
@@ -121,7 +121,7 @@ public class FeignRegistrationServiceIntegrationTest {
   @Test
   public void getNotFound() {
     String idNotToBeFound = "this_id_should_not_exist";
-    Assert.assertTrue(registrationService.findById(idNotToBeFound).isEmpty());
+    Assert.assertFalse(registrationService.findById(idNotToBeFound).isPresent());
   }
 
   @Test
