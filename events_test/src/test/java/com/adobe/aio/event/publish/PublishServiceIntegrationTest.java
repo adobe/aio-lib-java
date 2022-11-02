@@ -18,8 +18,8 @@ import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.
 
 import com.adobe.aio.event.management.ProviderServiceTester;
 import com.adobe.aio.event.management.RegistrationServiceTester;
-import com.adobe.aio.event.management.model.Provider;
-import com.adobe.aio.event.management.model.Registration;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class PublishServiceIntegrationTest extends PublishServiceTester {
@@ -42,18 +42,27 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
 
   @Test
   public void publishEventTest() {
-    Provider provider = providerServiceTester.createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL, TEST_EVENT_CODE);
-    String providerId = provider.getId();
-    Registration registration = registrationServiceTester.createJournalRegistration(
-        TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE);
-    String registrationId = registration.getRegistrationId();
+    String providerId = null;
+    String registrationId = null;
+    try {
+      providerId = providerServiceTester.createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL,
+          TEST_EVENT_CODE).getId();
+      registrationId = registrationServiceTester.createJournalRegistration(
+          TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE).getRegistrationId();
 
-    String cloudEventId = publishCloudEvent(providerId, TEST_EVENT_CODE);
-    String rawEventId = publishRawEvent(providerId, TEST_EVENT_CODE);
-
-    // we want to clean up the provider and registration even if the journal polling failed.
-    registrationServiceTester.deleteRegistration(registration.getRegistrationId());
-    providerServiceTester.deleteProvider(provider.getId());
+      Assert.assertNotNull(publishCloudEvent(providerId, TEST_EVENT_CODE));
+      Assert.assertNotNull(publishRawEvent(providerId, TEST_EVENT_CODE));
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      Assert.fail(e.getMessage());
+    } finally {
+      if (!StringUtils.isEmpty(registrationId)) {
+        registrationServiceTester.deleteRegistration(registrationId);
+      }
+      if (!StringUtils.isEmpty(providerId)) {
+        providerServiceTester.deleteProvider(providerId);
+      }
+    }
   }
 
 }

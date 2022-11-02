@@ -14,25 +14,22 @@ package com.adobe.aio.event.journal;
 import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_CODE;
 import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_PROVIDER_LABEL;
 import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.TEST_REGISTRATION_NAME;
-import static com.adobe.aio.event.publish.PublishServiceTester.DATA_EVENT_ID_NODE;
 
-import com.adobe.aio.event.journal.model.Event;
 import com.adobe.aio.event.management.ProviderServiceIntegrationTest;
 import com.adobe.aio.event.management.ProviderServiceTester;
 import com.adobe.aio.event.management.RegistrationServiceTester;
-import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.publish.PublishServiceTester;
 import com.adobe.aio.util.WorkspaceUtil;
-import java.util.function.BiPredicate;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class JournalServiceIntegrationTest extends JournalServiceTester {
 
-  private ProviderServiceTester providerServiceTester;
-  private RegistrationServiceTester registrationServiceTester;
-  private PublishServiceTester publishServiceTester;
+  private final ProviderServiceTester providerServiceTester;
+  private final RegistrationServiceTester registrationServiceTester;
+  private final PublishServiceTester publishServiceTester;
 
   public JournalServiceIntegrationTest() {
     super();
@@ -59,31 +56,35 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
   @Test
   public void testJournalPolling()
       throws InterruptedException {
-    Provider provider = providerServiceTester.createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL,
-        ProviderServiceIntegrationTest.TEST_EVENT_CODE);
-    String providerId = provider.getId();
-    Registration registration = registrationServiceTester.createJournalRegistration(
-        TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE);
-    String registrationId = registration.getRegistrationId();
+    String providerId = null;
+    String registrationId = null;
+    try {
+      providerId = providerServiceTester.createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL,
+          ProviderServiceIntegrationTest.TEST_EVENT_CODE).getId();
+      Registration registration = registrationServiceTester.createJournalRegistration(
+          TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE);
+      registrationId = registration.getRegistrationId();
 
-    String cloudEventId = publishServiceTester.publishCloudEvent(providerId,TEST_EVENT_CODE);
+      String cloudEventId = publishServiceTester.publishCloudEvent(providerId, TEST_EVENT_CODE);
+      boolean wasCloudEventPolled = pollJournalForEvent(
+          registration.getJournalUrl(), cloudEventId, isEventIdTheCloudEventId);
 
-    boolean wasCloudEventPolled = pollJournalForEvent(
-        registration.getJournalUrl(), cloudEventId, isEventIdTheCloudEventId);
+      String rawEventId = publishServiceTester.publishRawEvent(providerId, TEST_EVENT_CODE);
+      boolean wasRawEventPolled = pollJournalForEvent(registration.getJournalUrl(), rawEventId,
+          isEventIdInTheCloudEventData);
 
-    String rawEventId = publishServiceTester.publishRawEvent(providerId, TEST_EVENT_CODE);
-
-    boolean wasRawEventPolled = pollJournalForEvent(registration.getJournalUrl(), rawEventId,
-        isEventIdInTheCloudEventData);
-
-    // we want to clean up the provider and registration even if the journal polling failed.
-    registrationServiceTester.deleteRegistration(registrationId);
-    providerServiceTester.deleteProvider(provider.getId());
-
-    Assert.assertTrue("The published CloudEvent was not retrieved in the Journal",
-        wasCloudEventPolled);
-    Assert.assertTrue("The published Raw Event was not retrieved in the Journal",
-        wasRawEventPolled);
+      Assert.assertTrue("The published CloudEvent was not retrieved in the Journal",
+          wasCloudEventPolled);
+      Assert.assertTrue("The published Raw Event was not retrieved in the Journal",
+          !wasRawEventPolled);
+    } finally {
+      if (!StringUtils.isEmpty(registrationId)) {
+        registrationServiceTester.deleteRegistration(registrationId);
+      }
+      if (!StringUtils.isEmpty(providerId)) {
+        providerServiceTester.deleteProvider(providerId);
+      }
+    }
   }
 
 }

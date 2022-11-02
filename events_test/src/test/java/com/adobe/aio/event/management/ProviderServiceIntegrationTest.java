@@ -63,77 +63,85 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
   @Test
   public void createGetUpdateDelete() {
     Provider provider = createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL, TEST_EVENT_CODE);
-
     String providerId = provider.getId();
-    String instanceId = provider.getInstanceId();
-
-    Assert.assertEquals(1, providerService.getEventMetadata(providerId).size());
-    logger.info("Fetched All EventMetadata `{}` of AIO Events Provider `{}`", providerId);
-
-    String updatedEventMetadataDescription = "updated EventMetadata Description";
-    Optional<EventMetadata> eventMetadata = providerService.updateEventMetadata(providerId,
-        getTestEventMetadataBuilder(TEST_EVENT_CODE).description(updatedEventMetadataDescription).build());
-    Assert.assertTrue(eventMetadata.isPresent());
-    logger.info("Updated EventMetadata `{}` of AIO Events Provider `{}`", eventMetadata,
-        providerId);
-    Assert.assertEquals(updatedEventMetadataDescription, eventMetadata.get().getDescription());
-
-    Optional<EventMetadata> eventMetadataFromGet = providerService.getEventMetadata(providerId,
-        TEST_EVENT_CODE);
-    Assert.assertTrue(eventMetadataFromGet.isPresent());
-    Assert.assertEquals(eventMetadata, eventMetadataFromGet);
-    logger.info("Fetched EventMetadata `{}` of AIO Events Provider `{}`", eventMetadataFromGet,
-        providerId);
-
-    Optional<Provider> providerById = providerService.findProviderById(providerId);
-    Assert.assertTrue(providerById.isPresent());
-    List<EventMetadata> eventMetadataList = providerService.getEventMetadata(providerId);
-    Assert.assertTrue(eventMetadataList.size() == 1);
-    Assert.assertEquals(eventMetadata.get(), eventMetadataList.get(0));
-    logger.info("Found AIO Events Provider `{}` by Id", providerById);
-
-    Optional<Provider> providerByInstanceId = providerService.findCustomEventsProviderByInstanceId(
-        instanceId);
-    Assert.assertTrue(providerByInstanceId.isPresent());
-    Assert.assertEquals(providerId, providerByInstanceId.get().getId());
-    logger.info("Found AIO Events Provider `{}` by InstanceId", providerById);
-
-    providerService.deleteEventMetadata(providerId, TEST_EVENT_CODE);
-    Assert.assertTrue(providerService.getEventMetadata(providerId, TEST_EVENT_CODE).isEmpty());
-    Assert.assertTrue(providerService.getEventMetadata(providerId).isEmpty());
-    logger.info("Deleted EventMetadata {} from AIO Events Provider `{}`", TEST_EVENT_CODE,
-        providerById);
-
     try {
-      providerService.createProvider(
-          getTestProviderInputModelBuilder(TEST_EVENT_PROVIDER_LABEL).instanceId(instanceId).build());
-      Assert.fail("We should have had a ConflictException thrown");
-    } catch (ConflictException ex) {
-      logger.info("Cannot create an AIO Events provider with the same instanceId: {}",
-          ex.getMessage());
+      String instanceId = provider.getInstanceId();
+
+      Assert.assertEquals(1, providerService.getEventMetadata(providerId).size());
+      logger.info("Fetched All EventMetadata `{}` of AIO Events Provider `{}`", providerId);
+
+      String updatedEventMetadataDescription = "updated EventMetadata Description";
+      Optional<EventMetadata> eventMetadata = providerService.updateEventMetadata(providerId,
+          getTestEventMetadataBuilder(TEST_EVENT_CODE).description(updatedEventMetadataDescription)
+              .build());
+      Assert.assertTrue(eventMetadata.isPresent());
+      logger.info("Updated EventMetadata `{}` of AIO Events Provider `{}`", eventMetadata,
+          providerId);
+      Assert.assertEquals(updatedEventMetadataDescription, eventMetadata.get().getDescription());
+
+      Optional<EventMetadata> eventMetadataFromGet = providerService.getEventMetadata(providerId,
+          TEST_EVENT_CODE);
+      Assert.assertTrue(eventMetadataFromGet.isPresent());
+      Assert.assertEquals(eventMetadata, eventMetadataFromGet);
+      logger.info("Fetched EventMetadata `{}` of AIO Events Provider `{}`", eventMetadataFromGet,
+          providerId);
+
+      Optional<Provider> providerById = providerService.findProviderById(providerId);
+      Assert.assertTrue(providerById.isPresent());
+      List<EventMetadata> eventMetadataList = providerService.getEventMetadata(providerId);
+      Assert.assertTrue(eventMetadataList.size() == 1);
+      Assert.assertEquals(eventMetadata.get(), eventMetadataList.get(0));
+      logger.info("Found AIO Events Provider `{}` by Id", providerById);
+
+      Optional<Provider> providerByInstanceId = providerService.findCustomEventsProviderByInstanceId(
+          instanceId);
+      Assert.assertTrue(providerByInstanceId.isPresent());
+      Assert.assertEquals(providerId, providerByInstanceId.get().getId());
+      logger.info("Found AIO Events Provider `{}` by InstanceId", providerById);
+
+      providerService.deleteEventMetadata(providerId, TEST_EVENT_CODE);
+      Assert.assertTrue(providerService.getEventMetadata(providerId, TEST_EVENT_CODE).isEmpty());
+      Assert.assertTrue(providerService.getEventMetadata(providerId).isEmpty());
+      logger.info("Deleted EventMetadata {} from AIO Events Provider `{}`", TEST_EVENT_CODE,
+          providerById);
+
+      try {
+        providerService.createProvider(
+            getTestProviderInputModelBuilder(TEST_EVENT_PROVIDER_LABEL).instanceId(instanceId)
+                .build());
+        Assert.fail("We should have had a ConflictException thrown");
+      } catch (ConflictException ex) {
+        logger.info("Cannot create an AIO Events provider with the same instanceId: {}",
+            ex.getMessage());
+      }
+
+      String updatedProviderDescription = "updated Provider Description";
+      Optional<Provider> updatedProvider = providerService.createOrUpdateProvider
+          (getTestProviderInputModelBuilder(TEST_EVENT_PROVIDER_LABEL)
+              .instanceId(instanceId)
+              .description(updatedProviderDescription)
+              .eventDeliveryFormat(DELIVERY_FORMAT_ADOBE_IO)
+              .build());
+      Assert.assertTrue(updatedProvider.isPresent());
+      logger.info("Updated AIO Events Provider: {}", provider);
+      Assert.assertEquals(providerId, updatedProvider.get().getId());
+      Assert.assertEquals(updatedProviderDescription, updatedProvider.get().getDescription());
+      Assert.assertEquals(DELIVERY_FORMAT_ADOBE_IO, updatedProvider.get().getEventDeliveryFormat());
+
+      providerService.createEventMetadata(providerId,
+          getTestEventMetadataBuilder(TEST_EVENT_CODE).build());
+      Assert.assertTrue(eventMetadata.isPresent());
+      logger.info("Added EventMetadata `{}` to AIO Events Provider `{}`", eventMetadata,
+          providerId);
+      providerService.deleteAllEventMetadata(providerId);
+      Assert.assertTrue(providerService.getEventMetadata(providerId).isEmpty());
+      logger.info("Deleted All EventMetadata from AIO Events Provider `{}`", providerId);
+    } catch (Exception e) {
+      logger.error(e.getMessage(), e);
+      Assert.fail(e.getMessage());
+    } finally {
+      deleteProvider(providerId);
     }
-
-    String updatedProviderDescription = "updated Provider Description";
-    Optional<Provider> updatedProvider = providerService.createOrUpdateProvider
-        (getTestProviderInputModelBuilder(TEST_EVENT_PROVIDER_LABEL)
-            .instanceId(instanceId)
-            .description(updatedProviderDescription)
-            .eventDeliveryFormat(DELIVERY_FORMAT_ADOBE_IO)
-            .build());
-    Assert.assertTrue(updatedProvider.isPresent());
-    logger.info("Updated AIO Events Provider: {}", provider);
-    Assert.assertEquals(providerId, updatedProvider.get().getId());
-    Assert.assertEquals(updatedProviderDescription, updatedProvider.get().getDescription());
-    Assert.assertEquals(DELIVERY_FORMAT_ADOBE_IO, updatedProvider.get().getEventDeliveryFormat());
-
-    providerService.createEventMetadata(providerId, getTestEventMetadataBuilder(TEST_EVENT_CODE).build());
-    Assert.assertTrue(eventMetadata.isPresent());
-    logger.info("Added EventMetadata `{}` to AIO Events Provider `{}`", eventMetadata, providerId);
-    providerService.deleteAllEventMetadata(providerId);
-    Assert.assertTrue(providerService.getEventMetadata(providerId).isEmpty());
-    logger.info("Deleted All EventMetadata from AIO Events Provider `{}`", providerId);
-
-    deleteProvider(providerId);
   }
 
 }

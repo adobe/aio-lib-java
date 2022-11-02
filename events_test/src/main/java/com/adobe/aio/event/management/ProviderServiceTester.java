@@ -53,6 +53,10 @@ public class ProviderServiceTester {
         .docsUrl(DEFAULT_PROVIDER_DOCS_URL);
   }
 
+  public ProviderService getProviderService(){
+    return providerService;
+  }
+
   public Provider createOrUpdateProvider(String providerLabel, String eventCode) {
     return createOrUpdateProvider(getTestProviderInputModelBuilder(providerLabel).build(),
         Set.of(getTestEventMetadataBuilder(eventCode).build()));
@@ -103,7 +107,6 @@ public class ProviderServiceTester {
     }
     return provider.get();
   }
-
 
   public void deleteProvider(String providerId) {
     providerService.deleteProvider(providerId);
