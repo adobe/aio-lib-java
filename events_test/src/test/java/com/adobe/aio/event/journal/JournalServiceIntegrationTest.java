@@ -76,7 +76,7 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
       Assert.assertTrue("The published CloudEvent was not retrieved in the Journal",
           wasCloudEventPolled);
       Assert.assertTrue("The published Raw Event was not retrieved in the Journal",
-          !wasRawEventPolled);
+          wasRawEventPolled);
     } finally {
       if (!StringUtils.isEmpty(registrationId)) {
         registrationServiceTester.deleteRegistration(registrationId);
