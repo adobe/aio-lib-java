@@ -54,10 +54,10 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
   @Test
   public void getNotFound() {
     String idNotToBeFound = "this_id_should_not_exist";
-    Assert.assertTrue(providerService.findProviderById(idNotToBeFound).isEmpty());
+    Assert.assertFalse(providerService.findProviderById(idNotToBeFound).isPresent());
     Assert.assertTrue(providerService.getEventMetadata(idNotToBeFound).isEmpty());
-    Assert.assertTrue(
-        providerService.findCustomEventsProviderByInstanceId(idNotToBeFound).isEmpty());
+    Assert.assertFalse(
+        providerService.findCustomEventsProviderByInstanceId(idNotToBeFound).isPresent());
   }
 
   @Test
@@ -100,7 +100,7 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
       logger.info("Found AIO Events Provider `{}` by InstanceId", providerById);
 
       providerService.deleteEventMetadata(providerId, TEST_EVENT_CODE);
-      Assert.assertTrue(providerService.getEventMetadata(providerId, TEST_EVENT_CODE).isEmpty());
+      Assert.assertFalse(providerService.getEventMetadata(providerId, TEST_EVENT_CODE).isPresent());
       Assert.assertTrue(providerService.getEventMetadata(providerId).isEmpty());
       logger.info("Deleted EventMetadata {} from AIO Events Provider `{}`", TEST_EVENT_CODE,
           providerById);
