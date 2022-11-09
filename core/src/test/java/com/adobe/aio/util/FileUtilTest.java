@@ -41,7 +41,7 @@ public class FileUtilTest {
   }
 
   @Test
-  public void testReadPropertiesFromFile() throws Exception {
+  public void testReadPropertiesFromFile() {
     Assert.assertFalse(FileUtil.readPropertiesFromFile("").isPresent());
     Assert.assertFalse(FileUtil.readPropertiesFromFile(null).isPresent());
   }
