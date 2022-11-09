@@ -47,7 +47,7 @@ public class FileUtilTest {
   }
 
   @Test
-  public void testReadPropertiesFromClassPath() throws Exception {
+  public void testReadPropertiesFromClassPath() {
     assertEquals(getTestProperties(), FileUtil.readPropertiesFromClassPath(TEST_PROPERTIES_FILE));
   }
 

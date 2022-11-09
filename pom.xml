@@ -18,7 +18,7 @@
 
   <groupId>com.adobe.aio</groupId>
   <artifactId>aio-lib-java</artifactId>
-  <version>0.1.3-SNAPSHOT</version>
+  <version>0.1.5-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <modules>
@@ -28,6 +28,8 @@
     <module>events_mgmt</module>
     <module>events_ingress</module>
     <module>events_journal</module>
+
+    <module>events_test</module>
 
     <module>aem</module>
 
