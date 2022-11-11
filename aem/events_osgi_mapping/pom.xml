@@ -32,18 +32,21 @@
       <artifactId>aio-aem-core</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
       <artifactId>aio-aem-events-mgmt</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
       <artifactId>aio-aem-events-publish</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
 
     <dependency>
@@ -51,11 +54,14 @@
       <groupId>com.adobe.aio</groupId>
       <scope>provided</scope>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <!-- adobe.io XDM event model -->
     <dependency>
       <artifactId>xdm-event-model</artifactId>
       <groupId>com.adobe.event</groupId>
+      <version>${xdm.event-model.version}</version>
+      <classifier>${java.version.classifier}</classifier>
       <scope>provided</scope>
     </dependency>
 

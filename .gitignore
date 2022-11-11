@@ -105,3 +105,4 @@ slingInstall.sh
 secrets
 */docs
 */*/docs
+.DS_Store

@@ -174,26 +174,31 @@
           <groupId>com.adobe.aio.aem</groupId>
           <artifactId>aio-aem-events-osgi-mapping</artifactId>
           <version>${project.version}</version>
+          <classifier>${java.version.classifier}</classifier>
         </dependency>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
           <artifactId>aio-aem-events-publish</artifactId>
           <version>${project.version}</version>
+          <classifier>${java.version.classifier}</classifier>
         </dependency>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
           <artifactId>aio-aem-events-mgmt</artifactId>
           <version>${project.version}</version>
+          <classifier>${java.version.classifier}</classifier>
         </dependency>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
           <artifactId>aio-aem-core</artifactId>
           <version>${project.version}</version>
+          <classifier>${java.version.classifier}</classifier>
         </dependency>
         <dependency>
           <groupId>com.adobe.aio.aem</groupId>
           <artifactId>aio-lib-osgi</artifactId>
           <version>${project.version}</version>
+          <classifier>${java.version.classifier}</classifier>
         </dependency>
       </dependencies>
     </profile>

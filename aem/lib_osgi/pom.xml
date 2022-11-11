@@ -34,32 +34,39 @@
     <dependency>
       <groupId>com.adobe.event</groupId>
       <artifactId>xdm-event-model</artifactId>
+      <version>${xdm.event-model.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
 
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-ims</artifactId>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-core</artifactId>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-events-mgmt</artifactId>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-events-ingress</artifactId>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-events-journal</artifactId>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
     
     <dependency>

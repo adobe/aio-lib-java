@@ -32,6 +32,7 @@
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-core</artifactId>
       <version>${project.version}</version>
+      <classifier>${java.version.classifier}</classifier>
     </dependency>
 
     <dependency>
