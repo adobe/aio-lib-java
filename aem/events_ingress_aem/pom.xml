@@ -32,28 +32,24 @@
       <artifactId>aio-aem-core</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
-      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio.aem</groupId>
       <artifactId>aio-aem-events-mgmt</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
-      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-events-mgmt</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
-      <classifier>${java.version.classifier}</classifier>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-events-ingress</artifactId>
       <scope>provided</scope>
       <version>${project.version}</version>
-      <classifier>${java.version.classifier}</classifier>
     </dependency>
 
     <!-- test -->

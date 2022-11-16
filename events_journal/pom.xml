@@ -32,7 +32,6 @@
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-core</artifactId>
       <version>${project.version}</version>
-      <classifier>${java.version.classifier}</classifier>
     </dependency>
 
     <!--  test -->
@@ -40,14 +39,12 @@
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-events-mgmt</artifactId>
       <version>${project.version}</version>
-      <classifier>${java.version.classifier}</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-events-ingress</artifactId>
       <version>${project.version}</version>
-      <classifier>${java.version.classifier}</classifier>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -67,7 +64,6 @@
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-ims</artifactId>
       <version>${project.version}</version>
-      <classifier>${java.version.classifier}</classifier>
     </dependency>
 
   </dependencies>

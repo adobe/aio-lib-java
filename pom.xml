@@ -110,8 +110,7 @@
     <feign.version>11.2</feign.version>
     <feign-form.version>3.8.0</feign-form.version>
     
-    <xdm.event-model.version>0.92.6-SNAPSHOT</xdm.event-model.version>
-    <java.version.classifier></java.version.classifier>
+    <xdm.event-model.version>0.92.7-SNAPSHOT</xdm.event-model.version>
   </properties>
 
   <dependencyManagement>
@@ -122,7 +121,6 @@
         <groupId>com.adobe.event</groupId>
         <artifactId>xdm-event-model</artifactId>
         <version>${xdm.event-model.version}</version>
-        <classifier>${java.version.classifier}</classifier>
         <scope>provided</scope>
       </dependency>
 
@@ -371,8 +369,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.10.1</version>
           <configuration>
-            <source>11</source>
-            <target>11</target>
+            <source>1.8</source>
+            <target>1.8</target>
           </configuration>
         </plugin>
 
@@ -429,7 +427,7 @@
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.3.2</version>
           <configuration>
-            <source>11</source>
+            <source>1.8</source>
             <notimestamp>true</notimestamp>
             <quiet>true</quiet>
             <doctitle>Adobe I/O - Java SDK API v${project.version}</doctitle>
@@ -660,57 +658,6 @@
                 </configuration>
               </execution>
             </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>java8</id>
-      <activation>
-        <activeByDefault>false</activeByDefault>
-      </activation>
-      <properties>
-        <java.version.classifier>java8</java.version.classifier>
-      </properties>
-      <dependencies>
-      </dependencies>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-            <version>3.2.0</version>
-            <configuration>
-              <classifier>${java.version.classifier}</classifier>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <source>1.8</source>
-              <target>1.8</target>
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.3.2</version>
-            <configuration>
-              <source>1.8</source>
-              <notimestamp>true</notimestamp>
-              <quiet>true</quiet>
-              <doctitle>Adobe I/O - Java SDK API v${project.version}</doctitle>
-              <windowtitle>Adobe I/O - Java SDK API v${project.version}</windowtitle>
-              <excludePackageNames>
-                *.impl,
-                *.internal,
-                *.internal.*,
-                *.api,
-                *.feign,
-                *.feign.*
-              </excludePackageNames>
-            </configuration>
           </plugin>
         </plugins>
       </build>
