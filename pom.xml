@@ -110,7 +110,7 @@
     <feign.version>11.2</feign.version>
     <feign-form.version>3.8.0</feign-form.version>
     
-    <xdm.event-model.version>0.92.7-SNAPSHOT</xdm.event-model.version>
+    <xdm.event-model.version>0.92.6-SNAPSHOT</xdm.event-model.version>
   </properties>
 
   <dependencyManagement>
