@@ -38,13 +38,13 @@ public class FileUtilTest {
   }
 
   @Test
-  public void testReadPropertiesFromFile() throws Exception {
+  public void testReadPropertiesFromFile() {
     Assert.assertTrue(FileUtil.readPropertiesFromFile("").isEmpty());
     Assert.assertTrue(FileUtil.readPropertiesFromFile(null).isEmpty());
   }
 
   @Test
-  public void testReadPropertiesFromClassPath() throws Exception {
+  public void testReadPropertiesFromClassPath() {
     assertEquals(getTestProperties(), FileUtil.readPropertiesFromClassPath(TEST_PROPERTIES_FILE));
   }
 

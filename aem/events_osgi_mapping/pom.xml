@@ -19,7 +19,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.1.3-SNAPSHOT</version>
+    <version>0.1.5-SNAPSHOT</version>
   </parent>
 
   <artifactId>aio-aem-events-osgi-mapping</artifactId>

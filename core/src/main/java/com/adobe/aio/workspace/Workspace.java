@@ -327,7 +327,7 @@ public class Workspace {
       return configMap(System.getenv());
     }
 
-    public Builder propertiesPath(final String propertiesPath) throws IOException {
+    public Builder propertiesPath(final String propertiesPath) {
       return properties(
           readPropertiesFromFile(propertiesPath)
               .orElse(readPropertiesFromClassPath(propertiesPath)));

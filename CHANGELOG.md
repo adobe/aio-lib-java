@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [aio-lib-java-0.1.4](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.4) (2022-11-03)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.2...aio-lib-java-0.1.4)
+
+### 📁 Other pull requests
+
+- GH-127 moving the integration test with re-usable `testers` in a new `aio-lib-java-events-test` module [\#128](https://github.com/adobe/aio-lib-java/pull/128) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-0.1.2](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.2) (2022-08-31)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.0...aio-lib-java-0.1.2)

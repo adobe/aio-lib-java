@@ -123,8 +123,8 @@ public class FeignProviderService implements ProviderService {
   @Override
   public Optional<Provider> findProviderBy(final String providerMetadataId,
       final String instanceId) {
-    if (StringUtils.isEmpty(providerMetadataId) || StringUtils
-        .isEmpty(workspace.getConsumerOrgId())) {
+    if (StringUtils.isEmpty(providerMetadataId) ||
+        StringUtils.isEmpty(workspace.getConsumerOrgId())) {
       throw new IllegalArgumentException(
           "You must specify at least a non empty consumerOrgId and providerMetadataId");
     }

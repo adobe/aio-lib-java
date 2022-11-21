@@ -24,10 +24,8 @@ import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.util.feign.FeignUtil;
 import feign.RequestInterceptor;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 
 public class FeignRegistrationService implements RegistrationService {
