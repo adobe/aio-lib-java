@@ -103,7 +103,7 @@ public class ProviderServiceTester {
       Assert.assertEquals(eventMetadataInput.getEventCode(), eventMetadata.get().getEventCode());
       Assert.assertEquals(eventMetadataInput.getDescription(),
           eventMetadata.get().getDescription());
-      Assert.assertEquals(eventMetadataInput.getEventCode(), eventMetadata.get().getLabel());
+      Assert.assertEquals(eventMetadataInput.getLabel(), eventMetadata.get().getLabel());
       logger.info("Added EventMetadata `{}` to AIO Events Provider `{}`", eventMetadata,
           providerId);
     }
