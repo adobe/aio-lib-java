@@ -17,6 +17,8 @@ import com.adobe.aio.event.management.model.ProviderInputModel;
 import com.adobe.aio.event.publish.model.CloudEvent;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
+
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -59,7 +61,7 @@ public class ProviderServiceTester {
 
   public Provider createOrUpdateProvider(String providerLabel, String eventCode) {
     return createOrUpdateProvider(getTestProviderInputModelBuilder(providerLabel).build(),
-        Set.of(getTestEventMetadataBuilder(eventCode).build()));
+        Collections.singleton(getTestEventMetadataBuilder(eventCode).build()));
   }
 
   public Provider createOrUpdateProvider(ProviderInputModel providerInputModel,
@@ -112,7 +114,7 @@ public class ProviderServiceTester {
     providerService.deleteProvider(providerId);
     logger.info("Deleted AIO Events Provider: {}", providerId);
     Optional deleted = providerService.findProviderById(providerId);
-    Assert.assertTrue(deleted.isEmpty());
+    Assert.assertFalse(deleted.isPresent());
     logger.info("No more AIO Events Provider with id: {}", providerId);
   }
 
