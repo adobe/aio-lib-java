@@ -62,7 +62,7 @@
 
     <!-- test -->
     <dependency>
-      <artifactId>junit-dep</artifactId>
+      <artifactId>junit</artifactId>
       <groupId>junit</groupId>
     </dependency>
     <dependency>
