@@ -30,6 +30,7 @@
     <module>events_journal</module>
 
     <module>events_test</module>
+    <module>events_xdm</module>
 
     <module>aem</module>
 
@@ -116,14 +117,6 @@
   <dependencyManagement>
     <dependencies>
 
-      <!-- adobe.io XDM event model -->
-      <dependency>
-        <groupId>com.adobe.event</groupId>
-        <artifactId>xdm-event-model</artifactId>
-        <version>${xdm.event-model.version}</version>
-        <scope>provided</scope>
-      </dependency>
-
       <dependency>
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-text</artifactId>
@@ -164,6 +157,12 @@
         <groupId>jakarta.xml.bind</groupId>
         <artifactId>jakarta.xml.bind-api</artifactId>
         <version>3.0.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${jackson.version}</version>
       </dependency>
 
       <dependency>

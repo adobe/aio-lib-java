@@ -52,12 +52,13 @@
       <scope>provided</scope>
       <version>${project.version}</version>
     </dependency>
-    <!-- adobe.io XDM event model -->
     <dependency>
-      <artifactId>xdm-event-model</artifactId>
-      <groupId>com.adobe.event</groupId>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-xdm</artifactId>
       <scope>provided</scope>
+      <version>${project.version}</version>
     </dependency>
+
 
     <!-- test -->
     <dependency>
