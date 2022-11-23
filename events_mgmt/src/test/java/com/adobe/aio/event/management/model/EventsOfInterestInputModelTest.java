@@ -14,32 +14,32 @@ package com.adobe.aio.event.management.model;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class EventsOfInterestTest {
+public class EventsOfInterestInputModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidEmpty() {
-    EventsOfInterest.builder().build();
+    EventsOfInterestInputModel.builder().build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidMissingProviderId() {
-    EventsOfInterest.builder().eventCode("some.event.code").build();
+    EventsOfInterestInputModel.builder().eventCode("some.event.code").build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidMissingEventCode() {
-    EventsOfInterest.builder().providerId("someId").build();
+    EventsOfInterestInputModel.builder().providerId("someId").build();
   }
 
   @Test
   public void valid() {
     String eventCode = "com.adobe.aio.event.management.test.event";
     String providerId = "some_provider_id";
-    EventsOfInterest eventsOfInterest = EventsOfInterest.builder()
+    EventsOfInterestInputModel eventsOfInterestInputModel = EventsOfInterestInputModel.builder()
         .eventCode(eventCode)
         .providerId(providerId).build();
-    Assert.assertEquals(eventCode, eventsOfInterest.getEventCode());
-    Assert.assertEquals(providerId, eventsOfInterest.getProviderId());
+    Assert.assertEquals(eventCode, eventsOfInterestInputModel.getEventCode());
+    Assert.assertEquals(providerId, eventsOfInterestInputModel.getProviderId());
   }
 
 }

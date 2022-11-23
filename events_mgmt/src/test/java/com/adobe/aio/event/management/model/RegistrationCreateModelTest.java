@@ -14,25 +14,49 @@ package com.adobe.aio.event.management.model;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class RegistrationInputModelTest {
+public class RegistrationCreateModelTest {
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidEmpty() {
-    RegistrationInputModel.builder().build();
+    RegistrationCreateModel.builder().build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidMissingClientId() {
-    RegistrationInputModel registrationInputModel = RegistrationInputModel.builder()
+    RegistrationCreateModel registrationInputModel = RegistrationCreateModel.builder()
         .name("some name")
-        .description("some description").build();
+        .description("some description")
+        .build();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void invalidMissingName() {
-    RegistrationInputModel.builder()
+    RegistrationCreateModel.builder()
         .description("some description")
         .clientId("some client Id").build();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void missingDeliveryType() {
+    String name = "com.adobe.aio.event.management.test.registration";
+    String description = name + " description";
+    String clientId = "some_clientId";
+    RegistrationCreateModel registrationInputModel = RegistrationCreateModel.builder()
+        .name(name)
+        .description(description)
+        .clientId(clientId).build();
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void invalidWebhookUrlMissing() {
+    String name = "com.adobe.aio.event.management.test.registration";
+    String description = name + " description";
+    String clientId = "some_clientId";
+    RegistrationCreateModel registrationInputModel = RegistrationCreateModel.builder()
+                    .name(name)
+                    .description(description)
+                    .clientId(clientId)
+                    .deliveryType("webhook").build();
   }
 
   @Test
@@ -40,10 +64,11 @@ public class RegistrationInputModelTest {
     String name = "com.adobe.aio.event.management.test.registration";
     String description = name + " description";
     String clientId = "some_clientId";
-    RegistrationInputModel registrationInputModel = RegistrationInputModel.builder()
-        .name(name)
-        .description(description)
-        .clientId(clientId).build();
+    RegistrationCreateModel registrationInputModel = RegistrationCreateModel.builder()
+                    .name(name)
+                    .description(description)
+                    .clientId(clientId)
+                    .deliveryType("journal").build();
     Assert.assertEquals(clientId, registrationInputModel.getClientId());
     Assert.assertEquals(name, registrationInputModel.getName());
     Assert.assertEquals(description, registrationInputModel.getDescription());

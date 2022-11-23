@@ -11,13 +11,10 @@
  */
 package com.adobe.aio.event.management;
 
-import static com.adobe.aio.event.management.ProviderServiceTester.DEFAULT_DESC_SUFFIX;
-
 import com.adobe.aio.event.management.model.EventsOfInterest;
+import com.adobe.aio.event.management.model.EventsOfInterestInputModel;
 import com.adobe.aio.event.management.model.Registration;
-import com.adobe.aio.event.management.model.Registration.IntegrationStatus;
-import com.adobe.aio.event.management.model.Registration.Status;
-import com.adobe.aio.event.management.model.RegistrationInputModel;
+import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.net.MalformedURLException;
@@ -30,6 +27,8 @@ import org.slf4j.LoggerFactory;
 
 public class RegistrationServiceTester {
 
+  public static final String TEST_DESCRIPTION = "Test description";
+  public static final String DELIVERY_TYPE_JOURNAL = "journal";
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
   protected final Workspace workspace;
   protected final RegistrationService registrationService;
@@ -42,47 +41,48 @@ public class RegistrationServiceTester {
         .build();
   }
 
-  public static RegistrationInputModel.Builder getRegistrationInputModelBuilder(
-      String registrationName) {
-    return RegistrationInputModel.builder()
-        .name(registrationName)
-        .description(registrationName + DEFAULT_DESC_SUFFIX);
+  public static EventsOfInterestInputModel.Builder getTestEventsOfInterestBuilder(String providerId, String eventCode) {
+    return EventsOfInterestInputModel.builder()
+                    .eventCode(eventCode)
+                    .providerId(providerId);
   }
 
   public Registration createJournalRegistration(String registrationName,
       String providerId, String eventCode){
-    return createRegistration(getRegistrationInputModelBuilder(registrationName)
-        .addEventsOfInterests(EventsOfInterest.builder()
-            .eventCode(eventCode)
-            .providerId(providerId).build()));
+    return createRegistration(RegistrationCreateModel.builder()
+          .name(registrationName)
+          .description(TEST_DESCRIPTION)
+          .deliveryType(DELIVERY_TYPE_JOURNAL)
+          .addEventsOfInterests(getTestEventsOfInterestBuilder(providerId, eventCode).build()));
   }
 
-  public Registration createRegistration(
-      RegistrationInputModel.Builder registrationInputModelBuilder) {
-    RegistrationInputModel registrationInputModel =
+    public Registration createRegistration(
+      RegistrationCreateModel.Builder registrationInputModelBuilder) {
+    RegistrationCreateModel registrationInputModel =
         registrationInputModelBuilder.clientId(this.workspace.getApiKey()).build();
-    Optional<Registration> registration = registrationService.createRegistration(
-        registrationInputModelBuilder);
+    Optional<Registration> registration = registrationService.createRegistration(registrationInputModelBuilder);
     Assert.assertTrue(registration.isPresent());
+    var registratinCreated = registration.get();
     logger.info("Created AIO Event Registration: {}", registration.get());
-    String registrationId = registration.get().getRegistrationId();
+    String registrationId = registratinCreated.getRegistrationId();
     Assert.assertNotNull(registrationId);
-    String createdId = registration.get().getRegistrationId();
-    Assert.assertEquals(registrationInputModel.getDescription(), registration.get().getDescription());
-    Assert.assertEquals(registrationInputModel.getName(), registration.get().getName());
-    Assert.assertEquals(registrationInputModel.getDeliveryType(), registration.get().getDeliveryType());
+    Assert.assertEquals(registrationInputModel.getDescription(), registratinCreated.getDescription());
+    Assert.assertEquals(registrationInputModel.getName(), registratinCreated.getName());
+    Assert.assertEquals(registrationInputModel.getDeliveryType(), registratinCreated.getDeliveryType());
 
     Set<EventsOfInterest> eventsOfInterestSet = registration.get().getEventsOfInterests();
     Assert.assertEquals(registrationInputModel.getEventsOfInterests().size(),eventsOfInterestSet.size());
-    for(EventsOfInterest eventsOfInterestInput: registrationInputModel.getEventsOfInterests()){
-      eventsOfInterestSet.contains(eventsOfInterestInput);
+    for(var eventsOfInterestInput: registrationInputModel.getEventsOfInterests()){
+      Assert.assertTrue(eventsOfInterestSet.stream()
+                      .anyMatch(eventsOfInterest -> eventsOfInterest.getEventCode()
+                                      .equals(eventsOfInterestInput.getEventCode())));
     }
 
-    Assert.assertEquals(Status.VERIFIED, registration.get().getStatus());
-    Assert.assertEquals(IntegrationStatus.ENABLED, registration.get().getIntegrationStatus());
+    Assert.assertEquals("verified", registratinCreated.getWebhookStatus());
+    Assert.assertEquals(true, registratinCreated.isEnabled());
     Assert.assertNull(registration.get().getWebhookUrl());
-    assertUrl(registration.get().getJournalUrl());
-    assertUrl(registration.get().getTraceUrl());
+    assertUrl(registration.get().getEventsUrl().getHref());
+    assertUrl(registration.get().getTraceUrl().getHref());
     Assert.assertNotNull(registration.get().getCreatedDate());
     Assert.assertNotNull(registration.get().getUpdatedDate());
     Assert.assertEquals(registration.get().getUpdatedDate(), registration.get().getCreatedDate());

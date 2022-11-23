@@ -14,14 +14,19 @@ package com.adobe.aio.event.management.feign;
 import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 
 import com.adobe.aio.event.management.RegistrationService;
-import com.adobe.aio.feign.AIOHeaderInterceptor;
-import com.adobe.aio.ims.feign.JWTAuthInterceptor;
-import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.api.RegistrationApi;
 import com.adobe.aio.event.management.model.Registration;
-import com.adobe.aio.event.management.model.RegistrationInputModel;
+import com.adobe.aio.event.management.model.RegistrationCreateModel;
+import com.adobe.aio.event.management.model.RegistrationPaginatedModel;
+import com.adobe.aio.event.management.model.RegistrationUpdateModel;
+import com.adobe.aio.feign.AIOHeaderInterceptor;
+import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.util.feign.FeignUtil;
+import com.adobe.aio.workspace.Workspace;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import feign.RequestInterceptor;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
 
@@ -35,18 +40,6 @@ public class FeignRegistrationService implements RegistrationService {
     String apiUrl = StringUtils.isEmpty(url) ? API_MANAGEMENT_URL : url;
     if (workspace == null) {
       throw new IllegalArgumentException("RegistrationService is missing a workspace context");
-    }
-    if (StringUtils.isEmpty(workspace.getImsOrgId())) {
-      throw new IllegalArgumentException("Workspace is missing an imsOrgId context");
-    }
-    if (StringUtils.isEmpty(workspace.getConsumerOrgId())) {
-      throw new IllegalArgumentException("Workspace is missing a consumerOrgId context");
-    }
-    if (StringUtils.isEmpty(workspace.getCredentialId())) {
-      throw new IllegalArgumentException("Workspace is missing a credentialId context");
-    }
-    if (StringUtils.isEmpty(workspace.getApiKey())) {
-      throw new IllegalArgumentException("Workspace is missing an apiKey context");
     }
     workspace.validateWorkspaceContext();
     RequestInterceptor authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
@@ -62,8 +55,8 @@ public class FeignRegistrationService implements RegistrationService {
     if (StringUtils.isEmpty(registrationId)) {
       throw new IllegalArgumentException("registrationId cannot be null or empty");
     }
-    return registrationApi.get(workspace.getImsOrgId(), workspace.getConsumerOrgId(),
-        workspace.getCredentialId(), registrationId);
+    return registrationApi.get(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), registrationId);
   }
 
   @Override
@@ -71,17 +64,36 @@ public class FeignRegistrationService implements RegistrationService {
     if (StringUtils.isEmpty(registrationId)) {
       throw new IllegalArgumentException("registrationId cannot be null or empty");
     }
-    registrationApi.delete(workspace.getImsOrgId(), workspace.getConsumerOrgId(),
-        workspace.getCredentialId(), registrationId);
+    registrationApi.delete(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), registrationId);
   }
 
   @Override
   public Optional<Registration> createRegistration(
-      RegistrationInputModel.Builder registrationInputModelBuilder) {
-    RegistrationInputModel inputModel = registrationInputModelBuilder
+      RegistrationCreateModel.Builder registrationCreateModelBuilder) {
+    var inputModel = registrationCreateModelBuilder
         .clientId(workspace.getApiKey()).build();
-    return registrationApi.post(workspace.getImsOrgId(), workspace.getConsumerOrgId(),
-        workspace.getCredentialId(), inputModel);
+    return registrationApi.post(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), inputModel);
   }
 
+  @Override
+  public Optional<Registration> updateRegistration(String registrationId,
+                  RegistrationUpdateModel.Builder registrationUpdateModelBuilder) {
+    var inputModel = registrationUpdateModelBuilder.build();
+    return registrationApi.put(workspace.getConsumerOrgId(), workspace.getProjectId(),
+                    workspace.getWorkspaceId(), registrationId, inputModel);
+  }
+
+  @Override public List<Registration> getRegistrationsForWorkspace() {
+    var registrationCollection = registrationApi.getAllForWorkspace(workspace.getConsumerOrgId(), workspace.getProjectId(),
+                    workspace.getWorkspaceId());
+    return registrationCollection.map(collection -> new ArrayList<>(collection.getRegistrationHalModels()))
+                    .orElseGet(ArrayList::new);
+  }
+
+  @Override
+  public Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg(final long page, final long size) throws JsonProcessingException {
+    return registrationApi.getAllForOrg(workspace.getConsumerOrgId(), page, size);
+  }
 }

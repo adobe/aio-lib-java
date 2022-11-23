@@ -48,6 +48,10 @@
       <artifactId>aio-lib-java-ims</artifactId>
       <version>${project.version}</version>
     </dependency>
+    <dependency>
+      <groupId>io.openapitools.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-hal</artifactId>
+    </dependency>
 
   </dependencies>
 

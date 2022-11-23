@@ -12,9 +12,13 @@
 package com.adobe.aio.event.management;
 
 import com.adobe.aio.event.management.feign.FeignRegistrationService;
+import com.adobe.aio.event.management.model.RegistrationCreateModel;
+import com.adobe.aio.event.management.model.RegistrationPaginatedModel;
+import com.adobe.aio.event.management.model.RegistrationUpdateModel;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.Registration;
-import com.adobe.aio.event.management.model.RegistrationInputModel;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.List;
 import java.util.Optional;
 
 public interface RegistrationService {
@@ -23,9 +27,17 @@ public interface RegistrationService {
 
   void delete(String registrationId);
 
-  Optional<Registration> createRegistration(
-      RegistrationInputModel.Builder registrationInputModelBuilder);
+  Optional<Registration> createRegistration(RegistrationCreateModel.Builder registrationCreateModelBuilder);
 
+  Optional<Registration> updateRegistration(String registrationId, RegistrationUpdateModel.Builder registrationUpdateModelBuilder);
+
+  List<Registration> getRegistrationsForWorkspace();
+
+  default Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg() throws JsonProcessingException {
+    return getAllRegistrationsForOrg(0L, 10L);
+  }
+
+  Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg(long page, long size) throws JsonProcessingException;
 
   static Builder builder() {
     return new Builder();
