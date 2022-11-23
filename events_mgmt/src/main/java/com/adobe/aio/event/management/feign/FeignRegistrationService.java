@@ -14,14 +14,16 @@ package com.adobe.aio.event.management.feign;
 import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 
 import com.adobe.aio.event.management.RegistrationService;
+import com.adobe.aio.event.management.api.RegistrationApi;
+import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
+import com.adobe.aio.event.management.model.RegistrationPaginatedModel;
 import com.adobe.aio.event.management.model.RegistrationUpdateModel;
 import com.adobe.aio.feign.AIOHeaderInterceptor;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
-import com.adobe.aio.workspace.Workspace;
-import com.adobe.aio.event.management.api.RegistrationApi;
-import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.util.feign.FeignUtil;
+import com.adobe.aio.workspace.Workspace;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import feign.RequestInterceptor;
 import java.util.ArrayList;
 import java.util.List;
@@ -88,5 +90,10 @@ public class FeignRegistrationService implements RegistrationService {
                     workspace.getWorkspaceId());
     return registrationCollection.map(collection -> new ArrayList<>(collection.getRegistrationHalModels()))
                     .orElseGet(ArrayList::new);
+  }
+
+  @Override
+  public Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg(final long page, final long size) throws JsonProcessingException {
+    return registrationApi.getAllForOrg(workspace.getConsumerOrgId(), page, size);
   }
 }

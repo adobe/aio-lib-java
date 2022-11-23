@@ -43,12 +43,14 @@ public class FeignRegistrationServiceTestDrive {
       logger.info("someRegistration: {}", registration);
 
       Optional<Registration> created = registrationService.createRegistration(
-          RegistrationCreateModel.builder()
-              .description("your registration description")
-              .name("your registration name")
-              .addEventsOfInterests(EventsOfInterestInputModel.builder()
-                  .eventCode(SOME_EVENT_CODE)
-                  .providerId(SOME_PROVIDER_ID).build())
+        RegistrationCreateModel.builder()
+          .description("your registration description")
+          .name("your registration name")
+          .deliveryType("journal")
+          .clientId(workspace.getApiKey())
+          .addEventsOfInterests(EventsOfInterestInputModel.builder()
+            .eventCode(SOME_EVENT_CODE)
+            .providerId(SOME_PROVIDER_ID).build())
       );
       String createdId = created.get().getRegistrationId();
       logger.info("created: {}", created.get());
