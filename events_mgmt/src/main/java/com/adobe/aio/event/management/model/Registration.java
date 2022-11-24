@@ -31,7 +31,7 @@ public class Registration {
   private HALLink self;
 
   @Link("rel:events")
-  private HALLink eventsUrl;
+  private HALLink journalUrl;
 
   @Link("rel:trace")
   private HALLink traceUrl;
@@ -117,7 +117,7 @@ public class Registration {
     this.eventsOfInterests = eventsOfInterests;
     this.self = self;
     this.traceUrl = traceUrl;
-    this.eventsUrl = eventsUrl;
+    this.journalUrl = journalUrl;
   }
 
 
@@ -126,8 +126,8 @@ public class Registration {
     return self;
   }
 
-  public HALLink getEventsUrl() {
-    return eventsUrl;
+  public HALLink getJournalUrl() {
+    return journalUrl;
   }
 
   public HALLink getTraceUrl() {
@@ -208,7 +208,7 @@ public class Registration {
     Registration that = (Registration) o;
     return enabled == that.enabled &&
       Objects.equals(self, that.self) &&
-      Objects.equals(eventsUrl, that.eventsUrl) &&
+      Objects.equals(journalUrl, that.journalUrl) &&
       Objects.equals(traceUrl, that.traceUrl) &&
       Objects.equals(id, that.id) &&
       Objects.equals(name, that.name) &&
@@ -228,14 +228,14 @@ public class Registration {
   }
 
   @Override public int hashCode() {
-    return Objects.hash(self, eventsUrl, traceUrl, id, name, description, clientId, registrationId, deliveryType, webhookStatus,
+    return Objects.hash(self, journalUrl, traceUrl, id, name, description, clientId, registrationId, deliveryType, webhookStatus,
       createdDate, updatedDate, consumerId, projectId, workspaceId, webhookUrl, runtimeAction, enabled, eventsOfInterests);
   }
 
   @Override public String toString() {
     return "Registration{" +
       "self=" + self +
-      ", eventsUrl=" + eventsUrl +
+      ", eventsUrl=" + journalUrl +
       ", traceUrl=" + traceUrl +
       ", id=" + id +
       ", name='" + name + '\'' +

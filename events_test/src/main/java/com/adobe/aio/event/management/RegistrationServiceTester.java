@@ -81,7 +81,7 @@ public class RegistrationServiceTester {
     Assert.assertEquals("verified", registratinCreated.getWebhookStatus());
     Assert.assertEquals(true, registratinCreated.isEnabled());
     Assert.assertNull(registration.get().getWebhookUrl());
-    assertUrl(registration.get().getEventsUrl().getHref());
+    assertUrl(registration.get().getJournalUrl().getHref());
     assertUrl(registration.get().getTraceUrl().getHref());
     Assert.assertNotNull(registration.get().getCreatedDate());
     Assert.assertNotNull(registration.get().getUpdatedDate());

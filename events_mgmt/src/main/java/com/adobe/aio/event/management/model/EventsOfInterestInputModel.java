@@ -24,9 +24,6 @@ public class EventsOfInterestInputModel {
   @JsonProperty("provider_id")
   String providerId;
 
-  private EventsOfInterestInputModel() {
-  }
-
   private EventsOfInterestInputModel(String providerId, String eventCode) {
     if (StringUtils.isBlank(providerId) || StringUtils.isBlank(eventCode)){
       throw new IllegalArgumentException("Invalid EventsOfInterestInputModel, neither providerId, nor eventCode can be empty/blank");
