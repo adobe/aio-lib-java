@@ -1,5 +1,14 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.4...HEAD)
+
+### 📁 Other pull requests
+
+- GH-21 and GH-104 jdk8 support and move of the xdm IO Events Model here as a new module [\#130](https://github.com/adobe/aio-lib-java/pull/130) ([francoisledroff](https://github.com/francoisledroff))
+- Made the code compatible with java 8 [\#129](https://github.com/adobe/aio-lib-java/pull/129) ([pulguptaAdobe](https://github.com/pulguptaAdobe))
+
 ## [aio-lib-java-0.1.4](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.4) (2022-11-03)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.2...aio-lib-java-0.1.4)
