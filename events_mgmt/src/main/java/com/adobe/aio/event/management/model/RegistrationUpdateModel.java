@@ -41,7 +41,7 @@ public class RegistrationUpdateModel {
   @JsonProperty("enabled")
   protected Boolean enabled;
 
-  public RegistrationUpdateModel(final String name, final String description, final String webhookUrl,
+  RegistrationUpdateModel(final String name, final String description, final String webhookUrl,
                   final Set<EventsOfInterestInputModel> eventsOfInterestInputModels, final String deliveryType,
                   final Boolean enabled) {
 

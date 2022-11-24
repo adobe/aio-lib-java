@@ -27,7 +27,7 @@ public class RegistrationCreateModel extends RegistrationUpdateModel {
     @JsonProperty("client_id")
     private final String clientId;
 
-    public RegistrationCreateModel(final String clientId, final String name, final String description,
+    private RegistrationCreateModel(final String clientId, final String name, final String description,
                     final String deliveryType, final Set<EventsOfInterestInputModel> eventsOfInterestInputModels,
                     final String webhookUrl, final boolean enabled) {
         super(name, description, webhookUrl, eventsOfInterestInputModels, deliveryType, enabled);
