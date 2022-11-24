@@ -1,0 +1,33 @@
+{
+  "@id": "82235bac-2b81-4e70-90b5-2bd1f04b5c7b",
+  "@type": "xdmUnpublished",
+  "xdmEventEnvelope:objectType": "xdmComponentizedPage",
+  "activitystreams:published":"1970-01-01T01:00:00.000+01",
+  "activitystreams:to": {
+    "xdmImsOrg:id": "08B3E5CE5822FC520A494229@AdobeOrg",
+    "@type": "xdmImsOrg"
+  },
+  "activitystreams:generator": {
+    "xdmContentRepository:root": "https://cloud-action-dev.corp.adobe.com:4502/",
+    "@type": "xdmContentRepository"
+  },
+  "activitystreams:actor": {
+    "xdmAemUser:id": "admin",
+    "@type": "xdmAemUser"
+  },
+  "activitystreams:object": {
+    "@id": "http://adobesummit.adobesandbox.com:4502/content/geometrixx/en/vintage.html",
+    "@type": "xdmComponentizedPage",
+    "xdmComponentizedPage:title": "Vintage Collection",
+    "xdmComponentizedPage:path": "/content/geometrixx/en/vintage.html"
+  },
+  "@context": {
+    "activitystreams": "http://www.w3.org/ns/activitystreams#",
+    "xdmEventEnvelope": "https://ns.adobe.com/xdm/common/eventenvelope#",
+    "xdmComponentizedPage": "https://ns.adobe.com/xdm/content/componentized-page#",
+    "xdmImsOrg": "https://ns.adobe.com/xdm/ims/organization#",
+    "xdmContentRepository": "https://ns.adobe.com/xdm/content/repository#",
+    "xdmAemUser": "https://ns.adobe.com/xdm/aem/user#",
+    "xdmPublished": "https://ns.adobe.com/xdm/common/event/published#"
+  }
+}

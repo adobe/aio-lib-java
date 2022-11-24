@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -55,7 +56,7 @@ public class KeyStoreUtil {
 
   public static PrivateKey getPrivateKeyFromPkcs8File(String filePath)
       throws IOException, InvalidKeySpecException, NoSuchAlgorithmException {
-    return getPrivateKeyFromPkcs8(Files.readAllBytes(Path.of(filePath)));
+    return getPrivateKeyFromPkcs8(Files.readAllBytes(Paths.get(filePath)));
   }
 
   private static PrivateKey getPrivateKeyFromPkcs8(byte[] pkcs8)
