@@ -17,7 +17,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.1.8</version>
+    <version>0.1.9-SNAPSHOT</version>
   </parent>
 
   <artifactId>aio-lib-osgi</artifactId>
@@ -144,8 +144,4 @@
       </plugin>
     </plugins>
   </build>
-
-  <scm>
-    <tag>aio-lib-java-0.1.8</tag>
-  </scm>
 </project>
