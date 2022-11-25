@@ -438,6 +438,12 @@
               *.feign,
               *.feign.*
             </excludePackageNames>
+            <tags>
+              <tag>
+                <name>Version</name>
+                <placement>X</placement>
+              </tag>
+            </tags>
           </configuration>
         </plugin>
         <plugin>
