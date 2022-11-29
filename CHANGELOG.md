@@ -1,5 +1,15 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.10...HEAD)
+
+### 📁 Other pull requests
+
+- fix: address review comments [\#133](https://github.com/adobe/aio-lib-java/pull/133) ([sangeetha5491](https://github.com/sangeetha5491))
+- Add support for Registration V2 API  [\#132](https://github.com/adobe/aio-lib-java/pull/132) ([sangeetha5491](https://github.com/sangeetha5491))
+- Add support for Registration V2 API [\#126](https://github.com/adobe/aio-lib-java/pull/126) ([sangeetha5491](https://github.com/sangeetha5491))
+
 ## [aio-lib-java-0.1.10](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.10) (2022-11-25)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.8...aio-lib-java-0.1.10)
