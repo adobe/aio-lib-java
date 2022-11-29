@@ -12,76 +12,117 @@
 package com.adobe.aio.event.management.api;
 
 import com.adobe.aio.event.management.model.Registration;
-import com.adobe.aio.event.management.model.RegistrationInputModel;
+import com.adobe.aio.event.management.model.RegistrationCollection;
+import com.adobe.aio.event.management.model.RegistrationCreateModel;
+import com.adobe.aio.event.management.model.RegistrationPaginatedModel;
+import com.adobe.aio.event.management.model.RegistrationUpdateModel;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;
 import java.util.Optional;
 
-@Headers("Accept: application/json")
+@Headers({"Accept: application/hal+json"})
 public interface RegistrationApi {
 
-  /**
-   * Creates a Webhook or a Journal registration
-   *
-   * @param imsOrgId      your Ims Org Id
-   * @param consumerOrgId Your consumer organization Id
-   * @param credentialId  The integration Id associated with your project/workspace
-   * @param body          your Registration Input
-   * @return Registration
-   */
-  @RequestLine("POST /events/organizations/{consumerOrgId}/integrations/{credentialId}/registrations")
-  @Headers({
-      "Content-Type: application/json",
-      "x-ims-org-id: {imsOrgId}",
-  })
-  Optional<Registration> post(
-      @Param("imsOrgId") String imsOrgId,
+    /**
+     * Creates a Webhook or a Journal registration
+     *
+     * @param consumerOrgId Your consumer organization Id
+     * @param projectId     The Id associated with your project
+     * @param workspaceId   The Id associated with your workspace
+     * @param body          your Registration Input
+     * @return Registration
+     */
+    @RequestLine("POST /events/{consumerOrgId}/{projectId}/{workspaceId}/registrations")
+    @Headers({"Content-Type: application/json"})
+    Optional<Registration> post(
       @Param("consumerOrgId") String consumerOrgId,
-      @Param("credentialId") String credentialId,
-      RegistrationInputModel body
-  );
+      @Param("projectId") String projectId,
+      @Param("workspaceId") String workspaceId,
+      RegistrationCreateModel body
+    );
 
-  /**
-   * GET a registration
-   *
-   * @param imsOrgId       your Ims Org Id
-   * @param consumerOrgId  Your consumer organization Id
-   * @param credentialId   The integration Id associated with your project/workspace
-   * @param registrationId The Registration Id
-   * @return Registration
-   */
-  @RequestLine("GET /events/organizations/{consumerOrgId}/integrations/{credentialId}/registrations/{registrationId}")
-  @Headers({
-      "Content-Type: application/json",
-      "x-ims-org-id: {imsOrgId}",
-  })
-  Optional<Registration> get(
-      @Param("imsOrgId") String imsOrgId,
+    /**
+     * Updates a Webhook or a Journal registration
+     *
+     * @param consumerOrgId Your consumer organization Id
+     * @param projectId     The Id associated with your project
+     * @param workspaceId   The Id associated with your workspace
+     * @param registrationId The Registration Id
+     * @param body          your Registration Input
+     * @return Registration
+     */
+    @RequestLine("PUT /events/{consumerOrgId}/{projectId}/{workspaceId}/registrations/{registrationId}")
+    @Headers({"Content-Type: application/json"})
+    Optional<Registration> put(
       @Param("consumerOrgId") String consumerOrgId,
-      @Param("credentialId") String credentialId,
-      @Param("registrationId") String registrationId
-  );
+      @Param("projectId") String projectId,
+      @Param("workspaceId") String workspaceId,
+      @Param("registrationId") String registrationId,
+      RegistrationUpdateModel body
+    );
 
-  /**
-   * DELETE a registration
-   *
-   * @param imsOrgId       your Ims Org Id
-   * @param consumerOrgId  Your consumer organization Id
-   * @param credentialId   The integration Id associated with your project/workspace
-   * @param registrationId The Registration Id
-   */
-  @RequestLine("DELETE /events/organizations/{consumerOrgId}/integrations/{credentialId}/registrations/{registrationId}")
-  @Headers({
-      "Content-Type: application/json",
-      "x-ims-org-id: {imsOrgId}",
-  })
-  void delete(
-      @Param("imsOrgId") String imsOrgId,
+    /**
+     * GET a registration
+     *
+     * @param consumerOrgId Your consumer organization Id
+     * @param projectId     The Id associated with your project
+     * @param workspaceId   The Id associated with your workspace
+     * @param registrationId The Registration Id
+     * @return Registration
+     */
+    @RequestLine("GET /events/{consumerOrgId}/{projectId}/{workspaceId}/registrations/{registrationId}")
+    @Headers({"Content-Type: application/json"})
+    Optional<Registration> get(
       @Param("consumerOrgId") String consumerOrgId,
-      @Param("credentialId") String credentialId,
+      @Param("projectId") String projectId,
+      @Param("workspaceId") String workspaceId,
       @Param("registrationId") String registrationId
-  );
+    );
+
+    /**
+     * GET all registrations for a project/workspace
+     *
+     * @param consumerOrgId Your consumer organization Id
+     * @param projectId     The Id associated with your project
+     * @param workspaceId   The Id associated with your workspace
+     * @return Registration
+     */
+    @RequestLine("GET /events/{consumerOrgId}/{projectId}/{workspaceId}/registrations")
+    @Headers({"Content-Type: application/json"})
+    Optional<RegistrationCollection> getAllForWorkspace(
+      @Param("consumerOrgId") String consumerOrgId,
+      @Param("projectId") String projectId,
+      @Param("workspaceId") String workspaceId);
+
+    /**
+     * GET all registrations for an org
+     *
+     * @param consumerOrgId Your consumer organization Id
+     * @return Registration
+     */
+    @RequestLine("GET /events/{consumerOrgId}/registrations?page={page}&size={size}")
+    @Headers({"Content-Type: application/json"})
+    Optional<RegistrationPaginatedModel> getAllForOrg(
+      @Param("consumerOrgId") String consumerOrgId,
+      @Param("page") Long page,
+      @Param("size") Long size);
+
+    /**
+     * DELETE a registration
+     *
+     * @param consumerOrgId Your consumer organization Id
+     * @param projectId     The Id associated with your project
+     * @param workspaceId   The Id associated with your workspace
+     * @param registrationId The Registration Id
+     */
+    @RequestLine("DELETE /events/{consumerOrgId}/{projectId}/{workspaceId}/registrations/{registrationId}")
+    void delete(
+      @Param("consumerOrgId") String consumerOrgId,
+      @Param("projectId") String projectId,
+      @Param("workspaceId") String workspaceId,
+      @Param("registrationId") String registrationId
+    );
 
 
 }

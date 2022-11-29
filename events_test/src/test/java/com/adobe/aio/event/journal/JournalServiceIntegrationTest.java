@@ -67,10 +67,10 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
 
       String cloudEventId = publishServiceTester.publishCloudEvent(providerId, TEST_EVENT_CODE);
       boolean wasCloudEventPolled = pollJournalForEvent(
-          registration.getJournalUrl(), cloudEventId, isEventIdTheCloudEventId);
+          registration.getJournalUrl().getHref(), cloudEventId, isEventIdTheCloudEventId);
 
       String rawEventId = publishServiceTester.publishRawEvent(providerId, TEST_EVENT_CODE);
-      boolean wasRawEventPolled = pollJournalForEvent(registration.getJournalUrl(), rawEventId,
+      boolean wasRawEventPolled = pollJournalForEvent(registration.getJournalUrl().getHref(), rawEventId,
           isEventIdInTheCloudEventData);
 
       Assert.assertTrue("The published CloudEvent was not retrieved in the Journal",

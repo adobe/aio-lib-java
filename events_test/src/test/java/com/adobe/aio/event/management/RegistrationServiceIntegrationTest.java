@@ -63,12 +63,11 @@ public class RegistrationServiceIntegrationTest extends RegistrationServiceTeste
       Assert.assertEquals(registration.getDeliveryType(), found.get().getDeliveryType());
       Assert.assertEquals(registration.getEventsOfInterests(),
           found.get().getEventsOfInterests());
-      Assert.assertEquals(registration.getStatus(), found.get().getStatus());
-      Assert.assertEquals(registration.getIntegrationStatus(),
-          found.get().getIntegrationStatus());
+      Assert.assertEquals(registration.getWebhookStatus(), found.get().getWebhookStatus());
+      Assert.assertEquals(registration.isEnabled(), found.get().isEnabled());
       Assert.assertEquals(registration.getWebhookUrl(), found.get().getWebhookUrl());
-      Assert.assertEquals(registration.getJournalUrl(), found.get().getJournalUrl());
-      Assert.assertEquals(registration.getTraceUrl(), found.get().getTraceUrl());
+      Assert.assertEquals(registration.getJournalUrl().getHref(), found.get().getJournalUrl().getHref());
+      Assert.assertEquals(registration.getTraceUrl().getHref(), found.get().getTraceUrl().getHref());
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       Assert.fail(e.getMessage());

@@ -113,6 +113,9 @@ public class Workspace {
     if (StringUtils.isEmpty(this.getWorkspaceId())) {
       throw new IllegalArgumentException("Your `Worskpace` is missing a workspaceId");
     }
+    if (StringUtils.isEmpty(this.getApiKey())) {
+      throw new IllegalArgumentException("Your `Worskpace` is missing an apiKey");
+    }
   }
 
   public String getProjectUrl() {
