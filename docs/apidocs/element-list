@@ -24,3 +24,11 @@ com.adobe.aio.ims.util
 com.adobe.aio.osgi
 com.adobe.aio.util
 com.adobe.aio.workspace
+com.adobe.xdm
+com.adobe.xdm.assets
+com.adobe.xdm.common
+com.adobe.xdm.content
+com.adobe.xdm.event
+com.adobe.xdm.extensions.aem
+com.adobe.xdm.extensions.ims
+com.adobe.xdm.external.repo

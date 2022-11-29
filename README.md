@@ -6,7 +6,7 @@
 
 ## Modules
 
-This project is composed of Java Libraries :
+This project is composed of a few Java Libraries, among these :
 * [`aio-lib-java-core`](./core)  holds the core models, builders, utilities used across the other libraries below,
 * [`aio-lib-java-ims`](./ims) is a library wrapping a subset of [Adobe Identity Management System (IMS) API](https://www.adobe.io/authentication/auth-methods.html#!AdobeDocs/adobeio-auth/master/AuthenticationOverview/AuthenticationGuide.md)
 * [`aio-lib-java-events-mgmt`](./events_mgmt) is a library wrapping [Adobe I/O Events Provider and Registration API](https://www.adobe.io/apis/experienceplatform/events/docs.html#!adobedocs/adobeio-events/master/api/api.md)

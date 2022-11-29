@@ -17,7 +17,7 @@
   <parent>
     <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java</artifactId>
-    <version>0.1.5-SNAPSHOT</version>
+    <version>0.1.11-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -49,7 +49,7 @@
     </dependency>
     <dependency>
       <groupId>junit</groupId>
-      <artifactId>junit-dep</artifactId>
+      <artifactId>junit</artifactId>
     </dependency>
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>

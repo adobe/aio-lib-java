@@ -40,7 +40,7 @@ public class RegistrationServiceIntegrationTest extends RegistrationServiceTeste
   @Test
   public void getNotFound() {
     String idNotToBeFound = "this_id_should_not_exist";
-    Assert.assertTrue(registrationService.findById(idNotToBeFound).isEmpty());
+    Assert.assertFalse(registrationService.findById(idNotToBeFound).isPresent());
   }
 
   @Test

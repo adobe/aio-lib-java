@@ -91,7 +91,7 @@ public class RegistrationServiceTester {
 
   public void deleteRegistration(String registrationId) {
     registrationService.delete(registrationId);
-    Assert.assertTrue(registrationService.findById(registrationId).isEmpty());
+    Assert.assertFalse(registrationService.findById(registrationId).isPresent());
     logger.info("Deleted AIO Event Registration: {}", registrationId);
   }
 

@@ -17,7 +17,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.1.5-SNAPSHOT</version>
+    <version>0.1.11-SNAPSHOT</version>
   </parent>
 
   <artifactId>aio-lib-osgi</artifactId>
@@ -26,16 +26,12 @@
   <name>Adobe I/O - Java SDK - OSGI bundle</name>
 
   <dependencies>
-    <dependency> <!-- TODO: Remove this when xdm-event-model no longer depends on it -->
-      <groupId>javax.validation</groupId>
-      <artifactId>validation-api</artifactId>
-      <version>2.0.1.Final</version>
-    </dependency>
-    <dependency>
-      <groupId>com.adobe.event</groupId>
-      <artifactId>xdm-event-model</artifactId>
-    </dependency>
 
+    <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-xdm</artifactId>
+      <version>${project.version}</version>
+    </dependency>
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-ims</artifactId>
