@@ -16,6 +16,7 @@ import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 import com.adobe.aio.event.management.RegistrationService;
 import com.adobe.aio.event.management.api.RegistrationApi;
 import com.adobe.aio.event.management.model.Registration;
+import com.adobe.aio.event.management.model.RegistrationCollection;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.event.management.model.RegistrationPaginatedModel;
 import com.adobe.aio.event.management.model.RegistrationUpdateModel;
@@ -71,7 +72,7 @@ public class FeignRegistrationService implements RegistrationService {
   @Override
   public Optional<Registration> createRegistration(
       RegistrationCreateModel.Builder registrationCreateModelBuilder) {
-    var inputModel = registrationCreateModelBuilder
+    RegistrationCreateModel inputModel = registrationCreateModelBuilder
         .clientId(workspace.getApiKey()).build();
     return registrationApi.post(workspace.getConsumerOrgId(), workspace.getProjectId(),
         workspace.getWorkspaceId(), inputModel);
@@ -80,13 +81,13 @@ public class FeignRegistrationService implements RegistrationService {
   @Override
   public Optional<Registration> updateRegistration(String registrationId,
                   RegistrationUpdateModel.Builder registrationUpdateModelBuilder) {
-    var inputModel = registrationUpdateModelBuilder.build();
+    RegistrationUpdateModel inputModel = registrationUpdateModelBuilder.build();
     return registrationApi.put(workspace.getConsumerOrgId(), workspace.getProjectId(),
                     workspace.getWorkspaceId(), registrationId, inputModel);
   }
 
   @Override public List<Registration> getRegistrationsForWorkspace() {
-    var registrationCollection = registrationApi.getAllForWorkspace(workspace.getConsumerOrgId(), workspace.getProjectId(),
+    Optional<RegistrationCollection> registrationCollection = registrationApi.getAllForWorkspace(workspace.getConsumerOrgId(), workspace.getProjectId(),
                     workspace.getWorkspaceId());
     return registrationCollection.map(collection -> new ArrayList<>(collection.getRegistrationHalModels()))
                     .orElseGet(ArrayList::new);

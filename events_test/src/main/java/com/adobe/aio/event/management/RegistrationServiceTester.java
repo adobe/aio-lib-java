@@ -62,7 +62,7 @@ public class RegistrationServiceTester {
         registrationInputModelBuilder.clientId(this.workspace.getApiKey()).build();
     Optional<Registration> registration = registrationService.createRegistration(registrationInputModelBuilder);
     Assert.assertTrue(registration.isPresent());
-    var registratinCreated = registration.get();
+    Registration registratinCreated = registration.get();
     logger.info("Created AIO Event Registration: {}", registration.get());
     String registrationId = registratinCreated.getRegistrationId();
     Assert.assertNotNull(registrationId);
@@ -72,7 +72,7 @@ public class RegistrationServiceTester {
 
     Set<EventsOfInterest> eventsOfInterestSet = registration.get().getEventsOfInterests();
     Assert.assertEquals(registrationInputModel.getEventsOfInterests().size(),eventsOfInterestSet.size());
-    for(var eventsOfInterestInput: registrationInputModel.getEventsOfInterests()){
+    for(EventsOfInterestInputModel eventsOfInterestInput: registrationInputModel.getEventsOfInterests()){
       Assert.assertTrue(eventsOfInterestSet.stream()
                       .anyMatch(eventsOfInterest -> eventsOfInterest.getEventCode()
                                       .equals(eventsOfInterestInput.getEventCode())));
