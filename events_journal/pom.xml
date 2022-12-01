@@ -17,7 +17,7 @@
   <parent>
     <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java</artifactId>
-    <version>0.0.45-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -36,8 +36,20 @@
 
     <!--  test -->
     <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-mgmt</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-ingress</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
-      <artifactId>junit-dep</artifactId>
+      <artifactId>junit</artifactId>
     </dependency>
     <dependency>
       <groupId>com.squareup.okhttp3</groupId>

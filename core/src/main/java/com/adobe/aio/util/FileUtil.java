@@ -11,6 +11,7 @@
  */
 package com.adobe.aio.util;
 
+import com.adobe.aio.exception.AIOException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -34,8 +35,7 @@ public class FileUtil {
     return map;
   }
 
-  public static Optional<Properties> readPropertiesFromFile(final String configFilePath)
-      throws IOException {
+  public static Optional<Properties> readPropertiesFromFile(final String configFilePath) {
     if (StringUtils.isEmpty(configFilePath)) {
       return Optional.empty();
     } else {
@@ -43,14 +43,17 @@ public class FileUtil {
         return Optional.of(read(in));
       } catch (FileNotFoundException e) {
         return Optional.empty();
+      } catch (IOException e) {
+        throw new AIOException("Unable to load your Properties from File " + configFilePath, e);
       }
     }
   }
 
-  public static Properties readPropertiesFromClassPath(final String configClassPath)
-      throws IOException {
+  public static Properties readPropertiesFromClassPath(final String configClassPath) {
     try (InputStream in = FileUtil.class.getClassLoader().getResourceAsStream(configClassPath)) {
       return read(in);
+    } catch (IOException e) {
+      throw new AIOException("Unable to load your Properties from class path " + configClassPath, e);
     }
   }
 

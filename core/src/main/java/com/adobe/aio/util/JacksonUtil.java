@@ -11,11 +11,19 @@
  */
 package com.adobe.aio.util;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.TextNode;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import io.cloudevents.json.ZonedDateTimeDeserializer;
+import io.cloudevents.json.ZonedDateTimeSerializer;
+import io.openapitools.jackson.dataformat.hal.JacksonHALModule;
+import java.time.ZonedDateTime;
 import org.apache.commons.lang3.StringUtils;
 
 public class JacksonUtil {
@@ -24,9 +32,15 @@ public class JacksonUtil {
   }
 
   public static final ObjectMapper DEFAULT_OBJECT_MAPPER =
-      new ObjectMapper()
-          .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-          .findAndRegisterModules();
+    JsonMapper.builder()
+    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+    .serializationInclusion(Include.NON_NULL)
+    .addModule(new SimpleModule()
+      .addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer())
+      .addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer()))
+    .addModule(new JacksonHALModule())
+    .addModule(new Jdk8Module())
+    .build();
 
   public static JsonNode getJsonNode(String jsonPayload) throws JsonProcessingException {
     if (StringUtils.isEmpty(jsonPayload)) {

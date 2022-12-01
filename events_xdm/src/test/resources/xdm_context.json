@@ -1,0 +1,27 @@
+{
+  "@context": {
+    "activitystreams": "http://www.w3.org/ns/activitystreams#",
+
+    "xdmEventEnvelope": "http://ns.adobe.com/xdm/event-envelope#",
+
+    "xdmAsset": "http://ns.adobe.com/xdm/assets/asset#",
+    "xdmComponentizedPage": "http://ns.adobe.com/xdm/content/componentized-page#",
+
+    "xdmContentRepository": "http://ns.adobe.com/xdm/content/repository#",
+
+    "xdmImsOrg": "https://ns.adobe.com/xdm-extensions/ims/organization#",
+    "xdmAemUser": "https://ns.adobe.com/xdm-extensions/aem/user",
+    "xdmImsUser": "https://ns.adobe.com/xdm-extensions/ims/user#",
+
+    "xdmCreated": "https://ns.adobe.com/xdm/common/event/created#",
+    "xdmDeleted": "https://ns.adobe.com/xdm/common/event/deleted#",
+    "xdmUpdated": "https://ns.adobe.com/xdm/common/event/updated#",
+
+    "xdmPublished": "https://ns.adobe.com/xdm/common/event/published#",
+    "xdmUnpublished": "https://ns.adobe.com/xdm/common/event/unpublished#",
+
+    "xdmEmitted" : "https://ns.adobe.com/xdm/common/event/emitted#",
+
+    "osgiEvent" : "https://osgi.org/javadoc/r4v42/org/osgi/service/event/Event.html"
+  }
+}

@@ -20,13 +20,14 @@ import org.apache.commons.lang3.StringUtils;
 
 public class CloudEvent {
 
-  private static final String SOURCE_URN_PREFIX = "urn:uuid:";
+  public static final String SOURCE_URN_PREFIX = "urn:uuid:";
+  public static final String SPEC_VERSION = "1.0";
 
   @JsonProperty("datacontenttype")
   private final String dataContentType = "application/json";
 
   @JsonProperty("specversion")
-  private final String specVersion = "1.0";
+  private final String specVersion = SPEC_VERSION;
 
   private final String source;
 

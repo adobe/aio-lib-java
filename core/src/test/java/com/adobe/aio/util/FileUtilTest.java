@@ -14,6 +14,8 @@ package com.adobe.aio.util;
 import static org.junit.Assert.assertEquals;
 
 import com.adobe.aio.util.FileUtil;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import org.junit.Assert;
@@ -33,18 +35,19 @@ public class FileUtilTest {
 
   @Test
   public void testGetMapFromProperties() {
-    assertEquals(Map.ofEntries(Map.entry(KEY, VALUE)),
-        FileUtil.getMapFromProperties(getTestProperties()));
+    Map<String, String> map = new HashMap<>();
+    map.put(KEY, VALUE);
+    assertEquals(map, FileUtil.getMapFromProperties(getTestProperties()));
   }
 
   @Test
-  public void testReadPropertiesFromFile() throws Exception {
-    Assert.assertTrue(FileUtil.readPropertiesFromFile("").isEmpty());
-    Assert.assertTrue(FileUtil.readPropertiesFromFile(null).isEmpty());
+  public void testReadPropertiesFromFile() {
+    Assert.assertFalse(FileUtil.readPropertiesFromFile("").isPresent());
+    Assert.assertFalse(FileUtil.readPropertiesFromFile(null).isPresent());
   }
 
   @Test
-  public void testReadPropertiesFromClassPath() throws Exception {
+  public void testReadPropertiesFromClassPath() {
     assertEquals(getTestProperties(), FileUtil.readPropertiesFromClassPath(TEST_PROPERTIES_FILE));
   }
 

@@ -17,7 +17,7 @@
   <parent>
     <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java</artifactId>
-    <version>0.0.45-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -57,12 +57,19 @@
       <groupId>io.github.openfeign.form</groupId>
       <artifactId>feign-form</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.openapitools.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-hal</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.cloudevents</groupId>
+      <artifactId>cloudevents-api</artifactId>
+    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
-      <artifactId>junit-dep</artifactId>
+      <artifactId>junit</artifactId>
     </dependency>
-
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>

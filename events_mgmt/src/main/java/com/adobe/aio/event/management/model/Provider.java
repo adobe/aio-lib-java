@@ -32,6 +32,9 @@ public class Provider {
   @JsonProperty("description")
   private String description;
 
+  @JsonProperty("instance_id")
+  protected String instanceId;
+
   @JsonProperty("source")
   private String source;
 
@@ -40,6 +43,12 @@ public class Provider {
 
   @JsonProperty("publisher")
   private String publisher;
+
+  @JsonProperty("provider_metadata")
+  protected String providerMetadata;
+
+  @JsonProperty("event_delivery_format")
+  protected String eventDeliveryFormat;
 
   /**
    * the associated EventMetadata can be eager loaded by the provider http API
@@ -75,6 +84,16 @@ public class Provider {
   }
 
   /**
+   * The instanceId of this Events Provider, this can be null/NA
+   *
+   * @return instanceId
+   **/
+  public String getInstanceId() {
+    return instanceId;
+  }
+
+
+  /**
    * A URI-reference (this provider id prefixed with &#x60;urn:uuid:&#x60;), identifying the context
    * in which an event happened. Producers MUST ensure that source + event.id is unique for each
    * distinct event. See https://github.com/cloudevents/spec/blob/master/spec.md#source-1
@@ -107,6 +126,24 @@ public class Provider {
     return publisher;
   }
 
+  /**
+   * @return an provider_metadata id defining the type of provider
+   */
+  public String getProviderMetadata() {
+    return providerMetadata;
+  }
+
+  /**
+   *
+   * @return the Event Delivery Format, either: the old legacy`adobe_io` format
+   * or better `cloud_events_v1` (see https://github.com/cloudevents/spec/blob/v1.0/spec.md),
+   * @see ProviderInputModel#DELIVERY_FORMAT_ADOBE_IO
+   * @see ProviderInputModel#DELIVERY_FORMAT_CLOUD_EVENTS_V1
+   */
+  public String getEventDeliveryFormat() {
+    return eventDeliveryFormat;
+  }
+
   public EventMetadataCollection.EventMetadataList getEmbeddedEventMetadata() {
     return embeddedEventMetadata;
   }
@@ -126,19 +163,20 @@ public class Provider {
       return false;
     }
     Provider provider = (Provider) o;
-    return Objects.equals(id, provider.id) &&
-        Objects.equals(label, provider.label) &&
-        Objects.equals(description, provider.description) &&
-        Objects.equals(source, provider.source) &&
-        Objects.equals(docsUrl, provider.docsUrl) &&
-        Objects.equals(publisher, provider.publisher) &&
-        Objects.equals(embeddedEventMetadata, provider.embeddedEventMetadata);
+    return Objects.equals(id, provider.id) && Objects.equals(label,
+        provider.label) && Objects.equals(description, provider.description)
+        && Objects.equals(instanceId, provider.instanceId) && Objects.equals(
+        source, provider.source) && Objects.equals(docsUrl, provider.docsUrl)
+        && Objects.equals(publisher, provider.publisher) && Objects.equals(
+        providerMetadata, provider.providerMetadata) && Objects.equals(eventDeliveryFormat,
+        provider.eventDeliveryFormat) && Objects.equals(embeddedEventMetadata,
+        provider.embeddedEventMetadata);
   }
 
   @Override
   public int hashCode() {
-    return Objects
-        .hash(id, label, description, source, docsUrl, publisher, embeddedEventMetadata);
+    return Objects.hash(id, label, description, instanceId, source, docsUrl, publisher,
+        providerMetadata, eventDeliveryFormat, embeddedEventMetadata);
   }
 
   @Override
@@ -147,10 +185,13 @@ public class Provider {
         "id='" + id + '\'' +
         ", label='" + label + '\'' +
         ", description='" + description + '\'' +
+        ", instanceId='" + instanceId + '\'' +
         ", source='" + source + '\'' +
         ", docsUrl='" + docsUrl + '\'' +
         ", publisher='" + publisher + '\'' +
-        ", eventMetadata=" + embeddedEventMetadata +
+        ", providerMetadata='" + providerMetadata + '\'' +
+        ", eventDeliveryFormat='" + eventDeliveryFormat + '\'' +
+        ", embeddedEventMetadata=" + embeddedEventMetadata +
         '}';
   }
 }

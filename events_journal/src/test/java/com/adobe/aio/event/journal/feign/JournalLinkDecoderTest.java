@@ -15,7 +15,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import com.adobe.aio.event.journal.api.JournalApi;
-import com.adobe.aio.event.journal.feign.JournalLinkDecoder;
 import com.adobe.aio.event.journal.model.JournalEntry;
 import com.adobe.aio.util.JacksonUtil;
 import feign.Feign;
@@ -31,7 +30,6 @@ public class JournalLinkDecoderTest {
 
   private static final String TEST_IMS_ORG_ID = "testImsOrgId";
   private static final int RETRY_AFTER_VALUE = 10;
-  private JournalLinkDecoder journalLinkDecoderUnderTest;
   @Rule
   public ExpectedException expectedEx = ExpectedException.none();
 

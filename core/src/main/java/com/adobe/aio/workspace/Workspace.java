@@ -113,6 +113,9 @@ public class Workspace {
     if (StringUtils.isEmpty(this.getWorkspaceId())) {
       throw new IllegalArgumentException("Your `Worskpace` is missing a workspaceId");
     }
+    if (StringUtils.isEmpty(this.getApiKey())) {
+      throw new IllegalArgumentException("Your `Worskpace` is missing an apiKey");
+    }
   }
 
   public String getProjectUrl() {
@@ -324,13 +327,13 @@ public class Workspace {
       return configMap(System.getenv());
     }
 
-    public Builder propertiesPath(final String propertiesPath) throws IOException {
+    public Builder propertiesPath(final String propertiesPath) {
       return properties(
           readPropertiesFromFile(propertiesPath)
               .orElse(readPropertiesFromClassPath(propertiesPath)));
     }
 
-    public Builder properties(final Properties properties) throws IOException {
+    public Builder properties(final Properties properties)  {
       return configMap(getMapFromProperties(properties));
     }
 

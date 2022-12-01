@@ -13,6 +13,14 @@ Import-Package: \
     !jakarta.activation.*,\
     !org.glassfish.hk2.osgiresourcelocator,\
     !lombok,\
+    !org.jsoup.*,\
+    !org.apache.logging.log4j.*,\
+    !javax.money, \
+    !com.thoughtworks.paranamer,\
+    !javafx.beans.property,\
+    !javafx.beans.value,\
+    !javax.persistence,\
+    !org.jboss.logmanager,\
     javax.annotation;version="0.0.0",\
     com.fasterxml.jackson.annotation;version="[2.9,3)",\
     com.fasterxml.jackson.core;version="[2.9,3)",\

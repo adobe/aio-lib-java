@@ -30,6 +30,15 @@ import org.apache.commons.lang3.StringUtils;
 public class ProviderInputModel {
 
   /**
+   * Default legacy Adobe I/O Events envelope format
+   */
+  public static final String DELIVERY_FORMAT_ADOBE_IO = "adobe_io";
+  /**
+   * CloudEvents V1 envelop format see https://github.com/cloudevents/spec/blob/v1.0/spec.md
+   */
+  public static final String DELIVERY_FORMAT_CLOUD_EVENTS_V1 = "cloud_events_v1";
+
+  /**
    * Optional key when creating/POST-ing a new provider.
    * Note it will be ignored when updating/PUT-ing it.
    * If none is provided our API will create a Random UUID for you.
@@ -47,6 +56,16 @@ public class ProviderInputModel {
   @JsonProperty("provider_metadata")
   private final String providerMetadataId;
 
+  /** Optional Event Delivery Format, either: the old legacy`adobe_io` format
+   * or better `cloud_events_v1` (see https://github.com/cloudevents/spec/blob/v1.0/spec.md),
+   * this is optional, if none is provided a default event delivery format is associated with
+   * your provider_metadata on the Adobe I/O side. It is `cloud_events_v1` for `Custom Events` Provider
+   * @see #DELIVERY_FORMAT_ADOBE_IO
+   * @see #DELIVERY_FORMAT_CLOUD_EVENTS_V1
+  */
+  @JsonProperty("event_delivery_format")
+  private final String eventDeliveryFormat;
+
   /**
    * The label of this Events Provider, as shown on the Adobe I/O console
    */
@@ -59,7 +78,7 @@ public class ProviderInputModel {
   private final String docsUrl;
 
   private ProviderInputModel(final String label, final String description, final String docsUrl, final String instanceId,
-      final String providerMetadataId) {
+      final String providerMetadataId, final String eventDeliveryFormat) {
     if (StringUtils.isEmpty(label)) {
       throw new IllegalArgumentException(
           "ProviderUpdateModel is missing a label");
@@ -70,6 +89,7 @@ public class ProviderInputModel {
     this.description = description;
     this.docsUrl = docsUrl;
     this.instanceId = instanceId;
+    this.eventDeliveryFormat = eventDeliveryFormat;
   }
 
   public String getLabel() {
@@ -88,6 +108,8 @@ public class ProviderInputModel {
 
   public String getProviderMetadataId() { return this.providerMetadataId; }
 
+  public String getEventDeliveryFormat() { return this.eventDeliveryFormat; }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -98,13 +120,14 @@ public class ProviderInputModel {
     }
     ProviderInputModel that = (ProviderInputModel) o;
     return Objects.equals(instanceId, that.instanceId) && Objects.equals(providerMetadataId,
-        that.providerMetadataId) && Objects.equals(label, that.label) && Objects.equals(
+        that.providerMetadataId) && Objects.equals(eventDeliveryFormat,
+        that.eventDeliveryFormat) && Objects.equals(label, that.label) && Objects.equals(
         description, that.description) && Objects.equals(docsUrl, that.docsUrl);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(instanceId, providerMetadataId, label, description, docsUrl);
+    return Objects.hash(instanceId, providerMetadataId, label, description, docsUrl, eventDeliveryFormat);
   }
 
   @Override
@@ -115,6 +138,7 @@ public class ProviderInputModel {
         ", docsUrl='" + docsUrl + '\'' +
         ", providerMetadataId='" + providerMetadataId + '\'' +
         ", instanceId='" + instanceId + '\'' +
+        ", eventDeliveryFormat='" + eventDeliveryFormat + '\'' +
         '}';
   }
 
@@ -130,6 +154,7 @@ public class ProviderInputModel {
     private String docsUrl;
     private String instanceId;
     private String providerMetadataId;
+    private String eventDeliveryFormat;
 
     public Builder() {
     }
@@ -159,8 +184,13 @@ public class ProviderInputModel {
       return this;
     }
 
+    public Builder eventDeliveryFormat(final String eventDeliveryFormat) {
+      this.eventDeliveryFormat = eventDeliveryFormat;
+      return this;
+    }
+
     public ProviderInputModel build() {
-      return new ProviderInputModel(label, description, docsUrl, instanceId, providerMetadataId);
+      return new ProviderInputModel(label, description, docsUrl, instanceId, providerMetadataId, eventDeliveryFormat);
     }
   }
 }

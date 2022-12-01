@@ -1,5 +1,69 @@
 # 📑 Changelog
 
+## [aio-lib-java-1.0.0](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.0) (2022-11-30)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.10...aio-lib-java-1.0.0)
+
+### 📁 Other pull requests
+
+- fix: address review comments [\#133](https://github.com/adobe/aio-lib-java/pull/133) ([sangeetha5491](https://github.com/sangeetha5491))
+- Add support for Registration V2 API  [\#132](https://github.com/adobe/aio-lib-java/pull/132) ([sangeetha5491](https://github.com/sangeetha5491))
+- Add support for Registration V2 API [\#126](https://github.com/adobe/aio-lib-java/pull/126) ([sangeetha5491](https://github.com/sangeetha5491))
+
+## [aio-lib-java-0.1.10](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.10) (2022-11-25)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.8...aio-lib-java-0.1.10)
+
+## [aio-lib-java-0.1.8](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.8) (2022-11-25)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.6...aio-lib-java-0.1.8)
+
+### 📁 Other pull requests
+
+- GH-134 JDK-8193462 /  JDK-8222091 workaround [\#135](https://github.com/adobe/aio-lib-java/pull/135) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.1.6](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.6) (2022-11-25)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.4...aio-lib-java-0.1.6)
+
+### 📁 Other pull requests
+
+- GH-21 and GH-104 jdk8 support and move of the xdm IO Events Model here as a new module [\#130](https://github.com/adobe/aio-lib-java/pull/130) ([francoisledroff](https://github.com/francoisledroff))
+- Made the code compatible with java 8 [\#129](https://github.com/adobe/aio-lib-java/pull/129) ([pulguptaAdobe](https://github.com/pulguptaAdobe))
+
+## [aio-lib-java-0.1.4](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.4) (2022-11-03)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.2...aio-lib-java-0.1.4)
+
+### 📁 Other pull requests
+
+- GH-127 moving the integration test with re-usable `testers` in a new `aio-lib-java-events-test` module [\#128](https://github.com/adobe/aio-lib-java/pull/128) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.1.2](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.2) (2022-08-31)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.0...aio-lib-java-0.1.2)
+
+### 📁 Other pull requests
+
+- GH-121 fixing the javadocs [\#122](https://github.com/adobe/aio-lib-java/pull/122) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.1.0](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.1.0) (2022-07-13)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.46...aio-lib-java-0.1.0)
+
+### 📁 Other pull requests
+
+- GH-102 mapping the new Provider Registration input model allowing to specify the `event_delivery_format` [\#120](https://github.com/adobe/aio-lib-java/pull/120) ([francoisledroff](https://github.com/francoisledroff))
+- GH-114 adding unit and integration tests [\#117](https://github.com/adobe/aio-lib-java/pull/117) ([francoisledroff](https://github.com/francoisledroff))
+
+## [aio-lib-java-0.0.46](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.46) (2022-06-10)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.44...aio-lib-java-0.0.46)
+
+### 📁 Other pull requests
+
+- GH-112 adding the Provider model's instanceId [\#113](https://github.com/adobe/aio-lib-java/pull/113) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-0.0.44](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-0.0.44) (2022-06-03)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.0.42...aio-lib-java-0.0.44)

@@ -19,7 +19,7 @@
     <groupId>com.adobe.aio.aem</groupId>
     <artifactId>aio-aem</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>0.0.45-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
   </parent>
 
   <artifactId>aio-aem-events-osgi-mapping</artifactId>
@@ -52,16 +52,17 @@
       <scope>provided</scope>
       <version>${project.version}</version>
     </dependency>
-    <!-- adobe.io XDM event model -->
     <dependency>
-      <artifactId>xdm-event-model</artifactId>
-      <groupId>com.adobe.event</groupId>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-events-xdm</artifactId>
       <scope>provided</scope>
+      <version>${project.version}</version>
     </dependency>
+
 
     <!-- test -->
     <dependency>
-      <artifactId>junit-dep</artifactId>
+      <artifactId>junit</artifactId>
       <groupId>junit</groupId>
     </dependency>
     <dependency>
