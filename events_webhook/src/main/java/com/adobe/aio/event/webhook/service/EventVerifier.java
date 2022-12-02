@@ -20,18 +20,16 @@ import com.adobe.aio.exception.AIOException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.security.InvalidKeyException;
+import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Signature;
-import java.security.SignatureException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Map;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.validator.routines.UrlValidator;
-import org.h2.util.StringUtils;
+import java.util.Base64;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -41,19 +39,24 @@ public class EventVerifier {
 
   private static Logger logger = LoggerFactory.getLogger(EventVerifier.class);
 
-  public static final String ADOBE_IOEVENTS_SECURITY_DOMAIN = "https://static.adobeioevents.com/";
+  public static final String ADOBE_IOEVENTS_SECURITY_DOMAIN = "https://static.adobeioevents.com";
   public static final String ADOBE_IOEVENTS_DIGI_SIGN_1 = "x-adobe-digital-signature-1";
   public static final String ADOBE_IOEVENTS_DIGI_SIGN_2 = "x-adobe-digital-signature-2";
   public static final String ADOBE_IOEVENTS_PUB_KEY_1_PATH = "x-adobe-public-key1-path";
   public static final String ADOBE_IOEVENTS_PUB_KEY_2_PATH = "x-adobe-public-key2-path";
-  private static final int CACHE_EXPIRY_IN_MINUTES = 1440; // expiry of 24 hrs
+  //private static final int CACHE_EXPIRY_IN_MINUTES = 1440; // expiry of 24 hrs
+  private final FeignPubKeyService pubKeyService;
 
-  private final CacheServiceImpl pubKeyCache;
-  private FeignPubKeyService pubKeyService;
+  private CacheServiceImpl pubKeyCache;
+
+  EventVerifier(String url) {
+    this.pubKeyService = new FeignPubKeyService(url);
+
+  }
 
   public EventVerifier() {
-    this.pubKeyCache = cacheBuilder().buildWithExpiry(CACHE_EXPIRY_IN_MINUTES);
-    this.pubKeyService = new FeignPubKeyService(ADOBE_IOEVENTS_SECURITY_DOMAIN);
+    this(ADOBE_IOEVENTS_SECURITY_DOMAIN);
+    this.pubKeyCache = cacheBuilder().buildCache();
   }
 
   /**
@@ -65,9 +68,8 @@ public class EventVerifier {
    * @return boolean - TRUE if valid event else FALSE
    * @throws Exception
    */
-  public boolean authenticateEvent(String message, String clientId,
-      Map<String, String> headers) {
-    if(!isValidTargetRecipient(message, clientId)) {
+  public boolean authenticateEvent(String message, String clientId, Map<String, String> headers) {
+    if (!isValidTargetRecipient(message, clientId)) {
       logger.error("target recipient {} is not valid for message {}", clientId, message);
       return false;
     }
@@ -78,56 +80,46 @@ public class EventVerifier {
     return true;
   }
 
-  private boolean verifyEventSignatures(String message,
-      Map<String, String> headers) {
+  private boolean verifyEventSignatures(String message, Map<String, String> headers) {
     String[] digitalSignatures = {headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1),
         headers.get(ADOBE_IOEVENTS_DIGI_SIGN_2)};
     String[] pubKeyPaths = {headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
         headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH)};
-    String publicKey1Url = ADOBE_IOEVENTS_SECURITY_DOMAIN + headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH);
-    String publicKey2Url = ADOBE_IOEVENTS_SECURITY_DOMAIN + headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH);
-
-    try {
-      if (isValidUrl(publicKey1Url) && isValidUrl(publicKey2Url)) {
-        return verifySignature(message, pubKeyPaths, digitalSignatures);
-      }
-    } catch (Exception e) {
-      throw new AIOException("Error verifying signature for public keys " + publicKey1Url +
-          " & " + publicKey2Url + ". Reason -> " + e.getMessage());
-    }
-    return false;
+    return verifySignature(message, pubKeyPaths, digitalSignatures);
   }
 
-  private boolean verifySignature(String message, String[] publicKeyPaths, String[] signatures)
-      throws NoSuchAlgorithmException, InvalidKeySpecException, InvalidKeyException, SignatureException {
+  private boolean verifySignature(String message, String[] publicKeyPaths, String[] signatures) {
     byte[] data = message.getBytes(UTF_8);
 
     for (int i = 0; i < signatures.length; i++) {
-      // signature generated at I/O Events side is Base64 encoded, so it must be decoded
-      byte[] sign = Base64.decodeBase64(signatures[i]);
-      Signature sig = Signature.getInstance("SHA256withRSA");
-      sig.initVerify(getPublic(fetchPemEncodedPublicKey(publicKeyPaths[i])));
-      sig.update(data);
-      boolean result = sig.verify(sign);
-      if (result) {
-        return true;
+      try {
+        // signature generated at I/O Events side is Base64 encoded, so it must be decoded
+        byte[] sign = Base64.getDecoder().decode(signatures[i]);
+        Signature sig = Signature.getInstance("SHA256withRSA");
+        sig.initVerify(getPublic(fetchPemEncodedPublicKey(publicKeyPaths[i])));
+        sig.update(data);
+        boolean isSignValid = sig.verify(sign);
+        if (isSignValid) {
+          return true;
+        }
+      } catch (GeneralSecurityException e) {
+        throw new AIOException("Error verifying signature for public key " + publicKeyPaths[i]
+            +". Reason -> " + e.getMessage(), e);
       }
     }
     return false;
   }
 
   private boolean isValidTargetRecipient(String message, String clientId) {
-    ObjectMapper mapper = new ObjectMapper();
     try {
+      ObjectMapper mapper = new ObjectMapper();
       JsonNode jsonPayload = mapper.readTree(message);
       JsonNode recipientClientIdNode = jsonPayload.get("recipient_client_id");
-      if (recipientClientIdNode != null) {
-        return recipientClientIdNode.textValue().equals(clientId);
-      }
+      return (recipientClientIdNode != null && recipientClientIdNode.textValue() !=null
+          && recipientClientIdNode.textValue().equals(clientId));
     } catch (JsonProcessingException e) {
       throw new AIOException("error parsing the event payload during target recipient check..");
     }
-    return false;
   }
 
   private PublicKey getPublic(String pubKey)
@@ -137,10 +129,9 @@ public class EventVerifier {
         .replaceAll(System.lineSeparator(), "")
         .replace("-----END PUBLIC KEY-----", "");
 
-    byte[] encoded = Base64.decodeBase64(publicKeyPEM);
-
+    byte[] keyBytes = Base64.getDecoder().decode(publicKeyPEM);
     KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
     return keyFactory.generatePublic(keySpec);
   }
 
@@ -151,7 +142,7 @@ public class EventVerifier {
   private String fetchKeyFromCacheOrApi(String pubKeyPath) {
     String pubKeyFileName = getPublicKeyFileName(pubKeyPath);
     String pubKey = getKeyFromCache(pubKeyFileName);
-    if (StringUtils.isNullOrEmpty(pubKey)) {
+    if (StringUtils.isEmpty(pubKey)) {
       pubKey = fetchKeyFromApiAndPutInCache(pubKeyPath, pubKeyFileName);
     }
     return pubKey;
@@ -162,7 +153,7 @@ public class EventVerifier {
       logger.warn("public key {} not present in cache, fetching directly from the cdn url {}",
           pubKeyFileName, ADOBE_IOEVENTS_SECURITY_DOMAIN + pubKeyPath);
       String pubKeyFetchResponse = pubKeyService.getPubKeyFromCDN(pubKeyPath);
-      if (!StringUtils.isNullOrEmpty(pubKeyFetchResponse)) {
+      if (!StringUtils.isEmpty(pubKeyFetchResponse)) {
         pubKeyCache.put(pubKeyFileName, pubKeyFetchResponse);
       }
       return pubKeyFetchResponse;
@@ -189,9 +180,5 @@ public class EventVerifier {
    */
   private String getPublicKeyFileName(String pubKeyPath) {
     return pubKeyPath.substring(pubKeyPath.lastIndexOf('/') + 1);
-  }
-
-  private boolean isValidUrl(String url) {
-    return new UrlValidator().isValid(url);
   }
 }
