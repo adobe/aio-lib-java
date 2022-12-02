@@ -11,18 +11,19 @@
  */
 package com.adobe.aio.event.webhook.model;
 
+import java.util.Date;
 import java.util.Objects;
 
 public class CacheableObject {
 
   private String key;
   private String value;
-  private int expiryInMinutes;
+  private Date pubKeyExpiryDate;
 
-  public CacheableObject(String key, String value, int expiryInMinutes) {
+  public CacheableObject(String key, String value, Date expiryInMinutes) {
     this.key = key;
     this.value = value;
-    this.expiryInMinutes = expiryInMinutes;
+    this.pubKeyExpiryDate = expiryInMinutes;
   }
 
   public String getKey() {
@@ -33,8 +34,8 @@ public class CacheableObject {
     return value;
   }
 
-  public int getExpiryInMinutes() {
-    return expiryInMinutes;
+  public Date getPubKeyExpiryDate() {
+    return pubKeyExpiryDate;
   }
 
   @Override
@@ -46,13 +47,13 @@ public class CacheableObject {
       return false;
     }
     CacheableObject that = (CacheableObject) o;
-    return expiryInMinutes == that.expiryInMinutes && Objects.equals(key, that.key)
-        && Objects.equals(value, that.value);
+    return Objects.equals(key, that.key) && Objects.equals(value, that.value)
+        && Objects.equals(pubKeyExpiryDate, that.pubKeyExpiryDate);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(key, value, expiryInMinutes);
+    return Objects.hash(key, value, pubKeyExpiryDate);
   }
 
   @Override
@@ -60,7 +61,7 @@ public class CacheableObject {
     return "CacheableObject{" +
         "key='" + key + '\'' +
         ", value='" + value + '\'' +
-        ", expiryInMinutes=" + expiryInMinutes +
+        ", pubKeyExpiryDate=" + pubKeyExpiryDate +
         '}';
   }
 }

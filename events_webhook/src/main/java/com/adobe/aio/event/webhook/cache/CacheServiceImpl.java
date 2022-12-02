@@ -24,9 +24,10 @@ import org.slf4j.LoggerFactory;
 public class CacheServiceImpl implements CacheService {
 
   private static final Logger logger = LoggerFactory.getLogger(CacheServiceImpl.class);
+  private static final int DEFAULT_TTL_IN_MINUTES = 1440;
+  private static final Date CURRENT_SYSTEM_DATE = new Date();
 
   Map<String, Object> cacheMap;
-  Date cacheExpirationDate;
 
   @Nullable
   @Override
@@ -34,11 +35,10 @@ public class CacheServiceImpl implements CacheService {
     CacheableObject obj = (CacheableObject) cacheMap.get(key);
     if (obj != null) {
       if (isExpired(obj)) {
-        logger.debug("cache is expired..invalidating entry for key {}", key);
+        logger.debug("public key object in cache is expired..invalidating entry for key {}", key);
         cacheMap.remove(key);
         return null;
-      }
-      else {
+      } else {
         return obj.getValue();
       }
     }
@@ -47,18 +47,18 @@ public class CacheServiceImpl implements CacheService {
 
   @Override
   public void put(@Nonnull String key, @Nonnull Object value) {
-    CacheableObject cacheableObject = new CacheableObject(key, (String) value, 1440);
+    putWithExpiry(key, value, DEFAULT_TTL_IN_MINUTES);
+  }
+
+  public void putWithExpiry(@Nonnull String key, @Nonnull Object value, int ttlInMinutes) {
+    CacheableObject cacheableObject = new CacheableObject(key, (String) value,
+        getExpirationDate(ttlInMinutes));
     cacheMap.put(key, cacheableObject);
   }
 
   @Override
   public boolean isExpired(CacheableObject cacheableObject) {
-    return getExpirationDate(cacheableObject.getExpiryInMinutes()).after(this.cacheExpirationDate);
-  }
-
-  private CacheServiceImpl buildWithExpiry(int ttl) {
-    this.cacheExpirationDate = getExpirationDate(ttl);
-    return this;
+    return CURRENT_SYSTEM_DATE.after(cacheableObject.getPubKeyExpiryDate());
   }
 
   private CacheServiceImpl initialiseCacheMap() {
@@ -71,10 +71,9 @@ public class CacheServiceImpl implements CacheService {
   }
 
   public static class CacheBuilder {
-    public CacheServiceImpl buildWithExpiry(int expiryInMinutes) {
+    public CacheServiceImpl buildCache() {
       return new CacheServiceImpl()
-          .initialiseCacheMap()
-          .buildWithExpiry(expiryInMinutes);
+          .initialiseCacheMap();
     }
   }
 
