@@ -107,6 +107,7 @@
     <jackson.version>2.12.3</jackson.version>
     <jjwt.version>0.11.2</jjwt.version>
     <cloudevents.version>1.2.0</cloudevents.version>
+    <spring-context.version>5.3.22</spring-context.version>
 
     <!-- https://github.com/openapi-tools/jackson-dataformat-hal/blob/v1.0.7/pom.xml -->
     <jackson-dataformat-hal.version>1.0.9</jackson-dataformat-hal.version>
@@ -118,31 +119,6 @@
 
   <dependencyManagement>
     <dependencies>
-
-      <dependency>
-        <groupId>com.squareup.retrofit2</groupId>
-        <artifactId>converter-scalars</artifactId>
-        <version>${converter-scalars.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.squareup.retrofit2</groupId>
-        <artifactId>converter-jackson</artifactId>
-        <version>${converter-jackson.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.squareup.retrofit2</groupId>
-        <artifactId>retrofit</artifactId>
-        <version>${retrofit.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>com.github.ben-manes.caffeine</groupId>
-        <artifactId>caffeine</artifactId>
-        <version>${caffeine.version}</version>
-        <scope>compile</scope>
-      </dependency>
 
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -180,12 +156,6 @@
         <artifactId>slf4j-api</artifactId>
         <version>${slf4j-api.version}</version>
         <scope>provided</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>com.h2database</groupId>
-        <artifactId>h2</artifactId>
-        <version>${h2.version}</version>
       </dependency>
 
       <dependency>
@@ -242,25 +212,21 @@
         <artifactId>feign-form</artifactId>
         <version>${feign-form.version}</version>
       </dependency>
-
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring-context.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>3.0.2</version>
       </dependency>
 
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-test</artifactId>
-        <version>${spring-boot-test.version}</version>
         <scope>test</scope>
       </dependency>
 
@@ -291,8 +257,6 @@
         <version>${mockito.version}</version>
         <scope>test</scope>
       </dependency>
-
-
 
     </dependencies>
   </dependencyManagement>
