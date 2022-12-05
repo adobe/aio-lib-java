@@ -27,14 +27,12 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
-import java.util.Map;
 import java.util.Base64;
+import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
-@Service
 public class EventVerifier {
 
   private static Logger logger = LoggerFactory.getLogger(EventVerifier.class);
@@ -44,7 +42,7 @@ public class EventVerifier {
   public static final String ADOBE_IOEVENTS_DIGI_SIGN_2 = "x-adobe-digital-signature-2";
   public static final String ADOBE_IOEVENTS_PUB_KEY_1_PATH = "x-adobe-public-key1-path";
   public static final String ADOBE_IOEVENTS_PUB_KEY_2_PATH = "x-adobe-public-key2-path";
-  //private static final int CACHE_EXPIRY_IN_MINUTES = 1440; // expiry of 24 hrs
+
   private final FeignPubKeyService pubKeyService;
 
   private CacheServiceImpl pubKeyCache;
@@ -66,7 +64,6 @@ public class EventVerifier {
    * @param clientId - recipient client id in the payload
    * @param headers - webhook request headers
    * @return boolean - TRUE if valid event else FALSE
-   * @throws Exception
    */
   public boolean authenticateEvent(String message, String clientId, Map<String, String> headers) {
     if (!isValidTargetRecipient(message, clientId)) {
