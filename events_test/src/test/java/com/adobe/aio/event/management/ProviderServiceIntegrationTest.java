@@ -16,7 +16,6 @@ import static com.adobe.aio.event.management.model.ProviderInputModel.DELIVERY_F
 import com.adobe.aio.event.management.feign.ConflictException;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
-import com.adobe.aio.event.management.model.ProviderInputModel;
 import com.adobe.aio.util.WorkspaceUtil;
 import java.util.List;
 import java.util.Optional;
