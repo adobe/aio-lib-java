@@ -116,8 +116,8 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
       }
 
       String updatedProviderDescription = "updated Provider Description";
-      Optional<Provider> updatedProvider = providerService.createOrUpdateProvider
-          (getTestProviderInputModelBuilder(TEST_EVENT_PROVIDER_LABEL)
+      Optional<Provider> updatedProvider = providerService.updateProvider(providerId,
+          getTestProviderInputModelBuilder(TEST_EVENT_PROVIDER_LABEL)
               .instanceId(instanceId)
               .description(updatedProviderDescription)
               .eventDeliveryFormat(DELIVERY_FORMAT_ADOBE_IO)
