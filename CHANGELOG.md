@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.0...HEAD)
+
+### 📁 Other pull requests
+
+- GH-136 test bug fix: void catching unwanted Conflict exception when testing createGetUpdateDelete events providers [\#137](https://github.com/adobe/aio-lib-java/pull/137) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-1.0.0](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.0) (2022-11-30)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-0.1.10...aio-lib-java-1.0.0)
