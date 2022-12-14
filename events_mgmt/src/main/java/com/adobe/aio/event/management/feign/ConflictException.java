@@ -11,43 +11,17 @@
  */
 package com.adobe.aio.event.management.feign;
 
-import static com.adobe.aio.util.JacksonUtil.DEFAULT_OBJECT_MAPPER;
-
-import com.adobe.aio.event.management.model.ErrorResponse;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import feign.FeignException;
 import feign.Response;
-import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ConflictException extends FeignException {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
-  private final String conflictingId;
 
   public ConflictException(Response response, FeignException exception) {
     super(response.status(), exception.getMessage(), response.request(), exception);
-    conflictingId  = getConflictingId(exception.contentUTF8());
   }
 
-  public Optional<String> getConflictingId(){
-   return Optional.ofNullable(conflictingId);
-  }
-
-  private String getConflictingId(String body){
-    try {
-      String conflictingId = DEFAULT_OBJECT_MAPPER.readValue(body, ErrorResponse.class).getMessage();
-      if (!StringUtils.isEmpty(conflictingId) && !conflictingId.contains(" ")) {
-        return conflictingId;
-      } else {
-        logger.warn("The Conflict/409 Error response does not hold a valid conflicting id: `{}`",conflictingId);
-        return null;
-      }
-    } catch (JsonProcessingException e) {
-      logger.warn("The Conflict/409 Error response is not of the expected format",e.getMessage());
-      return null;
-    }
-  }
 }
