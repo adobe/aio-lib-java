@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.2...HEAD)
+
+### 📁 Other pull requests
+
+- GH-138 fixing the createorUpdate provider service method [\#139](https://github.com/adobe/aio-lib-java/pull/139) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-1.0.2](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.2) (2022-12-14)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.0...aio-lib-java-1.0.2)
