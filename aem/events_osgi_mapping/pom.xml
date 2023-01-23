@@ -81,6 +81,7 @@
         <dependency>
           <groupId>com.adobe.aem</groupId>
           <artifactId>aem-sdk-api</artifactId>
+          <version>${aemaacs.version}</version>
         </dependency>
       </dependencies>
     </profile>

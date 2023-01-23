@@ -43,7 +43,8 @@ Export-Package: com.adobe.aio.workspace;version="${project.version}";provide:=tr
     com.adobe.aio.event.journal.model;version="${project.version}";provide:=true,\
     com.adobe.aio.event.publish;version="${project.version}";provide:=true,\
     com.adobe.aio.event.publish.model;version="${project.version}";provide:=true,\
-    com.adobe.xdm.*;version="${project.version}";provide:=true
+    com.adobe.xdm.*;version="${project.version}";provide:=true, \
+    io.openapitools.jackson.dataformat.hal.*;version="${jackson-dataformat-hal.version}";provide:=true
 Bundle-DocURL:
 
 -noextraheaders: true
