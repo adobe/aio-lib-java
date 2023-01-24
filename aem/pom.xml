@@ -49,6 +49,9 @@
     <crx.password>admin</crx.password>
     <crx.port>4502</crx.port>
     <crx.path>/apps/aio/install</crx.path>
+
+    <aemaacs.version>2021.11.6013.20211105T162756Z-211000</aemaacs.version>
+
     <!--
 If you want to deploy the bundle from the source
 1. modify the below `crx.*` properties according to your needs
@@ -208,15 +211,12 @@ If you want to deploy the bundle from the source
       <activation>
         <activeByDefault>true</activeByDefault>
       </activation>
-      <properties>
-        <aem.version>2021.11.6013.20211105T162756Z-211000</aem.version>
-      </properties>
       <dependencyManagement>
         <dependencies>
           <dependency>
             <groupId>com.adobe.aem</groupId>
             <artifactId>aem-sdk-api</artifactId>
-            <version>${aem.version}</version>
+            <version>${aemaacs.version}</version>
             <scope>provided</scope>
           </dependency>
         </dependencies>
