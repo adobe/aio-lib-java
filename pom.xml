@@ -28,10 +28,9 @@
     <module>events_mgmt</module>
     <module>events_ingress</module>
     <module>events_journal</module>
-
+    <module>events_webhook</module>
     <module>events_test</module>
     <module>events_xdm</module>
-
     <module>aem</module>
 
   </modules>
@@ -108,6 +107,7 @@
     <jackson.version>2.12.3</jackson.version>
     <jjwt.version>0.11.2</jjwt.version>
     <cloudevents.version>1.2.0</cloudevents.version>
+    <spring-context.version>5.3.22</spring-context.version>
 
     <!-- https://github.com/openapi-tools/jackson-dataformat-hal/blob/v1.0.9/pom.xml -->
     <jackson-dataformat-hal.version>1.0.9</jackson-dataformat-hal.version>
@@ -211,6 +211,16 @@
         <groupId>io.github.openfeign.form</groupId>
         <artifactId>feign-form</artifactId>
         <version>${feign-form.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${spring-context.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.findbugs</groupId>
+        <artifactId>jsr305</artifactId>
+        <version>3.0.2</version>
       </dependency>
 
       <dependency>
