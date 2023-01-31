@@ -44,22 +44,13 @@
       <artifactId>aio-lib-java-ims</artifactId>
       <version>${project.version}</version>
     </dependency>
+
+    <!--- test specific -->
     <dependency>
       <groupId>com.github.tomakehurst</groupId>
       <artifactId>wiremock-jre8</artifactId>
       <version>${wiremock.version}</version>
       <scope>test</scope>
-    </dependency>
-
-    <!--- test specific -->
-    <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
