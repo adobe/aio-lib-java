@@ -18,7 +18,7 @@
   <parent>
     <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.7-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -28,6 +28,8 @@
   <properties>
     <maven.compiler.source>11</maven.compiler.source>
     <maven.compiler.target>11</maven.compiler.target>
+    <wiremock.version>2.31.0</wiremock.version>
+    <junit.jupiter.version>5.3.1</junit.jupiter.version>
   </properties>
   <artifactId>aio-lib-java-events-webhook</artifactId>
 
@@ -37,16 +39,16 @@
       <artifactId>aio-lib-java-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-ims</artifactId>
       <version>${project.version}</version>
     </dependency>
-
     <dependency>
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8</artifactId>
+      <version>${wiremock.version}</version>
+      <scope>test</scope>
     </dependency>
 
     <!--- test specific -->
@@ -57,7 +59,25 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>compile</scope>
     </dependency>
-
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-params</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-engine</artifactId>
+      <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
