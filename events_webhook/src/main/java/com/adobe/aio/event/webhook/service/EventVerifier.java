@@ -11,10 +11,8 @@
  */
 package com.adobe.aio.event.webhook.service;
 
-import static com.adobe.aio.event.webhook.cache.CacheServiceImpl.cacheBuilder;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
-import com.adobe.aio.event.webhook.cache.CacheServiceImpl;
 import com.adobe.aio.event.webhook.feign.FeignPubKeyService;
 import com.adobe.aio.exception.AIOException;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -29,7 +27,6 @@ import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Map;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +42,6 @@ public class EventVerifier {
 
   private final FeignPubKeyService pubKeyService;
 
-  private CacheServiceImpl pubKeyCache;
 
   EventVerifier(String url) {
     this.pubKeyService = new FeignPubKeyService(url);
@@ -54,7 +50,6 @@ public class EventVerifier {
 
   public EventVerifier() {
     this(ADOBE_IOEVENTS_SECURITY_DOMAIN);
-    this.pubKeyCache = cacheBuilder().buildCache();
   }
 
   /**
@@ -132,50 +127,13 @@ public class EventVerifier {
     return keyFactory.generatePublic(keySpec);
   }
 
-  String fetchPemEncodedPublicKey(String publicKeyPath) {
-    return fetchKeyFromCacheOrApi(publicKeyPath);
-  }
-
-  private String fetchKeyFromCacheOrApi(String pubKeyPath) {
-    String pubKeyFileName = getPublicKeyFileName(pubKeyPath);
-    String pubKey = getKeyFromCache(pubKeyFileName);
-    if (StringUtils.isEmpty(pubKey)) {
-      pubKey = fetchKeyFromApiAndPutInCache(pubKeyPath, pubKeyFileName);
-    }
-    return pubKey;
-  }
-
-  private String fetchKeyFromApiAndPutInCache(String pubKeyPath, String pubKeyFileName) {
+  private String fetchPemEncodedPublicKey(String publicKeyPath) {
     try {
-      logger.warn("public key {} not present in cache, fetching directly from the cdn url {}",
-          pubKeyFileName, ADOBE_IOEVENTS_SECURITY_DOMAIN + pubKeyPath);
-      String pubKeyFetchResponse = pubKeyService.getPubKeyFromCDN(pubKeyPath);
-      if (!StringUtils.isEmpty(pubKeyFetchResponse)) {
-        pubKeyCache.put(pubKeyFileName, pubKeyFetchResponse);
-      }
-      return pubKeyFetchResponse;
+      return pubKeyService.getPubKeyFromCDN(publicKeyPath);
     } catch (Exception e) {
       throw new AIOException("error fetching public key from CDN url -> "
-          + ADOBE_IOEVENTS_SECURITY_DOMAIN + pubKeyPath + " due to " + e.getMessage());
+          + ADOBE_IOEVENTS_SECURITY_DOMAIN + publicKeyPath + " due to " + e.getMessage());
     }
-  }
 
-  private String getKeyFromCache(String pubKeyFileNameAsKey) {
-    Object pubKey = pubKeyCache.get(pubKeyFileNameAsKey);
-    if (pubKey != null) {
-      logger.debug("fetched key successfully for pub key path {} from cache", pubKeyFileNameAsKey);
-      return String.valueOf(pubKey);
-    }
-    return null;
-  }
-
-  /**
-   * Parses the pub key file name from the relative path
-   *
-   * @param pubKeyPath - relative path in the format /prod/keys/pub-key-voy5XEbWmT.pem
-   * @return public key file name
-   */
-  private String getPublicKeyFileName(String pubKeyPath) {
-    return pubKeyPath.substring(pubKeyPath.lastIndexOf('/') + 1);
   }
 }
