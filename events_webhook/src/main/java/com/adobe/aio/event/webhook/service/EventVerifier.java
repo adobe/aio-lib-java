@@ -129,6 +129,9 @@ public class EventVerifier {
 
   private String fetchPemEncodedPublicKey(String publicKeyPath) {
     try {
+      // it is recommended to cache this public key fetched from the adobe hosted CDN.
+      // after downloading the public key set it in the cache with cache expiry of not more than 24h.
+      // refer our public doc for the same - https://developer.adobe.com/events/docs/guides/#security-considerations
       return pubKeyService.getPubKeyFromCDN(publicKeyPath);
     } catch (Exception e) {
       throw new AIOException("error fetching public key from CDN url -> "
