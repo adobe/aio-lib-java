@@ -16,39 +16,60 @@ import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_D
 import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_DIGI_SIGN_2;
 import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_PUB_KEY_1_PATH;
 import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_PUB_KEY_2_PATH;
+import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_SECURITY_DOMAIN;
+import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.github.tomakehurst.wiremock.WireMockServer;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-@RunWith(MockitoJUnitRunner.class)
 public class EventVerifierTest {
 
   private static final String TEST_CLIENT_ID = "client_id1";
   private static final String INVALID_TEST_CLIENT_ID = "invalid_client_id";
-  private static final String TEST_DIGI_SIGN_1 = "pZY22OGm8/6H6bJXSi+/4VztsPN+fPZtHgHrrASuTw7LTUZVpbAZNaXVTzQsFd47PvaI8aQxbl874GFmH0QfAVQaRT93x5O/kQdM1ymG03303QaFY/mjm/Iot3VEwq5xOtM8f5a2mKUce9bgEv28iN7z9H/MbBOSmukPSJh/vMLkFAmMZQwdP4SRK3ckxQg6wWTbeMRxjw8/FLckznCGPZri4c0O7WPr8wnrWcvArlhBpIPJPeifJOyDj/woFQzoeemdrVoBFOieE/j3RoMWzcQeLENaSrqk00MPL2svNQcTLMkmWuICOjYSbnlv/EPFCQS8bQsnVHxGFD1yDeFa7Q==";
-  private static final String TEST_DIGI_SIGN_2 = "GpMONiPMHY51vpHF3R9SSs9ogRn8i2or/bvV3R+PYXGgDzAxDhRdl9dIUp/qQ3vsxDGEv045IV4GQ2f4QbsFvWLJsBNyCqLs6KL8LsRoGfEC4Top6c1VVjrEEQ1MOoFcoq/6riXzg4h09lRTfARllVv+icgzAiuv/JW2HNg5yQ4bqenFELD6ipCStuaI/OGS0A9s0Hc6o3aoHz3r5d5DecwE6pUdpG8ODhKBM+34CvcvMDNdrj8STYWHsEUqGdR9klpaqaC1QRYFIO7WgbgdwsuGULz6Sjm+q5s5Wh++fz5E+gXkizFviD389gDIUylFTig/1h7WTLRDuSz69Q+C5w==";
+  private static final String TEST_DIGI_SIGN_1 = "IaHo9/8DYt2630pAtjIJeGtsHjB61zOSiAb3S4X1VdPooxikfk79H/t3rgaSbmQMOnjVPRpYVNsHn1fE+l80gjEqmljgNEHt+BtfEH8EsEigwbjQS9opTx/GFnexw3h/sWOt4MGWt3TFK484Dsijijcs1gLwcxTyVUeU2G2XXECpH4dvvEXWQP+1HDFu9nrN+MU/aOR17cNF5em/D/jKjgTcaPx7jK+W5M57F3qqsmdcPxM1ltQxx1/iAXWaOffOC/nXSda5fLFZL75RKBIoveDjL9zthVkBVY9qKXYyK6S/usc2bW3PpXuRTd5Xv2bFB2Mlzr0Gi6St/iiNYLEl3g==";
+  private static final String TEST_DIGI_SIGN_2 = "Xx8uVpZlKIOqAdVBr/6aNrASk6u7i/Bb9kWZttIFOu0Y2JGozZGG7WF9Z6056RdeeBUXLJsV4r8a3ZeEUrOZi3hvhV+Hw7vmK1NIQJVIqdigF9mJ/2gSMGe7K4OPedh+fPNZmbOyNIc6FRmUtTdemNLJeCzM7Zf+niC7Tfsytsz4lW4ebv34TWHxzAA9pZRcJE4a1YYqEYAqn3cHTvCzB/AQ6VdIcP8MsuTGatCk9Vc6dTPOVEcyYkVXTMGgsmzW8RB6mq0m1aqTz3KvnhEYlkspqtxi+jBkTjcYVf1dPa4ofbosmD5rohIef/UwPX5n5ZHM7du86Gf+6S72ee8tbw==";
   private static final String TEST_INVALID_DIGI_SIGN_1 = "abc22OGm8/6H6bJXSi+/4VztsPN+fPZtHgHrrASuTw7LTUZVpbAZNaXVTzQsFd47PvaI8aQxbl874GFmH0QfAVQaRT93x5O/kQdM1ymG03303QaFY/mjm/Iot3VEwq5xOtM8f5a2mKUce9bgEv28iN7z9H/MbBOSmukPSJh/vMLkFAmMZQwdP4SRK3ckxQg6wWTbeMRxjw8/FLckznCGPZri4c0O7WPr8wnrWcvArlhBpIPJPeifJOyDj/woFQzoeemdrVoBFOieE/j3RoMWzcQeLENaSrqk00MPL2svNQcTLMkmWuICOjYSbnlv/EPFCQS8bQsnVHxGFD1yDeFa7Q==";
-  private static final String TEST_PUB_KEY1_PATH = "/stage/keys/pub-key-3fVj0Lv0QB.pem";
-  private static final String TEST_PUB_KEY2_PATH = "/stage/keys/pub-key-sKNHrkauqi.pem";
+  private static final String TEST_PUB_KEY1_PATH = "/qe/keys/pub-key-TB6KRZMPO2.pem";
+  private static final String TEST_PUB_KEY2_PATH = "/qe/keys/pub-key-4HfJz9TQuy.pem";
 
   private EventVerifier underTest;
 
-  @Before
+  private WireMockServer wireMockServer;
+
+  @BeforeEach
   public void setup() {
+    wireMockServer = new WireMockServer();
+    wireMockServer.start();
+    setupEndpointStub();
     underTest = new EventVerifier();
   }
 
+  @AfterEach
+  void tearDown() {
+    wireMockServer.stop();
+  }
+
+  private void setupEndpointStub() {
+   stubFor(get(urlEqualTo(ADOBE_IOEVENTS_SECURITY_DOMAIN + TEST_PUB_KEY1_PATH))
+        .willReturn(aResponse().withBody(getPubKey1())));
+   stubFor(get(urlEqualTo(ADOBE_IOEVENTS_SECURITY_DOMAIN + TEST_PUB_KEY2_PATH))
+       .willReturn(aResponse().withBody(getPubKey2())));
+  }
   @Test
   public void testVerifyValidSignature() {
     String message = getTestMessage();
     Map<String, String> headers = getTestHeadersWithValidSignature();
     boolean result = underTest.authenticateEvent(message, TEST_CLIENT_ID, headers);
-    Assert.assertEquals(true, result);
+    assertTrue(result);
   }
 
   @Test
@@ -56,7 +77,7 @@ public class EventVerifierTest {
     String message = getTestMessage();
     Map<String, String> headers = getTestHeadersWithInvalidSignature();
     boolean result = underTest.authenticateEvent(message, TEST_CLIENT_ID, headers);
-    Assert.assertEquals(Boolean.FALSE, result);
+    assertFalse(result);
   }
 
   @Test
@@ -64,7 +85,7 @@ public class EventVerifierTest {
     String message = getTestMessage();
     Map<String, String> headers = getTestHeadersWithInvalidPubKey();
     boolean result = underTest.authenticateEvent(message, TEST_CLIENT_ID, headers);
-    Assert.assertEquals(Boolean.FALSE, result);
+    assertFalse(result);
   }
 
   @Test
@@ -72,7 +93,7 @@ public class EventVerifierTest {
     String message = getTestMessage();
     Map<String, String> headers = getTestHeadersWithInvalidPubKey();
     boolean result = underTest.authenticateEvent(message, INVALID_TEST_CLIENT_ID, headers);
-    Assert.assertEquals(Boolean.FALSE, result);
+    assertFalse(result);
   }
 
   // ============================ PRIVATE HELPER METHODS ================================
@@ -105,5 +126,28 @@ public class EventVerifierTest {
     signHeaders.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, TEST_PUB_KEY2_PATH);
     signHeaders.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, TEST_PUB_KEY1_PATH);
     return signHeaders;
+  }
+  private String getPubKey1() {
+    return "-----BEGIN PUBLIC KEY-----\n"
+        + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzxbiCd7hyiKbksssNEup\n"
+        + "SBhnNRHaPFHUVbi44k82GlFrLBF2MbviEWPxxJxRfqRkysHwMaE+3w74sR9oEunF\n"
+        + "Uz3J2vGcXHT4UWfEuKxO/C8dSt7Hex5EoK2R4eld/P7j/p55jp8ODvTW/Yd9ej8q\n"
+        + "Dk9dia8ZbkOOuVht2NJlZW4+4p8OCp4MLnSjprvPLAIHU5pD8sIcS+LFYYA3kAz2\n"
+        + "pAo/La7W4PFd6f3fuOQrhlBKsL99W6ALyXUOsHHBk0YrcgoxVeDYWO0N3NZLYIZd\n"
+        + "aWMxNONoH9kH2mhguidf8MCWwIuYyqO+J+IzsshXVWGyMyn3q7fVZCra9ISEZqWE\n"
+        + "iwIDAQAB\n"
+        + "-----END PUBLIC KEY-----";
+  }
+
+  private String getPubKey2() {
+    return "-----BEGIN PUBLIC KEY-----\n"
+        + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuyszY9i34MeIfmmaFSUz\n"
+        + "R0Y4ORhTkwiUafGbRntE0u0wTAKhe9Mewnmrxclh5OrX9jEjWY6lBkxxLYHAa+w2\n"
+        + "B4jDExTwiz/o1GKHYf0CGlVw0JqGQVfLlvEGFg5lQsVfOBdSdnxXBSH0FOw7ZQUb\n"
+        + "60MD7YKSbk40PRHKzHEcxlHLiHreoqPAIDn3JZ9A7b6QjKOB4LTR6jb3rUtfxnzl\n"
+        + "jku8atEfdo341WcHSHW2hf/Gx2mazhGg1of6wZVforXo3R1HVqIVMlOk6GMcz4HH\n"
+        + "iLOuEOURFucux3jm4gF2DF1B627vCqaGDoduvyIjitXQS6KqSx3dzB2dGOBDPpsr\n"
+        + "8wIDAQAB\n"
+        + "-----END PUBLIC KEY-----";
   }
 }
