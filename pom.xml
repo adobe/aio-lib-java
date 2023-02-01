@@ -212,16 +212,6 @@
         <artifactId>feign-form</artifactId>
         <version>${feign-form.version}</version>
       </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
-        <version>${spring-context.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.code.findbugs</groupId>
-        <artifactId>jsr305</artifactId>
-        <version>3.0.2</version>
-      </dependency>
 
       <dependency>
         <groupId>junit</groupId>

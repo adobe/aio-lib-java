@@ -16,11 +16,12 @@ import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_D
 import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_DIGI_SIGN_2;
 import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_PUB_KEY_1_PATH;
 import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_PUB_KEY_2_PATH;
-import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_SECURITY_DOMAIN;
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
+import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -38,8 +39,10 @@ public class EventVerifierTest {
   private static final String TEST_DIGI_SIGN_1 = "IaHo9/8DYt2630pAtjIJeGtsHjB61zOSiAb3S4X1VdPooxikfk79H/t3rgaSbmQMOnjVPRpYVNsHn1fE+l80gjEqmljgNEHt+BtfEH8EsEigwbjQS9opTx/GFnexw3h/sWOt4MGWt3TFK484Dsijijcs1gLwcxTyVUeU2G2XXECpH4dvvEXWQP+1HDFu9nrN+MU/aOR17cNF5em/D/jKjgTcaPx7jK+W5M57F3qqsmdcPxM1ltQxx1/iAXWaOffOC/nXSda5fLFZL75RKBIoveDjL9zthVkBVY9qKXYyK6S/usc2bW3PpXuRTd5Xv2bFB2Mlzr0Gi6St/iiNYLEl3g==";
   private static final String TEST_DIGI_SIGN_2 = "Xx8uVpZlKIOqAdVBr/6aNrASk6u7i/Bb9kWZttIFOu0Y2JGozZGG7WF9Z6056RdeeBUXLJsV4r8a3ZeEUrOZi3hvhV+Hw7vmK1NIQJVIqdigF9mJ/2gSMGe7K4OPedh+fPNZmbOyNIc6FRmUtTdemNLJeCzM7Zf+niC7Tfsytsz4lW4ebv34TWHxzAA9pZRcJE4a1YYqEYAqn3cHTvCzB/AQ6VdIcP8MsuTGatCk9Vc6dTPOVEcyYkVXTMGgsmzW8RB6mq0m1aqTz3KvnhEYlkspqtxi+jBkTjcYVf1dPa4ofbosmD5rohIef/UwPX5n5ZHM7du86Gf+6S72ee8tbw==";
   private static final String TEST_INVALID_DIGI_SIGN_1 = "abc22OGm8/6H6bJXSi+/4VztsPN+fPZtHgHrrASuTw7LTUZVpbAZNaXVTzQsFd47PvaI8aQxbl874GFmH0QfAVQaRT93x5O/kQdM1ymG03303QaFY/mjm/Iot3VEwq5xOtM8f5a2mKUce9bgEv28iN7z9H/MbBOSmukPSJh/vMLkFAmMZQwdP4SRK3ckxQg6wWTbeMRxjw8/FLckznCGPZri4c0O7WPr8wnrWcvArlhBpIPJPeifJOyDj/woFQzoeemdrVoBFOieE/j3RoMWzcQeLENaSrqk00MPL2svNQcTLMkmWuICOjYSbnlv/EPFCQS8bQsnVHxGFD1yDeFa7Q==";
-  private static final String TEST_PUB_KEY1_PATH = "/qe/keys/pub-key-TB6KRZMPO2.pem";
-  private static final String TEST_PUB_KEY2_PATH = "/qe/keys/pub-key-4HfJz9TQuy.pem";
+  private static final String TEST_PUB_KEY1_PATH = "/junit/pub-key-1.pem";
+  private static final String TEST_PUB_KEY2_PATH = "/junit/pub-key-2.pem";
+
+  static final int ADOBEIO_CDN_PORT = 9000;
 
   private EventVerifier underTest;
 
@@ -47,10 +50,10 @@ public class EventVerifierTest {
 
   @BeforeEach
   public void setup() {
-    wireMockServer = new WireMockServer();
+    wireMockServer = new WireMockServer(options().port(ADOBEIO_CDN_PORT));
     wireMockServer.start();
     setupEndpointStub();
-    underTest = new EventVerifier();
+    underTest = new EventVerifier("http://localhost:" + ADOBEIO_CDN_PORT);
   }
 
   @AfterEach
@@ -59,10 +62,11 @@ public class EventVerifierTest {
   }
 
   private void setupEndpointStub() {
-   stubFor(get(urlEqualTo(ADOBE_IOEVENTS_SECURITY_DOMAIN + TEST_PUB_KEY1_PATH))
+    configureFor("localhost", ADOBEIO_CDN_PORT);
+    stubFor(get(urlEqualTo(TEST_PUB_KEY1_PATH))
         .willReturn(aResponse().withBody(getPubKey1())));
-   stubFor(get(urlEqualTo(ADOBE_IOEVENTS_SECURITY_DOMAIN + TEST_PUB_KEY2_PATH))
-       .willReturn(aResponse().withBody(getPubKey2())));
+    stubFor(get(urlEqualTo(TEST_PUB_KEY2_PATH))
+        .willReturn(aResponse().withBody(getPubKey2())));
   }
   @Test
   public void testVerifyValidSignature() {

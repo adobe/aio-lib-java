@@ -11,6 +11,8 @@
  */
 package com.adobe.aio.event.webhook.service;
 
+import java.security.PublicKey;
+
 public interface PubKeyService {
-  String getPubKeyFromCDN(String pubKeyPath);
+  PublicKey getAioEventsPublicKey(String pubKeyPath);
 }

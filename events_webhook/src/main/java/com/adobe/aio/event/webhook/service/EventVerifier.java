@@ -19,12 +19,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.GeneralSecurityException;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.Signature;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Map;
 import org.slf4j.Logger;
@@ -42,12 +38,18 @@ public class EventVerifier {
 
   private final FeignPubKeyService pubKeyService;
 
-
-  EventVerifier(String url) {
+  /**
+   * Used for TESTING ONLY
+   * for creating instance with a test stub url
+   * @param url
+   */
+  public EventVerifier(String url) {
     this.pubKeyService = new FeignPubKeyService(url);
-
   }
 
+  /**
+   * Your Event Verifier instance must be created with the Adobe IO serving CDN host as below
+   */
   public EventVerifier() {
     this(ADOBE_IOEVENTS_SECURITY_DOMAIN);
   }
@@ -77,29 +79,24 @@ public class EventVerifier {
         headers.get(ADOBE_IOEVENTS_DIGI_SIGN_2)};
     String[] pubKeyPaths = {headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
         headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH)};
-    return verifySignature(message, pubKeyPaths, digitalSignatures);
+    // the signed payload is valid if any one of the signatures is valid
+    return verifySignature(message, pubKeyPaths[0], digitalSignatures[0]) ||
+        verifySignature(message, pubKeyPaths[1], digitalSignatures[1]);
   }
 
-  private boolean verifySignature(String message, String[] publicKeyPaths, String[] signatures) {
+  private boolean verifySignature(String message, String publicKeyPath, String signature) {
     byte[] data = message.getBytes(UTF_8);
-
-    for (int i = 0; i < signatures.length; i++) {
-      try {
-        // signature generated at I/O Events side is Base64 encoded, so it must be decoded
-        byte[] sign = Base64.getDecoder().decode(signatures[i]);
-        Signature sig = Signature.getInstance("SHA256withRSA");
-        sig.initVerify(getPublic(fetchPemEncodedPublicKey(publicKeyPaths[i])));
-        sig.update(data);
-        boolean isSignValid = sig.verify(sign);
-        if (isSignValid) {
-          return true;
-        }
-      } catch (GeneralSecurityException e) {
-        throw new AIOException("Error verifying signature for public key " + publicKeyPaths[i]
-            +". Reason -> " + e.getMessage(), e);
-      }
+    try {
+      // signature generated at I/O Events side is Base64 encoded, so it must be decoded
+      byte[] sign = Base64.getDecoder().decode(signature);
+      Signature sig = Signature.getInstance("SHA256withRSA");
+      sig.initVerify(fetchPemEncodedPublicKey(publicKeyPath));
+      sig.update(data);
+      return sig.verify(sign);
+    } catch (GeneralSecurityException e) {
+      throw new AIOException("Error verifying signature for public key " + publicKeyPath
+          + ". Reason -> " + e.getMessage(), e);
     }
-    return false;
   }
 
   private boolean isValidTargetRecipient(String message, String clientId) {
@@ -114,25 +111,12 @@ public class EventVerifier {
     }
   }
 
-  private PublicKey getPublic(String pubKey)
-      throws NoSuchAlgorithmException, InvalidKeySpecException {
-    String publicKeyPEM = pubKey
-        .replace("-----BEGIN PUBLIC KEY-----", "")
-        .replaceAll(System.lineSeparator(), "")
-        .replace("-----END PUBLIC KEY-----", "");
-
-    byte[] keyBytes = Base64.getDecoder().decode(publicKeyPEM);
-    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-    return keyFactory.generatePublic(keySpec);
-  }
-
-  private String fetchPemEncodedPublicKey(String publicKeyPath) {
+  private PublicKey fetchPemEncodedPublicKey(String publicKeyPath) {
     try {
       // it is recommended to cache this public key fetched from the adobe hosted CDN.
       // after downloading the public key set it in the cache with cache expiry of not more than 24h.
       // refer our public doc for the same - https://developer.adobe.com/events/docs/guides/#security-considerations
-      return pubKeyService.getPubKeyFromCDN(publicKeyPath);
+      return pubKeyService.getAioEventsPublicKey(publicKeyPath);
     } catch (Exception e) {
       throw new AIOException("error fetching public key from CDN url -> "
           + ADOBE_IOEVENTS_SECURITY_DOMAIN + publicKeyPath + " due to " + e.getMessage());
