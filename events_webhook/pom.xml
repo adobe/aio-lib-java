@@ -27,6 +27,7 @@
   <description>Adobe I/O - Java SDK - Events Webhook Library</description>
   <properties>
     <junit.jupiter.version>5.3.1</junit.jupiter.version>
+    <wiremock.version>2.32.0</wiremock.version>
   </properties>
   <artifactId>aio-lib-java-events-webhook</artifactId>
 
@@ -54,6 +55,18 @@
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
       <version>${junit.jupiter.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.tomakehurst</groupId>
+      <artifactId>wiremock-jre8</artifactId>
+      <version>${wiremock.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
