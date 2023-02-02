@@ -41,6 +41,7 @@ public class EventVerifierTest {
   private static final String TEST_INVALID_DIGI_SIGN_1 = "abc22OGm8/6H6bJXSi+/4VztsPN+fPZtHgHrrASuTw7LTUZVpbAZNaXVTzQsFd47PvaI8aQxbl874GFmH0QfAVQaRT93x5O/kQdM1ymG03303QaFY/mjm/Iot3VEwq5xOtM8f5a2mKUce9bgEv28iN7z9H/MbBOSmukPSJh/vMLkFAmMZQwdP4SRK3ckxQg6wWTbeMRxjw8/FLckznCGPZri4c0O7WPr8wnrWcvArlhBpIPJPeifJOyDj/woFQzoeemdrVoBFOieE/j3RoMWzcQeLENaSrqk00MPL2svNQcTLMkmWuICOjYSbnlv/EPFCQS8bQsnVHxGFD1yDeFa7Q==";
   private static final String TEST_PUB_KEY1_PATH = "/junit/pub-key-1.pem";
   private static final String TEST_PUB_KEY2_PATH = "/junit/pub-key-2.pem";
+  private static final String TEST_INVALID_PUB_KEY_PATH = "/junit/invalid-key.pem";
 
   static final int ADOBEIO_CDN_PORT = 9000;
 
@@ -67,6 +68,8 @@ public class EventVerifierTest {
         .willReturn(aResponse().withBody(getPubKey1())));
     stubFor(get(urlEqualTo(TEST_PUB_KEY2_PATH))
         .willReturn(aResponse().withBody(getPubKey2())));
+    stubFor(get(urlEqualTo(TEST_INVALID_PUB_KEY_PATH))
+        .willReturn(aResponse().withBody(getInvalidPubKey())));
   }
   @Test
   public void testVerifyValidSignature() {
@@ -127,8 +130,8 @@ public class EventVerifierTest {
 
   private Map<String, String> getTestHeadersWithInvalidPubKey() {
     Map<String, String> signHeaders = getTestSignatureHeaders();
-    signHeaders.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, TEST_PUB_KEY2_PATH);
-    signHeaders.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, TEST_PUB_KEY1_PATH);
+    signHeaders.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, TEST_INVALID_PUB_KEY_PATH);
+    signHeaders.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, TEST_INVALID_PUB_KEY_PATH);
     return signHeaders;
   }
   private String getPubKey1() {
@@ -152,6 +155,18 @@ public class EventVerifierTest {
         + "jku8atEfdo341WcHSHW2hf/Gx2mazhGg1of6wZVforXo3R1HVqIVMlOk6GMcz4HH\n"
         + "iLOuEOURFucux3jm4gF2DF1B627vCqaGDoduvyIjitXQS6KqSx3dzB2dGOBDPpsr\n"
         + "8wIDAQAB\n"
+        + "-----END PUBLIC KEY-----";
+  }
+
+  private String getInvalidPubKey() {
+    return "-----BEGIN PUBLIC KEY-----\n"
+        + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqQypvXnGrmnfoWdcdYg1\n"
+        + "+LfHdIVpwU5ycTclnYyWp4zpogug+AfG40j4alKfuUPbuCNQh8DFSRGTgZdHY6lI\n"
+        + "mzHcpbcJzkV1ZrW1foFEsNnulO9a7Vv8LNo4UAbZwrha5ozEbOUIttI+B6DKLLYa\n"
+        + "4+BjHj0WtxHHuRPibf46qrliMd2St3gdp1yUjGO2qHOHlKHm15K9uwN5SYKANMK2\n"
+        + "mZ5+3/uF4Ms21BqRSGCUEwNKpSxXT2bFNlUw0/DbM6gJuE1CJdk5z/sbLA0S3b1z\n"
+        + "PR1LpgOeG84lFG7c0gcIaeZX+c3dLdmNBfkOQwacFP3m0urlJkSxI8MomaeEOS2y\n"
+        + "hQIDAQAB\n"
         + "-----END PUBLIC KEY-----";
   }
 }
