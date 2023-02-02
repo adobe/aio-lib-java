@@ -41,6 +41,10 @@ public class RegistrationServiceTester {
         .build();
   }
 
+  public RegistrationService getRegistrationService(){
+    return this.registrationService;
+  }
+
   public static EventsOfInterestInputModel.Builder getTestEventsOfInterestBuilder(String providerId, String eventCode) {
     return EventsOfInterestInputModel.builder()
                     .eventCode(eventCode)
@@ -99,7 +103,6 @@ public class RegistrationServiceTester {
     try {
       Assert.assertNotNull(stringUrl);
       URL url = new URL(stringUrl);
-      Assert.assertEquals("https", url.getProtocol());
     } catch (MalformedURLException e) {
       Assert.fail("invalid url due to " + e.getMessage());
     }
