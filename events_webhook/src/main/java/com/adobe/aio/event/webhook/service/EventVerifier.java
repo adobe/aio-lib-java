@@ -19,7 +19,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.GeneralSecurityException;
-import java.security.PublicKey;
 import java.security.Signature;
 import java.util.Base64;
 import java.util.Map;
@@ -43,7 +42,7 @@ public class EventVerifier {
    * for creating instance with a test stub url
    * @param url
    */
-  public EventVerifier(String url) {
+  protected EventVerifier(String url) {
     this.pubKeyService = new FeignPubKeyService(url);
   }
 
@@ -75,13 +74,14 @@ public class EventVerifier {
   }
 
   private boolean verifyEventSignatures(String message, Map<String, String> headers) {
-    String[] digitalSignatures = {headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1),
-        headers.get(ADOBE_IOEVENTS_DIGI_SIGN_2)};
-    String[] pubKeyPaths = {headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
-        headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH)};
-    // the signed payload is valid if any one of the signatures is valid
-    return verifySignature(message, pubKeyPaths[0], digitalSignatures[0]) ||
-        verifySignature(message, pubKeyPaths[1], digitalSignatures[1]);
+    // Adobe I/O Events sends two signatures for a signed event payload to the webhook
+    // either of which is valid at any point of time even when the signatures are rotated.
+    // So, the signed payload is considered valid if any one of the signatures is valid
+    // refer our public doc for more details - https://developer.adobe.com/events/docs/guides/#security-considerations
+    return verifySignature(message, headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
+        headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1)) ||
+        verifySignature(message, headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH),
+            headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1));
   }
 
   private boolean verifySignature(String message, String publicKeyPath, String signature) {
@@ -90,7 +90,7 @@ public class EventVerifier {
       // signature generated at I/O Events side is Base64 encoded, so it must be decoded
       byte[] sign = Base64.getDecoder().decode(signature);
       Signature sig = Signature.getInstance("SHA256withRSA");
-      sig.initVerify(fetchPemEncodedPublicKey(publicKeyPath));
+      sig.initVerify(pubKeyService.getAioEventsPublicKey(publicKeyPath));
       sig.update(data);
       return sig.verify(sign);
     } catch (GeneralSecurityException e) {
@@ -111,16 +111,4 @@ public class EventVerifier {
     }
   }
 
-  private PublicKey fetchPemEncodedPublicKey(String publicKeyPath) {
-    try {
-      // it is recommended to cache this public key fetched from the adobe hosted CDN.
-      // after downloading the public key set it in the cache with cache expiry of not more than 24h.
-      // refer our public doc for the same - https://developer.adobe.com/events/docs/guides/#security-considerations
-      return pubKeyService.getAioEventsPublicKey(publicKeyPath);
-    } catch (Exception e) {
-      throw new AIOException("error fetching public key from CDN url -> "
-          + ADOBE_IOEVENTS_SECURITY_DOMAIN + publicKeyPath + " due to " + e.getMessage());
-    }
-
-  }
 }
