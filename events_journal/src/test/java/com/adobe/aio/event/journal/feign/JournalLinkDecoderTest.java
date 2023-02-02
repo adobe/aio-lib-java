@@ -17,11 +17,12 @@ import static org.junit.Assert.assertTrue;
 import com.adobe.aio.event.journal.api.JournalApi;
 import com.adobe.aio.event.journal.model.JournalEntry;
 import com.adobe.aio.util.JacksonUtil;
+import com.adobe.aio.util.feign.FeignUtil;
 import feign.Feign;
-import feign.FeignException;
 import feign.jackson.JacksonDecoder;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
+import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -55,7 +56,7 @@ public class JournalLinkDecoderTest {
     assertEquals("http://localhost:" + server.getPort()
             + "/count/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2",
         entry.getLinks().get("count"));
-    assertEquals(RETRY_AFTER_VALUE,entry.getRetryAfterInSeconds());
+    assertEquals(RETRY_AFTER_VALUE, entry.getRetryAfterInSeconds());
   }
 
   @Test
@@ -94,15 +95,13 @@ public class JournalLinkDecoderTest {
     final MockWebServer server = new MockWebServer();
     String rootServerUrl = server.url("/").toString();
     server.enqueue(new MockResponse()
+        .setBody("<html>some, non json, page: that is !</html>")
         .setResponseCode(404));
 
-    final JournalApi api = Feign.builder()
+    final JournalApi api = FeignUtil.getBaseBuilder()
         .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .target(JournalApi.class, rootServerUrl);
-
-    expectedEx.expect(FeignException.class);
-    expectedEx.expectMessage("404");
-    JournalEntry entry = api.get(TEST_IMS_ORG_ID);
+    Assert.assertNull(api.get(TEST_IMS_ORG_ID));
   }
 
 
