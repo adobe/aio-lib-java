@@ -16,6 +16,7 @@ import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
+import feign.FeignException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -38,21 +39,21 @@ public class FeignImsServiceIntegrationTest {
     logger.info("JWT Exchange access token validated");
   }
 
-  @Test(expected = IOUpstreamError.class)
+  @Test(expected = FeignException.BadRequest.class)
   public void getAndValidateJwtExchangeAccessTokenWithBadApiKey() {
     Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().apiKey("bad_api_key").build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     imsService.getJwtExchangeAccessToken();
   }
 
-  @Test(expected = IOUpstreamError.class)
+  @Test(expected = FeignException.BadRequest.class)
   public void getAndValidateJwtExchangeAccessTokenWithBadSecret() {
     Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().clientSecret("bad_secret").build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     imsService.getJwtExchangeAccessToken();
   }
 
-  @Test(expected = IOUpstreamError.class)
+  @Test(expected = FeignException.BadRequest.class)
   public void getAndValidateJwtExchangeAccessTokenWithBadTechAccount() {
     Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().technicalAccountId("bad_tech_account_id@techacct.adobe.com").build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
