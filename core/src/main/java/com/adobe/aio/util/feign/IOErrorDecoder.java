@@ -30,7 +30,7 @@ public class IOErrorDecoder implements ErrorDecoder {
   public Exception decode(String methodKey, Response response) {
     FeignException exception = FeignException.errorStatus(methodKey, response);
     logger.warn("Upstream response error ({},{})", response.status(), exception.contentUTF8());
-    return (response.status()>=400) ?
+    return (response.status()>=500) ?
         new IOUpstreamError(response, exception, getRequestId(response.headers())) : exception;
   }
 
