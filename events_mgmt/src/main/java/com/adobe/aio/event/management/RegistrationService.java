@@ -33,11 +33,11 @@ public interface RegistrationService {
 
   List<Registration> getRegistrationsForWorkspace();
 
-  default Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg() throws JsonProcessingException {
+  default Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg() {
     return getAllRegistrationsForOrg(0L, 10L);
   }
 
-  Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg(long page, long size) throws JsonProcessingException;
+  Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg(long page, long size);
 
   static Builder builder() {
     return new Builder();

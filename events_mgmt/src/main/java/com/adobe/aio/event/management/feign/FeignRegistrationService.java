@@ -94,7 +94,7 @@ public class FeignRegistrationService implements RegistrationService {
   }
 
   @Override
-  public Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg(final long page, final long size) throws JsonProcessingException {
+  public Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg(final long page, final long size) {
     return registrationApi.getAllForOrg(workspace.getConsumerOrgId(), page, size);
   }
 }
