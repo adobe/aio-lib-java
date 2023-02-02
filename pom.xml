@@ -107,7 +107,6 @@
     <jackson.version>2.12.3</jackson.version>
     <jjwt.version>0.11.2</jjwt.version>
     <cloudevents.version>1.2.0</cloudevents.version>
-    <spring-context.version>5.3.22</spring-context.version>
 
     <!-- https://github.com/openapi-tools/jackson-dataformat-hal/blob/v1.0.9/pom.xml -->
     <jackson-dataformat-hal.version>1.0.9</jackson-dataformat-hal.version>
