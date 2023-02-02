@@ -22,20 +22,20 @@ import static com.github.tomakehurst.wiremock.client.WireMock.get;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 public class EventVerifierTest {
 
-  private static final String TEST_CLIENT_ID = "client_id1";
-  private static final String INVALID_TEST_CLIENT_ID = "invalid_client_id";
+  private static final String TEST_API_KEY = "client_id1";
+  private static final String INVALID_TEST_API_KEY = "invalid_client_id";
   private static final String TEST_DIGI_SIGN_1 = "IaHo9/8DYt2630pAtjIJeGtsHjB61zOSiAb3S4X1VdPooxikfk79H/t3rgaSbmQMOnjVPRpYVNsHn1fE+l80gjEqmljgNEHt+BtfEH8EsEigwbjQS9opTx/GFnexw3h/sWOt4MGWt3TFK484Dsijijcs1gLwcxTyVUeU2G2XXECpH4dvvEXWQP+1HDFu9nrN+MU/aOR17cNF5em/D/jKjgTcaPx7jK+W5M57F3qqsmdcPxM1ltQxx1/iAXWaOffOC/nXSda5fLFZL75RKBIoveDjL9zthVkBVY9qKXYyK6S/usc2bW3PpXuRTd5Xv2bFB2Mlzr0Gi6St/iiNYLEl3g==";
   private static final String TEST_DIGI_SIGN_2 = "Xx8uVpZlKIOqAdVBr/6aNrASk6u7i/Bb9kWZttIFOu0Y2JGozZGG7WF9Z6056RdeeBUXLJsV4r8a3ZeEUrOZi3hvhV+Hw7vmK1NIQJVIqdigF9mJ/2gSMGe7K4OPedh+fPNZmbOyNIc6FRmUtTdemNLJeCzM7Zf+niC7Tfsytsz4lW4ebv34TWHxzAA9pZRcJE4a1YYqEYAqn3cHTvCzB/AQ6VdIcP8MsuTGatCk9Vc6dTPOVEcyYkVXTMGgsmzW8RB6mq0m1aqTz3KvnhEYlkspqtxi+jBkTjcYVf1dPa4ofbosmD5rohIef/UwPX5n5ZHM7du86Gf+6S72ee8tbw==";
   private static final String TEST_INVALID_DIGI_SIGN_1 = "abc22OGm8/6H6bJXSi+/4VztsPN+fPZtHgHrrASuTw7LTUZVpbAZNaXVTzQsFd47PvaI8aQxbl874GFmH0QfAVQaRT93x5O/kQdM1ymG03303QaFY/mjm/Iot3VEwq5xOtM8f5a2mKUce9bgEv28iN7z9H/MbBOSmukPSJh/vMLkFAmMZQwdP4SRK3ckxQg6wWTbeMRxjw8/FLckznCGPZri4c0O7WPr8wnrWcvArlhBpIPJPeifJOyDj/woFQzoeemdrVoBFOieE/j3RoMWzcQeLENaSrqk00MPL2svNQcTLMkmWuICOjYSbnlv/EPFCQS8bQsnVHxGFD1yDeFa7Q==";
@@ -49,7 +49,7 @@ public class EventVerifierTest {
 
   private WireMockServer wireMockServer;
 
-  @BeforeEach
+  @Before
   public void setup() {
     wireMockServer = new WireMockServer(options().port(ADOBEIO_CDN_PORT));
     wireMockServer.start();
@@ -57,8 +57,8 @@ public class EventVerifierTest {
     underTest = new EventVerifier("http://localhost:" + ADOBEIO_CDN_PORT);
   }
 
-  @AfterEach
-  void tearDown() {
+  @After
+  public void tearDown() {
     wireMockServer.stop();
   }
 
@@ -71,40 +71,41 @@ public class EventVerifierTest {
     stubFor(get(urlEqualTo(TEST_INVALID_PUB_KEY_PATH))
         .willReturn(aResponse().withBody(getInvalidPubKey())));
   }
+
   @Test
   public void testVerifyValidSignature() {
-    String message = getTestMessage();
+    String testPayload = getTestEventPayload();
     Map<String, String> headers = getTestHeadersWithValidSignature();
-    boolean result = underTest.authenticateEvent(message, TEST_CLIENT_ID, headers);
+    boolean result = underTest.verify(testPayload, TEST_API_KEY, headers);
     assertTrue(result);
   }
 
   @Test
   public void testVerifyInvalidSignature() {
-    String message = getTestMessage();
+    String testPayload = getTestEventPayload();
     Map<String, String> headers = getTestHeadersWithInvalidSignature();
-    boolean result = underTest.authenticateEvent(message, TEST_CLIENT_ID, headers);
+    boolean result = underTest.verify(testPayload, TEST_API_KEY, headers);
     assertFalse(result);
   }
 
   @Test
   public void testVerifyInvalidPublicKey() {
-    String message = getTestMessage();
+    String testPayload = getTestEventPayload();
     Map<String, String> headers = getTestHeadersWithInvalidPubKey();
-    boolean result = underTest.authenticateEvent(message, TEST_CLIENT_ID, headers);
+    boolean result = underTest.verify(testPayload, TEST_API_KEY, headers);
     assertFalse(result);
   }
 
   @Test
   public void testVerifyInvalidRecipientClient() {
-    String message = getTestMessage();
-    Map<String, String> headers = getTestHeadersWithInvalidPubKey();
-    boolean result = underTest.authenticateEvent(message, INVALID_TEST_CLIENT_ID, headers);
+    String testPayload = getTestEventPayload();
+    Map<String, String> headers = getTestHeadersWithValidSignature();
+    boolean result = underTest.verify(testPayload, INVALID_TEST_API_KEY, headers);
     assertFalse(result);
   }
 
   // ============================ PRIVATE HELPER METHODS ================================
-  private String getTestMessage() {
+  private String getTestEventPayload() {
     return "{\"event_id\":\"eventId1\",\"event\":{\"hello\":\"world\"},\"recipient_client_id\":\"client_id1\"}";
   }
 

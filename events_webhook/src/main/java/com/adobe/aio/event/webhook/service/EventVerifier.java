@@ -46,38 +46,42 @@ public class EventVerifier {
     this.pubKeyService = new FeignPubKeyService(url);
   }
 
-  /**
-   * Your Event Verifier instance must be created with the Adobe IO serving CDN host as below
-   */
   public EventVerifier() {
     this(ADOBE_IOEVENTS_SECURITY_DOMAIN);
   }
 
   /**
-   * Authenticate the event by checking the target recipient
-   * and verifying the signatures
-   * @param message - the event payload
-   * @param clientId - recipient client id in the payload
-   * @param headers - webhook request headers
-   * @return boolean - TRUE if valid event else FALSE
+   * @param eventPayload    the event payload to verify
+   * @param apiKey          the event payload `recipient_client_id` must be matching it
+   * @param requestHeaders  webhook request requestHeaders sent along the event payload: containing
+   *                        the path to the two public keys and the associated signatures of the
+   *                        eventPayload. Indeed, Adobe I/O Events sends two signatures, either of
+   *                        which is valid at any point of time (even when the signatures are rotated).
+   *                        So, the signed payload is considered valid if any one of the signatures is valid.
+   *                        Refer our public doc for more details -
+   *                        https://developer.adobe.com/events/docs/guides/#security-considerations
+   * @return the security verification result
    */
-  public boolean authenticateEvent(String message, String clientId, Map<String, String> headers) {
-    if (!isValidTargetRecipient(message, clientId)) {
-      logger.error("target recipient {} is not valid for message {}", clientId, message);
+  public boolean verify(String eventPayload, String apiKey, Map<String, String> requestHeaders) {
+    if (!isValidTargetRecipient(eventPayload, apiKey)) {
+      logger.error(
+          "Your apiKey {} is not matching the recipient_client_id of the event payload {}", apiKey,
+          eventPayload);
       return false;
     }
-    if (!verifyEventSignatures(message, headers)) {
-      logger.error("signatures are not valid for message {}", message);
+    if(!requestHeaders.isEmpty()) {
+      if (!verifyEventSignatures(eventPayload, requestHeaders)) {
+        logger.error("signatures are not valid for message {}", eventPayload);
+        return false;
+      }
+      return true;
+    } else {
+      logger.error("you request is missing the required headers for signatures and public key paths");
       return false;
     }
-    return true;
   }
 
   private boolean verifyEventSignatures(String message, Map<String, String> headers) {
-    // Adobe I/O Events sends two signatures for a signed event payload to the webhook
-    // either of which is valid at any point of time even when the signatures are rotated.
-    // So, the signed payload is considered valid if any one of the signatures is valid
-    // refer our public doc for more details - https://developer.adobe.com/events/docs/guides/#security-considerations
     return verifySignature(message, headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
         headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1)) ||
         verifySignature(message, headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH),
@@ -104,7 +108,7 @@ public class EventVerifier {
       ObjectMapper mapper = new ObjectMapper();
       JsonNode jsonPayload = mapper.readTree(message);
       JsonNode recipientClientIdNode = jsonPayload.get("recipient_client_id");
-      return (recipientClientIdNode != null && recipientClientIdNode.textValue() !=null
+      return (recipientClientIdNode != null && recipientClientIdNode.textValue() != null
           && recipientClientIdNode.textValue().equals(clientId));
     } catch (JsonProcessingException e) {
       throw new AIOException("error parsing the event payload during target recipient check..");
