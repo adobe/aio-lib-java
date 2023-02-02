@@ -25,67 +25,68 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * EventVerifier showcasing, implementing eventPayload security verifications see our public doc for
+ * more details - https://developer.adobe.com/events/docs/guides/#security-considerations
+ */
 public class EventVerifier {
 
-  private static Logger logger = LoggerFactory.getLogger(EventVerifier.class);
-
+  public static final String RECIPIENT_CLIENT_ID = "recipient_client_id";
   public static final String ADOBE_IOEVENTS_SECURITY_DOMAIN = "https://static.adobeioevents.com";
   public static final String ADOBE_IOEVENTS_DIGI_SIGN_1 = "x-adobe-digital-signature-1";
   public static final String ADOBE_IOEVENTS_DIGI_SIGN_2 = "x-adobe-digital-signature-2";
   public static final String ADOBE_IOEVENTS_PUB_KEY_1_PATH = "x-adobe-public-key1-path";
   public static final String ADOBE_IOEVENTS_PUB_KEY_2_PATH = "x-adobe-public-key2-path";
-
+  private static final Logger logger = LoggerFactory.getLogger(EventVerifier.class);
   private final FeignPubKeyService pubKeyService;
 
   /**
-   * Used for TESTING ONLY
-   * for creating instance with a test stub url
+   * Used for TESTING ONLY for creating instance with a test stub url
+   *
    * @param url
    */
   protected EventVerifier(String url) {
     this.pubKeyService = new FeignPubKeyService(url);
   }
 
-  /**
-   * Your Event Verifier instance must be created with the Adobe IO serving CDN host as below
-   */
   public EventVerifier() {
     this(ADOBE_IOEVENTS_SECURITY_DOMAIN);
   }
 
   /**
-   * Authenticate the event by checking the target recipient
-   * and verifying the signatures
-   * @param message - the event payload
-   * @param clientId - recipient client id in the payload
-   * @param headers - webhook request headers
-   * @return boolean - TRUE if valid event else FALSE
+   * @param eventPayload   the event payload to verify
+   * @param apiKey         the event payload `recipient_client_id` must be matching it
+   * @param requestHeaders webhook request requestHeaders sent along the event payload: containing
+   *                       the path to the two public keys and the associated signatures of the
+   *                       eventPayload. Indeed, Adobe I/O Events sends two signatures, either of
+   *                       which is valid at any point of time (even when the signatures are
+   *                       rotated). So, the signed payload is considered valid if any one of the
+   *                       signatures is valid. Refer our public doc for more details -
+   *                       https://developer.adobe.com/events/docs/guides/#security-considerations
+   * @return the security verification result
    */
-  public boolean authenticateEvent(String message, String clientId, Map<String, String> headers) {
-    if (!isValidTargetRecipient(message, clientId)) {
-      logger.error("target recipient {} is not valid for message {}", clientId, message);
+  public boolean verify(String eventPayload, String apiKey, Map<String, String> requestHeaders) {
+    if (!verifyApiKey(eventPayload, apiKey)) {
+      logger.error("Your apiKey {} is not matching the event {}, payload: {}", apiKey,
+          RECIPIENT_CLIENT_ID, eventPayload);
       return false;
     }
-    if (!verifyEventSignatures(message, headers)) {
-      logger.error("signatures are not valid for message {}", message);
+    if (!verifySignature(eventPayload, requestHeaders)) {
+      logger.error("Invalid signatures for the event payload: {}", eventPayload);
       return false;
     }
     return true;
   }
 
-  private boolean verifyEventSignatures(String message, Map<String, String> headers) {
-    // Adobe I/O Events sends two signatures for a signed event payload to the webhook
-    // either of which is valid at any point of time even when the signatures are rotated.
-    // So, the signed payload is considered valid if any one of the signatures is valid
-    // refer our public doc for more details - https://developer.adobe.com/events/docs/guides/#security-considerations
-    return verifySignature(message, headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
+  private boolean verifySignature(String eventPayload, Map<String, String> headers) {
+    return verifySignature(eventPayload, headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
         headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1)) ||
-        verifySignature(message, headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH),
+        verifySignature(eventPayload, headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH),
             headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1));
   }
 
-  private boolean verifySignature(String message, String publicKeyPath, String signature) {
-    byte[] data = message.getBytes(UTF_8);
+  private boolean verifySignature(String eventPayload, String publicKeyPath, String signature) {
+    byte[] data = eventPayload.getBytes(UTF_8);
     try {
       // signature generated at I/O Events side is Base64 encoded, so it must be decoded
       byte[] sign = Base64.getDecoder().decode(signature);
@@ -99,13 +100,13 @@ public class EventVerifier {
     }
   }
 
-  private boolean isValidTargetRecipient(String message, String clientId) {
+  private boolean verifyApiKey(String eventPayload, String apiKey) {
     try {
       ObjectMapper mapper = new ObjectMapper();
-      JsonNode jsonPayload = mapper.readTree(message);
-      JsonNode recipientClientIdNode = jsonPayload.get("recipient_client_id");
-      return (recipientClientIdNode != null && recipientClientIdNode.textValue() !=null
-          && recipientClientIdNode.textValue().equals(clientId));
+      JsonNode jsonPayload = mapper.readTree(eventPayload);
+      JsonNode recipientClientIdNode = jsonPayload.get(RECIPIENT_CLIENT_ID);
+      return (recipientClientIdNode != null && recipientClientIdNode.textValue() != null
+          && recipientClientIdNode.textValue().equals(apiKey));
     } catch (JsonProcessingException e) {
       throw new AIOException("error parsing the event payload during target recipient check..");
     }

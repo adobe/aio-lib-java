@@ -23,12 +23,9 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
+  <artifactId>aio-lib-java-events-webhook</artifactId>
   <name>Adobe I/O - Events Webhook Library</name>
   <description>Adobe I/O - Java SDK - Events Webhook Library</description>
-  <properties>
-    <junit.jupiter.version>5.3.1</junit.jupiter.version>
-  </properties>
-  <artifactId>aio-lib-java-events-webhook</artifactId>
 
   <dependencies>
     <dependency>
@@ -39,33 +36,13 @@
 
     <!--- test specific -->
     <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-api</artifactId>
-      <version>${junit.jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-params</artifactId>
-      <version>${junit.jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.junit.jupiter</groupId>
-      <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit.jupiter.version}</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-      <scope>compile</scope>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
     </dependency>
     <dependency>
       <groupId>com.github.tomakehurst</groupId>
       <artifactId>wiremock-jre8</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
+
 </project>
