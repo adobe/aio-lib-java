@@ -1,5 +1,14 @@
 # 📑 Changelog
 
+## [aio-lib-java-1.0.6](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.6) (2023-01-24)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.2...aio-lib-java-1.0.6)
+
+### 📁 Other pull requests
+
+- GH-142 fixing `aio-lib-osgi` : it now exports `io.openapitools.jackson.dataformat.hal.*` packages [\#143](https://github.com/adobe/aio-lib-java/pull/143) ([francoisledroff](https://github.com/francoisledroff))
+- GH-138 fixing the createorUpdate provider service method [\#139](https://github.com/adobe/aio-lib-java/pull/139) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-1.0.2](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.2) (2022-12-14)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.0...aio-lib-java-1.0.2)

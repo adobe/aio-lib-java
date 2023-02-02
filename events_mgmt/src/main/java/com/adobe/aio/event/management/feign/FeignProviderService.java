@@ -100,9 +100,14 @@ public class FeignProviderService implements ProviderService {
       return createProvider(providerInputModel);
     }
     catch (ConflictException e){
-      String providerId = e.getConflictingId().orElseThrow(()->e);
-      logger.info("Another provider (id:`{}`) exist with conflicting natural keys, "
-            + "trying to update it ...",providerId);
+      logger.info("Another provider (providerMetadata: `{}`, imsOrg:`{}`, instanceId: `{}` )"
+          + " exist with conflicting natural keys, trying to update it ...",
+          providerInputModel.getProviderMetadataId(), workspace.getImsOrgId(),
+          providerInputModel.getInstanceId());
+      String providerId = this.findProviderBy(providerInputModel.getProviderMetadataId(),
+              providerInputModel.getInstanceId())
+          .orElseThrow(() -> e)
+          .getId();
       return updateProvider(providerId,providerInputModel);
     }
   }
