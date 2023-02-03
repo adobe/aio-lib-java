@@ -12,19 +12,22 @@
 package com.adobe.aio.event.journal.feign;
 
 import com.adobe.aio.event.journal.JournalService;
-import com.adobe.aio.feign.AIOHeaderInterceptor;
-import com.adobe.aio.ims.feign.JWTAuthInterceptor;
-import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.journal.api.JournalApi;
 import com.adobe.aio.event.journal.model.JournalEntry;
-import com.adobe.aio.util.feign.FeignUtil;
+import com.adobe.aio.feign.AIOHeaderInterceptor;
+import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.util.JacksonUtil;
+import com.adobe.aio.util.feign.FeignUtil;
+import com.adobe.aio.workspace.Workspace;
 import feign.RequestInterceptor;
 import feign.jackson.JacksonDecoder;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FeignJournalService implements JournalService {
 
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
   private final JournalApi journalApi;
   private final String imsOrgId;
   private final RequestInterceptor authInterceptor;
@@ -54,22 +57,29 @@ public class FeignJournalService implements JournalService {
 
   @Override
   public JournalEntry getOldest() {
-    return journalApi.get(this.imsOrgId);
+    return logIfNull(journalApi.get(this.imsOrgId));
   }
 
   @Override
   public JournalEntry getLatest() {
-    return journalApi.getLatest(this.imsOrgId);
+    return logIfNull(journalApi.getLatest(this.imsOrgId));
   }
 
   @Override
   public JournalEntry getSince(String position) {
-    return journalApi.getSince(this.imsOrgId, position);
+    return logIfNull(journalApi.getSince(this.imsOrgId, position));
   }
 
   @Override
   public JournalEntry getSince(String position, int maxBatchSize) {
-    return journalApi.getSince(this.imsOrgId, position, maxBatchSize);
+    return logIfNull(journalApi.getSince(this.imsOrgId, position, maxBatchSize));
+  }
+
+  private JournalEntry logIfNull(JournalEntry journalEntry) {
+    if (journalEntry == null) {
+      logger.error("No/null Journal Entry, check your Journal url");
+    }
+    return journalEntry;
   }
 
   @Override
@@ -79,7 +89,11 @@ public class FeignJournalService implements JournalService {
         .requestInterceptor(authInterceptor)
         .requestInterceptor(aioHeaderInterceptor)
         .target(JournalApi.class, linkUrl);
-    return linkJournalApi.get(this.imsOrgId);
+    JournalEntry journalEntry = linkJournalApi.get(this.imsOrgId);
+    if (journalEntry == null) {
+      logger.error("No/null Journal Entry, check your Journal link url: " + linkUrl);
+    }
+    return journalEntry;
   }
 
 }

@@ -16,6 +16,8 @@ import static com.fasterxml.jackson.databind.type.TypeFactory.rawClass;
 import com.adobe.aio.event.journal.model.JournalEntry;
 import feign.Request;
 import feign.Response;
+import feign.Util;
+import feign.codec.DecodeException;
 import feign.codec.Decoder;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -51,11 +53,12 @@ public class JournalLinkDecoder implements Decoder {
 
   public Object decode(Response response, Type type) throws IOException {
     if (!rawClass(type).equals(JournalEntry.class)) {
-      return this.delegate.decode(response, type);
+      throw new DecodeException(response.status(),
+          String.format("%s is not a type supported by this decoder.", type), response.request());
     } else if (response.status() >= 200 && response.status() < 300) {
       JournalEntry entry = new JournalEntry();
       if (response.status() == 204 && response.headers() != null && response.headers()
-          .containsKey(RETRY_AFTER_HEADER)){
+          .containsKey(RETRY_AFTER_HEADER)) {
         entry.setRetryAfterInSeconds(response.headers().get(RETRY_AFTER_HEADER).iterator().next());
       }
       if (response.status() != 204) {
@@ -79,7 +82,9 @@ public class JournalLinkDecoder implements Decoder {
       }
       return entry;
     } else {
-      return this.delegate.decode(response, type);
+      logger.info("Not decoding Journal header link values when the response status is `{}`",
+          response.status());
+      return Util.emptyValueOf(type);
     }
   }
 

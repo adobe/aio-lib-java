@@ -24,11 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 public class FeignUtil {
 
-  public static final int MAX_IDLE_CONNECTIONS = 100;
-  public static final int KEEP_ALIVE_DURATION = 10;
   public static final int DEFAULT_CONNECT_TIMEOUT_IN_SECONDS = 10;
   public static final int DEFAULT_READ_TIMEOUT_IN_SECONDS = 60;
-  public static final String NON_AVAILABLE = "NA";
 
   private FeignUtil() {
   }
@@ -39,10 +36,11 @@ public class FeignUtil {
    */
   public static Feign.Builder getBaseBuilder() {
     return Feign.builder()
+        .logger(new Slf4jLogger())
+        //.logLevel(Level.BASIC)
         .logLevel(Level.NONE)
         //.logLevel(Level.FULL) // use this instead when debugging
         .decode404()
-        .logger(new Slf4jLogger())
         .errorDecoder(new IOErrorDecoder())
         .options(new Request.Options(DEFAULT_CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS,
             DEFAULT_READ_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, true));
