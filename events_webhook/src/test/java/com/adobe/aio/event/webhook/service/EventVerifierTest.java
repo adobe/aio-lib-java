@@ -104,6 +104,31 @@ public class EventVerifierTest {
     assertFalse(result);
   }
 
+  @Test
+  public void testEmptyOrMissingSignatureHeaders() {
+    String testPayload = getTestEventPayload();
+    Map<String, String> headers = getTestHeadersWithMissingSignatureHeaders();
+    boolean result = underTest.verify(testPayload, TEST_API_KEY, headers);
+    assertFalse(result);
+  }
+
+  @Test
+  public void testEmptyOrMissingPubKeyPathHeaders() {
+    String testPayload = getTestEventPayload();
+    Map<String, String> headers = getTestHeadersWithMissingPubKeyPathHeaders();
+    boolean result = underTest.verify(testPayload, TEST_API_KEY, headers);
+    assertFalse(result);
+  }
+
+  @Test
+  public void testEmptyOrMissingRequestHeaders() {
+    String testPayload = getTestEventPayload();
+    Map<String, String> headers = new HashMap<>();
+    boolean result = underTest.verify(testPayload, TEST_API_KEY, headers);
+    assertFalse(result);
+  }
+
+
   // ============================ PRIVATE HELPER METHODS ================================
   private String getTestEventPayload() {
     return "{\"event_id\":\"eventId1\",\"event\":{\"hello\":\"world\"},\"recipient_client_id\":\"client_id1\"}";
@@ -115,6 +140,20 @@ public class EventVerifierTest {
     testSignatureHeaders.put(ADOBE_IOEVENTS_DIGI_SIGN_2, TEST_DIGI_SIGN_2);
     testSignatureHeaders.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, TEST_PUB_KEY1_PATH);
     testSignatureHeaders.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, TEST_PUB_KEY2_PATH);
+    return testSignatureHeaders;
+  }
+
+  private Map<String, String> getTestHeadersWithMissingSignatureHeaders() {
+    Map<String, String> testSignatureHeaders = new HashMap<>();
+    testSignatureHeaders.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, TEST_PUB_KEY1_PATH);
+    testSignatureHeaders.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, TEST_PUB_KEY2_PATH);
+    return testSignatureHeaders;
+  }
+
+  private Map<String, String> getTestHeadersWithMissingPubKeyPathHeaders() {
+    Map<String, String> testSignatureHeaders = new HashMap<>();
+    testSignatureHeaders.put(ADOBE_IOEVENTS_DIGI_SIGN_1, TEST_DIGI_SIGN_1);
+    testSignatureHeaders.put(ADOBE_IOEVENTS_DIGI_SIGN_2, TEST_DIGI_SIGN_2);
     return testSignatureHeaders;
   }
 
@@ -135,6 +174,7 @@ public class EventVerifierTest {
     signHeaders.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, TEST_INVALID_PUB_KEY_PATH);
     return signHeaders;
   }
+
   private String getPubKey1() {
     return "-----BEGIN PUBLIC KEY-----\n"
         + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzxbiCd7hyiKbksssNEup\n"

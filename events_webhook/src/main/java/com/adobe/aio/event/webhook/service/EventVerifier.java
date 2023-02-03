@@ -22,6 +22,7 @@ import java.security.GeneralSecurityException;
 import java.security.Signature;
 import java.util.Base64;
 import java.util.Map;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,7 +70,11 @@ public class EventVerifier {
           eventPayload);
       return false;
     }
-    if(!requestHeaders.isEmpty()) {
+    if(!requestHeaders.isEmpty() &&
+        (!StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_DIGI_SIGN_1)) &&
+            !StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_DIGI_SIGN_2)) &&
+            !StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH)) &&
+            !StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH)))) {
       if (!verifyEventSignatures(eventPayload, requestHeaders)) {
         logger.error("signatures are not valid for message {}", eventPayload);
         return false;
