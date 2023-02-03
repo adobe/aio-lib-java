@@ -30,15 +30,16 @@ public class IOErrorDecoder implements ErrorDecoder {
   public Exception decode(String methodKey, Response response) {
     FeignException exception = FeignException.errorStatus(methodKey, response);
     logger.warn("Upstream response error ({},{})", response.status(), exception.contentUTF8());
-    return (response.status()>=500) ?
+    return (response.status() >= 500) ?
         new IOUpstreamError(response, exception, getRequestId(response.headers())) : exception;
   }
 
-  private String getRequestId(Map<String, Collection<String>> headers){
+  private String getRequestId(Map<String, Collection<String>> headers) {
     try {
       return headers.get(REQUEST_ID).iterator().next();
     } catch (Exception e) {
-      logger.warn("The upstream Error response does not hold any {} header",REQUEST_ID, e.getMessage());
+      logger.warn("The upstream Error response does not hold any {} header", REQUEST_ID,
+          e.getMessage());
       return "NA";
     }
   }

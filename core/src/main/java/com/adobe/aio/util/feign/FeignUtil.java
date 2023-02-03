@@ -24,11 +24,8 @@ import java.util.concurrent.TimeUnit;
 
 public class FeignUtil {
 
-  public static final int MAX_IDLE_CONNECTIONS = 100;
-  public static final int KEEP_ALIVE_DURATION = 10;
   public static final int DEFAULT_CONNECT_TIMEOUT_IN_SECONDS = 10;
   public static final int DEFAULT_READ_TIMEOUT_IN_SECONDS = 60;
-  public static final String NON_AVAILABLE = "NA";
 
   private FeignUtil() {
   }
