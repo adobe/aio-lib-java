@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.6...HEAD)
+
+### 📁 Other pull requests
+
+- GH-141 Fixing JournalLinkDecoder allowing to propagate 404  [\#145](https://github.com/adobe/aio-lib-java/pull/145) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-1.0.6](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.6) (2023-01-24)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.2...aio-lib-java-1.0.6)
