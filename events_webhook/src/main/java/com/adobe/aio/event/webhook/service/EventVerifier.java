@@ -70,19 +70,15 @@ public class EventVerifier {
           eventPayload);
       return false;
     }
-    if(!requestHeaders.isEmpty() &&
-        (!StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_DIGI_SIGN_1)) &&
-            !StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_DIGI_SIGN_2)) &&
-            !StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH)) &&
-            !StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH)))) {
-      if (!verifyEventSignatures(eventPayload, requestHeaders)) {
-        logger.error("signatures are not valid for message {}", eventPayload);
-        return false;
-      }
-      return true;
-    } else {
-      logger.error("you request is missing the required headers for signatures and public key paths");
+    if (requestHeaders.isEmpty() ||
+        StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_DIGI_SIGN_1)) ||
+        StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_DIGI_SIGN_2)) ||
+        StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH)) ||
+        StringUtils.isEmpty(requestHeaders.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH))) {
+      logger.error("At least one of the required Adobe IO Events headers is missing");
       return false;
+    } else {
+      return verifyEventSignatures(eventPayload, requestHeaders);
     }
   }
 
