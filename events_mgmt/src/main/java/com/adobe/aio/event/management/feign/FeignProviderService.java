@@ -14,6 +14,8 @@ package com.adobe.aio.event.management.feign;
 import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 
 import com.adobe.aio.event.management.ProviderService;
+import com.adobe.aio.event.management.api.SampleEventApi;
+import com.adobe.aio.event.management.model.SampleEvent;
 import com.adobe.aio.feign.AIOHeaderInterceptor;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
@@ -40,6 +42,7 @@ public class FeignProviderService implements ProviderService {
 
   private final ProviderApi providerApi;
   private final EventMetadataApi eventMetadataApi;
+  private final SampleEventApi sampleEventApi;
   private final Workspace workspace;
 
   public FeignProviderService(final Workspace workspace, final String url) {
@@ -61,6 +64,10 @@ public class FeignProviderService implements ProviderService {
         .requestInterceptor(authInterceptor)
         .requestInterceptor(aioHeaderInterceptor)
         .target(EventMetadataApi.class, apiUrl);
+    this.sampleEventApi = FeignUtil.getDefaultBuilder()
+        .requestInterceptor(authInterceptor)
+        .requestInterceptor(aioHeaderInterceptor)
+        .target(SampleEventApi.class, apiUrl);
     this.workspace = workspace;
   }
 
@@ -197,4 +204,9 @@ public class FeignProviderService implements ProviderService {
         providerId);
   }
 
+  @Override
+  public Optional<SampleEvent> getSampleEvent(final String providerId,
+      final String eventCode) {
+    return sampleEventApi.getSampleEvent(providerId, eventCode);
+  }
 }
