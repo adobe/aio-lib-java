@@ -12,6 +12,7 @@
 package com.adobe.aio.event.management;
 
 import com.adobe.aio.event.management.feign.FeignProviderService;
+import com.adobe.aio.event.management.model.SampleEvent;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
@@ -84,6 +85,9 @@ public interface ProviderService {
   static Builder builder() {
     return new Builder();
   }
+
+  Optional<SampleEvent> getSampleEvent(String providerId,
+      String eventCode);
 
   class Builder {
 
