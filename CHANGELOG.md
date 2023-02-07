@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-147  mapping the `Sample Event` API [\#148](https://github.com/adobe/aio-lib-java/pull/148) ([francoisledroff](https://github.com/francoisledroff))
 - GH-141 Fixing JournalLinkDecoder allowing to propagate 404  [\#145](https://github.com/adobe/aio-lib-java/pull/145) ([francoisledroff](https://github.com/francoisledroff))
 - GH-125 add new webhook module for payload authentication [\#144](https://github.com/adobe/aio-lib-java/pull/144) ([abhupadh](https://github.com/abhupadh))
 
