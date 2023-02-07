@@ -28,7 +28,9 @@ import org.slf4j.LoggerFactory;
 
 public class EventVerifier {
 
-  private static Logger logger = LoggerFactory.getLogger(EventVerifier.class);
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+  public static final String RECIPIENT_CLIENT_ID = "recipient_client_id";
 
   public static final String ADOBE_IOEVENTS_SECURITY_DOMAIN = "https://static.adobeioevents.com";
   public static final String ADOBE_IOEVENTS_DIGI_SIGN_1 = "x-adobe-digital-signature-1";
@@ -43,7 +45,7 @@ public class EventVerifier {
    * for creating instance with a test stub url
    * @param url
    */
-  protected EventVerifier(String url) {
+  EventVerifier(String url) {
     this.pubKeyService = new FeignPubKeyService(url);
   }
 
@@ -66,8 +68,8 @@ public class EventVerifier {
   public boolean verify(String eventPayload, String apiKey, Map<String, String> requestHeaders) {
     if (!isValidTargetRecipient(eventPayload, apiKey)) {
       logger.error(
-          "Your apiKey {} is not matching the recipient_client_id of the event payload {}", apiKey,
-          eventPayload);
+          "Your apiKey `{}` is not matching the `{}` of the event payload `{}`", apiKey,
+          RECIPIENT_CLIENT_ID, eventPayload);
       return false;
     }
     if (requestHeaders.isEmpty() ||
@@ -82,15 +84,15 @@ public class EventVerifier {
     }
   }
 
-  private boolean verifyEventSignatures(String message, Map<String, String> headers) {
-    return verifySignature(message, headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
+  private boolean verifyEventSignatures(String eventPayload, Map<String, String> headers) {
+    return verifySignature(eventPayload, headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
         headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1)) ||
-        verifySignature(message, headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH),
+        verifySignature(eventPayload, headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH),
             headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1));
   }
 
-  private boolean verifySignature(String message, String publicKeyPath, String signature) {
-    byte[] data = message.getBytes(UTF_8);
+  private boolean verifySignature(String eventPayload, String publicKeyPath, String signature) {
+    byte[] data = eventPayload.getBytes(UTF_8);
     try {
       // signature generated at I/O Events side is Base64 encoded, so it must be decoded
       byte[] sign = Base64.getDecoder().decode(signature);
@@ -104,15 +106,16 @@ public class EventVerifier {
     }
   }
 
-  private boolean isValidTargetRecipient(String message, String clientId) {
+  private boolean isValidTargetRecipient(String eventPayload, String clientId) {
     try {
       ObjectMapper mapper = new ObjectMapper();
-      JsonNode jsonPayload = mapper.readTree(message);
-      JsonNode recipientClientIdNode = jsonPayload.get("recipient_client_id");
+      JsonNode jsonPayload = mapper.readTree(eventPayload);
+      JsonNode recipientClientIdNode = jsonPayload.get(RECIPIENT_CLIENT_ID);
       return (recipientClientIdNode != null && recipientClientIdNode.textValue() != null
           && recipientClientIdNode.textValue().equals(clientId));
     } catch (JsonProcessingException e) {
-      throw new AIOException("error parsing the event payload during target recipient check..");
+      logger.error("Invalid event Payload: {}",e.getMessage());
+      return false;
     }
   }
 

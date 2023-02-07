@@ -23,9 +23,9 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
+  <artifactId>aio-lib-java-events-webhook</artifactId>
   <name>Adobe I/O - Events Webhook Library</name>
   <description>Adobe I/O - Java SDK - Events Webhook Library</description>
-  <artifactId>aio-lib-java-events-webhook</artifactId>
 
   <dependencies>
     <dependency>
@@ -48,4 +48,5 @@
       <artifactId>wiremock-jre8</artifactId>
     </dependency>
   </dependencies>
+
 </project>
