@@ -17,6 +17,7 @@ com.adobe.aio.event.management
 com.adobe.aio.event.management.model
 com.adobe.aio.event.publish
 com.adobe.aio.event.publish.model
+com.adobe.aio.event.webhook.service
 com.adobe.aio.exception
 com.adobe.aio.ims
 com.adobe.aio.ims.model
