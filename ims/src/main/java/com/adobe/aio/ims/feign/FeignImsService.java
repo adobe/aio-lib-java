@@ -17,6 +17,7 @@ import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.api.ImsApi;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.util.feign.FeignUtil;
+import feign.Retryer;
 
 public class FeignImsService implements ImsService {
 

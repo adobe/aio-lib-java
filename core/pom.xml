@@ -55,6 +55,14 @@
       <artifactId>feign-form</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.github.resilience4j</groupId>
+      <artifactId>resilience4j-feign</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.resilience4j</groupId>
+      <artifactId>resilience4j-retry</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.openapitools.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-hal</artifactId>
     </dependency>

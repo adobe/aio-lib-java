@@ -15,17 +15,26 @@ import com.adobe.aio.util.JacksonUtil;
 import feign.Feign;
 import feign.Logger.Level;
 import feign.Request;
+import feign.RetryableException;
+import feign.Retryer;
 import feign.form.FormEncoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 import feign.optionals.OptionalDecoder;
 import feign.slf4j.Slf4jLogger;
+import io.github.resilience4j.core.IntervalFunction;
+import io.github.resilience4j.feign.FeignDecorators;
+import io.github.resilience4j.feign.Resilience4jFeign;
+import io.github.resilience4j.retry.Retry;
+import io.github.resilience4j.retry.RetryConfig;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 public class FeignUtil {
 
   public static final int DEFAULT_CONNECT_TIMEOUT_IN_SECONDS = 10;
   public static final int DEFAULT_READ_TIMEOUT_IN_SECONDS = 60;
+  private static final long DEFAULT_RETRY_INITIAL_INTERVAL_IN_MILLISECONDS = 2000;
 
   private FeignUtil() {
   }
@@ -35,10 +44,39 @@ public class FeignUtil {
    * our global read and time out options
    */
   public static Feign.Builder getBaseBuilder() {
-    return Feign.builder()
+    return getBaseBuilder(DEFAULT_RETRY_INITIAL_INTERVAL_IN_MILLISECONDS);
+  }
+
+  public static Feign.Builder getBaseBuilder(long initialIntervalMillis) {
+    final IntervalFunction exponentialBackoff = IntervalFunction
+        .ofExponentialBackoff(initialIntervalMillis, 2.0);
+    FeignDecorators decorators = FeignDecorators.builder()
+        .withRetry(Retry.of("default", RetryConfig.custom()
+            .maxAttempts(3)
+            .retryOnException((t) -> t instanceof RetryableException)
+            .intervalBiFunction((attempt, result) -> result
+                  .bimap(
+                      e -> {
+                        if (e instanceof RetryableException) {
+                          RetryableException ex = (RetryableException) e;
+                          if (ex.retryAfter() != null) {
+                            long interval = System.currentTimeMillis() - ex.retryAfter().getTime();
+                            return Math.max(exponentialBackoff.apply(attempt), interval);
+                          }
+                        }
+                        return exponentialBackoff.apply(attempt);
+                      },
+                      r -> exponentialBackoff.apply(attempt)
+                  )
+                  .fold(Function.identity(), Function.identity())
+            )
+            .build())
+        ).build();
+    return Resilience4jFeign.builder(decorators)
         .logger(new Slf4jLogger())
         //.logLevel(Level.BASIC)
         .logLevel(Level.NONE)
+        .retryer(Retryer.NEVER_RETRY)
         //.logLevel(Level.FULL) // use this instead when debugging
         .decode404()
         .errorDecoder(new IOErrorDecoder())
@@ -51,7 +89,11 @@ public class FeignUtil {
    * logger and our global read and time out options
    */
   public static Feign.Builder getDefaultBuilder() {
-    return getBaseBuilder()
+    return getDefaultBuilder(DEFAULT_RETRY_INITIAL_INTERVAL_IN_MILLISECONDS);
+  }
+
+  public static Feign.Builder getDefaultBuilder(long initialIntervalMillis) {
+    return getBaseBuilder(initialIntervalMillis)
         .decoder(new OptionalDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .encoder(new JacksonEncoder(JacksonUtil.DEFAULT_OBJECT_MAPPER));
 
@@ -62,7 +104,11 @@ public class FeignUtil {
    * global read and time out options, and form encoder
    */
   public static Feign.Builder getBuilderWithFormEncoder() {
-    return getBaseBuilder()
+    return getBaseBuilder(DEFAULT_RETRY_INITIAL_INTERVAL_IN_MILLISECONDS);
+  }
+
+  public static Feign.Builder getBuilderWithFormEncoder(long initialIntervalMillis) {
+    return getBaseBuilder(initialIntervalMillis)
         .decoder(new OptionalDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
         .encoder(new FormEncoder());
   }
