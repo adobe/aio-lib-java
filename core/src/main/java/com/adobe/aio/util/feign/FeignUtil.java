@@ -11,10 +11,13 @@
  */
 package com.adobe.aio.util.feign;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import com.adobe.aio.util.JacksonUtil;
 import feign.Feign;
 import feign.Logger.Level;
 import feign.Request;
+import feign.Retryer;
 import feign.form.FormEncoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
@@ -41,6 +44,7 @@ public class FeignUtil {
         .logLevel(Level.NONE)
         //.logLevel(Level.FULL) // use this instead when debugging
         .decode404()
+        .retryer(new Retryer.Default(1000, SECONDS.toMillis(4), 3))
         .errorDecoder(new IOErrorDecoder())
         .options(new Request.Options(DEFAULT_CONNECT_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS,
             DEFAULT_READ_TIMEOUT_IN_SECONDS, TimeUnit.SECONDS, true));
