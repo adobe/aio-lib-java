@@ -16,6 +16,7 @@ import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 import com.adobe.aio.event.management.ProviderService;
 import com.adobe.aio.event.management.api.SampleEventApi;
 import com.adobe.aio.event.management.model.SampleEvent;
+import com.adobe.aio.exception.AIOException;
 import com.adobe.aio.feign.AIOHeaderInterceptor;
 import com.adobe.aio.ims.feign.JWTAuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
@@ -113,7 +114,12 @@ public class FeignProviderService implements ProviderService {
           providerInputModel.getInstanceId());
       String providerId = this.findProviderBy(providerInputModel.getProviderMetadataId(),
               providerInputModel.getInstanceId())
-          .orElseThrow(() -> e)
+          .orElseThrow(() -> new AIOException("Race condition error: the provider "
+              + "(`" + providerInputModel.getProviderMetadataId() + "`,"
+              + "`" + workspace.getImsOrgId() + "`,"
+              + "`" + providerInputModel.getInstanceId()+ "`)"
+              + " may have been deleted just after a Conflict `" + e.getMessage()
+              + "` was detected while creating it"))
           .getId();
       return updateProvider(providerId,providerInputModel);
     }
