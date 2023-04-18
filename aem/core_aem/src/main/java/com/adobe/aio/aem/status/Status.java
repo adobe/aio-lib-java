@@ -24,6 +24,8 @@ public class Status {
   private Object details;
   @JsonProperty("error")
   private String error;
+  @JsonProperty("version")
+  private String version;
 
   public Status(boolean status, Object details) {
     this(status ? UP : DOWN, details);
@@ -36,12 +38,14 @@ public class Status {
   public Status(String status, Object details) {
     this.status = status;
     this.details = details;
+    this.version = org.osgi.framework.FrameworkUtil.getBundle(getClass()).getVersion().toString();
   }
 
   public Status(String status, Object details, String error) {
     this.status = status;
     this.details = details;
     this.error = error;
+    this.version = org.osgi.framework.FrameworkUtil.getBundle(getClass()).getVersion().toString();
   }
 
   public Status(String status, Object details, Throwable error) {
