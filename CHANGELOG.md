@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.10...HEAD)
+
+### 📁 Other pull requests
+
+- GH-152 better logging and throwing corner case errors when events provider creation conflict happens [\#153](https://github.com/adobe/aio-lib-java/pull/153) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-1.0.10](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.10) (2023-02-13)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.7...aio-lib-java-1.0.10)
