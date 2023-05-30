@@ -17,6 +17,8 @@ import com.adobe.aio.event.journal.model.Event;
 import com.adobe.aio.event.journal.model.JournalEntry;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.BiPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +75,57 @@ public class JournalServiceTester {
       entry = journalService.get(entry.getNextLink());
     }
     return true;
+  }
+
+  /**
+   * Polls the journal for the given eventIds. The journal is polled until all eventIds are found.
+   * @param journalUrl        The journal url
+   * @param eventIds          The eventIds to find (the set is not modified)
+   * @param isEventIdInEvent  The predicate to use to find the eventIds in the journal
+   * @return true if all eventIds are found, false otherwise (if timeout is reached).
+   */
+  public boolean pollJournalForEvents(String journalUrl, Set<String> eventIds, BiPredicate<Event, String> isEventIdInEvent) {
+    JournalService journalService = JournalService.builder()
+        .workspace(workspace)
+        .url(journalUrl)
+        .build();
+    // Do not modify input parameter.
+    Set<String> eventIdsToFind = new HashSet<>(eventIds);
+    long pollingDuration = 0;
+    JournalEntry entry = journalService.getOldest();
+    do {
+      // Search for eventIds in this journal entry.
+      if (!entry.isEmpty()) {
+        for (Event event : entry.getEvents()) {
+          logger.debug("Journal Event {}: ", event);
+          for (String eventId : eventIdsToFind) {
+            if (isEventIdInEvent.test(event, eventId)) {
+              logger.info("EventId {} found in a cloudEvent in this journal entry", eventId);
+              eventIdsToFind.remove(eventId);
+            }
+          }
+        }
+      }
+      // If we found all eventIds, we are done.
+      if (eventIdsToFind.isEmpty()) {
+        logger.info("All eventIds found in the journal");
+        return true;
+      }
+      // Otherwise, we will try to get the next journal entry.
+      long sleeptime = entry.getRetryAfterInSeconds() * 1000l;
+      pollingDuration += sleeptime;
+
+      try {
+        Thread.sleep(sleeptime);
+      } catch (InterruptedException e) {
+        logger.error("Interrupted while sleeping", e);
+      }
+      entry = journalService.get(entry.getNextLink());
+    } while(pollingDuration < JOURNAL_POLLING_TIME_OUT_IN_MILLISECONDS);
+    // We did not find all eventIds in the journal, signal it.
+    logger.error("We polled the journal for " + JOURNAL_POLLING_TIME_OUT_IN_MILLISECONDS
+        + " milliseconds and could NOT find the expected eventIds.");
+    return false;
   }
 
   private boolean isEventIdInJournalEntry(JournalEntry entry, String eventId,
