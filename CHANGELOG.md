@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.12...HEAD)
+
+### 📁 Other pull requests
+
+- GH-157: add pollJournalForEvents to check for a set of eventIds to be in the journal [\#158](https://github.com/adobe/aio-lib-java/pull/158) ([nicdard](https://github.com/nicdard))
+
 ## [aio-lib-java-1.0.12](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.12) (2023-04-18)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.10...aio-lib-java-1.0.12)
