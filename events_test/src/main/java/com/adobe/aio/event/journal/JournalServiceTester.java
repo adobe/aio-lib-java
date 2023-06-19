@@ -79,12 +79,28 @@ public class JournalServiceTester {
 
   /**
    * Polls the journal for the given eventIds. The journal is polled until all eventIds are found.
+   * The timeout is set to 2 minutes.
    * @param journalUrl        The journal url
    * @param eventIds          The eventIds to find (the set is not modified)
    * @param isEventIdInEvent  The predicate to use to find the eventIds in the journal
    * @return true if all eventIds are found, false otherwise (if timeout is reached).
    */
-  public boolean pollJournalForEvents(String journalUrl, Set<String> eventIds, BiPredicate<Event, String> isEventIdInEvent) {
+  public boolean pollJournalForEvents(String journalUrl, Set<String> eventIds,
+      BiPredicate<Event, String> isEventIdInEvent) {
+    return pollJournalForEvents(journalUrl, eventIds, isEventIdInEvent,
+        JOURNAL_POLLING_TIME_OUT_IN_MILLISECONDS);
+  }
+
+  /**
+   * Polls the journal for the given eventIds. The journal is polled until all eventIds are found.
+   * @param journalUrl            The journal url
+   * @param eventIds              The eventIds to find (the set is not modified)
+   * @param isEventIdInEvent      The predicate to use to find the eventIds in the journal
+   * @param timeoutInMilliseconds The timeout in milliseconds
+   * @return true if all eventIds are found, false otherwise (if timeout is reached).
+   */
+  public boolean pollJournalForEvents(String journalUrl, Set<String> eventIds,
+      BiPredicate<Event, String> isEventIdInEvent, long timeoutInMilliseconds) {
     JournalService journalService = JournalService.builder()
         .workspace(workspace)
         .url(journalUrl)
@@ -121,7 +137,7 @@ public class JournalServiceTester {
         logger.error("Interrupted while sleeping", e);
       }
       entry = journalService.get(entry.getNextLink());
-    } while(pollingDuration < JOURNAL_POLLING_TIME_OUT_IN_MILLISECONDS);
+    } while(pollingDuration < timeoutInMilliseconds);
     // We did not find all eventIds in the journal, signal it.
     logger.error("We polled the journal for " + JOURNAL_POLLING_TIME_OUT_IN_MILLISECONDS
         + " milliseconds and could NOT find the expected eventIds.");
