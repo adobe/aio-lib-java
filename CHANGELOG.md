@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.14...HEAD)
+
+### 📁 Other pull requests
+
+- GH-157: expose a timeout configurable `pollJournalForEvents` method [\#161](https://github.com/adobe/aio-lib-java/pull/161) ([nicdard](https://github.com/nicdard))
+
 ## [aio-lib-java-1.0.14](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.14) (2023-06-02)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.12...aio-lib-java-1.0.14)
