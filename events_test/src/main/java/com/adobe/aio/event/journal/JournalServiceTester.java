@@ -18,6 +18,7 @@ import com.adobe.aio.event.journal.model.JournalEntry;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.function.BiPredicate;
 import org.slf4j.Logger;
@@ -114,10 +115,11 @@ public class JournalServiceTester {
       if (!entry.isEmpty()) {
         for (Event event : entry.getEvents()) {
           logger.debug("Journal Event {}: ", event);
-          for (String eventId : eventIdsToFind) {
+          for (Iterator<String> it = eventIdsToFind.iterator(); it.hasNext(); ) {
+            String eventId = it.next();
             if (isEventIdInEvent.test(event, eventId)) {
               logger.info("EventId {} found in a cloudEvent in this journal entry", eventId);
-              eventIdsToFind.remove(eventId);
+              it.remove();
             }
           }
         }
