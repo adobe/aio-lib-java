@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.16...HEAD)
+
+### 📁 Other pull requests
+
+- GH-157: fix iterator over set with removal bug in `JournalServiceTester` [\#162](https://github.com/adobe/aio-lib-java/pull/162) ([nicdard](https://github.com/nicdard))
+
 ## [aio-lib-java-1.0.16](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.16) (2023-06-19)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.14...aio-lib-java-1.0.16)
