@@ -1,8 +1,8 @@
 # 📑 Changelog
 
-## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+## [aio-lib-java-1.0.18](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.18) (2023-06-29)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.16...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.16...aio-lib-java-1.0.18)
 
 ### 📁 Other pull requests
 
