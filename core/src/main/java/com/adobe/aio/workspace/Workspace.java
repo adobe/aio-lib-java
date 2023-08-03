@@ -20,7 +20,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
-import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
 
 import static com.adobe.aio.util.FileUtil.*;
