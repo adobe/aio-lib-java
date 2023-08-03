@@ -11,13 +11,11 @@
  */
 package com.adobe.aio.util;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import com.adobe.aio.util.JacksonUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.node.TextNode;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JacksonUtilTest {
 
@@ -35,12 +33,12 @@ public class JacksonUtilTest {
     assertEquals(new TextNode(aWeirdString), JacksonUtil.getJsonNode(aWeirdString));
     String aJsonTree = "  { \"" + KEY + "\" : \"" + VALUE + "\" } ";
     assertTrue(JacksonUtil.getJsonNode(aJsonTree).has(KEY));
-    assertTrue(JacksonUtil.getJsonNode(aJsonTree).size() == 1);
+    assertEquals(1, JacksonUtil.getJsonNode(aJsonTree).size());
     assertEquals(VALUE, JacksonUtil.getJsonNode(aJsonTree).get(KEY).textValue());
   }
 
-  @Test(expected = JsonProcessingException.class)
+  @Test
   public void testGetJsonNode_ThrowsJsonProcessingException() throws Exception {
-    JacksonUtil.getJsonNode(" { an invalid Json Payload ");
+    assertThrows(JsonProcessingException.class, () -> JacksonUtil.getJsonNode(" { an invalid Json Payload "));
   }
 }
