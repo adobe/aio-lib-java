@@ -11,6 +11,7 @@
  */
 package com.adobe.aio.ims.feign;
 
+import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.JwtTokenBuilder;
 import com.adobe.aio.workspace.Workspace;
@@ -26,19 +27,29 @@ public class FeignImsService implements ImsService {
 
   public FeignImsService(final Workspace workspace) {
     this.workspace = workspace;
-    this.imsApi = FeignUtil.getBuilderWithFormEncoder()
-        .target(ImsApi.class, workspace.getImsUrl());
+    this.imsApi = FeignUtil.getBuilderWithFormEncoder().target(ImsApi.class, workspace.getImsUrl());
   }
 
   @Override
   public AccessToken getJwtExchangeAccessToken() {
-    workspace.validateJwtCredentialConfig();
-    return imsApi.getAccessToken(workspace.getApiKey(),
-        workspace.getClientSecret(), new JwtTokenBuilder(workspace).build());
+    if (!(workspace.getAuthContext() instanceof JwtContext)) {
+      throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
+    }
+
+    JwtContext context = (JwtContext) workspace.getAuthContext();
+    context.validate();
+
+    JwtTokenBuilder builder = new JwtTokenBuilder(workspace);
+    String token = builder.build();
+    return imsApi.getAccessToken(workspace.getApiKey(), context.getClientSecret(), token);
   }
 
   @Override
-  public Boolean validateAccessToken(String accessToken) {
+  public boolean validateAccessToken(String accessToken) {
+    if (!(workspace.getAuthContext() instanceof JwtContext)) {
+      throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
+    }
+
     return imsApi.validateToken(ACCESS_TOKEN, workspace.getApiKey(), accessToken).getValid();
   }
 
