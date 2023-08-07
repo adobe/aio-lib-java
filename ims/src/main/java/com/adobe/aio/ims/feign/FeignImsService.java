@@ -11,7 +11,12 @@
  */
 package com.adobe.aio.ims.feign;
 
+import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+
 import com.adobe.aio.auth.JwtContext;
+import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.JwtTokenBuilder;
 import com.adobe.aio.workspace.Workspace;
@@ -41,7 +46,7 @@ public class FeignImsService implements ImsService {
 
     JwtTokenBuilder builder = new JwtTokenBuilder(workspace);
     String token = builder.build();
-    return imsApi.getAccessToken(workspace.getApiKey(), context.getClientSecret(), token);
+    return imsApi.getJwtAccessToken(workspace.getApiKey(), context.getClientSecret(), token);
   }
 
   @Override
@@ -50,7 +55,18 @@ public class FeignImsService implements ImsService {
       throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
     }
 
-    return imsApi.validateToken(ACCESS_TOKEN, workspace.getApiKey(), accessToken).getValid();
+    return imsApi.validateJwtToken(ACCESS_TOKEN, workspace.getApiKey(), accessToken).getValid();
   }
 
+  @Override
+  public AccessToken getOAuthAccessToken() {
+    if (!(workspace.getAuthContext() instanceof OAuthContext)) {
+      throw new IllegalStateException("AuthContext in workspace not of type `OAuthContext`.");
+    }
+    OAuthContext context = (OAuthContext) workspace.getAuthContext();
+    String scopes = context.getScopes().stream().filter(StringUtils::isNotBlank).map(String::trim).collect(Collectors.joining(","));
+
+    return imsApi.getOAuthAccessToken(workspace.getApiKey(), context.getClientSecret(), scopes);
+  }
 }
+

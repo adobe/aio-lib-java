@@ -36,6 +36,8 @@ public interface ImsService {
   @Deprecated(since = "1.1", forRemoval = true)
   boolean validateAccessToken(String accessToken);
 
+  AccessToken getOAuthAccessToken();
+
   static Builder builder() {
     return new Builder();
   }
