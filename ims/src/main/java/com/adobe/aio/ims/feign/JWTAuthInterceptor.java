@@ -12,11 +12,10 @@
 package com.adobe.aio.ims.feign;
 
 import com.adobe.aio.ims.ImsService;
-import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.model.AccessToken;
+import com.adobe.aio.workspace.Workspace;
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import org.apache.commons.lang3.StringUtils;
 
 import static com.adobe.aio.util.Constants.*;
 
