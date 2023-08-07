@@ -143,6 +143,10 @@ public class Workspace {
     return workspaceId;
   }
 
+  public Context getAuthContext() {
+    return authContext;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -230,7 +234,6 @@ public class Workspace {
       return this;
     }
 
-
     public Builder credentialId(final String credentialId) {
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
@@ -279,6 +282,10 @@ public class Workspace {
           .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
           .projectId(configMap.get(PROJECT_ID))
           .workspaceId(configMap.get(WORKSPACE_ID));
+
+      // For backwards compatibility - should this be kept?
+      jwtbuilder = JwtContext.builder();
+      jwtbuilder.configMap(configMap);
       return this;
     }
 

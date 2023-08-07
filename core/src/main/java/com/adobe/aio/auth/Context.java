@@ -29,6 +29,8 @@ public interface Context {
 
   /**
    * Validates this context is minimally populated and able to function.
+   *
+   * @throws IllegalStateException if this context is not valid for use for generating access tokens
    */
-  void validate();
+  default void validate() throws IllegalStateException {}
 }
