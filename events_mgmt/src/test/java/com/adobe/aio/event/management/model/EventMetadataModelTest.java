@@ -11,14 +11,15 @@
  */
 package com.adobe.aio.event.management.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EventMetadataModelTest {
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalid() {
-    EventMetadata.builder().build();
+    assertThrows(IllegalArgumentException.class, () -> EventMetadata.builder().build());
   }
 
   @Test
@@ -28,8 +29,8 @@ public class EventMetadataModelTest {
     EventMetadata eventMetadata = EventMetadata.builder()
         .eventCode(eventCode)
         .description(eventDescription).build();
-    Assert.assertEquals(eventCode, eventMetadata.getEventCode());
-    Assert.assertEquals(eventCode, eventMetadata.getLabel());
-    Assert.assertEquals(eventDescription, eventMetadata.getDescription());
+    assertEquals(eventCode, eventMetadata.getEventCode());
+    assertEquals(eventCode, eventMetadata.getLabel());
+    assertEquals(eventDescription, eventMetadata.getDescription());
   }
 }

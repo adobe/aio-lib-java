@@ -11,52 +11,57 @@
  */
 package com.adobe.aio.event.management.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationCreateModelTest {
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidEmpty() {
-    RegistrationCreateModel.builder().build();
+    assertThrows(IllegalArgumentException.class, () -> RegistrationCreateModel.builder().build());
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidMissingClientId() {
-    RegistrationCreateModel registrationInputModel = RegistrationCreateModel.builder()
+    assertThrows(IllegalArgumentException.class, () -> RegistrationCreateModel.builder()
         .name("some name")
         .description("some description")
-        .build();
+        .build()
+    );
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidMissingName() {
-    RegistrationCreateModel.builder()
+    assertThrows(IllegalArgumentException.class, () -> RegistrationCreateModel.builder()
         .description("some description")
-        .clientId("some client Id").build();
+        .clientId("some client Id").build()
+    );
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void missingDeliveryType() {
     String name = "com.adobe.aio.event.management.test.registration";
     String description = name + " description";
     String clientId = "some_clientId";
-    RegistrationCreateModel registrationInputModel = RegistrationCreateModel.builder()
+    assertThrows(IllegalArgumentException.class, () -> RegistrationCreateModel.builder()
         .name(name)
         .description(description)
-        .clientId(clientId).build();
+        .clientId(clientId).build()
+    );
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidWebhookUrlMissing() {
     String name = "com.adobe.aio.event.management.test.registration";
     String description = name + " description";
     String clientId = "some_clientId";
-    RegistrationCreateModel registrationInputModel = RegistrationCreateModel.builder()
-                    .name(name)
-                    .description(description)
-                    .clientId(clientId)
-                    .deliveryType("webhook").build();
+    assertThrows(IllegalArgumentException.class, () -> RegistrationCreateModel.builder()
+        .name(name)
+        .description(description)
+        .clientId(clientId)
+        .deliveryType("webhook").build()
+    );
   }
 
   @Test
@@ -65,12 +70,12 @@ public class RegistrationCreateModelTest {
     String description = name + " description";
     String clientId = "some_clientId";
     RegistrationCreateModel registrationInputModel = RegistrationCreateModel.builder()
-                    .name(name)
-                    .description(description)
-                    .clientId(clientId)
-                    .deliveryType("journal").build();
-    Assert.assertEquals(clientId, registrationInputModel.getClientId());
-    Assert.assertEquals(name, registrationInputModel.getName());
-    Assert.assertEquals(description, registrationInputModel.getDescription());
+        .name(name)
+        .description(description)
+        .clientId(clientId)
+        .deliveryType("journal").build();
+    assertEquals(clientId, registrationInputModel.getClientId());
+    assertEquals(name, registrationInputModel.getName());
+    assertEquals(description, registrationInputModel.getDescription());
   }
 }

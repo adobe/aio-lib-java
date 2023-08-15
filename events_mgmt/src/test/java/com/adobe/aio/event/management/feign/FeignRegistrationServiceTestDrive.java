@@ -13,7 +13,7 @@ package com.adobe.aio.event.management.feign;
 
 import com.adobe.aio.event.management.RegistrationService;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
-import com.adobe.aio.util.WorkspaceUtil;
+import com.adobe.aio.ims.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.EventsOfInterestInputModel;
 import com.adobe.aio.event.management.model.Registration;

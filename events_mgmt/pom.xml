@@ -36,8 +36,8 @@
 
     <!--  test -->
     <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
+       <groupId>org.junit.jupiter</groupId>
+       <artifactId>junit-jupiter</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -53,6 +53,13 @@
       <artifactId>jackson-dataformat-hal</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.adobe.aio</groupId>
+      <artifactId>aio-lib-java-ims</artifactId>
+      <version>${project.version}</version>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>

@@ -11,8 +11,9 @@
  */
 package com.adobe.aio.event.management.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationUpdateModelTest {
 
@@ -20,42 +21,47 @@ public class RegistrationUpdateModelTest {
   public static final String DESCRIPTION = NAME + " description";
   public static final String DELIVERY_TYPE = "journal";
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidEmpty() {
-    RegistrationCreateModel.builder().build();
+    assertThrows(IllegalArgumentException.class, () -> RegistrationCreateModel.builder().build());
   }
 
-
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidMissingName() {
-    RegistrationUpdateModel.builder()
-        .description(DESCRIPTION)
-        .build();
+    assertThrows(IllegalArgumentException.class, () ->
+        RegistrationUpdateModel.builder()
+            .description(DESCRIPTION)
+            .build()
+    );
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void missingDeliveryType() {
-    RegistrationUpdateModel.builder()
-        .name(NAME)
-        .description(DESCRIPTION)
-        .build();
+    assertThrows(IllegalArgumentException.class, () ->
+        RegistrationUpdateModel.builder()
+            .name(NAME)
+            .description(DESCRIPTION)
+            .build()
+    );
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidWebhookUrlMissing() {
-    RegistrationUpdateModel.builder()
-                    .name(NAME)
-                    .description(DESCRIPTION)
-                    .deliveryType("webhook").build();
+    assertThrows(IllegalArgumentException.class, () ->
+        RegistrationUpdateModel.builder()
+            .name(NAME)
+            .description(DESCRIPTION)
+            .deliveryType("webhook").build()
+    );
   }
 
   @Test
   public void valid() {
     RegistrationUpdateModel registrationInputModel = RegistrationUpdateModel.builder()
-                    .name(NAME)
-                    .description(DESCRIPTION)
-                    .deliveryType(DELIVERY_TYPE).build();
-    Assert.assertEquals(NAME, registrationInputModel.getName());
-    Assert.assertEquals(DESCRIPTION, registrationInputModel.getDescription());
+        .name(NAME)
+        .description(DESCRIPTION)
+        .deliveryType(DELIVERY_TYPE).build();
+    assertEquals(NAME, registrationInputModel.getName());
+    assertEquals(DESCRIPTION, registrationInputModel.getDescription());
   }
 }

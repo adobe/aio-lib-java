@@ -11,24 +11,25 @@
  */
 package com.adobe.aio.event.management.model;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class EventsOfInterestInputModelTest {
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidEmpty() {
-    EventsOfInterestInputModel.builder().build();
+    assertThrows(IllegalArgumentException.class, () -> EventsOfInterestInputModel.builder().build());
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidMissingProviderId() {
-    EventsOfInterestInputModel.builder().eventCode("some.event.code").build();
+    assertThrows(IllegalArgumentException.class, () -> EventsOfInterestInputModel.builder().eventCode("some.event.code").build());
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidMissingEventCode() {
-    EventsOfInterestInputModel.builder().providerId("someId").build();
+    assertThrows(IllegalArgumentException.class, () -> EventsOfInterestInputModel.builder().providerId("someId").build());
   }
 
   @Test
@@ -38,8 +39,8 @@ public class EventsOfInterestInputModelTest {
     EventsOfInterestInputModel eventsOfInterestInputModel = EventsOfInterestInputModel.builder()
         .eventCode(eventCode)
         .providerId(providerId).build();
-    Assert.assertEquals(eventCode, eventsOfInterestInputModel.getEventCode());
-    Assert.assertEquals(providerId, eventsOfInterestInputModel.getProviderId());
+    assertEquals(eventCode, eventsOfInterestInputModel.getEventCode());
+    assertEquals(providerId, eventsOfInterestInputModel.getProviderId());
   }
 
 }

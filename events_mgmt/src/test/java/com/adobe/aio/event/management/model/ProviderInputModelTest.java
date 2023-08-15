@@ -11,16 +11,16 @@
  */
 package com.adobe.aio.event.management.model;
 
-import static com.adobe.aio.util.Constants.CUSTOM_EVENTS_PROVIDER_METADATA_ID;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import static com.adobe.aio.util.Constants.CUSTOM_EVENTS_PROVIDER_METADATA_ID;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProviderInputModelTest {
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalid() {
-    ProviderInputModel.builder().build();
+    assertThrows(IllegalArgumentException.class, () -> ProviderInputModel.builder().build());
   }
 
   @Test
@@ -32,9 +32,9 @@ public class ProviderInputModelTest {
         .description(description)
         .docsUrl("https://github.com/adobe/aio-lib-java")
         .build();
-    Assert.assertEquals(description, providerInputModel.getDescription());
-    Assert.assertEquals(label, providerInputModel.getLabel());
-    Assert.assertEquals(CUSTOM_EVENTS_PROVIDER_METADATA_ID,
+    assertEquals(description, providerInputModel.getDescription());
+    assertEquals(label, providerInputModel.getLabel());
+    assertEquals(CUSTOM_EVENTS_PROVIDER_METADATA_ID,
         providerInputModel.getProviderMetadataId());
   }
 }
