@@ -53,39 +53,38 @@ public class JournalLinkDecoder implements Decoder {
 
   public Object decode(Response response, Type type) throws IOException {
     if (!rawClass(type).equals(JournalEntry.class)) {
-      throw new DecodeException(response.status(),
-          String.format("%s is not a type supported by this decoder.", type), response.request());
-    } else if (response.status() >= 200 && response.status() < 300) {
-      JournalEntry entry = new JournalEntry();
-      if (response.status() == 204 && response.headers() != null && response.headers()
-          .containsKey(RETRY_AFTER_HEADER)) {
+      throw new DecodeException(response.status(), String.format("%s is not a type supported by this decoder.", type), response.request());
+    }
+
+    if (response.status() < 200 || response.status() >= 300) {
+      logger.info("Not decoding Journal header link values when the response status is `{}`", response.status());
+      return Util.emptyValueOf(type);
+    }
+
+    JournalEntry entry = (JournalEntry) this.delegate.decode(response, type);
+    // Decode could return null.
+    if (entry == null) entry = new JournalEntry();
+
+    if (response.headers() != null) {
+      if (response.status() == 204 && response.headers().containsKey(RETRY_AFTER_HEADER))  {
         entry.setRetryAfterInSeconds(response.headers().get(RETRY_AFTER_HEADER).iterator().next());
       }
-      if (response.status() != 204) {
-        entry = (JournalEntry) this.delegate.decode(response, type);
-      }
-      if (entry != null && response.headers() != null && response.headers()
-          .containsKey(LINK_HEADER)) {
+      if (response.headers().containsKey(LINK_HEADER)) {
         Map<String, String> links = new HashMap<>();
-        URL requestUrl = new URL(response.request().url());
         Collection<String> linkValues = response.headers().get(LINK_HEADER);
         for (String linkValue : linkValues) {
           Pattern pattern = Pattern.compile(LINK_PATH_NAME_REGEXP);
           Matcher matcher = pattern.matcher(linkValue);
-          if (!matcher.find()) {
-            logger.error("unexpected Journal header link values format.");
-          } else {
+          if (matcher.find()) {
             links.put(matcher.group(2), getRootUrl(response.request()) + matcher.group(1));
+          } else {
+            logger.error("unexpected Journal header link values format.");
           }
         }
         entry.setLinks(links);
       }
-      return entry;
-    } else {
-      logger.info("Not decoding Journal header link values when the response status is `{}`",
-          response.status());
-      return Util.emptyValueOf(type);
     }
+    return entry;
   }
 
   private String getRootUrl(Request request) throws MalformedURLException {
@@ -94,8 +93,7 @@ public class JournalLinkDecoder implements Decoder {
         ("http".equals(requestUrl.getProtocol()) && requestUrl.getPort() == 80)) {
       return requestUrl.getProtocol() + "://" + requestUrl.getHost();
     } else {
-      return requestUrl.getProtocol() + "://" + requestUrl.getHost() + ":"
-          + requestUrl.getPort();
+      return requestUrl.getProtocol() + "://" + requestUrl.getHost() + ":" + requestUrl.getPort();
     }
   }
 }

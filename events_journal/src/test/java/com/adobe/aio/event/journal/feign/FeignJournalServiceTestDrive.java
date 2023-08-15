@@ -13,7 +13,7 @@ package com.adobe.aio.event.journal.feign;
 
 import com.adobe.aio.event.journal.JournalService;
 import com.adobe.aio.event.journal.model.JournalEntry;
-import com.adobe.aio.util.WorkspaceUtil;
+import com.adobe.aio.ims.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

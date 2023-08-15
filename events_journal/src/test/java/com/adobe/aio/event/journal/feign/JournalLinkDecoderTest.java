@@ -11,99 +11,117 @@
  */
 package com.adobe.aio.event.journal.feign;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import com.adobe.aio.event.journal.api.JournalApi;
 import com.adobe.aio.event.journal.model.JournalEntry;
-import com.adobe.aio.util.JacksonUtil;
-import com.adobe.aio.util.feign.FeignUtil;
-import feign.Feign;
-import feign.jackson.JacksonDecoder;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import org.junit.Assert;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.ExpectedException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Request;
+import feign.Response;
+import feign.codec.DecodeException;
+import feign.codec.Decoder;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 public class JournalLinkDecoderTest {
+
+  @Mock
+  private Decoder mockDelegate;
+
+  @Mock
+  private Request request;
+
+  @Mock
+  private Response response;
 
   private static final String TEST_IMS_ORG_ID = "testImsOrgId";
   private static final int RETRY_AFTER_VALUE = 10;
-  @Rule
-  public ExpectedException expectedEx = ExpectedException.none();
 
   @Test
-  public void get204() {
-    final MockWebServer server = new MockWebServer();
-    String rootServerUrl = server.url("/").toString();
-    server.enqueue(new MockResponse()
-        .addHeader(JournalLinkDecoder.RETRY_AFTER_HEADER, RETRY_AFTER_VALUE)
-        .addHeader(JournalLinkDecoder.LINK_HEADER, getNextLink())
-        .addHeader(JournalLinkDecoder.LINK_HEADER, getCountLink())
-        .setResponseCode(204));
-    server.enqueue(new MockResponse().setBody("foo"));
-
-    final JournalApi api = Feign.builder()
-        .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
-        .target(JournalApi.class, rootServerUrl);
-    JournalEntry entry = api.get(TEST_IMS_ORG_ID);
-    assertTrue(entry.isEmpty());
-    assertEquals("http://localhost:" + server.getPort()
-            + "/events-fast/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2",
-        entry.getNextLink());
-    assertEquals("http://localhost:" + server.getPort()
-            + "/count/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2",
-        entry.getLinks().get("count"));
-    assertEquals(RETRY_AFTER_VALUE, entry.getRetryAfterInSeconds());
+  public void unsupportedType() {
+    when(response.request()).thenReturn(request);
+    JournalLinkDecoder decoder = new JournalLinkDecoder(mockDelegate);
+    assertThrows(DecodeException.class, () -> decoder.decode(response, JournalLinkDecoder.class));
   }
 
   @Test
-  public void get200() {
-    final MockWebServer server = new MockWebServer();
-    String rootServerUrl = server.url("/").toString();
-    String entryJsonPayload = "{\"events\":"
-        + " [ { \"position\": \"aposition\", \"event\": {  \"key\": \"value\"  }} ],"
-        + " \"_page\": { \"last\": \"aposition\",  \"count\": 1 }}";
-    server.enqueue(new MockResponse()
-        .addHeader(JournalLinkDecoder.LINK_HEADER, getNextLink())
-        .addHeader(JournalLinkDecoder.LINK_HEADER, getCountLink())
-        .setResponseCode(200)
-        .setBody(entryJsonPayload));
+  public void errorResponse() throws Exception {
+    when(response.status()).thenReturn(302);
+    JournalLinkDecoder decoder = new JournalLinkDecoder(mockDelegate);
+    assertNull(decoder.decode(response, JournalEntry.class));
+  }
 
-    final JournalApi api = Feign.builder()
-        .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
-        .target(JournalApi.class, rootServerUrl);
-    JournalEntry entry = api.get(TEST_IMS_ORG_ID);
-    assertTrue(!entry.isEmpty());
-    assertEquals("http://localhost:" + server.getPort()
-            + "/events-fast/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2",
-        entry.getNextLink());
-    assertEquals("http://localhost:" + server.getPort()
-            + "/count/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2",
-        entry.getLinks().get("count"));
-    assertEquals(1, entry.size());
+  @Test
+  public void get204() throws Exception {
+    final String rootServerUrl = "http://localhost:1234";
+
+    Map<String, Collection<String>> headers = new HashMap<>();
+    headers.put(JournalLinkDecoder.RETRY_AFTER_HEADER, Collections.singleton("" + RETRY_AFTER_VALUE));
+    List<String> links = new ArrayList<>();
+    links.add(getNextLink());
+    links.add(getCountLink());
+    headers.put(JournalLinkDecoder.LINK_HEADER, links);
+
+    when(response.status()).thenReturn(204);
+    when(response.headers()).thenReturn(headers);
+    when(response.request()).thenReturn(request);
+
+    when(request.url()).thenReturn(rootServerUrl);
+
+    JournalLinkDecoder decoder = new JournalLinkDecoder(mockDelegate);
+    JournalEntry actual = (JournalEntry) decoder.decode(response, JournalEntry.class);
+
+    assertTrue(actual.isEmpty());
+    assertEquals("http://localhost:1234/events-fast/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2", actual.getNextLink());
+    assertEquals("http://localhost:1234/count/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2", actual.getLinks().get("count"));
+    assertEquals(RETRY_AFTER_VALUE, actual.getRetryAfterInSeconds());
+  }
+
+  @Test
+  public void get200() throws Exception {
+    final String rootServerUrl = "http://localhost:1234";
+
+    String payload = "{\"events\": [ { \"position\": \"aposition\", \"event\": {  \"key\": \"value\"  }} ], \"_page\": { \"last\": \"aposition\",  \"count\": 1 }}";
+    JournalEntry entry = new ObjectMapper().readValue(payload, JournalEntry.class);
+
+    Map<String, Collection<String>> headers = new HashMap<>();
+    headers.put(JournalLinkDecoder.RETRY_AFTER_HEADER, Collections.singleton("" + RETRY_AFTER_VALUE));
+    List<String> links = new ArrayList<>();
+    links.add(getNextLink());
+    links.add(getCountLink());
+    headers.put(JournalLinkDecoder.LINK_HEADER, links);
+
+    when(response.status()).thenReturn(200);
+    when(response.headers()).thenReturn(headers);
+    when(response.request()).thenReturn(request);
+
+    when(request.url()).thenReturn(rootServerUrl);
+
+    when(mockDelegate.decode(response, JournalEntry.class)).thenReturn(entry);
+
+    JournalLinkDecoder decoder = new JournalLinkDecoder(mockDelegate);
+    JournalEntry actual = (JournalEntry) decoder.decode(response, JournalEntry.class);
+
+    assertFalse(actual.isEmpty());
+    assertEquals("http://localhost:1234/events-fast/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2", actual.getNextLink());
+    assertEquals("http://localhost:1234/count/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2", actual.getLinks().get("count"));
+    assertEquals(1, actual.size());
     assertEquals("aposition", entry.getEvents().get(0).getPosition());
     assertEquals("{\"key\":\"value\"}", entry.getEvents().get(0).getEvent().toString());
     assertEquals("aposition", entry.getPage().getLast());
     assertEquals(1, entry.getPage().getCount());
   }
-
-  @Test
-  public void get404() {
-    final MockWebServer server = new MockWebServer();
-    String rootServerUrl = server.url("/").toString();
-    server.enqueue(new MockResponse()
-        .setBody("<html>some, non json, page: that is !</html>")
-        .setResponseCode(404));
-
-    final JournalApi api = FeignUtil.getBaseBuilder()
-        .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))
-        .target(JournalApi.class, rootServerUrl);
-    Assert.assertNull(api.get(TEST_IMS_ORG_ID));
-  }
-
 
   private String getNextLink() {
     return "</events-fast/organizations/organizations/junit/integrations/junit/junit?since=salmon:1.salmon:2>; rel=\"next\"";
