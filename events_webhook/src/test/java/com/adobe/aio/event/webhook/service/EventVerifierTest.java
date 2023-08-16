@@ -12,29 +12,25 @@
 
 package com.adobe.aio.event.webhook.service;
 
-import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_DIGI_SIGN_1;
-import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_DIGI_SIGN_2;
-import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_PUB_KEY_1_PATH;
-import static com.adobe.aio.event.webhook.service.EventVerifier.ADOBE_IOEVENTS_PUB_KEY_2_PATH;
-import static com.adobe.aio.event.webhook.service.EventVerifier.RECIPIENT_CLIENT_ID;
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.configureFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.notFound;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.wireMockConfig;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import com.github.tomakehurst.wiremock.WireMockServer;
+import java.security.KeyFactory;
+import java.security.PublicKey;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 
+import com.adobe.aio.event.webhook.feign.FeignPubKeyService;
+import com.adobe.aio.exception.AIOException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedConstruction;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static com.adobe.aio.event.webhook.service.EventVerifier.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 public class EventVerifierTest {
 
   private static final String API_KEY = "client_id1";
@@ -45,122 +41,170 @@ public class EventVerifierTest {
   private static final String PUB_KEY1_PATH = "/junit/pub-key-1.pem";
   private static final String PUB_KEY2_PATH = "/junit/pub-key-2.pem";
   private static final String ANOTHER_PUB_KEY_PATH = "/junit/another-pub-key.pem";
-  private static final String NOT_FOUND_PUB_KEY_PATH = "/junit/not-found-pub-key.pem";
+  private static final String VALID_PAYLOAD = "{\"event_id\":\"eventId1\",\"event\":{\"hello\":\"world\"},\"" + RECIPIENT_CLIENT_ID + "\":\"" + API_KEY + "\"}";
 
-  private EventVerifier underTest;
+  private static final PublicKey PUBLIC_KEY1;
+  private static final PublicKey PUBLIC_KEY2;
+  private static final PublicKey ANOTHER_PUBLIC_KEY;
 
-  private WireMockServer wireMockServer;
+  private static final Map<String, String> VALID_HEADERS = new HashMap<>();
+  static {
+    VALID_HEADERS.put(ADOBE_IOEVENTS_DIGI_SIGN_1, VALID_SIGNATURE_1);
+    VALID_HEADERS.put(ADOBE_IOEVENTS_DIGI_SIGN_2, VALID_SIGNATURE_2);
+    VALID_HEADERS.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, PUB_KEY1_PATH);
+    VALID_HEADERS.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, PUB_KEY2_PATH);
 
-  @Before
-  public void setup() {
-
-    wireMockServer = new WireMockServer(wireMockConfig().dynamicPort());
-    wireMockServer.start();
-    int port = wireMockServer.port();
-    setupEndpointStub(port);
-    underTest = new EventVerifier("http://localhost:" + port);
-  }
-
-  @After
-  public void tearDown() {
-    wireMockServer.stop();
-  }
-
-  private void setupEndpointStub(int port) {
-    configureFor("localhost", port);
-    stubFor(get(urlEqualTo(PUB_KEY1_PATH))
-        .willReturn(aResponse().withBody(getPubKey1())));
-    stubFor(get(urlEqualTo(PUB_KEY2_PATH))
-        .willReturn(aResponse().withBody(getPubKey2())));
-    stubFor(get(urlEqualTo(ANOTHER_PUB_KEY_PATH))
-        .willReturn(aResponse().withBody(getAnotherPubKey())));
-    stubFor(get(urlEqualTo(NOT_FOUND_PUB_KEY_PATH))
-        .willReturn(notFound()));
-
+    try {
+      PUBLIC_KEY1 = getPubKey1();
+      PUBLIC_KEY2 = getPubKey2();
+      ANOTHER_PUBLIC_KEY = getAnotherPubKey();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Test
-  public void testVerifyWithValidSignatures() {
-    assertTrue(underTest.verify(getValidPayload(), API_KEY, getValidHeaders()));
+  public void validSignatures() {
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(PUB_KEY1_PATH)).thenReturn(PUBLIC_KEY1);
+        }
+    )) {
+      assertTrue(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, VALID_HEADERS));
+    }
   }
 
   @Test
-  public void testVerifyValidSignature1() {
-    Map<String, String> headers = getValidHeaders();
+  public void invalidValidSignature1() {
+    Map<String, String> headers = new HashMap<>(VALID_HEADERS);
     headers.put(ADOBE_IOEVENTS_DIGI_SIGN_1, INVALID_SIGNATURE);
-    assertTrue(underTest.verify(getValidPayload(), API_KEY, headers));
+
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(PUB_KEY1_PATH)).thenReturn(PUBLIC_KEY1);
+          when(mock.getAioEventsPublicKey(PUB_KEY2_PATH)).thenReturn(PUBLIC_KEY2);
+        }
+    )) {
+      assertTrue(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, headers));
+    }
   }
 
   @Test
-  public void testVerifyValidSignature2() {
-    Map<String, String> headers = getValidHeaders();
+  public void invalidSignature2() {
+    Map<String, String> headers = new HashMap<>(VALID_HEADERS);
     headers.put(ADOBE_IOEVENTS_DIGI_SIGN_2, INVALID_SIGNATURE);
-    assertTrue(underTest.verify(getValidPayload(), API_KEY, headers));
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(PUB_KEY1_PATH)).thenReturn(PUBLIC_KEY1);
+        }
+    )) {
+      assertTrue(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, headers));
+    }
   }
 
   @Test
-  public void testVerifyInvalidSignature() {
-    Map<String, String> headers = getValidHeaders();
+  public void invalidSignatures() {
+    Map<String, String> headers = new HashMap<>(VALID_HEADERS);
+
     headers.put(ADOBE_IOEVENTS_DIGI_SIGN_1, INVALID_SIGNATURE);
     headers.put(ADOBE_IOEVENTS_DIGI_SIGN_2, INVALID_SIGNATURE);
-    assertFalse(underTest.verify(getValidPayload(), API_KEY, headers));
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(PUB_KEY1_PATH)).thenReturn(PUBLIC_KEY1);
+          when(mock.getAioEventsPublicKey(PUB_KEY2_PATH)).thenReturn(PUBLIC_KEY2);
+        }
+    )) {
+      assertFalse(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, headers));
+    }
   }
 
   @Test
-  public void testVerifyBadlyFormattedSignature() {
-    String testPayload = getValidPayload();
-    Map<String, String> headers = getValidHeaders();
-    // not base64 encoded
-    headers.put(ADOBE_IOEVENTS_DIGI_SIGN_1, "some random String");
-    headers.put(ADOBE_IOEVENTS_DIGI_SIGN_2, "some random String");
-    assertFalse(underTest.verify(testPayload, API_KEY, headers));
+  public void badlyFormattedSignature() {
+    Map<String, String> headers = new HashMap<>(VALID_HEADERS);
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(PUB_KEY1_PATH)).thenReturn(PUBLIC_KEY1);
+          when(mock.getAioEventsPublicKey(PUB_KEY2_PATH)).thenReturn(PUBLIC_KEY2);
+        }
+    )) {
+      EventVerifier underTest = new EventVerifier();
+      // not base64 encoded
+      headers.put(ADOBE_IOEVENTS_DIGI_SIGN_1, "some random String");
+      headers.put(ADOBE_IOEVENTS_DIGI_SIGN_2, "some random String");
+      assertFalse(underTest.verify(VALID_PAYLOAD, API_KEY, headers));
 
-    // just base64 encoded
-    headers.put(ADOBE_IOEVENTS_DIGI_SIGN_1,
-        Base64.getEncoder().encodeToString("some random String".getBytes()));
-    headers.put(ADOBE_IOEVENTS_DIGI_SIGN_2,
-        Base64.getEncoder().encodeToString("some random String".getBytes()));
-    assertFalse(underTest.verify(testPayload, API_KEY, headers));
+      // just base64 encoded
+      headers.put(ADOBE_IOEVENTS_DIGI_SIGN_1, Base64.getEncoder().encodeToString("some random String".getBytes()));
+      headers.put(ADOBE_IOEVENTS_DIGI_SIGN_2, Base64.getEncoder().encodeToString("some random String".getBytes()));
+      assertFalse(underTest.verify(VALID_PAYLOAD, API_KEY, headers));
+    }
   }
 
   @Test
-  public void testVerifyPublicKeyNotFound() {
-    Map<String, String> headers = getValidHeaders();
-    headers.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, NOT_FOUND_PUB_KEY_PATH);
-    headers.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, NOT_FOUND_PUB_KEY_PATH);
-    assertFalse(underTest.verify(getValidPayload(), API_KEY, headers));
+  public void publicKeyNotFound() {
+    Map<String, String> headers = new HashMap<>(VALID_HEADERS);
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(PUB_KEY1_PATH)).thenThrow(new AIOException("Error"));
+          when(mock.getAioEventsPublicKey(PUB_KEY2_PATH)).thenThrow(new AIOException("Error"));
+        }
+    )) {
+      assertFalse(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, headers));
+    }
   }
 
   @Test
-  public void testVerifyOnePublicKeyNotFound() {
-    Map<String, String> headers = getValidHeaders();
-    headers.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, NOT_FOUND_PUB_KEY_PATH);
-    assertTrue(underTest.verify(getValidPayload(), API_KEY, headers));
+  public void onePublicKeyNotFound() {
+    Map<String, String> headers = new HashMap<>(VALID_HEADERS);
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(PUB_KEY1_PATH)).thenThrow(new AIOException("Error"));
+          when(mock.getAioEventsPublicKey(PUB_KEY2_PATH)).thenReturn(PUBLIC_KEY2);
+        }
+    )) {
+      EventVerifier underTest = new EventVerifier();
+      assertTrue(underTest.verify(VALID_PAYLOAD, API_KEY, headers));
+    }
   }
 
   @Test
-  public void testVerifyPublicKeyMismatch() {
-    Map<String, String> headers = getValidHeaders();
+  public void publicKeyMismatch() {
+    Map<String, String> headers = new HashMap<>(VALID_HEADERS);
     headers.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, ANOTHER_PUB_KEY_PATH);
     headers.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, ANOTHER_PUB_KEY_PATH);
-    assertFalse(underTest.verify(getValidPayload(), API_KEY, headers));
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(ANOTHER_PUB_KEY_PATH)).thenReturn(ANOTHER_PUBLIC_KEY);
+          when(mock.getAioEventsPublicKey(ANOTHER_PUB_KEY_PATH)).thenReturn(ANOTHER_PUBLIC_KEY);
+        }
+    )) {
+      assertFalse(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, headers));
+    }
   }
 
   @Test
-  public void testVerifyOnePublicKeyMismatch() {
-    Map<String, String> headers = getValidHeaders();
+  public void onePublicKeyMismatch() {
+    Map<String, String> headers = new HashMap<>(VALID_HEADERS);
     headers.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, ANOTHER_PUB_KEY_PATH);
-    assertTrue(underTest.verify(getValidPayload(), API_KEY, headers));
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(ANOTHER_PUB_KEY_PATH)).thenReturn(ANOTHER_PUBLIC_KEY);
+          when(mock.getAioEventsPublicKey(PUB_KEY2_PATH)).thenReturn(PUBLIC_KEY2);
+        }
+    )) {
+      assertTrue(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, headers));
+    }
   }
 
   @Test
-  public void testVerifyWithApiKeyMismatch() {
-    assertFalse(underTest.verify(getValidPayload(), ANOTHER_API_KEY, getValidHeaders()));
+  public void withApiKeyMismatch() {
+    assertFalse(new EventVerifier().verify(VALID_PAYLOAD, ANOTHER_API_KEY, VALID_HEADERS));
   }
 
   @Test
-  public void testVerifyInvalidEventPayloads() {
-    Map<String, String> headers = getValidHeaders();
+  public void invalidEventPayloads() {
+    Map<String, String> headers = VALID_HEADERS;
+    EventVerifier underTest = new EventVerifier();
     assertFalse(underTest.verify("aSimpleString", API_KEY, headers));
     assertFalse(underTest.verify("{\"key\":\"value\"}", API_KEY, headers));
     assertFalse(underTest.verify("{\"key\":\"value\"", API_KEY, headers));
@@ -172,62 +216,56 @@ public class EventVerifierTest {
     headers.put(ADOBE_IOEVENTS_DIGI_SIGN_1, VALID_SIGNATURE_1);
     headers.put(ADOBE_IOEVENTS_DIGI_SIGN_2, VALID_SIGNATURE_2);
     headers.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, PUB_KEY1_PATH);
-    assertFalse(underTest.verify(getValidPayload(), API_KEY, headers));
+    assertFalse(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, headers));
   }
 
   @Test
   public void testEmptyHeaders() {
-    assertFalse(underTest.verify(getValidPayload(), API_KEY, new HashMap<>()));
+    assertFalse(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, new HashMap<>()));
   }
 
-  // ============================ PRIVATE HELPER METHODS ================================
-  private String getValidPayload() {
-    return "{\"event_id\":\"eventId1\",\"event\":{\"hello\":\"world\"},\""
-        + RECIPIENT_CLIENT_ID + "\":\"" + API_KEY + "\"}";
+  private static PublicKey stringToKey(String publicK) throws Exception {
+    byte[] publicBytes = Base64.getDecoder().decode(publicK);
+    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);
+    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+    return keyFactory.generatePublic(keySpec);
   }
 
-  private Map<String, String> getValidHeaders() {
-    Map<String, String> headers = new HashMap<>();
-    headers.put(ADOBE_IOEVENTS_DIGI_SIGN_1, VALID_SIGNATURE_1);
-    headers.put(ADOBE_IOEVENTS_DIGI_SIGN_2, VALID_SIGNATURE_2);
-    headers.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, PUB_KEY1_PATH);
-    headers.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, PUB_KEY2_PATH);
-    return headers;
-  }
+  private static PublicKey getPubKey1() throws Exception {
 
-  private String getPubKey1() {
-    return "-----BEGIN PUBLIC KEY-----\n"
-        + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzxbiCd7hyiKbksssNEup\n"
+    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzxbiCd7hyiKbksssNEup\n"
         + "SBhnNRHaPFHUVbi44k82GlFrLBF2MbviEWPxxJxRfqRkysHwMaE+3w74sR9oEunF\n"
         + "Uz3J2vGcXHT4UWfEuKxO/C8dSt7Hex5EoK2R4eld/P7j/p55jp8ODvTW/Yd9ej8q\n"
         + "Dk9dia8ZbkOOuVht2NJlZW4+4p8OCp4MLnSjprvPLAIHU5pD8sIcS+LFYYA3kAz2\n"
         + "pAo/La7W4PFd6f3fuOQrhlBKsL99W6ALyXUOsHHBk0YrcgoxVeDYWO0N3NZLYIZd\n"
         + "aWMxNONoH9kH2mhguidf8MCWwIuYyqO+J+IzsshXVWGyMyn3q7fVZCra9ISEZqWE\n"
-        + "iwIDAQAB\n"
-        + "-----END PUBLIC KEY-----";
+        + "iwIDAQAB";
+
+    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    return stringToKey(publicK);
   }
 
-  private String getPubKey2() {
-    return "-----BEGIN PUBLIC KEY-----\n"
-        + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuyszY9i34MeIfmmaFSUz\n"
+  private static PublicKey getPubKey2() throws Exception {
+    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuyszY9i34MeIfmmaFSUz\n"
         + "R0Y4ORhTkwiUafGbRntE0u0wTAKhe9Mewnmrxclh5OrX9jEjWY6lBkxxLYHAa+w2\n"
         + "B4jDExTwiz/o1GKHYf0CGlVw0JqGQVfLlvEGFg5lQsVfOBdSdnxXBSH0FOw7ZQUb\n"
         + "60MD7YKSbk40PRHKzHEcxlHLiHreoqPAIDn3JZ9A7b6QjKOB4LTR6jb3rUtfxnzl\n"
         + "jku8atEfdo341WcHSHW2hf/Gx2mazhGg1of6wZVforXo3R1HVqIVMlOk6GMcz4HH\n"
         + "iLOuEOURFucux3jm4gF2DF1B627vCqaGDoduvyIjitXQS6KqSx3dzB2dGOBDPpsr\n"
-        + "8wIDAQAB\n"
-        + "-----END PUBLIC KEY-----";
+        + "8wIDAQAB";
+    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    return stringToKey(publicK);
   }
 
-  private String getAnotherPubKey() {
-    return "-----BEGIN PUBLIC KEY-----\n"
-        + "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqQypvXnGrmnfoWdcdYg1\n"
+  private static PublicKey getAnotherPubKey() throws Exception {
+    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqQypvXnGrmnfoWdcdYg1\n"
         + "+LfHdIVpwU5ycTclnYyWp4zpogug+AfG40j4alKfuUPbuCNQh8DFSRGTgZdHY6lI\n"
         + "mzHcpbcJzkV1ZrW1foFEsNnulO9a7Vv8LNo4UAbZwrha5ozEbOUIttI+B6DKLLYa\n"
         + "4+BjHj0WtxHHuRPibf46qrliMd2St3gdp1yUjGO2qHOHlKHm15K9uwN5SYKANMK2\n"
         + "mZ5+3/uF4Ms21BqRSGCUEwNKpSxXT2bFNlUw0/DbM6gJuE1CJdk5z/sbLA0S3b1z\n"
         + "PR1LpgOeG84lFG7c0gcIaeZX+c3dLdmNBfkOQwacFP3m0urlJkSxI8MomaeEOS2y\n"
-        + "hQIDAQAB\n"
-        + "-----END PUBLIC KEY-----";
+        + "hQIDAQAB";
+    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    return stringToKey(publicK);
   }
 }
