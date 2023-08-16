@@ -15,15 +15,16 @@ import com.adobe.aio.event.management.model.EventsOfInterest;
 import com.adobe.aio.event.management.model.EventsOfInterestInputModel;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
-import com.adobe.aio.util.WorkspaceUtil;
+import com.adobe.aio.ims.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.Set;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceTester {
 
@@ -65,46 +66,46 @@ public class RegistrationServiceTester {
     RegistrationCreateModel registrationInputModel =
         registrationInputModelBuilder.clientId(this.workspace.getApiKey()).build();
     Optional<Registration> registration = registrationService.createRegistration(registrationInputModelBuilder);
-    Assert.assertTrue(registration.isPresent());
+    assertTrue(registration.isPresent());
     Registration registratinCreated = registration.get();
     logger.info("Created AIO Event Registration: {}", registration.get());
     String registrationId = registratinCreated.getRegistrationId();
-    Assert.assertNotNull(registrationId);
-    Assert.assertEquals(registrationInputModel.getDescription(), registratinCreated.getDescription());
-    Assert.assertEquals(registrationInputModel.getName(), registratinCreated.getName());
-    Assert.assertEquals(registrationInputModel.getDeliveryType(), registratinCreated.getDeliveryType());
+    assertNotNull(registrationId);
+    assertEquals(registrationInputModel.getDescription(), registratinCreated.getDescription());
+    assertEquals(registrationInputModel.getName(), registratinCreated.getName());
+    assertEquals(registrationInputModel.getDeliveryType(), registratinCreated.getDeliveryType());
 
     Set<EventsOfInterest> eventsOfInterestSet = registration.get().getEventsOfInterests();
-    Assert.assertEquals(registrationInputModel.getEventsOfInterests().size(),eventsOfInterestSet.size());
+    assertEquals(registrationInputModel.getEventsOfInterests().size(),eventsOfInterestSet.size());
     for(EventsOfInterestInputModel eventsOfInterestInput: registrationInputModel.getEventsOfInterests()){
-      Assert.assertTrue(eventsOfInterestSet.stream()
+      assertTrue(eventsOfInterestSet.stream()
                       .anyMatch(eventsOfInterest -> eventsOfInterest.getEventCode()
                                       .equals(eventsOfInterestInput.getEventCode())));
     }
 
-    Assert.assertEquals("verified", registratinCreated.getWebhookStatus());
-    Assert.assertEquals(true, registratinCreated.isEnabled());
-    Assert.assertNull(registration.get().getWebhookUrl());
+    assertEquals("verified", registratinCreated.getWebhookStatus());
+    assertEquals(true, registratinCreated.isEnabled());
+    assertNull(registration.get().getWebhookUrl());
     assertUrl(registration.get().getJournalUrl().getHref());
     assertUrl(registration.get().getTraceUrl().getHref());
-    Assert.assertNotNull(registration.get().getCreatedDate());
-    Assert.assertNotNull(registration.get().getUpdatedDate());
-    Assert.assertEquals(registration.get().getUpdatedDate(), registration.get().getCreatedDate());
+    assertNotNull(registration.get().getCreatedDate());
+    assertNotNull(registration.get().getUpdatedDate());
+    assertEquals(registration.get().getUpdatedDate(), registration.get().getCreatedDate());
     return registration.get();
   }
 
   public void deleteRegistration(String registrationId) {
     registrationService.delete(registrationId);
-    Assert.assertFalse(registrationService.findById(registrationId).isPresent());
+    assertFalse(registrationService.findById(registrationId).isPresent());
     logger.info("Deleted AIO Event Registration: {}", registrationId);
   }
 
   private static void assertUrl(String stringUrl) {
     try {
-      Assert.assertNotNull(stringUrl);
+      assertNotNull(stringUrl);
       URL url = new URL(stringUrl);
     } catch (MalformedURLException e) {
-      Assert.fail("invalid url due to " + e.getMessage());
+      fail("invalid url due to " + e.getMessage());
     }
   }
 

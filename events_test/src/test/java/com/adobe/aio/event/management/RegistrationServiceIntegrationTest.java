@@ -11,15 +11,16 @@
  */
 package com.adobe.aio.event.management;
 
+import java.util.Optional;
 
-import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_CODE;
-import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_PROVIDER_LABEL;
+import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.event.management.model.Registration;
-import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class RegistrationServiceIntegrationTest extends RegistrationServiceTester {
 
@@ -32,15 +33,15 @@ public class RegistrationServiceIntegrationTest extends RegistrationServiceTeste
     providerServiceTester = new ProviderServiceTester();
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void missingWorkspace() {
-    RegistrationService.builder().build();
+    assertThrows(IllegalArgumentException.class, () -> RegistrationService.builder().build());
   }
 
   @Test
   public void getNotFound() {
     String idNotToBeFound = "this_id_should_not_exist";
-    Assert.assertFalse(registrationService.findById(idNotToBeFound).isPresent());
+    assertFalse(registrationService.findById(idNotToBeFound).isPresent());
   }
 
   @Test
@@ -54,23 +55,23 @@ public class RegistrationServiceIntegrationTest extends RegistrationServiceTeste
           TEST_EVENT_CODE);
       registrationId = registration.getRegistrationId();
       Optional<Registration> found = registrationService.findById(registrationId);
-      Assert.assertTrue(found.isPresent());
+      assertTrue(found.isPresent());
       logger.info("Found AIO Event Registration: {}", found.get());
-      Assert.assertEquals(registrationId, found.get().getRegistrationId());
-      Assert.assertEquals(registration.getClientId(), found.get().getClientId());
-      Assert.assertEquals(registration.getDescription(), found.get().getDescription());
-      Assert.assertEquals(registration.getName(), found.get().getName());
-      Assert.assertEquals(registration.getDeliveryType(), found.get().getDeliveryType());
-      Assert.assertEquals(registration.getEventsOfInterests(),
+      assertEquals(registrationId, found.get().getRegistrationId());
+      assertEquals(registration.getClientId(), found.get().getClientId());
+      assertEquals(registration.getDescription(), found.get().getDescription());
+      assertEquals(registration.getName(), found.get().getName());
+      assertEquals(registration.getDeliveryType(), found.get().getDeliveryType());
+      assertEquals(registration.getEventsOfInterests(),
           found.get().getEventsOfInterests());
-      Assert.assertEquals(registration.getWebhookStatus(), found.get().getWebhookStatus());
-      Assert.assertEquals(registration.isEnabled(), found.get().isEnabled());
-      Assert.assertEquals(registration.getWebhookUrl(), found.get().getWebhookUrl());
-      Assert.assertEquals(registration.getJournalUrl().getHref(), found.get().getJournalUrl().getHref());
-      Assert.assertEquals(registration.getTraceUrl().getHref(), found.get().getTraceUrl().getHref());
+      assertEquals(registration.getWebhookStatus(), found.get().getWebhookStatus());
+      assertEquals(registration.isEnabled(), found.get().isEnabled());
+      assertEquals(registration.getWebhookUrl(), found.get().getWebhookUrl());
+      assertEquals(registration.getJournalUrl().getHref(), found.get().getJournalUrl().getHref());
+      assertEquals(registration.getTraceUrl().getHref(), found.get().getTraceUrl().getHref());
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
-      Assert.fail(e.getMessage());
+      fail(e.getMessage());
     } finally {
       if (!StringUtils.isEmpty(registrationId)) {
         this.deleteRegistration(registrationId);

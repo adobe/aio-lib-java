@@ -11,16 +11,18 @@
  */
 package com.adobe.aio.event.management;
 
-import static com.adobe.aio.event.management.model.ProviderInputModel.DELIVERY_FORMAT_ADOBE_IO;
+import java.util.List;
+import java.util.Optional;
 
 import com.adobe.aio.event.management.feign.ConflictException;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
-import com.adobe.aio.util.WorkspaceUtil;
-import java.util.List;
-import java.util.Optional;
-import org.junit.Assert;
-import org.junit.Test;
+import com.adobe.aio.ims.util.WorkspaceUtil;
+import org.junit.jupiter.api.Test;
+
+import static com.adobe.aio.event.management.model.ProviderInputModel.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProviderServiceIntegrationTest extends ProviderServiceTester {
 
@@ -31,9 +33,9 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
     super();
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void missingWorkspace() {
-    ProviderService.builder().build();
+    assertThrows(IllegalArgumentException.class, () -> ProviderService.builder().build());
   }
 
   @Test
@@ -43,20 +45,20 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
             .consumerOrgId("invalid").build())
         .url(WorkspaceUtil.getSystemProperty(WorkspaceUtil.API_URL))
         .build();
-    Assert.assertTrue(providerService.getProviders().isEmpty());
+    assertTrue(providerService.getProviders().isEmpty());
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void invalidFindByArg() {
-    providerService.findProviderBy("", "");
+    assertThrows(IllegalArgumentException.class, () -> providerService.findProviderBy("", ""));
   }
 
   @Test
   public void getNotFound() {
     String idNotToBeFound = "this_id_should_not_exist";
-    Assert.assertFalse(providerService.findProviderById(idNotToBeFound).isPresent());
-    Assert.assertTrue(providerService.getEventMetadata(idNotToBeFound).isEmpty());
-    Assert.assertFalse(
+    assertFalse(providerService.findProviderById(idNotToBeFound).isPresent());
+    assertTrue(providerService.getEventMetadata(idNotToBeFound).isEmpty());
+    assertFalse(
         providerService.findCustomEventsProviderByInstanceId(idNotToBeFound).isPresent());
   }
 
@@ -67,41 +69,41 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
     try {
       String instanceId = provider.getInstanceId();
 
-      Assert.assertEquals(1, providerService.getEventMetadata(providerId).size());
+      assertEquals(1, providerService.getEventMetadata(providerId).size());
       logger.info("Fetched All EventMetadata `{}` of AIO Events Provider `{}`", providerId);
 
       String updatedEventMetadataDescription = "updated EventMetadata Description";
       Optional<EventMetadata> eventMetadata = providerService.updateEventMetadata(providerId,
           getTestEventMetadataBuilder(TEST_EVENT_CODE).description(updatedEventMetadataDescription)
               .build());
-      Assert.assertTrue(eventMetadata.isPresent());
+      assertTrue(eventMetadata.isPresent());
       logger.info("Updated EventMetadata `{}` of AIO Events Provider `{}`", eventMetadata,
           providerId);
-      Assert.assertEquals(updatedEventMetadataDescription, eventMetadata.get().getDescription());
+      assertEquals(updatedEventMetadataDescription, eventMetadata.get().getDescription());
 
       Optional<EventMetadata> eventMetadataFromGet = providerService.getEventMetadata(providerId,
           TEST_EVENT_CODE);
-      Assert.assertTrue(eventMetadataFromGet.isPresent());
-      Assert.assertEquals(eventMetadata, eventMetadataFromGet);
+      assertTrue(eventMetadataFromGet.isPresent());
+      assertEquals(eventMetadata, eventMetadataFromGet);
       logger.info("Fetched EventMetadata `{}` of AIO Events Provider `{}`", eventMetadataFromGet,
           providerId);
 
       Optional<Provider> providerById = providerService.findProviderById(providerId);
-      Assert.assertTrue(providerById.isPresent());
+      assertTrue(providerById.isPresent());
       List<EventMetadata> eventMetadataList = providerService.getEventMetadata(providerId);
-      Assert.assertTrue(eventMetadataList.size() == 1);
-      Assert.assertEquals(eventMetadata.get(), eventMetadataList.get(0));
+      assertTrue(eventMetadataList.size() == 1);
+      assertEquals(eventMetadata.get(), eventMetadataList.get(0));
       logger.info("Found AIO Events Provider `{}` by Id", providerById);
 
       Optional<Provider> providerByInstanceId = providerService.findCustomEventsProviderByInstanceId(
           instanceId);
-      Assert.assertTrue(providerByInstanceId.isPresent());
-      Assert.assertEquals(providerId, providerByInstanceId.get().getId());
+      assertTrue(providerByInstanceId.isPresent());
+      assertEquals(providerId, providerByInstanceId.get().getId());
       logger.info("Found AIO Events Provider `{}` by InstanceId", providerById);
 
       providerService.deleteEventMetadata(providerId, TEST_EVENT_CODE);
-      Assert.assertFalse(providerService.getEventMetadata(providerId, TEST_EVENT_CODE).isPresent());
-      Assert.assertTrue(providerService.getEventMetadata(providerId).isEmpty());
+      assertFalse(providerService.getEventMetadata(providerId, TEST_EVENT_CODE).isPresent());
+      assertTrue(providerService.getEventMetadata(providerId).isEmpty());
       logger.info("Deleted EventMetadata {} from AIO Events Provider `{}`", TEST_EVENT_CODE,
           providerById);
 
@@ -109,7 +111,7 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
         providerService.createProvider(
             getTestProviderInputModelBuilder(TEST_EVENT_PROVIDER_LABEL).instanceId(instanceId)
                 .build());
-        Assert.fail("We should have had a ConflictException thrown");
+        fail("We should have had a ConflictException thrown");
       } catch (ConflictException ex) {
         logger.info("Cannot create an AIO Events provider with the same instanceId: {}",
             ex.getMessage());
@@ -122,23 +124,23 @@ public class ProviderServiceIntegrationTest extends ProviderServiceTester {
               .description(updatedProviderDescription)
               .eventDeliveryFormat(DELIVERY_FORMAT_ADOBE_IO)
               .build());
-      Assert.assertTrue(updatedProvider.isPresent());
+      assertTrue(updatedProvider.isPresent());
       logger.info("Updated AIO Events Provider: {}", provider);
-      Assert.assertEquals(providerId, updatedProvider.get().getId());
-      Assert.assertEquals(updatedProviderDescription, updatedProvider.get().getDescription());
-      Assert.assertEquals(DELIVERY_FORMAT_ADOBE_IO, updatedProvider.get().getEventDeliveryFormat());
+      assertEquals(providerId, updatedProvider.get().getId());
+      assertEquals(updatedProviderDescription, updatedProvider.get().getDescription());
+      assertEquals(DELIVERY_FORMAT_ADOBE_IO, updatedProvider.get().getEventDeliveryFormat());
 
       providerService.createEventMetadata(providerId,
           getTestEventMetadataBuilder(TEST_EVENT_CODE).build());
-      Assert.assertTrue(eventMetadata.isPresent());
+      assertTrue(eventMetadata.isPresent());
       logger.info("Added EventMetadata `{}` to AIO Events Provider `{}`", eventMetadata,
           providerId);
       providerService.deleteAllEventMetadata(providerId);
-      Assert.assertTrue(providerService.getEventMetadata(providerId).isEmpty());
+      assertTrue(providerService.getEventMetadata(providerId).isEmpty());
       logger.info("Deleted All EventMetadata from AIO Events Provider `{}`", providerId);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
-      Assert.fail(e.getMessage());
+      fail(e.getMessage());
     } finally {
       deleteProvider(providerId);
     }

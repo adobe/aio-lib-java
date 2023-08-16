@@ -15,7 +15,7 @@ import static com.adobe.aio.event.publish.PublishServiceTester.DATA_EVENT_ID_NOD
 
 import com.adobe.aio.event.journal.model.Event;
 import com.adobe.aio.event.journal.model.JournalEntry;
-import com.adobe.aio.util.WorkspaceUtil;
+import com.adobe.aio.ims.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.util.HashSet;
 import java.util.Iterator;
