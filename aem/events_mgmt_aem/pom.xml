@@ -39,16 +39,6 @@
       <scope>provided</scope>
       <version>${project.version}</version>
     </dependency>
-
-    <!-- test -->
-    <dependency>
-      <artifactId>junit</artifactId>
-      <groupId>junit</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>slf4j-simple</artifactId>
-      <groupId>org.slf4j</groupId>
-    </dependency>
   </dependencies>
   
   <profiles>
