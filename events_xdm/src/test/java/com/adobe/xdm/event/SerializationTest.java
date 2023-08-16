@@ -11,7 +11,6 @@
  */
 package com.adobe.xdm.event;
 
-import static org.junit.Assert.assertTrue;
 
 import com.adobe.xdm.Xdm;
 import com.adobe.xdm.assets.Asset;
@@ -28,10 +27,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Hashtable;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SerializationTest {
 
@@ -40,7 +42,7 @@ public class SerializationTest {
   //the above is new SimpleDateFormat(XdmContext.DATE_FORMAT,Locale.US).format(new Date(0));
   private ObjectMapper mapper;
 
-  @Before
+  @BeforeEach
   public void setUp() {
     mapper = new ObjectMapper();
   }
