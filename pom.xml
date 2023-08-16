@@ -96,21 +96,19 @@
 
     <jacoco.version>0.8.3</jacoco.version> <!-- See https://github.com/jacoco/jacoco/issues/896#issuecomment-500944865 -->
 
-    <commons-text.version>1.6</commons-text.version>
-    <commons-lang3.version>3.6</commons-lang3.version>
-    <junit.version>5.9.2</junit.version>
-    <wiremock.version>2.32.0</wiremock.version>
+    <commons-text.version>1.10.0</commons-text.version>
+    <commons-lang3.version>3.13.0</commons-lang3.version>
+    <junit.version>5.10.0</junit.version>
     <mockito.version>5.4.0</mockito.version>
-    <slf4j.version>1.7.21</slf4j.version>
-    <slf4j-api.version>[1.7.21,1.7.25]</slf4j-api.version>
-    <jackson.version>2.12.3</jackson.version>
+    <slf4j.version>2.0.7</slf4j.version>
+    <jackson.version>2.15.2</jackson.version>
     <jjwt.version>0.11.5</jjwt.version>
-    <cloudevents.version>1.2.0</cloudevents.version>
+    <cloudevents.version>2.5.0</cloudevents.version>
 
     <!-- https://github.com/openapi-tools/jackson-dataformat-hal/blob/v1.0.9/pom.xml -->
     <jackson-dataformat-hal.version>1.0.9</jackson-dataformat-hal.version>
 
-    <feign.version>11.2</feign.version>
+    <feign.version>12.4</feign.version>
     <feign-form.version>3.8.0</feign-form.version>
 
   </properties>
@@ -152,7 +150,7 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-api</artifactId>
-        <version>${slf4j-api.version}</version>
+        <version>${slf4j.version}</version>
         <scope>provided</scope>
       </dependency>
 
@@ -175,7 +173,7 @@
       <dependency>
         <groupId>jakarta.xml.bind</groupId>
         <artifactId>jakarta.xml.bind-api</artifactId>
-        <version>3.0.1</version>
+        <version>4.0.0</version>
       </dependency>
 
       <dependency>
@@ -215,13 +213,6 @@
         <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter</artifactId>
         <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>com.github.tomakehurst</groupId>
-        <artifactId>wiremock-jre8</artifactId>
-        <version>${wiremock.version}</version>
         <scope>test</scope>
       </dependency>
 
