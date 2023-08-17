@@ -63,8 +63,6 @@ public class FeignImsServiceIntegrationTest {
   @Test
   public void getAndValidateJwtExchangeAccessTokenWithMissingPrivateKey() {
     Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().privateKey(null).build();
-    ImsService imsService = ImsService.builder().workspace(workspace).build();
-    assertThrows(IllegalStateException.class, imsService::getJwtExchangeAccessToken);
-
+    assertThrows(IllegalStateException.class, () -> ImsService.builder().workspace(workspace).build());
   }
 }
