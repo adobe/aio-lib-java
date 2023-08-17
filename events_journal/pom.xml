@@ -77,10 +77,6 @@
       <groupId>org.mockito</groupId>
       <artifactId>mockito-junit-jupiter</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.mock-server</groupId>
-      <artifactId>mockserver-junit-jupiter-no-dependencies</artifactId>
-    </dependency>
   </dependencies>
 
 </project>
