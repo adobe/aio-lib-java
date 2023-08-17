@@ -36,22 +36,22 @@ public class Workspace {
   /**
    * @deprecated This will be removed in v2.0 of the library.
    */
-  @Deprecated(since = "1.1", forRemoval = true)
+  @Deprecated
   public static final String CREDENTIAL_ID = "aio_credential_id";
   /**
    * @deprecated This will be removed in v2.0 of the library.
    */
-  @Deprecated(since = "1.1", forRemoval = true)
+  @Deprecated
   public static final String CLIENT_SECRET = "aio_client_secret";
   /**
    * @deprecated This will be removed in v2.0 of the library.
    */
-  @Deprecated(since = "1.1", forRemoval = true)
+  @Deprecated
   public static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
   /**
    * @deprecated This will be removed in v2.0 of the library.
    */
-  @Deprecated(since = "1.1", forRemoval = true)
+  @Deprecated
   public static final String META_SCOPES = "aio_meta_scopes";
 
   // workspace context related:
