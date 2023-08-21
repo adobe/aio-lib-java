@@ -14,18 +14,13 @@ package com.adobe.aio.ims.feign;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
 
-@Deprecated
-public class JWTAuthInterceptor extends AuthInterceptor {
-
-  protected JWTAuthInterceptor(ImsService imsService) {
+public class OAuthInterceptor extends AuthInterceptor {
+  protected OAuthInterceptor(ImsService imsService) {
     super(imsService);
   }
 
-  public boolean isUp() {
-    return getImsService().validateAccessToken(this.getAccessToken());
-  }
-
+  @Override
   AccessToken fetchAccessToken() {
-    return getImsService().getJwtExchangeAccessToken();
+    return getImsService().getOAuthAccessToken();
   }
 }

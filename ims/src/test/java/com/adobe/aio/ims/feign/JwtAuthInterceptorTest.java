@@ -8,15 +8,16 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
-import feign.RequestTemplate;
+import com.adobe.aio.workspace.Workspace;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedConstruction;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.verification.VerificationMode;
+import shaded_package.org.checkerframework.checker.units.qual.A;
 
 import static com.adobe.aio.util.Constants.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,136 +25,47 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class JwtAuthInterceptorTest {
-
   private static final String ACCESS_TOKEN = "ACCESS_TOKEN";
-  
+
+  @Mock
+  private Workspace workspace;
+
+  @Mock
+  private JwtContext authContext;
+
   @Mock
   private ImsService imsService;
 
-  @Mock
-  private RequestTemplate template;
-
   @Test
-  void isUpExpirationNull() throws Exception {
-    AccessToken token = new AccessToken(ACCESS_TOKEN, new Date().getTime());
-
-    when(imsService.getJwtExchangeAccessToken()).thenReturn(token);
+  void isUp() {
+    when(workspace.getAuthContext()).thenReturn(authContext);
     when(imsService.validateAccessToken(ACCESS_TOKEN)).thenReturn(true);
 
     try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
         (mock, mockContext) -> {
-          when(mock.workspace(null)).thenReturn(mock);
+          when(mock.workspace(workspace)).thenReturn(mock);
           when(mock.build()).thenReturn(imsService);
         }
     )) {
-      JWTAuthInterceptor interceptor = JWTAuthInterceptor.builder().workspace(null).build();
-      assertTrue(interceptor.isUp());
+      JWTAuthInterceptor spy = spy((JWTAuthInterceptor) AuthInterceptor.builder().workspace(workspace).build());
+      doReturn(ACCESS_TOKEN).when(spy).getAccessToken();
+      assertTrue(spy.isUp());
     }
   }
 
   @Test
-  void isUpTokenExpired() throws Exception {
-    AccessToken token = new AccessToken(ACCESS_TOKEN, '1');
-
-    when(imsService.getJwtExchangeAccessToken()).thenReturn(token);
-    when(imsService.validateAccessToken(ACCESS_TOKEN)).thenReturn(true);
+  void fetchAccessToken() {
+    when(workspace.getAuthContext()).thenReturn(authContext);
+    when(imsService.getJwtExchangeAccessToken()).thenReturn(new AccessToken(ACCESS_TOKEN, 0));
 
     try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
         (mock, mockContext) -> {
-          when(mock.workspace(null)).thenReturn(mock);
+          when(mock.workspace(workspace)).thenReturn(mock);
           when(mock.build()).thenReturn(imsService);
         }
     )) {
-      JWTAuthInterceptor interceptor = JWTAuthInterceptor.builder().workspace(null).build();
-      Field expiresField = interceptor.getClass().getDeclaredField("expirationTimeMillis");
-      expiresField.setAccessible(true);
-      expiresField.set(interceptor, 1L);
-      assertTrue(interceptor.isUp());
-    }
-  }
-
-
-  @Test
-  void isUpTokenValid() throws Exception {
-    Calendar expires = Calendar.getInstance();
-    expires.add(Calendar.HOUR, 1);
-    AccessToken token = new AccessToken(ACCESS_TOKEN, expires.getTimeInMillis());
-
-    when(imsService.validateAccessToken(ACCESS_TOKEN)).thenReturn(true);
-
-    try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
-        (mock, mockContext) -> {
-          when(mock.workspace(null)).thenReturn(mock);
-          when(mock.build()).thenReturn(imsService);
-        }
-    )) {
-      JWTAuthInterceptor interceptor = JWTAuthInterceptor.builder().workspace(null).build();
-      Field expiresField = interceptor.getClass().getDeclaredField("expirationTimeMillis");
-      expiresField.setAccessible(true);
-      expiresField.set(interceptor, expires.getTimeInMillis());
-
-      Field tokenField = interceptor.getClass().getDeclaredField("accessToken");
-      tokenField.setAccessible(true);
-      tokenField.set(interceptor, token);
-
-      assertTrue(interceptor.isUp());
-    }
-  }
-
-  @Test
-  void applyAlreadySet() throws Exception {
-    Calendar expires = Calendar.getInstance();
-    expires.add(Calendar.HOUR, 1);
-    AccessToken token = new AccessToken(ACCESS_TOKEN, expires.getTimeInMillis());
-
-    Map<String, Collection<String>> headers = new HashMap<>();
-    headers.put(AUTHORIZATION_HEADER, Collections.EMPTY_LIST);
-
-    when(template.headers()).thenReturn(headers);
-
-    try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
-        (mock, mockContext) -> {
-          when(mock.workspace(null)).thenReturn(mock);
-          when(mock.build()).thenReturn(imsService);
-        }
-    )) {
-      JWTAuthInterceptor interceptor = JWTAuthInterceptor.builder().workspace(null).build();
-      Field expiresField = interceptor.getClass().getDeclaredField("expirationTimeMillis");
-      expiresField.setAccessible(true);
-      expiresField.set(interceptor, expires.getTimeInMillis());
-
-      Field tokenField = interceptor.getClass().getDeclaredField("accessToken");
-      tokenField.setAccessible(true);
-      tokenField.set(interceptor, token);
-      interceptor.apply(template);
-    }
-  }
-
-  @Test
-  void apply() throws Exception {
-    Calendar expires = Calendar.getInstance();
-    expires.add(Calendar.HOUR, 1);
-    AccessToken token = new AccessToken(ACCESS_TOKEN, expires.getTimeInMillis());
-
-    when(template.headers()).thenReturn(Collections.emptyMap());
-
-    try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
-        (mock, mockContext) -> {
-          when(mock.workspace(null)).thenReturn(mock);
-          when(mock.build()).thenReturn(imsService);
-        }
-    )) {
-      JWTAuthInterceptor interceptor = JWTAuthInterceptor.builder().workspace(null).build();
-      Field expiresField = interceptor.getClass().getDeclaredField("expirationTimeMillis");
-      expiresField.setAccessible(true);
-      expiresField.set(interceptor, expires.getTimeInMillis());
-
-      Field tokenField = interceptor.getClass().getDeclaredField("accessToken");
-      tokenField.setAccessible(true);
-      tokenField.set(interceptor, token);
-      interceptor.apply(template);
-
-      verify(template).header(AUTHORIZATION_HEADER, BEARER_PREFIX + ACCESS_TOKEN);
+      JWTAuthInterceptor interceptor = (JWTAuthInterceptor) AuthInterceptor.builder().workspace(workspace).build();
+      assertNotNull(interceptor.fetchAccessToken());
     }
   }
 }
