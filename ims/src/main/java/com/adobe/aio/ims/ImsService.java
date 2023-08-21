@@ -23,7 +23,7 @@ public interface ImsService {
    * @deprecated this will be removed in v2.0
    * @return AccessToken a valid API authentication token
    */
-  @Deprecated(since = "1.1", forRemoval = true)
+  @Deprecated()
   AccessToken getJwtExchangeAccessToken();
 
   /**
@@ -33,7 +33,7 @@ public interface ImsService {
    * @param accessToken the token to check
    * @return true if the provided access token is still valid, false otherwise
    */
-  @Deprecated(since = "1.1", forRemoval = true)
+  @Deprecated()
   boolean validateAccessToken(String accessToken);
 
   AccessToken getOAuthAccessToken();
