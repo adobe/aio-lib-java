@@ -17,7 +17,7 @@ import java.util.Optional;
 import com.adobe.aio.event.management.feign.ConflictException;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
-import com.adobe.aio.ims.util.WorkspaceUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import org.junit.jupiter.api.Test;
 
 import static com.adobe.aio.event.management.model.ProviderInputModel.*;

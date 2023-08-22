@@ -15,7 +15,7 @@ import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.ProviderInputModel;
 import com.adobe.aio.event.publish.model.CloudEvent;
-import com.adobe.aio.ims.util.WorkspaceUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 
 import java.util.Collections;

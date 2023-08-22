@@ -147,6 +147,18 @@ public class Workspace {
     return authContext;
   }
 
+  /**
+   * @deprecated This will be removed in v2.0 of the library.
+   */
+  @Deprecated
+  public String getCredentialId() {
+    if (authContext instanceof JwtContext) {
+      return ((JwtContext) authContext).getCredentialId();
+    } else {
+      return null;
+    }
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {

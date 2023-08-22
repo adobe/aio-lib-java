@@ -14,7 +14,7 @@ package com.adobe.aio.event.publish.feign;
 import com.adobe.aio.event.publish.PublishService;
 import com.adobe.aio.event.publish.model.CloudEvent;
 import com.adobe.aio.util.JacksonUtil;
-import com.adobe.aio.ims.util.WorkspaceUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
