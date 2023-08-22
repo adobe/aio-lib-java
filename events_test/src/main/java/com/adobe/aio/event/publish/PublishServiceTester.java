@@ -14,7 +14,7 @@ package com.adobe.aio.event.publish;
 import static com.adobe.aio.event.publish.model.CloudEvent.SPEC_VERSION;
 
 import com.adobe.aio.event.publish.model.CloudEvent;
-import com.adobe.aio.ims.util.WorkspaceUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.UUID;
 import org.slf4j.Logger;

@@ -18,7 +18,7 @@ import com.adobe.aio.event.management.ProviderServiceTester;
 import com.adobe.aio.event.management.RegistrationServiceTester;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.publish.PublishServiceTester;
-import com.adobe.aio.ims.util.WorkspaceUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import org.junit.jupiter.api.Test;
 
 import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.*;

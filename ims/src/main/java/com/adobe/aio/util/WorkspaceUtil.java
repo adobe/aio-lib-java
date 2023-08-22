@@ -9,9 +9,9 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.ims.util;
+package com.adobe.aio.util;
 
-import com.adobe.aio.util.FileUtil;
+import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.workspace.Workspace;
 import java.security.PrivateKey;
 import java.util.Properties;
@@ -63,7 +63,10 @@ public class WorkspaceUtil {
   public static String getSystemProperty(String key, String propertyClassPath) {
     String value = System.getProperty(key);
     if (StringUtils.isBlank(value)) {
+      logger.debug("loading property `{}` from classpath `{}`", key, propertyClassPath);
       value = FileUtil.readPropertiesFromClassPath(propertyClassPath).getProperty(key);
+    } else {
+      logger.debug("loading property `{}`from JVM System Properties", key);
     }
     return value;
   }
