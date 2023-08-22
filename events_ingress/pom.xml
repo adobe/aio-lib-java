@@ -48,14 +48,6 @@
       <artifactId>aio-lib-java-ims</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>com.adobe.aio</groupId>
-      <artifactId>aio-lib-java-ims</artifactId>
-      <version>${project.version}</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
 </project>

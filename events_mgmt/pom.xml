@@ -52,14 +52,6 @@
       <groupId>io.openapitools.jackson.dataformat</groupId>
       <artifactId>jackson-dataformat-hal</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>com.adobe.aio</groupId>
-      <artifactId>aio-lib-java-ims</artifactId>
-      <version>${project.version}</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
 </project>

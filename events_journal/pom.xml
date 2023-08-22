@@ -54,13 +54,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.adobe.aio</groupId>
-      <artifactId>aio-lib-java-ims</artifactId>
-      <version>${project.version}</version>
-      <classifier>tests</classifier>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
        <groupId>org.junit.jupiter</groupId>
        <artifactId>junit-jupiter</artifactId>
     </dependency>
