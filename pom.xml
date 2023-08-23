@@ -103,7 +103,9 @@
     <slf4j.version>2.0.7</slf4j.version>
     <jackson.version>2.15.2</jackson.version>
     <jjwt.version>0.11.5</jjwt.version>
-    <cloudevents.version>2.5.0</cloudevents.version>
+
+    <cloudevents.version>1.2.0</cloudevents.version>
+    <!--  we'll stick to this CloudEvents v1 version for now -->
 
     <!-- https://github.com/openapi-tools/jackson-dataformat-hal/blob/v1.0.9/pom.xml -->
     <jackson-dataformat-hal.version>1.0.9</jackson-dataformat-hal.version>
