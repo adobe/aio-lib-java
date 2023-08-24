@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.18...HEAD)
+
+### 📁 Other pull requests
+
+- OAuth2 Support [\#166](https://github.com/adobe/aio-lib-java/pull/166) ([bstopp](https://github.com/bstopp))
+
 ## [aio-lib-java-1.0.18](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.0.18) (2023-06-29)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.16...aio-lib-java-1.0.18)
