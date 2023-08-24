@@ -32,15 +32,16 @@ public class JacksonUtil {
   }
 
   public static final ObjectMapper DEFAULT_OBJECT_MAPPER =
-    JsonMapper.builder()
-    .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-    .serializationInclusion(Include.NON_NULL)
-    .addModule(new SimpleModule()
-      .addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer())
-      .addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer()))
-    .addModule(new JacksonHALModule())
-    .addModule(new Jdk8Module())
-    .build();
+      JsonMapper.builder()
+          .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+          .serializationInclusion(Include.NON_NULL)
+          .addModule(new SimpleModule()
+              .addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer())
+              .addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer()))
+           // let's stick to CloudEvents v1 ISO_OFFSET_DATE_TIME date format
+          .addModule(new JacksonHALModule())
+          .addModule(new Jdk8Module())
+          .build();
 
   public static JsonNode getJsonNode(String jsonPayload) throws JsonProcessingException {
     if (StringUtils.isEmpty(jsonPayload)) {

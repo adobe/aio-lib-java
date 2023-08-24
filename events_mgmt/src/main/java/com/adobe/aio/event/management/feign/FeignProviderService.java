@@ -11,31 +11,33 @@
  */
 package com.adobe.aio.event.management.feign;
 
-import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.event.management.ProviderService;
-import com.adobe.aio.event.management.api.SampleEventApi;
-import com.adobe.aio.event.management.model.SampleEvent;
-import com.adobe.aio.exception.AIOException;
-import com.adobe.aio.feign.AIOHeaderInterceptor;
-import com.adobe.aio.ims.feign.JWTAuthInterceptor;
-import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.api.EventMetadataApi;
 import com.adobe.aio.event.management.api.ProviderApi;
+import com.adobe.aio.event.management.api.SampleEventApi;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.EventMetadataCollection;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.event.management.model.ProviderCollection;
 import com.adobe.aio.event.management.model.ProviderInputModel;
+import com.adobe.aio.event.management.model.SampleEvent;
+import com.adobe.aio.exception.AIOException;
+import com.adobe.aio.feign.AIOHeaderInterceptor;
+import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.adobe.aio.util.Constants;
 import com.adobe.aio.util.feign.FeignUtil;
+import com.adobe.aio.workspace.Workspace;
 import feign.RequestInterceptor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static com.adobe.aio.util.Constants.*;
 
 public class FeignProviderService implements ProviderService {
 
@@ -53,7 +55,7 @@ public class FeignProviderService implements ProviderService {
       throw new IllegalArgumentException("ProviderService is missing a workspace context");
     }
     workspace.validateWorkspaceContext();
-    RequestInterceptor authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
+    RequestInterceptor authInterceptor = AuthInterceptor.builder().workspace(workspace).build();
     RequestInterceptor aioHeaderInterceptor = AIOHeaderInterceptor.builder().workspace(workspace).build();
 
     this.providerApi = FeignUtil.getDefaultBuilder()

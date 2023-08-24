@@ -57,8 +57,8 @@ public class PrivateKeyBuilder {
     return this;
   }
 
-  public PrivateKeyBuilder encodedPkcs8Key(String encodePkcs8Key) {
-    this.encodedPkcs8Key = encodePkcs8Key;
+  public PrivateKeyBuilder encodedPkcs8Key(String encodedPkcs8Key) {
+    this.encodedPkcs8Key = encodedPkcs8Key;
     return this;
   }
 
@@ -98,6 +98,4 @@ public class PrivateKeyBuilder {
               + "" + e.getMessage(), e);
     }
   }
-
-
 }

@@ -17,9 +17,10 @@ import com.adobe.aio.event.publish.model.CloudEvent;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.UUID;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PublishServiceTester {
 
@@ -42,15 +43,15 @@ public class PublishServiceTester {
     CloudEvent cloudEvent = publishService.publishCloudEvent(
           providerId, eventCode, eventId, getEventDataNode(eventId));
       logger.info("Published CloudEvent: {}", cloudEvent);
-      Assert.assertEquals(eventId, cloudEvent.getId());
-      Assert.assertEquals(CloudEvent.SOURCE_URN_PREFIX + providerId, cloudEvent.getSource());
-      Assert.assertEquals(eventCode, cloudEvent.getType());
-      Assert.assertEquals(eventId, cloudEvent.getData().get(DATA_EVENT_ID_NODE).asText());
-      Assert.assertEquals(SPEC_VERSION, cloudEvent.getSpecVersion());
-      Assert.assertEquals("application/json", cloudEvent.getDataContentType());
+      assertEquals(eventId, cloudEvent.getId());
+      assertEquals(CloudEvent.SOURCE_URN_PREFIX + providerId, cloudEvent.getSource());
+      assertEquals(eventCode, cloudEvent.getType());
+      assertEquals(eventId, cloudEvent.getData().get(DATA_EVENT_ID_NODE).asText());
+      assertEquals(SPEC_VERSION, cloudEvent.getSpecVersion());
+      assertEquals("application/json", cloudEvent.getDataContentType());
       return eventId;
     } catch (JsonProcessingException e) {
-     Assert.fail("publishService.publishCloudEvent failed with "+e.getMessage());
+     fail("publishService.publishCloudEvent failed with "+e.getMessage());
      return null;
     }
   }

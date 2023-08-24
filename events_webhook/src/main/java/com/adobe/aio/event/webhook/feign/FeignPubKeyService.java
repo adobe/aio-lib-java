@@ -15,6 +15,7 @@ import com.adobe.aio.event.webhook.api.PublicKeyCdnApi;
 import com.adobe.aio.event.webhook.service.PubKeyService;
 import com.adobe.aio.exception.AIOException;
 import com.adobe.aio.util.feign.FeignUtil;
+
 import java.security.GeneralSecurityException;
 import java.security.KeyFactory;
 import java.security.PublicKey;
@@ -34,14 +35,19 @@ public class FeignPubKeyService implements PubKeyService {
    * it is recommended to cache this public key fetched from the adobe hosted CDN.
    * after downloading the public key set it in the cache with cache expiry of not more than 24h.
    * refer our public doc for the same - https://developer.adobe.com/events/docs/guides/#security-considerations
-   * @param pubKeyPath  cdn path for fetching the public key
+   *
+   * @param pubKeyPath cdn path for fetching the public key
    * @return {@link PublicKey}
    */
   @Override
   public PublicKey getAioEventsPublicKey(String pubKeyPath) {
     try {
-      String publicKeyPEM = publicKeyCdnApi.getPubKeyFromCDN(pubKeyPath)
-          .replace("-----BEGIN PUBLIC KEY-----", "")
+      String publicKeyPEM = publicKeyCdnApi.getPubKeyFromCDN(pubKeyPath);
+      if (publicKeyPEM == null) {
+        throw new IllegalStateException(String.format("No key found at specified path %s", pubKeyPath));
+      }
+
+      publicKeyPEM = publicKeyPEM.replace("-----BEGIN PUBLIC KEY-----", "")
           .replaceAll(System.lineSeparator(), "")
           .replace("-----END PUBLIC KEY-----", "");
       byte[] keyBytes = Base64.getDecoder().decode(publicKeyPEM);
@@ -50,7 +56,7 @@ public class FeignPubKeyService implements PubKeyService {
       return keyFactory.generatePublic(keySpec);
     } catch (GeneralSecurityException e) {
       throw new AIOException("Error fetching public key from CDN path " + pubKeyPath
-          +". Reason -> " + e.getMessage(), e);
+          + ". Reason -> " + e.getMessage(), e);
     }
   }
 

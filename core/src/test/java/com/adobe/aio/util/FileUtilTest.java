@@ -11,15 +11,13 @@
  */
 package com.adobe.aio.util;
 
-import static org.junit.Assert.assertEquals;
-
-import com.adobe.aio.util.FileUtil;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileUtilTest {
 
@@ -42,8 +40,8 @@ public class FileUtilTest {
 
   @Test
   public void testReadPropertiesFromFile() {
-    Assert.assertFalse(FileUtil.readPropertiesFromFile("").isPresent());
-    Assert.assertFalse(FileUtil.readPropertiesFromFile(null).isPresent());
+    assertFalse(FileUtil.readPropertiesFromFile("").isPresent());
+    assertFalse(FileUtil.readPropertiesFromFile(null).isPresent());
   }
 
   @Test

@@ -11,16 +11,16 @@
  */
 package com.adobe.aio.event.publish;
 
-
-import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_CODE;
-import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_PROVIDER_LABEL;
-import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.TEST_REGISTRATION_NAME;
+import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.event.management.ProviderServiceTester;
 import com.adobe.aio.event.management.RegistrationServiceTester;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.*;
+import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PublishServiceIntegrationTest extends PublishServiceTester {
 
@@ -33,11 +33,9 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
     registrationServiceTester = new RegistrationServiceTester();
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void missingWorkspace() {
-    PublishService publishService = PublishService.builder()
-        .workspace(null)
-        .build();
+    assertThrows(IllegalArgumentException.class, () -> PublishService.builder().workspace(null).build());
   }
 
   @Test
@@ -50,11 +48,11 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
       registrationId = registrationServiceTester.createJournalRegistration(
           TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE).getRegistrationId();
 
-      Assert.assertNotNull(publishCloudEvent(providerId, TEST_EVENT_CODE));
-      Assert.assertNotNull(publishRawEvent(providerId, TEST_EVENT_CODE));
+      assertNotNull(publishCloudEvent(providerId, TEST_EVENT_CODE));
+      assertNotNull(publishRawEvent(providerId, TEST_EVENT_CODE));
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
-      Assert.fail(e.getMessage());
+      fail(e.getMessage());
     } finally {
       if (!StringUtils.isEmpty(registrationId)) {
         registrationServiceTester.deleteRegistration(registrationId);
@@ -64,5 +62,4 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
       }
     }
   }
-
 }

@@ -11,7 +11,10 @@
  */
 package com.adobe.aio.ims;
 
+import com.adobe.aio.auth.Context;
+import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.workspace.Workspace;
+import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.security.PrivateKey;
@@ -32,7 +35,10 @@ import java.util.Map;
  *
  * It will also help you getting this signed with a `RSASSA-PKCS1-V1_5` Digital Signatures with `SHA-2` and a `RS256` The JWT algorithm/`alg` header value.
  * For this, it leverages a third-party open source library : [jjwt](https://github.com/jwtk/jjwt)
+ *
+ * @deprecated See <a href="https://developer.adobe.com/developer-console/docs/guides/authentication/JWT/">Developer Console documentation</a>
  */
+@Deprecated
 public class JwtTokenBuilder {
 
   private final Map<String, Object> claims;
@@ -47,18 +53,23 @@ public class JwtTokenBuilder {
   private static final String AUD_SUFFIX = "/c/";
 
   public JwtTokenBuilder(final Workspace workspace) {
-    workspace.validateJwtCredentialConfig();
-    this.claims = getClaims(workspace);
-    this.privateKey = workspace.getPrivateKey();
+    if (!(workspace.getAuthContext() instanceof JwtContext)) {
+      throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
+    }
+
+    JwtContext context = (JwtContext) workspace.getAuthContext();
+    context.validate();
+    this.claims = getClaims(workspace, context);
+    this.privateKey = context.getPrivateKey();
   }
 
-  private static Map<String, Object> getClaims(final Workspace workspace) {
+  private static Map<String, Object> getClaims(final Workspace workspace, JwtContext context) {
     Map<String, Object> claims = new HashMap<String, Object>();
     claims.put(ISS, workspace.getImsOrgId());
-    claims.put(SUB, workspace.getTechnicalAccountId());
+    claims.put(SUB, context.getTechnicalAccountId());
     claims.put(AUD, workspace.getImsUrl() + AUD_SUFFIX + workspace.getApiKey());
 
-    for (String metascope : workspace.getMetascopes()) {
+    for (String metascope : context.getMetascopes()) {
       claims.put(workspace.getImsUrl() + metascope, true);
     }
 
@@ -69,9 +80,7 @@ public class JwtTokenBuilder {
   }
 
   public String build() {
-    String jwt = Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.RS256, privateKey)
-        .compact();
-    return jwt;
+    return Jwts.builder().setClaims(claims).signWith(SignatureAlgorithm.RS256, privateKey).compact();
   }
 
 }

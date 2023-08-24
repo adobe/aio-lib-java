@@ -15,7 +15,7 @@ import com.adobe.aio.event.journal.JournalService;
 import com.adobe.aio.event.journal.api.JournalApi;
 import com.adobe.aio.event.journal.model.JournalEntry;
 import com.adobe.aio.feign.AIOHeaderInterceptor;
-import com.adobe.aio.ims.feign.JWTAuthInterceptor;
+import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.adobe.aio.util.JacksonUtil;
 import com.adobe.aio.util.feign.FeignUtil;
 import com.adobe.aio.workspace.Workspace;
@@ -46,7 +46,7 @@ public class FeignJournalService implements JournalService {
     }
     workspace.validateWorkspaceContext();
     this.imsOrgId = workspace.getImsOrgId();
-    authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
+    authInterceptor = AuthInterceptor.builder().workspace(workspace).build();
     aioHeaderInterceptor = AIOHeaderInterceptor.builder().workspace(workspace).build();
     this.journalApi = FeignUtil.getBaseBuilder()
         .decoder(new JournalLinkDecoder(new JacksonDecoder(JacksonUtil.DEFAULT_OBJECT_MAPPER)))

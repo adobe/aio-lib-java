@@ -11,9 +11,7 @@
  */
 package com.adobe.aio.event.journal;
 
-import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_CODE;
-import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_PROVIDER_LABEL;
-import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.TEST_REGISTRATION_NAME;
+import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.event.management.ProviderServiceIntegrationTest;
 import com.adobe.aio.event.management.ProviderServiceTester;
@@ -21,9 +19,11 @@ import com.adobe.aio.event.management.RegistrationServiceTester;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.publish.PublishServiceTester;
 import com.adobe.aio.util.WorkspaceUtil;
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.*;
+import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JournalServiceIntegrationTest extends JournalServiceTester {
 
@@ -38,19 +38,23 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
     publishServiceTester = new PublishServiceTester();
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void missingWorkspace() {
-    JournalService journalService = JournalService.builder()
+    assertThrows(IllegalArgumentException.class, () ->
+     JournalService.builder()
         .workspace(null)
         .url("https://adobe.com")
-        .build();
+        .build()
+    );
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void missingUrl() {
-    JournalService journalService = JournalService.builder()
+    assertThrows(IllegalArgumentException.class, () ->
+    JournalService.builder()
         .workspace(WorkspaceUtil.getSystemWorkspaceBuilder().build())
-        .build();
+        .build()
+    );
   }
 
   @Test
@@ -73,10 +77,8 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
       boolean wasRawEventPolled = pollJournalForEvent(registration.getJournalUrl().getHref(), rawEventId,
           isEventIdInTheCloudEventData);
 
-      Assert.assertTrue("The published CloudEvent was not retrieved in the Journal",
-          wasCloudEventPolled);
-      Assert.assertTrue("The published Raw Event was not retrieved in the Journal",
-          wasRawEventPolled);
+      assertTrue(wasCloudEventPolled, "The published CloudEvent was not retrieved in the Journal");
+      assertTrue(wasRawEventPolled, "The published Raw Event was not retrieved in the Journal");
     } finally {
       if (!StringUtils.isEmpty(registrationId)) {
         registrationServiceTester.deleteRegistration(registrationId);

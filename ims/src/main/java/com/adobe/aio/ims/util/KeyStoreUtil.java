@@ -42,7 +42,7 @@ public class KeyStoreUtil {
       String password)
       throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException, UnrecoverableKeyException {
     KeyStore keystore = KeyStore.getInstance(PKCS_12);
-    keystore.load(new FileInputStream(new File(filePath)), password.toCharArray());
+    keystore.load(new FileInputStream(filePath), password.toCharArray());
     return (PrivateKey) keystore.getKey(alias, password.toCharArray());
   }
 

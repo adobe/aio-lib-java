@@ -23,9 +23,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
-import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ProviderServiceTester {
 
@@ -79,31 +80,31 @@ public class ProviderServiceTester {
   private Provider assertProviderResponseAndCreateEventMetadata(ProviderInputModel providerInputModel,
       Set<EventMetadata> eventMetadataSet, Supplier<Optional<Provider>> providerSupplier) {
     Optional<Provider> provider = providerSupplier.get();
-    Assert.assertTrue(provider.isPresent());
+    assertTrue(provider.isPresent());
     logger.info("Created AIO Events Provider: {}", provider);
     String providerId = provider.get().getId();
-    Assert.assertTrue(StringUtils.isNotBlank(providerId));
-    Assert.assertTrue(StringUtils.isNotBlank(provider.get().getInstanceId()));
-    Assert.assertNotNull(provider.get().getId());
-    Assert.assertNotNull(provider.get().getInstanceId());
-    Assert.assertEquals(providerInputModel.getLabel(), provider.get().getLabel());
-    Assert.assertEquals(providerInputModel.getDescription(), provider.get().getDescription());
-    Assert.assertEquals(providerInputModel.getDocsUrl(), provider.get().getDocsUrl());
-    Assert.assertEquals(WorkspaceUtil.getSystemProperty(Workspace.IMS_ORG_ID),
+    assertTrue(StringUtils.isNotBlank(providerId));
+    assertTrue(StringUtils.isNotBlank(provider.get().getInstanceId()));
+    assertNotNull(provider.get().getId());
+    assertNotNull(provider.get().getInstanceId());
+    assertEquals(providerInputModel.getLabel(), provider.get().getLabel());
+    assertEquals(providerInputModel.getDescription(), provider.get().getDescription());
+    assertEquals(providerInputModel.getDocsUrl(), provider.get().getDocsUrl());
+    assertEquals(WorkspaceUtil.getSystemProperty(Workspace.IMS_ORG_ID),
         provider.get().getPublisher());
-    Assert.assertEquals(CloudEvent.SOURCE_URN_PREFIX + provider.get().getId(),
+    assertEquals(CloudEvent.SOURCE_URN_PREFIX + provider.get().getId(),
         provider.get().getSource());
-    Assert.assertEquals(providerInputModel.getProviderMetadataId(),
+    assertEquals(providerInputModel.getProviderMetadataId(),
         provider.get().getProviderMetadata());
 
     for (EventMetadata eventMetadataInput : eventMetadataSet) {
       Optional<EventMetadata> eventMetadata = providerService.createEventMetadata(providerId,
           eventMetadataInput);
-      Assert.assertTrue(eventMetadata.isPresent());
-      Assert.assertEquals(eventMetadataInput.getEventCode(), eventMetadata.get().getEventCode());
-      Assert.assertEquals(eventMetadataInput.getDescription(),
+      assertTrue(eventMetadata.isPresent());
+      assertEquals(eventMetadataInput.getEventCode(), eventMetadata.get().getEventCode());
+      assertEquals(eventMetadataInput.getDescription(),
           eventMetadata.get().getDescription());
-      Assert.assertEquals(eventMetadataInput.getLabel(), eventMetadata.get().getLabel());
+      assertEquals(eventMetadataInput.getLabel(), eventMetadata.get().getLabel());
       logger.info("Added EventMetadata `{}` to AIO Events Provider `{}`", eventMetadata,
           providerId);
     }
@@ -114,7 +115,7 @@ public class ProviderServiceTester {
     providerService.deleteProvider(providerId);
     logger.info("Deleted AIO Events Provider: {}", providerId);
     Optional deleted = providerService.findProviderById(providerId);
-    Assert.assertFalse(deleted.isPresent());
+    assertFalse(deleted.isPresent());
     logger.info("No more AIO Events Provider with id: {}", providerId);
   }
 

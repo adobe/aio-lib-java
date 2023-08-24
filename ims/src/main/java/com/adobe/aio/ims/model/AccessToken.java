@@ -53,7 +53,7 @@ public class AccessToken {
   @Override
   public String toString() {
     return "AccessToken{" +
-        ", accessToken='**secret**'" +
+        "accessToken='**secret**'" +
         ", expiresIn=" + expiresIn +
         '}';
   }

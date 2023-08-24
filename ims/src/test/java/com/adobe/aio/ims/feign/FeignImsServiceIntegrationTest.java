@@ -11,16 +11,16 @@
  */
 package com.adobe.aio.ims.feign;
 
-import com.adobe.aio.exception.feign.IOUpstreamError;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import feign.FeignException;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FeignImsServiceIntegrationTest {
 
@@ -32,38 +32,37 @@ public class FeignImsServiceIntegrationTest {
     ImsService imsService = ImsService.builder().workspace(workspace).build();
     AccessToken accessToken = imsService.getJwtExchangeAccessToken();
     logger.info("JWT Exchange token flow complete");
-    Assert.assertNotNull(accessToken);
-    Assert.assertNotNull(accessToken.getAccessToken());
-    Assert.assertTrue(accessToken.getExpiresIn()>0);
-    Assert.assertTrue(imsService.validateAccessToken(accessToken.getAccessToken()));
+    assertNotNull(accessToken);
+    assertNotNull(accessToken.getAccessToken());
+    assertTrue(accessToken.getExpiresIn()>0);
+    assertTrue(imsService.validateAccessToken(accessToken.getAccessToken()));
     logger.info("JWT Exchange access token validated");
   }
 
-  @Test(expected = FeignException.BadRequest.class)
+  @Test
   public void getAndValidateJwtExchangeAccessTokenWithBadApiKey() {
     Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().apiKey("bad_api_key").build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
-    imsService.getJwtExchangeAccessToken();
+    assertThrows(FeignException.BadRequest.class, imsService::getJwtExchangeAccessToken);
   }
 
-  @Test(expected = FeignException.BadRequest.class)
+  @Test
   public void getAndValidateJwtExchangeAccessTokenWithBadSecret() {
     Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().clientSecret("bad_secret").build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
-    imsService.getJwtExchangeAccessToken();
+    assertThrows(FeignException.BadRequest.class, imsService::getJwtExchangeAccessToken);
   }
 
-  @Test(expected = FeignException.BadRequest.class)
+  @Test
   public void getAndValidateJwtExchangeAccessTokenWithBadTechAccount() {
     Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().technicalAccountId("bad_tech_account_id@techacct.adobe.com").build();
     ImsService imsService = ImsService.builder().workspace(workspace).build();
-    imsService.getJwtExchangeAccessToken();
+    assertThrows(FeignException.BadRequest.class, imsService::getJwtExchangeAccessToken);
   }
 
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void getAndValidateJwtExchangeAccessTokenWithMissingPrivateKey() {
     Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().privateKey(null).build();
-    ImsService imsService = ImsService.builder().workspace(workspace).build();
-    imsService.getJwtExchangeAccessToken();
+    assertThrows(IllegalStateException.class, () -> ImsService.builder().workspace(workspace).build());
   }
 }

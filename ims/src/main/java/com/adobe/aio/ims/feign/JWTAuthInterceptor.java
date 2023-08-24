@@ -12,77 +12,20 @@
 package com.adobe.aio.ims.feign;
 
 import com.adobe.aio.ims.ImsService;
-import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.model.AccessToken;
-import feign.RequestInterceptor;
-import feign.RequestTemplate;
-import org.apache.commons.lang3.StringUtils;
 
-import static com.adobe.aio.util.Constants.*;
+@Deprecated
+public class JWTAuthInterceptor extends AuthInterceptor {
 
-public class JWTAuthInterceptor implements RequestInterceptor {
-
-  private volatile Long expirationTimeMillis;
-  private volatile AccessToken accessToken;
-
-  private final ImsService imsService;
-
-  private JWTAuthInterceptor(final ImsService imsService) {
-    this.imsService = imsService;
+  protected JWTAuthInterceptor(ImsService imsService) {
+    super(imsService);
   }
 
-  @Override
-  public void apply(RequestTemplate requestTemplate) {
-    applyAuthorization(requestTemplate);
+  public boolean isUp() {
+    return getImsService().validateAccessToken(this.getAccessToken());
   }
 
-  public boolean isUp(){
-    return imsService.validateAccessToken(this.getAccessToken());
+  AccessToken fetchAccessToken() {
+    return getImsService().getJwtExchangeAccessToken();
   }
-
-  private void applyAuthorization(RequestTemplate requestTemplate) {
-    // If the request already have an authorization
-    if (requestTemplate.headers().containsKey(AUTHORIZATION_HEADER)) {
-      return;
-    }
-    // If first time or of expired, get the token
-    if (getAccessToken() != null) {
-      requestTemplate.header(AUTHORIZATION_HEADER, BEARER_PREFIX + getAccessToken());
-    }
-  }
-  
-  private synchronized void updateAccessToken() {
-    this.accessToken = imsService.getJwtExchangeAccessToken();
-    this.expirationTimeMillis = System.currentTimeMillis() + accessToken.getExpiresIn();
-    // throw RetryableException and implement Feign Retry ?
-  }
-
-  private synchronized String getAccessToken() {
-    if (expirationTimeMillis == null || System.currentTimeMillis() >= expirationTimeMillis) {
-      updateAccessToken();
-    }
-    return this.accessToken.getAccessToken();
-  }
-
-  public static Builder builder() {
-    return new Builder();
-  }
-
-  public static class Builder {
-
-    private ImsService imsService;
-
-    private Builder() {
-    }
-
-    public Builder workspace(Workspace workspace) {
-      this.imsService = ImsService.builder().workspace(workspace).build();
-      return this;
-    }
-
-    public JWTAuthInterceptor build() {
-      return new JWTAuthInterceptor(imsService);
-    }
-  }
-
 }

@@ -11,7 +11,11 @@
  */
 package com.adobe.aio.event.management.feign;
 
-import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.event.management.RegistrationService;
 import com.adobe.aio.event.management.api.RegistrationApi;
@@ -21,15 +25,12 @@ import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.event.management.model.RegistrationPaginatedModel;
 import com.adobe.aio.event.management.model.RegistrationUpdateModel;
 import com.adobe.aio.feign.AIOHeaderInterceptor;
-import com.adobe.aio.ims.feign.JWTAuthInterceptor;
+import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.adobe.aio.util.feign.FeignUtil;
 import com.adobe.aio.workspace.Workspace;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import feign.RequestInterceptor;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import org.apache.commons.lang3.StringUtils;
+
+import static com.adobe.aio.util.Constants.*;
 
 public class FeignRegistrationService implements RegistrationService {
 
@@ -43,7 +44,7 @@ public class FeignRegistrationService implements RegistrationService {
       throw new IllegalArgumentException("RegistrationService is missing a workspace context");
     }
     workspace.validateWorkspaceContext();
-    RequestInterceptor authInterceptor = JWTAuthInterceptor.builder().workspace(workspace).build();
+    RequestInterceptor authInterceptor = AuthInterceptor.builder().workspace(workspace).build();
     this.registrationApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
         .requestInterceptor(AIOHeaderInterceptor.builder().workspace(workspace).build())

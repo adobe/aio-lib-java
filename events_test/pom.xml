@@ -12,22 +12,19 @@
     governing permissions and limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
     <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java</artifactId>
-    <version>1.0.19-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-
   <artifactId>aio-lib-java-events-test</artifactId>
   <name>Adobe I/O - Events Test Utility Library</name>
   <description>Adobe I/O - Java SDK - Events Test Utility Library</description>
-
   <dependencies>
-
     <dependency>
       <groupId>com.adobe.aio</groupId>
       <artifactId>aio-lib-java-core</artifactId>
@@ -53,16 +50,14 @@
       <artifactId>aio-lib-java-events-journal</artifactId>
       <version>${project.version}</version>
     </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>compile</scope>
-    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <scope>compile</scope>
+    </dependency>
   </dependencies>
-
 </project>
