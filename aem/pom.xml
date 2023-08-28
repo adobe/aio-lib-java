@@ -228,7 +228,7 @@ If you want to deploy the bundle from the source
         <activeByDefault>false</activeByDefault>
       </activation>
       <properties>
-        <aem.version>6.5.0</aem.version>
+        <aem.version>6.5.5</aem.version>
       </properties>
       <dependencyManagement>
         <dependencies>
