@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- Install plugin version [\#175](https://github.com/adobe/aio-lib-java/pull/175) ([bstopp](https://github.com/bstopp))
 - GH-170 downgrading `maven-install-plugin` to `2.5.2` [\#171](https://github.com/adobe/aio-lib-java/pull/171) ([francoisledroff](https://github.com/francoisledroff))
 - OAuth2 Support [\#166](https://github.com/adobe/aio-lib-java/pull/166) ([bstopp](https://github.com/bstopp))
 
