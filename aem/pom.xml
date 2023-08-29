@@ -385,6 +385,13 @@ If you want to deploy the bundle from the source
               </configuration>
             </plugin>
             <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-install-plugin</artifactId>
+              <configuration>
+                <allowIncompleteProjects>true</allowIncompleteProjects>
+              </configuration>
+            </plugin>
+            <plugin>
               <groupId>org.apache.jackrabbit</groupId>
               <artifactId>filevault-package-maven-plugin</artifactId>
               <configuration>
