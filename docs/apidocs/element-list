@@ -11,6 +11,7 @@ com.adobe.aio.aem.status
 com.adobe.aio.aem.util
 com.adobe.aio.aem.workspace
 com.adobe.aio.aem.workspace.ocd
+com.adobe.aio.auth
 com.adobe.aio.event.journal
 com.adobe.aio.event.journal.model
 com.adobe.aio.event.management
