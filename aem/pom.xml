@@ -19,7 +19,7 @@
     <groupId>com.adobe.aio</groupId>
     <artifactId>aio-lib-java</artifactId>
     <relativePath>../pom.xml</relativePath>
-    <version>1.1.0</version>
+    <version>1.1.1-SNAPSHOT</version>
   </parent>
 
   <groupId>com.adobe.aio.aem</groupId>
