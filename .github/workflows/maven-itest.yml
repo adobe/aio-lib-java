@@ -28,7 +28,7 @@ jobs:
 
       # Check out Git repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Set up environment with Java and Maven
       - name: Setup JDK
@@ -66,7 +66,7 @@ jobs:
 
       # Check out Git repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Set up environment with Java and Maven
       - name: Setup JDK
