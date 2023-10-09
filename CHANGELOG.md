@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.0...HEAD)
+
+### 📁 Other pull requests
+
+- GH-182 - downgrade jackson and slf4j: to work-around missing AEM support… [\#185](https://github.com/adobe/aio-lib-java/pull/185) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-1.1.0](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.0) (2023-08-29)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.0.18...aio-lib-java-1.1.0)
