@@ -19,6 +19,7 @@ public class Constants {
   public static final String IMS_ORG_HEADER = "x-gw-ims-org-id";
   public static final String IMS_URL = "https://ims-na1.adobelogin.com";
   public static final String API_MANAGEMENT_URL = "https://api.adobe.io";
+  public static final String AIO_EVENTS_WEBHOOK_APP_URL = "https://webhooks.adobe.io/egauditor";
   public static final String CUSTOM_EVENTS_PROVIDER_METADATA_ID = "3rd_party_custom_events";
 
   private Constants() {

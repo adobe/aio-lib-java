@@ -9,7 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-package com.adobe.aio.event.webhook.service;
+package com.adobe.aio.event.webhook.service.impl;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 

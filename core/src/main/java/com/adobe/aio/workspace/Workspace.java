@@ -11,18 +11,21 @@
  */
 package com.adobe.aio.workspace;
 
-import java.security.PrivateKey;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
-
-import org.apache.commons.lang3.StringUtils;
+import static com.adobe.aio.util.FileUtil.getMapFromProperties;
+import static com.adobe.aio.util.FileUtil.readPropertiesFromClassPath;
+import static com.adobe.aio.util.FileUtil.readPropertiesFromFile;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.util.Constants;
-
-import static com.adobe.aio.util.FileUtil.*;
+import java.security.PrivateKey;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+import org.apache.commons.lang3.StringUtils;
 
 public class Workspace {
 
@@ -31,6 +34,8 @@ public class Workspace {
   public static final String CONSUMER_ORG_ID = "aio_consumer_org_id";
   public static final String PROJECT_ID = "aio_project_id";
   public static final String WORKSPACE_ID = "aio_workspace_id";
+  public static final String RUNTIME_NAMESPACE = "aio_runtime_namespace";
+  public static final String RUNTIME_ACTIONS = "aio_runtime_actions";
 
   public static final String API_KEY = "aio_api_key";
   /**
@@ -61,11 +66,13 @@ public class Workspace {
   private final String consumerOrgId;
   private final String projectId;
   private final String workspaceId;
+  private final String runtimeNamespace;
+  private final List<String> runtimeActions;
   private final Context authContext;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String apiKey,
                     final String consumerOrgId, final String projectId, final String workspaceId,
-                    Context authContext) {
+                    final String runtimeNamespace, final List<String> runtimeActions, Context authContext) {
     this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
 
@@ -73,7 +80,9 @@ public class Workspace {
     this.consumerOrgId = consumerOrgId;
     this.projectId = projectId;
     this.workspaceId = workspaceId;
-
+    this.runtimeNamespace = runtimeNamespace;
+    this.runtimeActions = (runtimeActions != null && !runtimeActions.isEmpty())
+        ? runtimeActions : Collections.emptyList();
     this.authContext = authContext;
   }
 
@@ -106,6 +115,25 @@ public class Workspace {
     }
     if (StringUtils.isEmpty(this.getWorkspaceId())) {
       throw new IllegalStateException("Your `Workspace` is missing a workspaceId");
+    }
+  }
+
+  /**
+   * Validates that this workspace context is populated properly for runtime integration test.
+   *
+   * @throws IllegalStateException if any properties are not specified.
+   */
+  public void validateWorkspaceContextForRuntime() throws IllegalStateException {
+    validateWorkspaceContext();
+    if (StringUtils.isEmpty(this.getRuntimeNamespace())) {
+      throw new IllegalStateException("Your `Workspace` doesn't have runtime enabled, which is required for runtime e2e");
+    }
+    if (StringUtils.isNotEmpty(this.getRuntimeNamespace())) {
+      if (this.getRuntimeActions() == null || this.getRuntimeActions().isEmpty()) {
+        throw new IllegalStateException("Your `Workspace` has runtime enabled but missing runtime actions");
+      } else if (this.getRuntimeActions().size() < 2) {
+        throw new IllegalStateException("Your `Workspace has runtime enabled and requires at least 2 runtime actions for runtime e2e`");
+      }
     }
   }
 
@@ -143,6 +171,14 @@ public class Workspace {
     return workspaceId;
   }
 
+  public String getRuntimeNamespace() {
+    return runtimeNamespace;
+  }
+
+  public List<String> getRuntimeActions() {
+    return runtimeActions;
+  }
+
   public Context getAuthContext() {
     return authContext;
   }
@@ -173,13 +209,15 @@ public class Workspace {
             Objects.equals(imsOrgId, workspace.imsOrgId) &&
             Objects.equals(consumerOrgId, workspace.consumerOrgId) &&
             Objects.equals(projectId, workspace.projectId) &&
-            Objects.equals(workspaceId, workspace.workspaceId);
+            Objects.equals(workspaceId, workspace.workspaceId) &&
+            Objects.equals(runtimeNamespace, workspace.runtimeNamespace) &&
+            Objects.equals(runtimeActions, workspace.runtimeActions);
   }
 
   @Override
   public int hashCode() {
     return Objects
-        .hash(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId);
+        .hash(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId, runtimeNamespace, runtimeActions);
   }
 
   @Override
@@ -191,6 +229,8 @@ public class Workspace {
         ", apiKey='" + apiKey + '\'' +
         ", projectId='" + projectId + '\'' +
         ", workspaceId='" + workspaceId + '\'' +
+        ", runtimeNamespace='" + runtimeNamespace + '\'' +
+        ", runtimeActions='" + runtimeActions + '\'' +
         '}';
   }
 
@@ -202,6 +242,8 @@ public class Workspace {
     private String consumerOrgId;
     private String projectId;
     private String workspaceId;
+    private String runtimeNamespace;
+    private List<String> runtimeActions;
 
     private Map<String, String> workspaceProperties;
 
@@ -238,6 +280,20 @@ public class Workspace {
 
     public Builder workspaceId(final String workspaceId) {
       this.workspaceId = workspaceId;
+      return this;
+    }
+
+    public Builder runtimeNamespace(final String runtimeNamespace) {
+      this.runtimeNamespace = runtimeNamespace;
+      return this;
+    }
+
+    public Builder runtimeActions(final List<String> runtimeActions) {
+      if (runtimeActions != null && !runtimeActions.isEmpty()) {
+        this.runtimeActions = runtimeActions;
+      } else {
+        this.runtimeActions = Collections.emptyList();
+      }
       return this;
     }
 
@@ -293,12 +349,21 @@ public class Workspace {
           .apiKey(configMap.get(API_KEY))
           .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
           .projectId(configMap.get(PROJECT_ID))
-          .workspaceId(configMap.get(WORKSPACE_ID));
+          .workspaceId(configMap.get(WORKSPACE_ID))
+          .runtimeNamespace(configMap.get(RUNTIME_NAMESPACE))
+          .runtimeActions(getRuntimeActionsFromConfig(configMap));
 
       // For backwards compatibility - should this be kept?
       jwtbuilder = JwtContext.builder();
       jwtbuilder.configMap(configMap);
       return this;
+    }
+
+    public List<String> getRuntimeActionsFromConfig(final Map<String, String> configMap) {
+      if (StringUtils.isNotEmpty(configMap.get(RUNTIME_ACTIONS))) {
+        return Arrays.asList(configMap.get(RUNTIME_ACTIONS).split("\\s*,\\s*"));
+      }
+      return Collections.emptyList();
     }
 
     public Builder systemEnv() {
@@ -318,12 +383,12 @@ public class Workspace {
     public Workspace build() {
 
       if (authContext != null) {
-        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, runtimeNamespace, runtimeActions, authContext);
       }
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
       }
-      return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
+      return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, runtimeNamespace, runtimeActions, jwtbuilder.build());
     }
   }
 }
