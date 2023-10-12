@@ -27,9 +27,6 @@ public class PublishServiceTester {
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public static final String DATA_EVENT_ID_NODE = "data_event_id";
-  public static final String DATA_E2E_ENVIRONMENT_NODE = "data_e2e_environment";
-  public static final String DATA_REGISTRATION_ID_NODE = "data_registration_id";
-  public static final String DATA_RUNTIME_ACTION_NODE = "data_runtime_action";
 
   private final PublishService publishService;
 
@@ -40,26 +37,10 @@ public class PublishServiceTester {
         .build();
   }
 
-  public String publishCloudEvent(String providerId, String eventCode) {
+  public String publishCloudEvent(String providerId, String eventCode, String eventId, String data) {
     try {
-      String eventId = UUID.randomUUID().toString();
       CloudEvent cloudEvent = publishService.publishCloudEvent(
-            providerId, eventCode, eventId, getEventDataNode(eventId));
-      logger.info("Published CloudEvent: {}", cloudEvent);
-      assertDeliveredCloudEvent(providerId, eventCode, eventId, cloudEvent);
-      return eventId;
-    } catch (JsonProcessingException e) {
-     fail("publishService.publishCloudEvent failed with "+e.getMessage());
-     return null;
-    }
-  }
-
-  public String publishCloudEventForRuntimeWebhook(String providerId, String eventCode, String environment,
-      String registrationId, String runtimeAction) {
-    try {
-      String eventId = UUID.randomUUID().toString();
-      CloudEvent cloudEvent = publishService.publishCloudEvent(providerId, eventCode, eventId,
-          getEventDataNodeForRuntimeWebhook(eventId, environment, registrationId, runtimeAction));
+          providerId, eventCode, eventId, data);
       logger.info("Published CloudEvent: {}", cloudEvent);
       assertDeliveredCloudEvent(providerId, eventCode, eventId, cloudEvent);
       return eventId;
@@ -69,24 +50,10 @@ public class PublishServiceTester {
     }
   }
 
-  public String publishRawEvent(String providerId, String eventCode) {
-    String eventId = UUID.randomUUID().toString();
-    String rawEventPayload = getEventDataNode(eventId);
-    publishService.publishRawEvent(providerId, eventCode, rawEventPayload);
-    logger.info("Published Raw Event: {}", rawEventPayload);
+  public String publishRawEvent(String providerId, String eventCode, String eventId, String data) {
+    publishService.publishRawEvent(providerId, eventCode, data);
+    logger.info("Published Raw Event: {}", data);
     return eventId;
-  }
-
-  public static String getEventDataNode(String eventId) {
-    return "{\"" + DATA_EVENT_ID_NODE + "\" : \"" + eventId + "\"}";
-  }
-
-  public static String getEventDataNodeForRuntimeWebhook(String eventId, String environment,
-      String registrationId, String runtimeAction) {
-    return "{\"" + DATA_EVENT_ID_NODE + "\" : \"" + eventId + "\","
-          + "\"" + DATA_E2E_ENVIRONMENT_NODE + "\" : \"" + environment + "\","
-          + "\"" + DATA_RUNTIME_ACTION_NODE + "\" : \"" + runtimeAction + "\","
-          + "\"" + DATA_REGISTRATION_ID_NODE + "\" : \"" + registrationId + "\"}";
   }
 
   private void assertDeliveredCloudEvent(String providerId, String eventCode, String eventId,

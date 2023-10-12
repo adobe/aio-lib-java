@@ -11,6 +11,7 @@
  */
 package com.adobe.aio.event.publish;
 
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.event.management.ProviderServiceTester;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.*;
 import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.*;
 
+import static com.adobe.aio.event.util.DataNodeUtil.getEventDataNode;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PublishServiceIntegrationTest extends PublishServiceTester {
@@ -48,8 +50,10 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
       registrationId = registrationServiceTester.createJournalRegistration(
           TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE).getRegistrationId();
 
-      assertNotNull(publishCloudEvent(providerId, TEST_EVENT_CODE));
-      assertNotNull(publishRawEvent(providerId, TEST_EVENT_CODE));
+      String eventId = UUID.randomUUID().toString();
+      assertNotNull(publishCloudEvent(providerId, TEST_EVENT_CODE, eventId, getEventDataNode(eventId)));
+      eventId = UUID.randomUUID().toString();
+      assertNotNull(publishRawEvent(providerId, TEST_EVENT_CODE, eventId, getEventDataNode(eventId)));
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       fail(e.getMessage());
@@ -62,4 +66,5 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
       }
     }
   }
+
 }

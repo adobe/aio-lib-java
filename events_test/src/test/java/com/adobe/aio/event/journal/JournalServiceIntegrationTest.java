@@ -11,6 +11,7 @@
  */
 package com.adobe.aio.event.journal;
 
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.event.management.ProviderServiceIntegrationTest;
@@ -23,6 +24,8 @@ import org.junit.jupiter.api.Test;
 
 import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.*;
 import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.*;
+import static com.adobe.aio.event.publish.PublishServiceTester.DATA_EVENT_ID_NODE;
+import static com.adobe.aio.event.util.DataNodeUtil.getEventDataNode;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class JournalServiceIntegrationTest extends JournalServiceTester {
@@ -69,11 +72,15 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
           TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE);
       registrationId = registration.getRegistrationId();
 
-      String cloudEventId = publishServiceTester.publishCloudEvent(providerId, TEST_EVENT_CODE);
+      String eventId = UUID.randomUUID().toString();
+      String cloudEventId = publishServiceTester.publishCloudEvent(providerId, TEST_EVENT_CODE, eventId,
+          getEventDataNode(eventId));
       boolean wasCloudEventPolled = pollJournalForEvent(
           registration.getJournalUrl().getHref(), cloudEventId, isEventIdTheCloudEventId);
 
-      String rawEventId = publishServiceTester.publishRawEvent(providerId, TEST_EVENT_CODE);
+      eventId = UUID.randomUUID().toString();
+      String rawEventId = publishServiceTester.publishRawEvent(providerId, TEST_EVENT_CODE, eventId,
+          getEventDataNode(eventId));
       boolean wasRawEventPolled = pollJournalForEvent(registration.getJournalUrl().getHref(), rawEventId,
           isEventIdInTheCloudEventData);
 
