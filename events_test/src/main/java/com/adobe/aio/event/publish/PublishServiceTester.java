@@ -12,15 +12,14 @@
 package com.adobe.aio.event.publish;
 
 import static com.adobe.aio.event.publish.model.CloudEvent.SPEC_VERSION;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.adobe.aio.event.publish.model.CloudEvent;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class PublishServiceTester {
 
