@@ -67,12 +67,11 @@ public class Workspace {
   private final String projectId;
   private final String workspaceId;
   private final String runtimeNamespace;
-  private final List<String> runtimeActions;
   private final Context authContext;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String apiKey,
                     final String consumerOrgId, final String projectId, final String workspaceId,
-                    final String runtimeNamespace, final List<String> runtimeActions, Context authContext) {
+                    final String runtimeNamespace, Context authContext) {
     this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
 
@@ -81,8 +80,6 @@ public class Workspace {
     this.projectId = projectId;
     this.workspaceId = workspaceId;
     this.runtimeNamespace = runtimeNamespace;
-    this.runtimeActions = (runtimeActions != null && !runtimeActions.isEmpty())
-        ? runtimeActions : Collections.emptyList();
     this.authContext = authContext;
   }
 
@@ -115,25 +112,6 @@ public class Workspace {
     }
     if (StringUtils.isEmpty(this.getWorkspaceId())) {
       throw new IllegalStateException("Your `Workspace` is missing a workspaceId");
-    }
-  }
-
-  /**
-   * Validates that this workspace context is populated properly for runtime integration test.
-   *
-   * @throws IllegalStateException if any properties are not specified.
-   */
-  public void validateWorkspaceContextForRuntime() throws IllegalStateException {
-    validateWorkspaceContext();
-    if (StringUtils.isEmpty(this.getRuntimeNamespace())) {
-      throw new IllegalStateException("Your `Workspace` doesn't have runtime enabled, which is required for runtime e2e");
-    }
-    if (StringUtils.isNotEmpty(this.getRuntimeNamespace())) {
-      if (this.getRuntimeActions() == null || this.getRuntimeActions().isEmpty()) {
-        throw new IllegalStateException("Your `Workspace` has runtime enabled but missing runtime actions");
-      } else if (this.getRuntimeActions().size() < 2) {
-        throw new IllegalStateException("Your `Workspace has runtime enabled and requires at least 2 runtime actions for runtime e2e`");
-      }
     }
   }
 
@@ -175,10 +153,6 @@ public class Workspace {
     return runtimeNamespace;
   }
 
-  public List<String> getRuntimeActions() {
-    return runtimeActions;
-  }
-
   public Context getAuthContext() {
     return authContext;
   }
@@ -210,14 +184,13 @@ public class Workspace {
             Objects.equals(consumerOrgId, workspace.consumerOrgId) &&
             Objects.equals(projectId, workspace.projectId) &&
             Objects.equals(workspaceId, workspace.workspaceId) &&
-            Objects.equals(runtimeNamespace, workspace.runtimeNamespace) &&
-            Objects.equals(runtimeActions, workspace.runtimeActions);
+            Objects.equals(runtimeNamespace, workspace.runtimeNamespace);
   }
 
   @Override
   public int hashCode() {
     return Objects
-        .hash(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId, runtimeNamespace, runtimeActions);
+        .hash(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId, runtimeNamespace);
   }
 
   @Override
@@ -230,7 +203,6 @@ public class Workspace {
         ", projectId='" + projectId + '\'' +
         ", workspaceId='" + workspaceId + '\'' +
         ", runtimeNamespace='" + runtimeNamespace + '\'' +
-        ", runtimeActions='" + runtimeActions + '\'' +
         '}';
   }
 
@@ -243,7 +215,6 @@ public class Workspace {
     private String projectId;
     private String workspaceId;
     private String runtimeNamespace;
-    private List<String> runtimeActions;
 
     private Map<String, String> workspaceProperties;
 
@@ -285,15 +256,6 @@ public class Workspace {
 
     public Builder runtimeNamespace(final String runtimeNamespace) {
       this.runtimeNamespace = runtimeNamespace;
-      return this;
-    }
-
-    public Builder runtimeActions(final List<String> runtimeActions) {
-      if (runtimeActions != null && !runtimeActions.isEmpty()) {
-        this.runtimeActions = runtimeActions;
-      } else {
-        this.runtimeActions = Collections.emptyList();
-      }
       return this;
     }
 
@@ -350,8 +312,7 @@ public class Workspace {
           .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
           .projectId(configMap.get(PROJECT_ID))
           .workspaceId(configMap.get(WORKSPACE_ID))
-          .runtimeNamespace(configMap.get(RUNTIME_NAMESPACE))
-          .runtimeActions(getRuntimeActionsFromConfig(configMap));
+          .runtimeNamespace(configMap.get(RUNTIME_NAMESPACE));
 
       // For backwards compatibility - should this be kept?
       jwtbuilder = JwtContext.builder();
@@ -383,12 +344,12 @@ public class Workspace {
     public Workspace build() {
 
       if (authContext != null) {
-        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, runtimeNamespace, runtimeActions, authContext);
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, runtimeNamespace, authContext);
       }
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
       }
-      return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, runtimeNamespace, runtimeActions, jwtbuilder.build());
+      return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, runtimeNamespace, jwtbuilder.build());
     }
   }
 }
