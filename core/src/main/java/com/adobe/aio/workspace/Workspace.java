@@ -19,9 +19,6 @@ import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.util.Constants;
 import java.security.PrivateKey;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
@@ -35,7 +32,6 @@ public class Workspace {
   public static final String PROJECT_ID = "aio_project_id";
   public static final String WORKSPACE_ID = "aio_workspace_id";
   public static final String RUNTIME_NAMESPACE = "aio_runtime_namespace";
-  public static final String RUNTIME_ACTIONS = "aio_runtime_actions";
 
   public static final String API_KEY = "aio_api_key";
   /**
@@ -66,12 +62,11 @@ public class Workspace {
   private final String consumerOrgId;
   private final String projectId;
   private final String workspaceId;
-  private final String runtimeNamespace;
   private final Context authContext;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String apiKey,
                     final String consumerOrgId, final String projectId, final String workspaceId,
-                    final String runtimeNamespace, Context authContext) {
+                    Context authContext) {
     this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
 
@@ -79,7 +74,6 @@ public class Workspace {
     this.consumerOrgId = consumerOrgId;
     this.projectId = projectId;
     this.workspaceId = workspaceId;
-    this.runtimeNamespace = runtimeNamespace;
     this.authContext = authContext;
   }
 
@@ -149,10 +143,6 @@ public class Workspace {
     return workspaceId;
   }
 
-  public String getRuntimeNamespace() {
-    return runtimeNamespace;
-  }
-
   public Context getAuthContext() {
     return authContext;
   }
@@ -171,26 +161,21 @@ public class Workspace {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
+    if (this == o)
       return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
+    if (o == null || getClass() != o.getClass())
       return false;
-    }
     Workspace workspace = (Workspace) o;
-    return
-        Objects.equals(imsUrl, workspace.imsUrl) &&
-            Objects.equals(imsOrgId, workspace.imsOrgId) &&
-            Objects.equals(consumerOrgId, workspace.consumerOrgId) &&
-            Objects.equals(projectId, workspace.projectId) &&
-            Objects.equals(workspaceId, workspace.workspaceId) &&
-            Objects.equals(runtimeNamespace, workspace.runtimeNamespace);
+    return Objects.equals(imsUrl, workspace.imsUrl) && Objects.equals(imsOrgId, workspace.imsOrgId)
+        && Objects.equals(apiKey, workspace.apiKey) && Objects.equals(consumerOrgId,
+        workspace.consumerOrgId) && Objects.equals(projectId, workspace.projectId)
+        && Objects.equals(workspaceId, workspace.workspaceId)
+        && Objects.equals(authContext, workspace.authContext);
   }
 
   @Override
   public int hashCode() {
-    return Objects
-        .hash(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId, runtimeNamespace);
+    return Objects.hash(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
   }
 
   @Override
@@ -198,11 +183,11 @@ public class Workspace {
     return "Workspace{" +
         "imsUrl='" + imsUrl + '\'' +
         ", imsOrgId='" + imsOrgId + '\'' +
-        ", consumerOrgId='" + consumerOrgId + '\'' +
         ", apiKey='" + apiKey + '\'' +
+        ", consumerOrgId='" + consumerOrgId + '\'' +
         ", projectId='" + projectId + '\'' +
         ", workspaceId='" + workspaceId + '\'' +
-        ", runtimeNamespace='" + runtimeNamespace + '\'' +
+        ", authContext=" + authContext +
         '}';
   }
 
@@ -214,7 +199,6 @@ public class Workspace {
     private String consumerOrgId;
     private String projectId;
     private String workspaceId;
-    private String runtimeNamespace;
 
     private Map<String, String> workspaceProperties;
 
@@ -251,11 +235,6 @@ public class Workspace {
 
     public Builder workspaceId(final String workspaceId) {
       this.workspaceId = workspaceId;
-      return this;
-    }
-
-    public Builder runtimeNamespace(final String runtimeNamespace) {
-      this.runtimeNamespace = runtimeNamespace;
       return this;
     }
 
@@ -311,20 +290,12 @@ public class Workspace {
           .apiKey(configMap.get(API_KEY))
           .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
           .projectId(configMap.get(PROJECT_ID))
-          .workspaceId(configMap.get(WORKSPACE_ID))
-          .runtimeNamespace(configMap.get(RUNTIME_NAMESPACE));
+          .workspaceId(configMap.get(WORKSPACE_ID));
 
       // For backwards compatibility - should this be kept?
       jwtbuilder = JwtContext.builder();
       jwtbuilder.configMap(configMap);
       return this;
-    }
-
-    public List<String> getRuntimeActionsFromConfig(final Map<String, String> configMap) {
-      if (StringUtils.isNotEmpty(configMap.get(RUNTIME_ACTIONS))) {
-        return Arrays.asList(configMap.get(RUNTIME_ACTIONS).split("\\s*,\\s*"));
-      }
-      return Collections.emptyList();
     }
 
     public Builder systemEnv() {
@@ -342,14 +313,13 @@ public class Workspace {
     }
 
     public Workspace build() {
-
       if (authContext != null) {
-        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, runtimeNamespace, authContext);
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
       }
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
       }
-      return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, runtimeNamespace, jwtbuilder.build());
+      return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
     }
   }
 }

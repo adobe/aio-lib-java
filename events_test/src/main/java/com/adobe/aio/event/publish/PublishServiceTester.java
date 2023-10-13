@@ -18,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 import com.adobe.aio.event.publish.model.CloudEvent;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,12 +37,22 @@ public class PublishServiceTester {
         .build();
   }
 
+  public String publishCloudEvent(String providerId, String eventCode) {
+    String eventId = UUID.randomUUID().toString();
+    return this.publishCloudEvent(providerId, eventCode, eventId, getDummyDataNode(eventId));
+  }
+
   public String publishCloudEvent(String providerId, String eventCode, String eventId, String data) {
     try {
       CloudEvent cloudEvent = publishService.publishCloudEvent(
           providerId, eventCode, eventId, data);
       logger.info("Published CloudEvent: {}", cloudEvent);
-      assertDeliveredCloudEvent(providerId, eventCode, eventId, cloudEvent);
+      assertEquals(eventId, cloudEvent.getId());
+      assertEquals(CloudEvent.SOURCE_URN_PREFIX + providerId, cloudEvent.getSource());
+      assertEquals(eventCode, cloudEvent.getType());
+      assertEquals(eventId, cloudEvent.getData().get(DATA_EVENT_ID_NODE).asText());
+      assertEquals(SPEC_VERSION, cloudEvent.getSpecVersion());
+      assertEquals("application/json", cloudEvent.getDataContentType());
       return eventId;
     } catch (JsonProcessingException e) {
       fail("publishService.publishCloudEvent failed with "+e.getMessage());
@@ -49,20 +60,14 @@ public class PublishServiceTester {
     }
   }
 
-  public String publishRawEvent(String providerId, String eventCode, String eventId, String data) {
-    publishService.publishRawEvent(providerId, eventCode, data);
-    logger.info("Published Raw Event: {}", data);
+  public String publishRawEvent(String providerId, String eventCode) {
+    String eventId = UUID.randomUUID().toString();
+    publishService.publishRawEvent(providerId, eventCode, getDummyDataNode(eventId));
+    logger.info("Published Raw Event: {}", getDummyDataNode(eventId));
     return eventId;
   }
 
-  private void assertDeliveredCloudEvent(String providerId, String eventCode, String eventId,
-      CloudEvent cloudEvent) {
-    assertEquals(eventId, cloudEvent.getId());
-    assertEquals(CloudEvent.SOURCE_URN_PREFIX + providerId, cloudEvent.getSource());
-    assertEquals(eventCode, cloudEvent.getType());
-    assertEquals(eventId, cloudEvent.getData().get(DATA_EVENT_ID_NODE).asText());
-    assertEquals(SPEC_VERSION, cloudEvent.getSpecVersion());
-    assertEquals("application/json", cloudEvent.getDataContentType());
+  private static String getDummyDataNode(String eventId) {
+    return "{\"" + DATA_EVENT_ID_NODE + "\" : \"" + eventId + "\"}";
   }
-
 }
