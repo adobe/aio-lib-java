@@ -59,9 +59,13 @@ public class WorkspaceTest {
         .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
         .authContext(new MockContext())
         .build();
-    assertEquals(actual, expected);
-    assertEquals(actual.hashCode(), expected.hashCode());
-    assertEquals(actual.toString(), expected.toString());
+
+    assertEquals(Workspace.IMS_ORG_ID + TEST_VALUE, actual.getImsOrgId());
+    assertEquals(Workspace.API_KEY + TEST_VALUE, actual.getApiKey());
+    assertEquals(Workspace.CONSUMER_ORG_ID + TEST_VALUE, actual.getConsumerOrgId());
+    assertEquals(Workspace.PROJECT_ID + TEST_VALUE, actual.getProjectId());
+    assertEquals(Workspace.WORKSPACE_ID + TEST_VALUE, actual.getWorkspaceId());
+    assertEquals(Constants.IMS_URL, actual.getImsUrl());
     actual.validateAll();
   }
 

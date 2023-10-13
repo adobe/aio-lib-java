@@ -14,7 +14,6 @@ package com.adobe.aio.event.publish;
 import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_CODE;
 import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_PROVIDER_LABEL;
 import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.TEST_REGISTRATION_NAME;
-import static com.adobe.aio.event.util.DataNodeUtil.getEventDataNode;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -51,10 +50,8 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
       registrationId = registrationServiceTester.createJournalRegistration(
           TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE).getRegistrationId();
 
-      String eventId = UUID.randomUUID().toString();
-      assertNotNull(publishCloudEvent(providerId, TEST_EVENT_CODE, eventId, getEventDataNode(eventId)));
-      eventId = UUID.randomUUID().toString();
-      assertNotNull(publishRawEvent(providerId, TEST_EVENT_CODE, eventId, getEventDataNode(eventId)));
+      assertNotNull(publishCloudEvent(providerId, TEST_EVENT_CODE));
+      assertNotNull(publishRawEvent(providerId, TEST_EVENT_CODE));
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       fail(e.getMessage());

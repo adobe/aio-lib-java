@@ -82,22 +82,13 @@ public class RegistrationServiceTester {
     assertTrue(registration.isPresent());
     Registration registrationCreated = registration.get();
     logger.info("Created AIO Event Registration: {}", registration.get());
-    String registrationId = registrationCreated.getRegistrationId();
-    assertNotNull(registrationId);
+
+    assertNotNull(registrationCreated.getRegistrationId());
     assertEquals(registrationInputModel.getDescription(), registrationCreated.getDescription());
     assertEquals(registrationInputModel.getName(), registrationCreated.getName());
     assertEquals(registrationInputModel.getDeliveryType(), registrationCreated.getDeliveryType());
-
-    if (!registrationInputModel.getDeliveryType().equals(DELIVERY_TYPE_JOURNAL)) {
-      if (StringUtils.isNotEmpty(registrationInputModel.getRuntimeAction())) {
-        String runtimeAction = registration.get().getRuntimeAction();
-        assertEquals(registrationInputModel.getRuntimeAction(), runtimeAction);
-      }
-      assertNotNull(registration.get().getWebhookUrl());
-    } else {
-      assertNull(registration.get().getWebhookUrl());
-      assertUrl(registration.get().getJournalUrl().getHref());
-    }
+    assertEquals(registrationInputModel.getRuntimeAction(), registrationCreated.getRuntimeAction());
+    assertEquals(registrationInputModel.getWebhookUrl(), registrationCreated.getWebhookUrl());
 
     Set<EventsOfInterest> eventsOfInterestSet = registration.get().getEventsOfInterests();
     assertEquals(registrationInputModel.getEventsOfInterests().size(),eventsOfInterestSet.size());
@@ -111,6 +102,8 @@ public class RegistrationServiceTester {
     assertEquals(true, registrationCreated.isEnabled());
 
     assertUrl(registration.get().getTraceUrl().getHref());
+    assertUrl(registration.get().getJournalUrl().getHref());
+
     assertNotNull(registration.get().getCreatedDate());
     assertNotNull(registration.get().getUpdatedDate());
     return registration.get();
