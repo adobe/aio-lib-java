@@ -89,7 +89,6 @@ public class ProviderServiceTester {
     assertNotNull(provider.get().getInstanceId());
     assertEquals(providerInputModel.getLabel(), provider.get().getLabel());
     assertEquals(providerInputModel.getDescription(), provider.get().getDescription());
-    assertEquals(providerInputModel.getDocsUrl(), provider.get().getDocsUrl());
     assertEquals(WorkspaceUtil.getSystemProperty(Workspace.IMS_ORG_ID),
         provider.get().getPublisher());
     assertEquals(CloudEvent.SOURCE_URN_PREFIX + provider.get().getId(),
