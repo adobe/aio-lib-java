@@ -31,8 +31,6 @@ public class Workspace {
   public static final String CONSUMER_ORG_ID = "aio_consumer_org_id";
   public static final String PROJECT_ID = "aio_project_id";
   public static final String WORKSPACE_ID = "aio_workspace_id";
-  public static final String RUNTIME_NAMESPACE = "aio_runtime_namespace";
-
   public static final String API_KEY = "aio_api_key";
   /**
    * @deprecated This will be removed in v2.0 of the library.
