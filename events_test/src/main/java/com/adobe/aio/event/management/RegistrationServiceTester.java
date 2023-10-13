@@ -87,8 +87,17 @@ public class RegistrationServiceTester {
     assertEquals(registrationInputModel.getDescription(), registrationCreated.getDescription());
     assertEquals(registrationInputModel.getName(), registrationCreated.getName());
     assertEquals(registrationInputModel.getDeliveryType(), registrationCreated.getDeliveryType());
-    assertEquals(registrationInputModel.getRuntimeAction(), registrationCreated.getRuntimeAction());
-    assertEquals(registrationInputModel.getWebhookUrl(), registrationCreated.getWebhookUrl());
+    if (registrationInputModel.getDeliveryType().equals(DELIVERY_TYPE_WEBHOOK)) {
+      if (StringUtils.isNotEmpty(registrationInputModel.getRuntimeAction())) {
+        assertEquals(registrationInputModel.getRuntimeAction(), registrationCreated.getRuntimeAction());
+        assertNotNull(registrationCreated.getWebhookUrl());
+      } else {
+        assertEquals(registrationInputModel.getWebhookUrl(), registrationCreated.getWebhookUrl());
+      }
+    } else {
+      assertNull(registration.get().getWebhookUrl());
+      assertUrl(registration.get().getJournalUrl().getHref());
+    }
 
     Set<EventsOfInterest> eventsOfInterestSet = registration.get().getEventsOfInterests();
     assertEquals(registrationInputModel.getEventsOfInterests().size(),eventsOfInterestSet.size());
