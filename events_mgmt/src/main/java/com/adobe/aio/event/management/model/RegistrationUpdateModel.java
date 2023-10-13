@@ -38,31 +38,38 @@ public class RegistrationUpdateModel {
   @JsonProperty("delivery_type")
   protected String deliveryType;
 
+  @JsonProperty("runtime_action")
+  protected String runtimeAction;
+
   @JsonProperty("enabled")
   protected Boolean enabled;
 
   RegistrationUpdateModel(final String name, final String description, final String webhookUrl,
                   final Set<EventsOfInterestInputModel> eventsOfInterestInputModels, final String deliveryType,
-                  final Boolean enabled) {
+                  final String runtimeAction, final Boolean enabled) {
 
     if (StringUtils.isBlank(name)){
       throw new IllegalArgumentException("Registration is missing a name");
     }
-
     if (StringUtils.isBlank(deliveryType)){
       throw new IllegalArgumentException("Registration is missing a delivery_type");
     }
-
+    if (DeliveryType.fromFriendlyName(deliveryType).isWebhookDelivery()) {
+      if (StringUtils.isNotEmpty(webhookUrl) && StringUtils.isNotEmpty(runtimeAction)) {
+        throw new IllegalArgumentException(
+            "Pick one, you cannot set both a webhook url and a Runtime Action");
+      }
+      if (StringUtils.isEmpty(webhookUrl) && StringUtils.isEmpty(runtimeAction)) {
+        throw new IllegalArgumentException(
+            "Registration is a webhook registration, but missing a webhook url or a Runtime Action");
+      }
+    }
     this.name = name;
     this.description = description;
     this.webhookUrl = webhookUrl;
     this.eventsOfInterestInputModels = eventsOfInterestInputModels;
-    if (DeliveryType.fromFriendlyName(deliveryType).isWebhookDelivery() && StringUtils.isEmpty(webhookUrl)) {
-      throw new IllegalArgumentException(
-                      "Registration is a webhook registration, but missing a webhook url");
-    } else {
-      this.deliveryType = deliveryType;
-    }
+    this.deliveryType = deliveryType;
+    this.runtimeAction = runtimeAction;
     this.enabled = enabled == null || enabled;
   }
 
@@ -90,6 +97,10 @@ public class RegistrationUpdateModel {
     return deliveryType;
   }
 
+  public String getRuntimeAction() {
+    return runtimeAction;
+  }
+
   @Override public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -103,12 +114,13 @@ public class RegistrationUpdateModel {
                     Objects.equals(webhookUrl, that.webhookUrl) &&
                     Objects.equals(eventsOfInterestInputModels, that.eventsOfInterestInputModels) &&
                     Objects.equals(deliveryType, that.deliveryType) &&
+                    Objects.equals(runtimeAction, that.runtimeAction) &&
                     Objects.equals(enabled, that.enabled);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description, webhookUrl, eventsOfInterestInputModels, deliveryType, enabled);
+    return Objects.hash(name, description, webhookUrl, eventsOfInterestInputModels, deliveryType, runtimeAction, enabled);
   }
 
   @Override
@@ -119,6 +131,7 @@ public class RegistrationUpdateModel {
                     ", webhookUrl='" + webhookUrl + '\'' +
                     ", eventsOfInterestInputModels=" + eventsOfInterestInputModels +
                     ", deliveryType=" + deliveryType +
+                    ", runtimeAction=" + runtimeAction +
                     ", enabled='" + enabled + '\'' +
                     '}';
   }
@@ -133,6 +146,7 @@ public class RegistrationUpdateModel {
     protected String name;
     protected String description;
     protected String deliveryType;
+    protected String runtimeAction;
     protected Set<EventsOfInterestInputModel> eventsOfInterestInputModels = new HashSet<>();
     protected String webhookUrl;
     protected Boolean enabled = Boolean.TRUE;
@@ -152,6 +166,11 @@ public class RegistrationUpdateModel {
 
     public T deliveryType(String deliveryType) {
       this.deliveryType = deliveryType;
+      return (T) this;
+    }
+
+    public T runtimeAction(String runtimeAction) {
+      this.runtimeAction = runtimeAction;
       return (T) this;
     }
 
@@ -179,7 +198,7 @@ public class RegistrationUpdateModel {
 
     public RegistrationUpdateModel build() {
       return new RegistrationUpdateModel(name, description, webhookUrl,
-                      eventsOfInterestInputModels, deliveryType,
+                      eventsOfInterestInputModels, deliveryType, runtimeAction,
                       enabled);
     }
   }

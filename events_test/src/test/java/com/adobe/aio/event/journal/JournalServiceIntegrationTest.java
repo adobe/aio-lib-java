@@ -11,7 +11,11 @@
  */
 package com.adobe.aio.event.journal;
 
-import org.apache.commons.lang3.StringUtils;
+import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_CODE;
+import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_PROVIDER_LABEL;
+import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.TEST_REGISTRATION_NAME;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.adobe.aio.event.management.ProviderServiceIntegrationTest;
 import com.adobe.aio.event.management.ProviderServiceTester;
@@ -19,11 +23,9 @@ import com.adobe.aio.event.management.RegistrationServiceTester;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.publish.PublishServiceTester;
 import com.adobe.aio.util.WorkspaceUtil;
+import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
-
-import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.*;
-import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 public class JournalServiceIntegrationTest extends JournalServiceTester {
 

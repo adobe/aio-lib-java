@@ -11,16 +11,18 @@
  */
 package com.adobe.aio.event.publish;
 
-import org.apache.commons.lang3.StringUtils;
+import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_CODE;
+import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.TEST_EVENT_PROVIDER_LABEL;
+import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.TEST_REGISTRATION_NAME;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.adobe.aio.event.management.ProviderServiceTester;
 import com.adobe.aio.event.management.RegistrationServiceTester;
+import java.util.UUID;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
-
-import static com.adobe.aio.event.management.ProviderServiceIntegrationTest.*;
-import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 public class PublishServiceIntegrationTest extends PublishServiceTester {
 
@@ -62,4 +64,5 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
       }
     }
   }
+
 }

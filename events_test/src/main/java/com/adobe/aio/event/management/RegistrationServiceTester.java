@@ -15,12 +15,14 @@ import com.adobe.aio.event.management.model.EventsOfInterest;
 import com.adobe.aio.event.management.model.EventsOfInterestInputModel;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
+import com.adobe.aio.event.management.model.RegistrationUpdateModel;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.Set;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,6 +32,7 @@ public class RegistrationServiceTester {
 
   public static final String TEST_DESCRIPTION = "Test description";
   public static final String DELIVERY_TYPE_JOURNAL = "journal";
+  public static final String DELIVERY_TYPE_WEBHOOK = "webhook";
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
   protected final Workspace workspace;
   protected final RegistrationService registrationService;
@@ -61,19 +64,31 @@ public class RegistrationServiceTester {
           .addEventsOfInterests(getTestEventsOfInterestBuilder(providerId, eventCode).build()));
   }
 
-    public Registration createRegistration(
+  public Registration createRuntimeWebhookRegistration(String registrationName, String providerId,
+      String eventCode, String runtimeAction) {
+    return createRegistration(RegistrationCreateModel.builder()
+        .name(registrationName)
+        .description(TEST_DESCRIPTION)
+        .deliveryType(DELIVERY_TYPE_WEBHOOK)
+        .runtimeAction(runtimeAction)
+        .addEventsOfInterests(getTestEventsOfInterestBuilder(providerId, eventCode).build()));
+  }
+
+  public Registration createRegistration(
       RegistrationCreateModel.Builder registrationInputModelBuilder) {
     RegistrationCreateModel registrationInputModel =
         registrationInputModelBuilder.clientId(this.workspace.getApiKey()).build();
     Optional<Registration> registration = registrationService.createRegistration(registrationInputModelBuilder);
     assertTrue(registration.isPresent());
-    Registration registratinCreated = registration.get();
+    Registration registrationCreated = registration.get();
     logger.info("Created AIO Event Registration: {}", registration.get());
-    String registrationId = registratinCreated.getRegistrationId();
-    assertNotNull(registrationId);
-    assertEquals(registrationInputModel.getDescription(), registratinCreated.getDescription());
-    assertEquals(registrationInputModel.getName(), registratinCreated.getName());
-    assertEquals(registrationInputModel.getDeliveryType(), registratinCreated.getDeliveryType());
+
+    assertNotNull(registrationCreated.getRegistrationId());
+    assertEquals(registrationInputModel.getDescription(), registrationCreated.getDescription());
+    assertEquals(registrationInputModel.getName(), registrationCreated.getName());
+    assertEquals(registrationInputModel.getDeliveryType(), registrationCreated.getDeliveryType());
+    assertEquals(registrationInputModel.getRuntimeAction(), registrationCreated.getRuntimeAction());
+    assertEquals(registrationInputModel.getWebhookUrl(), registrationCreated.getWebhookUrl());
 
     Set<EventsOfInterest> eventsOfInterestSet = registration.get().getEventsOfInterests();
     assertEquals(registrationInputModel.getEventsOfInterests().size(),eventsOfInterestSet.size());
@@ -83,21 +98,43 @@ public class RegistrationServiceTester {
                                       .equals(eventsOfInterestInput.getEventCode())));
     }
 
-    assertEquals("verified", registratinCreated.getWebhookStatus());
-    assertEquals(true, registratinCreated.isEnabled());
-    assertNull(registration.get().getWebhookUrl());
-    assertUrl(registration.get().getJournalUrl().getHref());
+    assertEquals("verified", registrationCreated.getWebhookStatus());
+    assertEquals(true, registrationCreated.isEnabled());
+
     assertUrl(registration.get().getTraceUrl().getHref());
+    assertUrl(registration.get().getJournalUrl().getHref());
+
     assertNotNull(registration.get().getCreatedDate());
     assertNotNull(registration.get().getUpdatedDate());
-    assertEquals(registration.get().getUpdatedDate(), registration.get().getCreatedDate());
     return registration.get();
   }
 
+  public Registration updateRegistration(Registration registrationToUpdate, String runtimeActionToUpdate) {
+    EventsOfInterest eventsOfInterest = registrationToUpdate.getEventsOfInterests().iterator().next();
+    String providerId = eventsOfInterest.getProviderId();
+    String eventCode = eventsOfInterest.getEventCode();
+    Optional<Registration> updatedRegistration =
+        registrationService.updateRegistration(registrationToUpdate.getRegistrationId(),
+            RegistrationUpdateModel.builder()
+            .name(registrationToUpdate.getName())
+            .description(TEST_DESCRIPTION)
+            .deliveryType(DELIVERY_TYPE_WEBHOOK)
+            .runtimeAction(runtimeActionToUpdate)
+            .addEventsOfInterests(getTestEventsOfInterestBuilder(providerId, eventCode).build()));
+
+    assertTrue(updatedRegistration.isPresent());
+    logger.info("Updated AIO Event Registration: {}", updatedRegistration.get());
+    return updatedRegistration.get();
+  }
+
   public void deleteRegistration(String registrationId) {
-    registrationService.delete(registrationId);
-    assertFalse(registrationService.findById(registrationId).isPresent());
-    logger.info("Deleted AIO Event Registration: {}", registrationId);
+    if (registrationService.findById(registrationId).isPresent()) {
+      registrationService.delete(registrationId);
+      assertFalse(registrationService.findById(registrationId).isPresent());
+      logger.info("Deleted AIO Event Registration: {}", registrationId);
+    } else {
+      logger.info("no registration exists for registration_id=`{}` to delete", registrationId);
+    }
   }
 
   private static void assertUrl(String stringUrl) {

@@ -11,18 +11,18 @@
  */
 package com.adobe.aio.workspace;
 
-import java.security.PrivateKey;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Properties;
-
-import org.apache.commons.lang3.StringUtils;
+import static com.adobe.aio.util.FileUtil.getMapFromProperties;
+import static com.adobe.aio.util.FileUtil.readPropertiesFromClassPath;
+import static com.adobe.aio.util.FileUtil.readPropertiesFromFile;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.util.Constants;
-
-import static com.adobe.aio.util.FileUtil.*;
+import java.security.PrivateKey;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Properties;
+import org.apache.commons.lang3.StringUtils;
 
 public class Workspace {
 
@@ -31,7 +31,6 @@ public class Workspace {
   public static final String CONSUMER_ORG_ID = "aio_consumer_org_id";
   public static final String PROJECT_ID = "aio_project_id";
   public static final String WORKSPACE_ID = "aio_workspace_id";
-
   public static final String API_KEY = "aio_api_key";
   /**
    * @deprecated This will be removed in v2.0 of the library.
@@ -73,7 +72,6 @@ public class Workspace {
     this.consumerOrgId = consumerOrgId;
     this.projectId = projectId;
     this.workspaceId = workspaceId;
-
     this.authContext = authContext;
   }
 
@@ -161,25 +159,21 @@ public class Workspace {
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
+    if (this == o)
       return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
+    if (o == null || getClass() != o.getClass())
       return false;
-    }
     Workspace workspace = (Workspace) o;
-    return
-        Objects.equals(imsUrl, workspace.imsUrl) &&
-            Objects.equals(imsOrgId, workspace.imsOrgId) &&
-            Objects.equals(consumerOrgId, workspace.consumerOrgId) &&
-            Objects.equals(projectId, workspace.projectId) &&
-            Objects.equals(workspaceId, workspace.workspaceId);
+    return Objects.equals(imsUrl, workspace.imsUrl) && Objects.equals(imsOrgId, workspace.imsOrgId)
+        && Objects.equals(apiKey, workspace.apiKey) && Objects.equals(consumerOrgId,
+        workspace.consumerOrgId) && Objects.equals(projectId, workspace.projectId)
+        && Objects.equals(workspaceId, workspace.workspaceId)
+        && Objects.equals(authContext, workspace.authContext);
   }
 
   @Override
   public int hashCode() {
-    return Objects
-        .hash(imsUrl, imsOrgId, consumerOrgId, projectId, workspaceId);
+    return Objects.hash(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
   }
 
   @Override
@@ -187,10 +181,11 @@ public class Workspace {
     return "Workspace{" +
         "imsUrl='" + imsUrl + '\'' +
         ", imsOrgId='" + imsOrgId + '\'' +
-        ", consumerOrgId='" + consumerOrgId + '\'' +
         ", apiKey='" + apiKey + '\'' +
+        ", consumerOrgId='" + consumerOrgId + '\'' +
         ", projectId='" + projectId + '\'' +
         ", workspaceId='" + workspaceId + '\'' +
+        ", authContext=" + authContext +
         '}';
   }
 
@@ -316,7 +311,6 @@ public class Workspace {
     }
 
     public Workspace build() {
-
       if (authContext != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
       }

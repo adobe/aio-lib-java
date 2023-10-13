@@ -28,9 +28,10 @@ public class RegistrationCreateModel extends RegistrationUpdateModel {
     private final String clientId;
 
     private RegistrationCreateModel(final String clientId, final String name, final String description,
-                    final String deliveryType, final Set<EventsOfInterestInputModel> eventsOfInterestInputModels,
+                    final String deliveryType, final String runtimeAction,
+                    final Set<EventsOfInterestInputModel> eventsOfInterestInputModels,
                     final String webhookUrl, final boolean enabled) {
-        super(name, description, webhookUrl, eventsOfInterestInputModels, deliveryType, enabled);
+        super(name, description, webhookUrl, eventsOfInterestInputModels, deliveryType, runtimeAction, enabled);
         if (StringUtils.isBlank(clientId)) {
             throw new IllegalArgumentException(
                             "Registration is missing a clientId");
@@ -58,7 +59,7 @@ public class RegistrationCreateModel extends RegistrationUpdateModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId, name, description, deliveryType, eventsOfInterestInputModels, webhookUrl, enabled);
+        return Objects.hash(clientId, name, description, deliveryType, runtimeAction, eventsOfInterestInputModels, webhookUrl, enabled);
     }
 
     @Override
@@ -68,6 +69,7 @@ public class RegistrationCreateModel extends RegistrationUpdateModel {
                         ", name='" + name + '\'' +
                         ", description='" + description + '\'' +
                         ", deliveryType=" + deliveryType +
+                        ", runtimeAction=" + runtimeAction +
                         ", eventsOfInterestInputModels=" + eventsOfInterestInputModels +
                         ", webhookUrl='" + webhookUrl + '\'' +
                         ", enabled='" + enabled + '\'' +
@@ -90,8 +92,8 @@ public class RegistrationCreateModel extends RegistrationUpdateModel {
 
         @Override
         public RegistrationCreateModel build() {
-            return new RegistrationCreateModel(clientId, name, description, deliveryType, eventsOfInterestInputModels,
-                            webhookUrl, enabled);
+            return new RegistrationCreateModel(clientId, name, description, deliveryType, runtimeAction,
+                eventsOfInterestInputModels, webhookUrl, enabled);
         }
     }
 }
