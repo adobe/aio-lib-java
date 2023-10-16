@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.4...HEAD)
+
+### 📁 Other pull requests
+
+- fixing the runtime registration create assertion [\#191](https://github.com/adobe/aio-lib-java/pull/191) ([abhupadh](https://github.com/abhupadh))
+
 ## [aio-lib-java-1.1.4](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.4) (2023-10-13)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.2...aio-lib-java-1.1.4)
