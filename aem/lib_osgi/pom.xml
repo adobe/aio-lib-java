@@ -72,11 +72,6 @@
     </dependency>
 
     <dependency>
-      <artifactId>jakarta.xml.bind-api</artifactId>
-      <groupId>jakarta.xml.bind</groupId>
-    </dependency>
-
-    <dependency>
       <artifactId>feign-core</artifactId>
       <groupId>io.github.openfeign</groupId>
     </dependency>

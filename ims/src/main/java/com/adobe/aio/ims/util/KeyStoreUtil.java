@@ -11,13 +11,9 @@
  */
 package com.adobe.aio.ims.util;
 
-import jakarta.xml.bind.DatatypeConverter;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyFactory;
 import java.security.KeyStore;
@@ -28,11 +24,11 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.util.Base64;
 
 public class KeyStoreUtil {
 
   private static final String PKCS_12 = "PKCS12";
-  private static final String UTF_8 = "UTF-8";
   private static final String RSA = "RSA";
 
   private KeyStoreUtil() {
@@ -48,10 +44,7 @@ public class KeyStoreUtil {
 
   public static PrivateKey getPrivateKeyFromEncodedPkcs8(String base64EncodedPkcs8)
       throws InvalidKeySpecException, NoSuchAlgorithmException {
-    return getPrivateKeyFromPkcs8(
-        DatatypeConverter.parseBase64Binary(
-            new String(base64EncodedPkcs8.getBytes(), StandardCharsets.UTF_8))
-    );
+    return getPrivateKeyFromPkcs8(Base64.getDecoder().decode(base64EncodedPkcs8));
   }
 
   public static PrivateKey getPrivateKeyFromPkcs8File(String filePath)
