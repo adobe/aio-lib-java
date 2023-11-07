@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.8...HEAD)
+
+### 📁 Other pull requests
+
+- Remove all references to deprecated Jakarta libraries [\#192](https://github.com/adobe/aio-lib-java/pull/192) ([bstopp](https://github.com/bstopp))
+
 ## [aio-lib-java-1.1.8](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.8) (2023-10-18)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.6...aio-lib-java-1.1.8)
