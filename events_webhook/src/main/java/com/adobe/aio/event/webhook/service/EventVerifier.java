@@ -18,7 +18,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.Signature;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -84,10 +86,11 @@ public class EventVerifier {
 
   private boolean verifyEventSignatures(String eventPayload, Map<String, String> headers) {
     return verifySignature(eventPayload, headers.get(ADOBE_IOEVENTS_PUB_KEY_1_PATH),
-        headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1)) ||
-        verifySignature(eventPayload, headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH),
-            headers.get(ADOBE_IOEVENTS_DIGI_SIGN_2));
-  }
+          headers.get(ADOBE_IOEVENTS_DIGI_SIGN_1)) ||
+          verifySignature(eventPayload, headers.get(ADOBE_IOEVENTS_PUB_KEY_2_PATH),
+              headers.get(ADOBE_IOEVENTS_DIGI_SIGN_2));
+    }
+
 
   private boolean verifySignature(String eventPayload, String publicKeyPath, String signature) {
     try {
@@ -108,9 +111,18 @@ public class EventVerifier {
     try {
       ObjectMapper mapper = new ObjectMapper();
       JsonNode jsonPayload = mapper.readTree(eventPayload);
-      JsonNode recipientClientIdNode = jsonPayload.get(RECIPIENT_CLIENT_ID);
-      return (recipientClientIdNode != null && recipientClientIdNode.textValue() != null
-          && recipientClientIdNode.textValue().equals(clientId));
+
+      if (jsonPayload.isArray()) {
+        List recipientClientIds = new ArrayList<String>();
+        for (JsonNode event : jsonPayload) {
+          recipientClientIds.add(event.get(RECIPIENT_CLIENT_ID).textValue());
+        }
+        return recipientClientIds.stream().allMatch(id -> id.equals(clientId));
+      } else {
+        JsonNode recipientClientIdNode = jsonPayload.get(RECIPIENT_CLIENT_ID);
+        return (recipientClientIdNode != null && recipientClientIdNode.textValue() != null
+            && recipientClientIdNode.textValue().equals(clientId));
+      }
     } catch (JsonProcessingException e) {
       logger.error("Invalid event Payload: {}", e.getMessage());
       return false;
