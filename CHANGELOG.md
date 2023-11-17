@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- feat: support for handling batch payload during event verification [\#195](https://github.com/adobe/aio-lib-java/pull/195) ([abhupadh](https://github.com/abhupadh))
 - Remove all references to deprecated Jakarta libraries [\#192](https://github.com/adobe/aio-lib-java/pull/192) ([bstopp](https://github.com/bstopp))
 
 ## [aio-lib-java-1.1.8](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.8) (2023-10-18)
