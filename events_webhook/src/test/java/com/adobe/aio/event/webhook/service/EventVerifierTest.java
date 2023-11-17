@@ -37,13 +37,17 @@ public class EventVerifierTest {
   private static final String ANOTHER_API_KEY = "another_api_key";
   private static final String VALID_SIGNATURE_1 = "IaHo9/8DYt2630pAtjIJeGtsHjB61zOSiAb3S4X1VdPooxikfk79H/t3rgaSbmQMOnjVPRpYVNsHn1fE+l80gjEqmljgNEHt+BtfEH8EsEigwbjQS9opTx/GFnexw3h/sWOt4MGWt3TFK484Dsijijcs1gLwcxTyVUeU2G2XXECpH4dvvEXWQP+1HDFu9nrN+MU/aOR17cNF5em/D/jKjgTcaPx7jK+W5M57F3qqsmdcPxM1ltQxx1/iAXWaOffOC/nXSda5fLFZL75RKBIoveDjL9zthVkBVY9qKXYyK6S/usc2bW3PpXuRTd5Xv2bFB2Mlzr0Gi6St/iiNYLEl3g==";
   private static final String VALID_SIGNATURE_2 = "Xx8uVpZlKIOqAdVBr/6aNrASk6u7i/Bb9kWZttIFOu0Y2JGozZGG7WF9Z6056RdeeBUXLJsV4r8a3ZeEUrOZi3hvhV+Hw7vmK1NIQJVIqdigF9mJ/2gSMGe7K4OPedh+fPNZmbOyNIc6FRmUtTdemNLJeCzM7Zf+niC7Tfsytsz4lW4ebv34TWHxzAA9pZRcJE4a1YYqEYAqn3cHTvCzB/AQ6VdIcP8MsuTGatCk9Vc6dTPOVEcyYkVXTMGgsmzW8RB6mq0m1aqTz3KvnhEYlkspqtxi+jBkTjcYVf1dPa4ofbosmD5rohIef/UwPX5n5ZHM7du86Gf+6S72ee8tbw==";
+  private static final String VALID_SIGNATURE_1_FOR_BATCH_PAYLOAD = "FHdNfD32TWCLbTUbnQykLWfyNfD+XpNroo0sqmVMhmdMGUqVQMkg7SVfIr8vt12EhGPzapqIbgFe2b6lU7isflzzJWQfpN+BB7brMzfrxQVDkAZZP7hvm9FLqPVAV24/jLojyfNJbLNufEN8rg0+u90bGxZjzAOAWdHdkA3xbJudJc+mzpW0GSxKN7QszrIC0P0A2bTmpvfVtyCbR3uM9JVwBPwR0yqq0EuFV2GeFhnJzDqH4qq8Q4kScOmgMK/9p/Ii2Km0KquYnBFC7GsPE2OVrZulmOZZpy1F2YNY2NEPehbtqtgVvbKCafzwi85LnOC/ZXbfOnN4HMoWwS6MSQ==";
+  private static final String VALID_SIGNATURE_2_FOR_BATCH_PAYLOAD = "v6Id3pI0rVt8b3QTMaceL874PwHztTZAHrydaAap/5uHoMcJhXcXHX0lZtTIEzqar0za2NM93HRz1AJZvuCDlWMPNWd+W2bvodjsh0OAHYJ2woNfeIm6QrnWOYHSC0x0dFuC0gncKGvcNt977Ef7XThEoIbTemIbQt/7dlgTOu9X0hTA9pZHb+iX8AL71zvjP31gWUaAQE9Di1LiACKI1kadfGb0ZNOWXpov3byOl8EXNN7GwoGYtTdP0AlyswhOjRZDEFeCfOoPq+XH2ufqOa0t8inoOp80AczxO9WEqPosyyqhaNjMhSSiN/h41TqMXNsDA7FIRgO6GRg2cRDtog==";
   private static final String INVALID_SIGNATURE = "abc22OGm8/6H6bJXSi+/4VztsPN+fPZtHgHrrASuTw7LTUZVpbAZNaXVTzQsFd47PvaI8aQxbl874GFmH0QfAVQaRT93x5O/kQdM1ymG03303QaFY/mjm/Iot3VEwq5xOtM8f5a2mKUce9bgEv28iN7z9H/MbBOSmukPSJh/vMLkFAmMZQwdP4SRK3ckxQg6wWTbeMRxjw8/FLckznCGPZri4c0O7WPr8wnrWcvArlhBpIPJPeifJOyDj/woFQzoeemdrVoBFOieE/j3RoMWzcQeLENaSrqk00MPL2svNQcTLMkmWuICOjYSbnlv/EPFCQS8bQsnVHxGFD1yDeFa7Q==";
   private static final String PUB_KEY1_PATH = "/junit/pub-key-1.pem";
   private static final String PUB_KEY2_PATH = "/junit/pub-key-2.pem";
   private static final String ANOTHER_PUB_KEY_PATH = "/junit/another-pub-key.pem";
   private static final String VALID_PAYLOAD = "{\"event_id\":\"eventId1\",\"event\":{\"hello\":\"world\"},\"" + RECIPIENT_CLIENT_ID + "\":\"" + API_KEY + "\"}";
-
+  private static final String VALID_BATCH_PAYLOAD = "[{\"event_id\":\"eventId1\",\"event\":{\"hello\":\"world\"},\"" + RECIPIENT_CLIENT_ID + "\":\"" + API_KEY + "\"}]";
   private static final PublicKey PUBLIC_KEY1;
+  private static final PublicKey PUBLIC_KEY1_FOR_BATCH_PAYLOAD;
+  private static final PublicKey PUBLIC_KEY2_FOR_BATCH_PAYLOAD;
   private static final PublicKey PUBLIC_KEY2;
   private static final PublicKey ANOTHER_PUBLIC_KEY;
 
@@ -63,6 +67,21 @@ public class EventVerifierTest {
     }
   }
 
+  private static final Map<String, String> VALID_HEADERS_FOR_BATCH_PAYLOAD = new HashMap<>();
+  static {
+    VALID_HEADERS_FOR_BATCH_PAYLOAD.put(ADOBE_IOEVENTS_DIGI_SIGN_1, VALID_SIGNATURE_1_FOR_BATCH_PAYLOAD);
+    VALID_HEADERS_FOR_BATCH_PAYLOAD.put(ADOBE_IOEVENTS_DIGI_SIGN_2, VALID_SIGNATURE_2_FOR_BATCH_PAYLOAD);
+    VALID_HEADERS_FOR_BATCH_PAYLOAD.put(ADOBE_IOEVENTS_PUB_KEY_1_PATH, PUB_KEY1_PATH);
+    VALID_HEADERS_FOR_BATCH_PAYLOAD.put(ADOBE_IOEVENTS_PUB_KEY_2_PATH, PUB_KEY2_PATH);
+
+    try {
+      PUBLIC_KEY1_FOR_BATCH_PAYLOAD = getPublicKey1ForBatchPayload();
+      PUBLIC_KEY2_FOR_BATCH_PAYLOAD = getPublicKey2ForBatchPayload();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
+
   @Test
   public void validSignatures() {
     try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
@@ -71,6 +90,19 @@ public class EventVerifierTest {
         }
     )) {
       assertTrue(new EventVerifier().verify(VALID_PAYLOAD, API_KEY, VALID_HEADERS));
+    }
+  }
+
+  @Test
+  public void validSignaturesForBatchPayload() {
+    try (MockedConstruction<FeignPubKeyService> ignored = mockConstruction(FeignPubKeyService.class,
+        (mock, mockContext) -> {
+          when(mock.getAioEventsPublicKey(PUB_KEY1_PATH)).thenReturn(PUBLIC_KEY1_FOR_BATCH_PAYLOAD);
+          when(mock.getAioEventsPublicKey(PUB_KEY2_PATH)).thenReturn(PUBLIC_KEY2_FOR_BATCH_PAYLOAD);
+        }
+    )) {
+      assertTrue(new EventVerifier().verify(VALID_BATCH_PAYLOAD, API_KEY,
+          VALID_HEADERS_FOR_BATCH_PAYLOAD));
     }
   }
 
@@ -208,6 +240,7 @@ public class EventVerifierTest {
     assertFalse(underTest.verify("aSimpleString", API_KEY, headers));
     assertFalse(underTest.verify("{\"key\":\"value\"}", API_KEY, headers));
     assertFalse(underTest.verify("{\"key\":\"value\"", API_KEY, headers));
+    assertFalse(underTest.verify("[\"{\"key\":\"value\"}, {\"key\":\"value\"}]", API_KEY, headers));
   }
 
   @Test
@@ -253,6 +286,31 @@ public class EventVerifierTest {
         + "jku8atEfdo341WcHSHW2hf/Gx2mazhGg1of6wZVforXo3R1HVqIVMlOk6GMcz4HH\n"
         + "iLOuEOURFucux3jm4gF2DF1B627vCqaGDoduvyIjitXQS6KqSx3dzB2dGOBDPpsr\n"
         + "8wIDAQAB";
+    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    return stringToKey(publicK);
+  }
+
+  private static PublicKey getPublicKey1ForBatchPayload() throws Exception {
+    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA32C7cnLjR0a\n"
+        + "7nAkPff9u2EaWMeSHepagN65lP5KT0g8crCGX2ZKnU3Q87GR/dJXXa8TO8Q/khVf64\n"
+        + "faO+mLdhFrpXu1fCPIaWmvKMVhwUdE8gh/jQKKiM7VP6o4K4SuhHrSJut7GFEfWemz\n"
+        + "l9MKP5ykhqKbx11Hse4GwpN26F/oUp5tAfycrPOkQjyUo/WOhLNZ/zJpsl9FQRpYGf\n"
+        + "HPWhIRXHuPvb32O1A1F9kNNYISphxPq6+htotnFGuXS3j2G928g0pX7SU2CYGkVBMV\n"
+        + "AMJqNqyVENaVON0sVA8u10aIPi9xIi9vR9rGpridIP+zMiwsv+H1zWoU5CX4eN5RN/\n"
+        + "QIDAQAB";
+
+    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    return stringToKey(publicK);
+  }
+
+  private static PublicKey getPublicKey2ForBatchPayload() throws Exception {
+    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxw9Gi8RdJuD\n"
+        + "ZhMVMexLYCPISnFTuaJ14q9TL2wVnc9pc79GO24mAOFvjx9x4GffOsCKwWPp62wrgj\n"
+        + "w4MS4Xyvo4uv9Qyhp0pJGfMgT3BRtzbL/AgJEJAGvluRxZdDOXkZsViB/pQIu1AQJx\n"
+        + "+2c0DIRAVxI5AcQc/8BvBsB7AltjH+Bf5hFMuNuARiVouyI83KOh3S6hN+zZu10Dkm\n"
+        + "rLA1kZ6X2rKxrnz6bTG8ad+rkL3DbY/WvAah9ZJz8Xq87TS3/NDsveloVQ3+Wm+nF3\n"
+        + "tyzdyTRDldwviRFX+EDhzAbTtk2hEZEIU3+9zxhSAscBUfV/2+P12vnowVoYNN7mqr\n"
+        + "QIDAQAB";
     publicK = publicK.replaceAll(System.lineSeparator(), "");
     return stringToKey(publicK);
   }
