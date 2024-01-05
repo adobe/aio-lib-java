@@ -23,7 +23,6 @@ import com.adobe.aio.event.management.RegistrationServiceTester;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.publish.PublishServiceTester;
 import com.adobe.aio.util.WorkspaceUtil;
-import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -67,7 +66,7 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
     try {
       providerId = providerServiceTester.createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL,
           ProviderServiceIntegrationTest.TEST_EVENT_CODE).getId();
-      Registration registration = registrationServiceTester.createJournalRegistration(
+      Registration registration = registrationServiceTester.createOrUpdateJournalRegistration(
           TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE);
       registrationId = registration.getRegistrationId();
 

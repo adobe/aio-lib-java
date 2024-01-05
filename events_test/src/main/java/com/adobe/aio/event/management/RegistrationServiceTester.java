@@ -22,6 +22,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,18 +56,18 @@ public class RegistrationServiceTester {
                     .providerId(providerId);
   }
 
-  public Registration createJournalRegistration(String registrationName,
+  public Registration createOrUpdateJournalRegistration(String registrationName,
       String providerId, String eventCode){
-    return createRegistration(RegistrationCreateModel.builder()
+    return createOrUpdateRegistration(RegistrationCreateModel.builder()
           .name(registrationName)
           .description(TEST_DESCRIPTION)
           .deliveryType(DELIVERY_TYPE_JOURNAL)
           .addEventsOfInterests(getTestEventsOfInterestBuilder(providerId, eventCode).build()));
   }
 
-  public Registration createRuntimeWebhookRegistration(String registrationName, String providerId,
+  public Registration createOrUpdateRuntimeWebhookRegistration(String registrationName, String providerId,
       String eventCode, String runtimeAction) {
-    return createRegistration(RegistrationCreateModel.builder()
+    return createOrUpdateRegistration(RegistrationCreateModel.builder()
         .name(registrationName)
         .description(TEST_DESCRIPTION)
         .deliveryType(DELIVERY_TYPE_WEBHOOK)
@@ -74,14 +75,21 @@ public class RegistrationServiceTester {
         .addEventsOfInterests(getTestEventsOfInterestBuilder(providerId, eventCode).build()));
   }
 
-  public Registration createRegistration(
+  public Registration createOrUpdateRegistration(
       RegistrationCreateModel.Builder registrationInputModelBuilder) {
+    return assertRegistrationCreatedResponseWithEventsOfInterest(registrationInputModelBuilder,
+        () -> registrationService.createOrUpdateRegistration(registrationInputModelBuilder));
+  }
+
+  public Registration assertRegistrationCreatedResponseWithEventsOfInterest(
+      RegistrationCreateModel.Builder registrationInputModelBuilder,
+      Supplier<Optional<Registration>> registrationSupplier) {
     RegistrationCreateModel registrationInputModel =
         registrationInputModelBuilder.clientId(this.workspace.getApiKey()).build();
-    Optional<Registration> registration = registrationService.createRegistration(registrationInputModelBuilder);
-    assertTrue(registration.isPresent());
-    Registration registrationCreated = registration.get();
-    logger.info("Created AIO Event Registration: {}", registration.get());
+    Optional<Registration> registrationOptional = registrationSupplier.get();
+    assertTrue(registrationOptional.isPresent());
+    Registration registrationCreated = registrationOptional.get();
+    logger.info("Created AIO Event Registration: {}", registrationOptional.get());
 
     assertNotNull(registrationCreated.getRegistrationId());
     assertEquals(registrationInputModel.getDescription(), registrationCreated.getDescription());
@@ -95,30 +103,31 @@ public class RegistrationServiceTester {
         assertEquals(registrationInputModel.getWebhookUrl(), registrationCreated.getWebhookUrl());
       }
     } else {
-      assertNull(registration.get().getWebhookUrl());
-      assertUrl(registration.get().getJournalUrl().getHref());
+      assertNull(registrationOptional.get().getWebhookUrl());
+      assertUrl(registrationOptional.get().getJournalUrl().getHref());
     }
 
-    Set<EventsOfInterest> eventsOfInterestSet = registration.get().getEventsOfInterests();
+    Set<EventsOfInterest> eventsOfInterestSet = registrationOptional.get().getEventsOfInterests();
     assertEquals(registrationInputModel.getEventsOfInterests().size(),eventsOfInterestSet.size());
     for(EventsOfInterestInputModel eventsOfInterestInput: registrationInputModel.getEventsOfInterests()){
       assertTrue(eventsOfInterestSet.stream()
-                      .anyMatch(eventsOfInterest -> eventsOfInterest.getEventCode()
-                                      .equals(eventsOfInterestInput.getEventCode())));
+          .anyMatch(eventsOfInterest -> eventsOfInterest.getEventCode()
+              .equals(eventsOfInterestInput.getEventCode())));
     }
 
     assertEquals("verified", registrationCreated.getWebhookStatus());
     assertEquals(true, registrationCreated.isEnabled());
 
-    assertUrl(registration.get().getTraceUrl().getHref());
-    assertUrl(registration.get().getJournalUrl().getHref());
+    assertUrl(registrationOptional.get().getTraceUrl().getHref());
+    assertUrl(registrationOptional.get().getJournalUrl().getHref());
 
-    assertNotNull(registration.get().getCreatedDate());
-    assertNotNull(registration.get().getUpdatedDate());
-    return registration.get();
+    assertNotNull(registrationOptional.get().getCreatedDate());
+    assertNotNull(registrationOptional.get().getUpdatedDate());
+    return registrationOptional.get();
   }
 
-  public Registration updateRegistration(Registration registrationToUpdate, String runtimeActionToUpdate) {
+  public Registration updateRuntimeWebhookRegistration(Registration registrationToUpdate,
+      String runtimeActionToUpdate) {
     EventsOfInterest eventsOfInterest = registrationToUpdate.getEventsOfInterests().iterator().next();
     String providerId = eventsOfInterest.getProviderId();
     String eventCode = eventsOfInterest.getEventCode();

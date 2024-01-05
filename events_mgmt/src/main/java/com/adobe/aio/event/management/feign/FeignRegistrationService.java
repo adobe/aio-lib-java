@@ -11,11 +11,7 @@
  */
 package com.adobe.aio.event.management.feign;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.apache.commons.lang3.StringUtils;
+import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 
 import com.adobe.aio.event.management.RegistrationService;
 import com.adobe.aio.event.management.api.RegistrationApi;
@@ -29,10 +25,16 @@ import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.adobe.aio.util.feign.FeignUtil;
 import com.adobe.aio.workspace.Workspace;
 import feign.RequestInterceptor;
-
-import static com.adobe.aio.util.Constants.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FeignRegistrationService implements RegistrationService {
+
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final RegistrationApi registrationApi;
   private final Workspace workspace;
@@ -48,6 +50,7 @@ public class FeignRegistrationService implements RegistrationService {
     this.registrationApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
         .requestInterceptor(AIOHeaderInterceptor.builder().workspace(workspace).build())
+        .errorDecoder(new ConflictErrorDecoder())
         .target(RegistrationApi.class, apiUrl);
     this.workspace = workspace;
   }
@@ -68,6 +71,18 @@ public class FeignRegistrationService implements RegistrationService {
     }
     registrationApi.delete(workspace.getConsumerOrgId(), workspace.getProjectId(),
         workspace.getWorkspaceId(), registrationId);
+  }
+
+  @Override
+  public Optional<Registration> createOrUpdateRegistration(
+      RegistrationCreateModel.Builder registrationCreateModelBuilder) {
+    try {
+      return createRegistration(registrationCreateModelBuilder);
+    } catch (ConflictException ex) {
+      String conflictingRegistrationId = ex.getConflictingId();
+      logger.warn("Another registration (id `{}`) exists with conflict due to {}. Trying to update it...", conflictingRegistrationId, ex.getMessage());
+      return updateRegistration(conflictingRegistrationId, registrationCreateModelBuilder);
+    }
   }
 
   @Override

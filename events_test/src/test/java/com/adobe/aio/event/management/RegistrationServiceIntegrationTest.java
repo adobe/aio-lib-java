@@ -51,7 +51,7 @@ public class RegistrationServiceIntegrationTest extends RegistrationServiceTeste
     try {
       providerId = providerServiceTester.createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL,
           TEST_EVENT_CODE).getId();
-      Registration registration = createJournalRegistration(TEST_REGISTRATION_NAME, providerId,
+      Registration registration = createOrUpdateJournalRegistration(TEST_REGISTRATION_NAME, providerId,
           TEST_EVENT_CODE);
       registrationId = registration.getRegistrationId();
       Optional<Registration> found = registrationService.findById(registrationId);
