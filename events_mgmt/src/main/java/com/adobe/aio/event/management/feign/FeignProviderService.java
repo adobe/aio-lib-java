@@ -108,22 +108,11 @@ public class FeignProviderService implements ProviderService {
   public Optional<Provider> createOrUpdateProvider(final ProviderInputModel providerInputModel) {
     try {
       return createProvider(providerInputModel);
-    }
-    catch (ConflictException e){
-      logger.info("Another provider (providerMetadata: `{}`, imsOrg:`{}`, instanceId: `{}` )"
-          + " exist with conflicting natural keys, trying to update it ...",
-          providerInputModel.getProviderMetadataId(), workspace.getImsOrgId(),
-          providerInputModel.getInstanceId());
-      String providerId = this.findProviderBy(providerInputModel.getProviderMetadataId(),
-              providerInputModel.getInstanceId())
-          .orElseThrow(() -> new AIOException("Race condition error: the provider "
-              + "(`" + providerInputModel.getProviderMetadataId() + "`,"
-              + "`" + workspace.getImsOrgId() + "`,"
-              + "`" + providerInputModel.getInstanceId()+ "`)"
-              + " may have been deleted just after a Conflict `" + e.getMessage()
-              + "` was detected while creating it"))
-          .getId();
-      return updateProvider(providerId,providerInputModel);
+    } catch (ConflictException e){
+      String conflictingProviderId = e.getConflictingId();
+      logger.warn("Another provider (id: `{}` ) exist with conflict due to {}, trying to update it ...",
+          conflictingProviderId, e.getMessage());
+      return updateProvider(conflictingProviderId, providerInputModel);
     }
   }
 
