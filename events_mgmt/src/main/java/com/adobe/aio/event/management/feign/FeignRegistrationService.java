@@ -80,7 +80,7 @@ public class FeignRegistrationService implements RegistrationService {
       return createRegistration(registrationCreateModelBuilder);
     } catch (ConflictException ex) {
       String conflictingRegistrationId = ex.getConflictingId();
-      logger.warn("Another registration (id `{}`) exists with conflict due to {}. Trying to update it...", conflictingRegistrationId, ex.getMessage());
+      logger.info("Another registration (id `{}`) exists with conflict due to {}. Trying to update it...", conflictingRegistrationId, ex.getMessage());
       return updateRegistration(conflictingRegistrationId, registrationCreateModelBuilder);
     }
   }

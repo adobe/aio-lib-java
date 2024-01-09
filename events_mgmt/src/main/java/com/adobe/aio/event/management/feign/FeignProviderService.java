@@ -110,7 +110,7 @@ public class FeignProviderService implements ProviderService {
       return createProvider(providerInputModel);
     } catch (ConflictException e){
       String conflictingProviderId = e.getConflictingId();
-      logger.warn("Another provider (id: `{}` ) exist with conflict due to {}, trying to update it ...",
+      logger.info("Another provider (id: `{}` ) exist with conflict due to {}, trying to update it ...",
           conflictingProviderId, e.getMessage());
       return updateProvider(conflictingProviderId, providerInputModel);
     }
