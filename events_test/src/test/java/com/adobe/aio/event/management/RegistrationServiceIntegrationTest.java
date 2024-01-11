@@ -13,6 +13,7 @@ package com.adobe.aio.event.management;
 
 import java.util.Optional;
 
+import java.util.function.Supplier;
 import org.apache.commons.lang3.StringUtils;
 
 import com.adobe.aio.event.management.model.Registration;
@@ -54,21 +55,16 @@ public class RegistrationServiceIntegrationTest extends RegistrationServiceTeste
       Registration registration = createOrUpdateJournalRegistration(TEST_REGISTRATION_NAME, providerId,
           TEST_EVENT_CODE);
       registrationId = registration.getRegistrationId();
-      Optional<Registration> found = registrationService.findById(registrationId);
-      assertTrue(found.isPresent());
-      logger.info("Found AIO Event Registration: {}", found.get());
-      assertEquals(registrationId, found.get().getRegistrationId());
-      assertEquals(registration.getClientId(), found.get().getClientId());
-      assertEquals(registration.getDescription(), found.get().getDescription());
-      assertEquals(registration.getName(), found.get().getName());
-      assertEquals(registration.getDeliveryType(), found.get().getDeliveryType());
-      assertEquals(registration.getEventsOfInterests(),
-          found.get().getEventsOfInterests());
-      assertEquals(registration.getWebhookStatus(), found.get().getWebhookStatus());
-      assertEquals(registration.isEnabled(), found.get().isEnabled());
-      assertEquals(registration.getWebhookUrl(), found.get().getWebhookUrl());
-      assertEquals(registration.getJournalUrl().getHref(), found.get().getJournalUrl().getHref());
-      assertEquals(registration.getTraceUrl().getHref(), found.get().getTraceUrl().getHref());
+      String finalRegistrationId = registration.getRegistrationId();
+      assertCreatedOrUpdatedRegistrationMatchesWithFoundRegistration(registration,
+          () -> registrationService.findById(finalRegistrationId));
+
+      // covering the update path
+      registration = createOrUpdateJournalRegistration(TEST_REGISTRATION_NAME, providerId,
+          TEST_EVENT_CODE);
+      String finalUpdatedRegistrationId = registration.getRegistrationId();
+      assertCreatedOrUpdatedRegistrationMatchesWithFoundRegistration(registration,
+          () -> registrationService.findById(finalUpdatedRegistrationId));
     } catch (Exception e) {
       logger.error(e.getMessage(), e);
       fail(e.getMessage());
@@ -80,5 +76,24 @@ public class RegistrationServiceIntegrationTest extends RegistrationServiceTeste
         providerServiceTester.deleteProvider(providerId);
       }
     }
+  }
+
+  public void assertCreatedOrUpdatedRegistrationMatchesWithFoundRegistration(Registration registration,
+      Supplier<Optional<Registration>> foundRegistrationSupplier) {
+    Optional<Registration> foundRegistrationOptional = foundRegistrationSupplier.get();
+    assertTrue(foundRegistrationOptional.isPresent());
+    logger.info("Found AIO Event Registration: {}", foundRegistrationOptional.get());
+    assertEquals(registration.getRegistrationId(), foundRegistrationOptional.get().getRegistrationId());
+    assertEquals(registration.getClientId(), foundRegistrationOptional.get().getClientId());
+    assertEquals(registration.getDescription(), foundRegistrationOptional.get().getDescription());
+    assertEquals(registration.getName(), foundRegistrationOptional.get().getName());
+    assertEquals(registration.getDeliveryType(), foundRegistrationOptional.get().getDeliveryType());
+    assertEquals(registration.getEventsOfInterests(),
+        foundRegistrationOptional.get().getEventsOfInterests());
+    assertEquals(registration.getWebhookStatus(), foundRegistrationOptional.get().getWebhookStatus());
+    assertEquals(registration.isEnabled(), foundRegistrationOptional.get().isEnabled());
+    assertEquals(registration.getWebhookUrl(), foundRegistrationOptional.get().getWebhookUrl());
+    assertEquals(registration.getJournalUrl().getHref(), foundRegistrationOptional.get().getJournalUrl().getHref());
+    assertEquals(registration.getTraceUrl().getHref(), foundRegistrationOptional.get().getTraceUrl().getHref());
   }
 }
