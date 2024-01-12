@@ -1,12 +1,12 @@
 # 📑 Changelog
 
-## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+## [aio-lib-java-1.1.14](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.14) (2024-01-12)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.12...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.12...aio-lib-java-1.1.14)
 
 ### 📁 Other pull requests
 
-- refactoring registration service to make it resilient for conflict errors [\#200](https://github.com/adobe/aio-lib-java/pull/200) ([abhupadh](https://github.com/abhupadh))
+- refactoring registration and provider service to make it resilient for conflict errors [\#200](https://github.com/adobe/aio-lib-java/pull/200) ([abhupadh](https://github.com/abhupadh))
 
 ## [aio-lib-java-1.1.12](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.12) (2023-11-17)
 
