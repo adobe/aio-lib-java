@@ -12,12 +12,11 @@
 package com.adobe.aio.event.management;
 
 import com.adobe.aio.event.management.feign.FeignRegistrationService;
+import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.event.management.model.RegistrationPaginatedModel;
 import com.adobe.aio.event.management.model.RegistrationUpdateModel;
 import com.adobe.aio.workspace.Workspace;
-import com.adobe.aio.event.management.model.Registration;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +25,8 @@ public interface RegistrationService {
   Optional<Registration> findById(String registrationId);
 
   void delete(String registrationId);
+
+  Optional<Registration> createOrUpdateRegistration(RegistrationCreateModel.Builder registrationCreateModelBuilder);
 
   Optional<Registration> createRegistration(RegistrationCreateModel.Builder registrationCreateModelBuilder);
 

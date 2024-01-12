@@ -20,7 +20,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import com.adobe.aio.event.management.ProviderServiceTester;
 import com.adobe.aio.event.management.RegistrationServiceTester;
-import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +46,7 @@ public class PublishServiceIntegrationTest extends PublishServiceTester {
     try {
       providerId = providerServiceTester.createOrUpdateProvider(TEST_EVENT_PROVIDER_LABEL,
           TEST_EVENT_CODE).getId();
-      registrationId = registrationServiceTester.createJournalRegistration(
+      registrationId = registrationServiceTester.createOrUpdateJournalRegistration(
           TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE).getRegistrationId();
 
       assertNotNull(publishCloudEvent(providerId, TEST_EVENT_CODE));

@@ -13,15 +13,19 @@ package com.adobe.aio.event.management.feign;
 
 import feign.FeignException;
 import feign.Response;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Optional;
 
 public class ConflictException extends FeignException {
 
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final String conflictingId;
 
   public ConflictException(Response response, FeignException exception) {
     super(response.status(), exception.getMessage(), response.request(), exception);
+    Optional<String> conflictingIdOptional = response.headers().get("x-conflicting-id").stream().findFirst();
+    conflictingId  = conflictingIdOptional.isPresent() ? conflictingIdOptional.get() : null;
   }
 
+  public String getConflictingId() {
+    return conflictingId;
+  }
 }
