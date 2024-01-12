@@ -77,11 +77,11 @@ public class RegistrationServiceTester {
 
   public Registration createOrUpdateRegistration(
       RegistrationCreateModel.Builder registrationInputModelBuilder) {
-    return assertRegistrationCreatedResponseWithEventsOfInterest(registrationInputModelBuilder,
+    return assertRegistrationCreatedOrUpdatedResponseWithEventsOfInterest(registrationInputModelBuilder,
         () -> registrationService.createOrUpdateRegistration(registrationInputModelBuilder));
   }
 
-  public Registration assertRegistrationCreatedResponseWithEventsOfInterest(
+  public Registration assertRegistrationCreatedOrUpdatedResponseWithEventsOfInterest(
       RegistrationCreateModel.Builder registrationInputModelBuilder,
       Supplier<Optional<Registration>> registrationSupplier) {
     RegistrationCreateModel registrationInputModel =
@@ -89,7 +89,7 @@ public class RegistrationServiceTester {
     Optional<Registration> registrationOptional = registrationSupplier.get();
     assertTrue(registrationOptional.isPresent());
     Registration registrationCreated = registrationOptional.get();
-    logger.info("Created AIO Event Registration: {}", registrationOptional.get());
+    logger.info("Created/Updated AIO Event Registration: {}", registrationOptional.get());
 
     assertNotNull(registrationCreated.getRegistrationId());
     assertEquals(registrationInputModel.getDescription(), registrationCreated.getDescription());
@@ -124,25 +124,6 @@ public class RegistrationServiceTester {
     assertNotNull(registrationOptional.get().getCreatedDate());
     assertNotNull(registrationOptional.get().getUpdatedDate());
     return registrationOptional.get();
-  }
-
-  public Registration updateRuntimeWebhookRegistration(Registration registrationToUpdate,
-      String runtimeActionToUpdate) {
-    EventsOfInterest eventsOfInterest = registrationToUpdate.getEventsOfInterests().iterator().next();
-    String providerId = eventsOfInterest.getProviderId();
-    String eventCode = eventsOfInterest.getEventCode();
-    Optional<Registration> updatedRegistration =
-        registrationService.updateRegistration(registrationToUpdate.getRegistrationId(),
-            RegistrationUpdateModel.builder()
-            .name(registrationToUpdate.getName())
-            .description(TEST_DESCRIPTION)
-            .deliveryType(DELIVERY_TYPE_WEBHOOK)
-            .runtimeAction(runtimeActionToUpdate)
-            .addEventsOfInterests(getTestEventsOfInterestBuilder(providerId, eventCode).build()));
-
-    assertTrue(updatedRegistration.isPresent());
-    logger.info("Updated AIO Event Registration: {}", updatedRegistration.get());
-    return updatedRegistration.get();
   }
 
   public void deleteRegistration(String registrationId) {
