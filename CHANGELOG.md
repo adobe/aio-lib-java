@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.12...HEAD)
+
+### 📁 Other pull requests
+
+- refactoring registration service to make it resilient for conflict errors [\#200](https://github.com/adobe/aio-lib-java/pull/200) ([abhupadh](https://github.com/abhupadh))
+
 ## [aio-lib-java-1.1.12](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.12) (2023-11-17)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.10...aio-lib-java-1.1.12)
