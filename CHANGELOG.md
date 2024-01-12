@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.14...HEAD)
+
+### 📁 Other pull requests
+
+- better logging, removing updateRuntimeRegistration api after leveraging createOrUpdate [\#201](https://github.com/adobe/aio-lib-java/pull/201) ([abhupadh](https://github.com/abhupadh))
+
 ## [aio-lib-java-1.1.14](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.14) (2024-01-12)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.12...aio-lib-java-1.1.14)
