@@ -81,7 +81,7 @@ public class ProviderServiceTester {
       Set<EventMetadata> eventMetadataSet, Supplier<Optional<Provider>> providerSupplier) {
     Optional<Provider> provider = providerSupplier.get();
     assertTrue(provider.isPresent());
-    logger.info("Created AIO Events Provider: {}", provider);
+    logger.info("Created/Updated AIO Events Provider: {}", provider);
     String providerId = provider.get().getId();
     assertTrue(StringUtils.isNotBlank(providerId));
     assertTrue(StringUtils.isNotBlank(provider.get().getInstanceId()));
