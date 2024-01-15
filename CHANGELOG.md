@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.16...HEAD)
+
+### 📁 Other pull requests
+
+- `aio-lib-osgi` added export instruction for auth package \(\#202\) [\#203](https://github.com/adobe/aio-lib-java/pull/203) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-1.1.16](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.16) (2024-01-12)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.14...aio-lib-java-1.1.16)

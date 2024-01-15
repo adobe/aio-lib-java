@@ -32,6 +32,7 @@ Import-Package: \
     com.fasterxml.jackson.databind.type;version="[2.9,3)",\
     *
 Export-Package: com.adobe.aio.workspace;version="${project.version}";provide:=true,\
+    com.adobe.aio.auth;version="${project.version}";provide:=true,\
     com.adobe.aio.exception;version="${project.version}";provide:=true,\
     com.adobe.aio.util;version="${project.version}";provide:=true,\
     com.adobe.aio.ims;version="${project.version}";provide:=true,\
