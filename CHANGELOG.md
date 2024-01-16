@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-204 Setting the `--release `of the Java Compiler: to stick to Java 8 and avoid accidental Java 11 api use [\#206](https://github.com/adobe/aio-lib-java/pull/206) ([francoisledroff](https://github.com/francoisledroff))
 - `aio-lib-osgi` added export instruction for auth package \(\#202\) [\#203](https://github.com/adobe/aio-lib-java/pull/203) ([francoisledroff](https://github.com/francoisledroff))
 
 ## [aio-lib-java-1.1.16](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.16) (2024-01-12)
