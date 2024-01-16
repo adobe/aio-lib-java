@@ -1,5 +1,9 @@
 # 📑 Changelog
 
+## [aio-lib-java-1.1.20](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.20) (2024-01-16)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.18...aio-lib-java-1.1.20)
+
 ## [aio-lib-java-1.1.18](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.18) (2024-01-16)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.16...aio-lib-java-1.1.18)
