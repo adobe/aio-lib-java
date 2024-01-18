@@ -13,16 +13,17 @@ package com.adobe.aio.event.management.feign;
 
 import feign.FeignException;
 import feign.Response;
-import java.util.Optional;
+import java.util.Collection;
 
 public class ConflictException extends FeignException {
 
+  public static final String X_CONFLICTING_ID = "x-conflicting-id";
   private final String conflictingId;
 
   public ConflictException(Response response, FeignException exception) {
     super(response.status(), exception.getMessage(), response.request(), exception);
-    Optional<String> conflictingIdOptional = response.headers().get("x-conflicting-id").stream().findFirst();
-    conflictingId  = conflictingIdOptional.isPresent() ? conflictingIdOptional.get() : null;
+    Collection<String> conflictingIdHeader = response.headers().get(X_CONFLICTING_ID);
+    conflictingId  = conflictingIdHeader!=null ? conflictingIdHeader.stream().findFirst().orElse(null) : null;
   }
 
   public String getConflictingId() {
