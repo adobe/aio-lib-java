@@ -52,7 +52,7 @@ jobs:
 
       - name: Store Version
         id: store-version
-        run: echo "::set-output name=version::$(grep ^scm.tag= release.properties | sed -e 's/scm.tag=aio-lib-java-//g')"
+        run: echo "version=$(grep ^scm.tag= release.properties | sed -e 's/scm.tag=aio-lib-java-//g')" >> $GITHUB_OUTPUT
 
   github-release:
     needs: tag
