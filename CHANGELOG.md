@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.20...HEAD)
+
+### 📁 Other pull requests
+
+- GH-207 `aio-lib-java-events-mgmt`:   adding missing `x-conflicting-id` header safe guard within `ConflictException` [\#208](https://github.com/adobe/aio-lib-java/pull/208) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-1.1.20](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.20) (2024-01-16)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.18...aio-lib-java-1.1.20)
