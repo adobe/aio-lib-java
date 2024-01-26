@@ -36,7 +36,7 @@ public interface ImsApi {
 
   @RequestLine("POST /ims/token/v3?client_id={client_id}")
   @Headers("Content-Type: application/x-www-form-urlencoded")
-  @Body("client_secret={client_secret}&grant_type=client_credentials&scopes={scopes}")
+  @Body("client_secret={client_secret}&grant_type=client_credentials&scope={scopes}")
   AccessToken getOAuthAccessToken(
       @Param("client_id") String clientId,
       @Param("client_secret") String clientSecret,
