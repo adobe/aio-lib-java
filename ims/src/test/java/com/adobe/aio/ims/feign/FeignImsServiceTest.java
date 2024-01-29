@@ -76,7 +76,7 @@ public class FeignImsServiceTest {
                 params(
                     param("client_secret", clientSecret),
                     param("grant_type", "client_credentials"),
-                    param("scopes", "SCOPE2,SCOPE1")
+                    param("scope", "SCOPE2,SCOPE1")
                 )
             )
     ).respond(
