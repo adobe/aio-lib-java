@@ -29,6 +29,17 @@ public class WorkspaceUtil {
   private WorkspaceUtil() {
   }
 
+  /**
+   * Loads configurations for a Workspace from either one and only one of the following
+   * sources, probing them first to check that all the required properties are given,
+   * in order:
+   * <ol>
+   *   <li>System Properties</li>
+   *   <li>Environment Variables</li>
+   *   <li>classpath:{@link WorkspaceUtil#DEFAULT_TEST_PROPERTIES}</li>
+   * </ol>
+   * @return a Workspace.Builder loaded with the provided config
+   */
   public static Workspace.Builder getSystemWorkspaceBuilder() {
     if (StringUtils.isNoneBlank(
         System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
