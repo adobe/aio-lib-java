@@ -47,6 +47,23 @@ public class WorkspaceUtil {
       return Workspace.builder()
           .properties(System.getProperties())
           .privateKey(privateKey);
+    } else if (StringUtils.isNoneBlank(
+        System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
+        System.getenv(Workspace.API_KEY),
+        System.getenv(Workspace.WORKSPACE_ID),
+        System.getenv(Workspace.CLIENT_SECRET),
+        System.getenv(Workspace.CONSUMER_ORG_ID),
+        System.getenv(Workspace.CREDENTIAL_ID),
+        System.getenv(Workspace.IMS_ORG_ID),
+        System.getenv(Workspace.META_SCOPES),
+        System.getenv(Workspace.PROJECT_ID),
+        System.getenv(Workspace.TECHNICAL_ACCOUNT_ID))) {
+      logger.debug("loading test Workspace from JVM System Properties");
+      PrivateKey privateKey =
+          new PrivateKeyBuilder()
+              .encodedPkcs8Key(System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8))
+              .build();
+      return Workspace.builder().systemEnv().privateKey(privateKey);
     } else {
       /**
        * WARNING: don't push back your workspace secrets to github
