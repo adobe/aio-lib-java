@@ -29,6 +29,17 @@ public class WorkspaceUtil {
   private WorkspaceUtil() {
   }
 
+  /**
+   * Loads configurations for a Workspace from either one and only one of the following
+   * sources, probing them first to check that all the required properties are given,
+   * in order:
+   * <ol>
+   *   <li>System Properties</li>
+   *   <li>Environment Variables</li>
+   *   <li>classpath:{@link WorkspaceUtil#DEFAULT_TEST_PROPERTIES}</li>
+   * </ol>
+   * @return a Workspace.Builder loaded with the provided config
+   */
   public static Workspace.Builder getSystemWorkspaceBuilder() {
     if (StringUtils.isNoneBlank(
         System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
@@ -47,6 +58,23 @@ public class WorkspaceUtil {
       return Workspace.builder()
           .properties(System.getProperties())
           .privateKey(privateKey);
+    } else if (StringUtils.isNoneBlank(
+        System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
+        System.getenv(Workspace.API_KEY),
+        System.getenv(Workspace.WORKSPACE_ID),
+        System.getenv(Workspace.CLIENT_SECRET),
+        System.getenv(Workspace.CONSUMER_ORG_ID),
+        System.getenv(Workspace.CREDENTIAL_ID),
+        System.getenv(Workspace.IMS_ORG_ID),
+        System.getenv(Workspace.META_SCOPES),
+        System.getenv(Workspace.PROJECT_ID),
+        System.getenv(Workspace.TECHNICAL_ACCOUNT_ID))) {
+      logger.debug("loading test Workspace from JVM System Properties");
+      PrivateKey privateKey =
+          new PrivateKeyBuilder()
+              .encodedPkcs8Key(System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8))
+              .build();
+      return Workspace.builder().systemEnv().privateKey(privateKey);
     } else {
       /**
        * WARNING: don't push back your workspace secrets to github
@@ -60,15 +88,30 @@ public class WorkspaceUtil {
     return getSystemProperty(key,DEFAULT_TEST_PROPERTIES);
   }
 
+  /**
+   * Loads a property from either one of the following sources, probing it first to
+   * check that the required property is given, in order:
+   * <ol>
+   *   <li>System Properties</li>
+   *   <li>Environment Variables</li>
+   *   <li>classpath:{@code propertyClassPath}</li>
+   * </ol>
+   *
+   * @param key the property name
+   * @param propertyClassPath the classpath of the property file
+   * @return the value of the property
+   */
   public static String getSystemProperty(String key, String propertyClassPath) {
-    String value = System.getProperty(key);
-    if (StringUtils.isBlank(value)) {
-      logger.debug("loading property `{}` from classpath `{}`", key, propertyClassPath);
-      value = FileUtil.readPropertiesFromClassPath(propertyClassPath).getProperty(key);
-    } else {
+    if (StringUtils.isNotBlank(System.getProperty(key))) {
       logger.debug("loading property `{}`from JVM System Properties", key);
+      return System.getProperty(key);
+    } if (StringUtils.isNotBlank(System.getenv(key))) {
+      logger.debug("loading property `{}` from Environment Variables", key);
+      return System.getenv(key);
+    } else {
+      logger.debug("loading property `{}` from classpath `{}`", key, propertyClassPath);
+      return FileUtil.readPropertiesFromClassPath(propertyClassPath).getProperty(key);
     }
-    return value;
   }
 
   private static Workspace.Builder getWorkspaceBuilder(String propertyFileClassPath) {
