@@ -88,15 +88,30 @@ public class WorkspaceUtil {
     return getSystemProperty(key,DEFAULT_TEST_PROPERTIES);
   }
 
+  /**
+   * Loads a property from either one of the following sources, probing it first to
+   * check that the required property is given, in order:
+   * <ol>
+   *   <li>System Properties</li>
+   *   <li>Environment Variables</li>
+   *   <li>classpath:{@code propertyClassPath}</li>
+   * </ol>
+   *
+   * @param key the property name
+   * @param propertyClassPath the classpath of the property file
+   * @return the value of the property
+   */
   public static String getSystemProperty(String key, String propertyClassPath) {
-    String value = System.getProperty(key);
-    if (StringUtils.isBlank(value)) {
-      logger.debug("loading property `{}` from classpath `{}`", key, propertyClassPath);
-      value = FileUtil.readPropertiesFromClassPath(propertyClassPath).getProperty(key);
-    } else {
+    if (StringUtils.isNotBlank(System.getProperty(key))) {
       logger.debug("loading property `{}`from JVM System Properties", key);
+      return System.getProperty(key);
+    } if (StringUtils.isNotBlank(System.getenv(key))) {
+      logger.debug("loading property `{}` from Environment Variables", key);
+      return System.getenv(key);
+    } else {
+      logger.debug("loading property `{}` from classpath `{}`", key, propertyClassPath);
+      return FileUtil.readPropertiesFromClassPath(propertyClassPath).getProperty(key);
     }
-    return value;
   }
 
   private static Workspace.Builder getWorkspaceBuilder(String propertyFileClassPath) {

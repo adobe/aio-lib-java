@@ -11,12 +11,10 @@
  */
 package com.adobe.aio.event.management;
 
-import com.adobe.aio.event.management.model.ProviderInputModel;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import com.adobe.aio.event.management.feign.ConflictException;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
 import com.adobe.aio.util.WorkspaceUtil;

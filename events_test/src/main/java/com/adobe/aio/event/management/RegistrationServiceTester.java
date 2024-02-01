@@ -15,7 +15,6 @@ import com.adobe.aio.event.management.model.EventsOfInterest;
 import com.adobe.aio.event.management.model.EventsOfInterestInputModel;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
-import com.adobe.aio.event.management.model.RegistrationUpdateModel;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.net.MalformedURLException;
