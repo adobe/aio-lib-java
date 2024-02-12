@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.24...HEAD)
+
+### 📁 Other pull requests
+
+- GH-213: enhance WorkspaceUtil to also search in environment variables… [\#216](https://github.com/adobe/aio-lib-java/pull/216) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-1.1.24](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.24) (2024-01-29)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.22...aio-lib-java-1.1.24)
