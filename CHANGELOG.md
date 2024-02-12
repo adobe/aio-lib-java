@@ -7,6 +7,8 @@
 ### 📁 Other pull requests
 
 - GH-213: enhance WorkspaceUtil to also search in environment variables… [\#216](https://github.com/adobe/aio-lib-java/pull/216) ([francoisledroff](https://github.com/francoisledroff))
+- GH-150: adjust feign retryer configuration \(\#151\) [\#215](https://github.com/adobe/aio-lib-java/pull/215) ([francoisledroff](https://github.com/francoisledroff))
+- GH-150: adjust feign retryer configuration [\#151](https://github.com/adobe/aio-lib-java/pull/151) ([nicdard](https://github.com/nicdard))
 
 ## [aio-lib-java-1.1.24](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.24) (2024-01-29)
 
