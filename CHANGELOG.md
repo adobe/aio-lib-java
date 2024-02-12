@@ -1,5 +1,14 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.26...HEAD)
+
+### 📁 Other pull requests
+
+- GH-218: Use GITHUB\_OUTPUT envvar instead of set-output command [\#219](https://github.com/adobe/aio-lib-java/pull/219) ([nicdard](https://github.com/nicdard))
+- ci: Use GITHUB\_OUTPUT envvar instead of set-output command [\#209](https://github.com/adobe/aio-lib-java/pull/209) ([arunsathiya](https://github.com/arunsathiya))
+
 ## [aio-lib-java-1.1.26](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-1.1.26) (2024-02-12)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.24...aio-lib-java-1.1.26)
