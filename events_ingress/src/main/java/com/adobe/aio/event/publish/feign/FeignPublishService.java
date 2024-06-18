@@ -54,23 +54,37 @@ public class FeignPublishService implements PublishService {
 
   @Override
   public CloudEvent publishCloudEvent(String providerId, String eventCode, String eventId,
-      String data) throws JsonProcessingException {
-    return publishCloudEvent(providerId, eventCode, eventId, JacksonUtil.getJsonNode(data));
+      String cloudEventData) throws JsonProcessingException {
+    return publishCloudEvent(providerId, eventCode, eventId, JacksonUtil.getJsonNode(cloudEventData));
   }
 
   @Override
   public CloudEvent publishCloudEvent(String providerId, String eventCode, String eventId,
-      JsonNode data) {
+                                      JsonNode cloudEventData) {
+    return publishCloudEvent(false, providerId, eventCode, eventId, cloudEventData);
+  }
+
+  @Override
+  public CloudEvent publishCloudEvent(Boolean isPhiData, String providerId, String eventCode, String eventId,
+                                     JsonNode cloudEventData) {
     CloudEvent inputModel = CloudEvent.builder()
         .providerId(providerId).eventCode(eventCode).eventId(eventId)
-        .data(data).build();
-    publishApi.publishCloudEvent(inputModel);
+        .data(cloudEventData).build();
+    publishApi.publishCloudEvent(isPhiData, inputModel);
     return inputModel;
   }
 
   @Override
   public void publishRawEvent(String providerId, String eventCode, String rawEvent) {
-    publishApi.publishRawEvent(providerId,  eventCode, getJsonNode(rawEvent));
+    publishApi.publishRawEvent(false, providerId,  eventCode, null, getJsonNode(rawEvent));
+  }
+
+  @Override
+  public void publishRawEvent(Boolean isPhiData, String providerId, String eventCode, String eventId, String rawEvent) {
+    if (isPhiData !=null && isPhiData && StringUtils.isEmpty(eventId)) {
+      throw new AIOException("Cannot publish PHI data without an eventId");
+    }
+    publishApi.publishRawEvent(isPhiData, providerId,  eventCode, eventId, getJsonNode(rawEvent));
   }
 
   private static JsonNode getJsonNode(String jsonPayload)  {

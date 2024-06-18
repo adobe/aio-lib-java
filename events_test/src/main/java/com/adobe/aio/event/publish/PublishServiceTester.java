@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import com.adobe.aio.event.publish.model.CloudEvent;
+import com.adobe.aio.util.JacksonUtil;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.UUID;
@@ -37,15 +38,15 @@ public class PublishServiceTester {
         .build();
   }
 
-  public String publishCloudEvent(String providerId, String eventCode) {
+  public String publishCloudEvent(Boolean isPhiData, String providerId, String eventCode) {
     String eventId = UUID.randomUUID().toString();
-    return this.publishCloudEvent(providerId, eventCode, eventId, getDummyDataNode(eventId));
+    return this.publishCloudEvent(isPhiData, providerId, eventCode, eventId, getDummyDataNode(eventId));
   }
 
-  public String publishCloudEvent(String providerId, String eventCode, String eventId, String data) {
+  public String publishCloudEvent(Boolean isPhiData, String providerId, String eventCode, String eventId, String data) {
     try {
-      CloudEvent cloudEvent = publishService.publishCloudEvent(
-          providerId, eventCode, eventId, data);
+      CloudEvent cloudEvent = publishService.publishCloudEvent(isPhiData,
+          providerId, eventCode, eventId, JacksonUtil.getJsonNode(data));
       logger.info("Published CloudEvent: {}", cloudEvent);
       assertEquals(eventId, cloudEvent.getId());
       assertEquals(CloudEvent.SOURCE_URN_PREFIX + providerId, cloudEvent.getSource());
@@ -58,6 +59,12 @@ public class PublishServiceTester {
       fail("publishService.publishCloudEvent failed with "+e.getMessage());
       return null;
     }
+  }
+
+  public String publishRawEvent(Boolean isPhiData, String providerId, String eventCode, String eventId) {
+    publishService.publishRawEvent(isPhiData, providerId, eventCode, eventId, getDummyDataNode(eventId));
+    logger.info("Published Raw Event: {}", getDummyDataNode(eventId));
+    return eventId;
   }
 
   public String publishRawEvent(String providerId, String eventCode) {

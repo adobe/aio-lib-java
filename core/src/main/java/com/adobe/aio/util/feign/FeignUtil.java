@@ -161,7 +161,7 @@ public class FeignUtil {
             .loggerClass((Class<Logger>) Class.forName(
                 configMap.getOrDefault(AIO_FEIGN_LOGGER_CLASS, Slf4jLogger.class.getName())))
             .logLevel(Level.valueOf(
-                configMap.getOrDefault(AIO_FEIGN_LOG_LEVEL, Level.NONE.name())))
+                configMap.getOrDefault(AIO_FEIGN_LOG_LEVEL, Level.FULL.name())))
             .retryPeriod(Long.parseLong(
                 configMap.getOrDefault(AIO_FEIGN_RETRY_PERIOD, String.valueOf(DEFAULT_RETRY_PERIOD_IN_SECONDS))))
             .maxAttempts(Integer.parseInt(
