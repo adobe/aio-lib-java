@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-221 wiring the new `x-event-phidata` header support in Adobe IO Events `eventsingress` `PublishApi` [\#222](https://github.com/adobe/aio-lib-java/pull/222) ([francoisledroff](https://github.com/francoisledroff))
 - GH-218: Use GITHUB\_OUTPUT envvar instead of set-output command [\#219](https://github.com/adobe/aio-lib-java/pull/219) ([nicdard](https://github.com/nicdard))
 - ci: Use GITHUB\_OUTPUT envvar instead of set-output command [\#209](https://github.com/adobe/aio-lib-java/pull/209) ([arunsathiya](https://github.com/arunsathiya))
 
