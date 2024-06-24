@@ -57,8 +57,8 @@ public class FeignUtil {
   public static final String AIO_FEIGN_RETRY_MAX_PERIOD = "AIO_FEIGN_RETRY_MAX_PERIOD";
 
 
-  private static final int DEFAULT_CONNECT_TIMEOUT_IN_SECONDS = 10;
-  private static final int DEFAULT_READ_TIMEOUT_IN_SECONDS = 60;
+  public static final int DEFAULT_CONNECT_TIMEOUT_IN_SECONDS = 10;
+  public static final int DEFAULT_READ_TIMEOUT_IN_SECONDS = 60;
   public static final long DEFAULT_RETRY_PERIOD_IN_SECONDS = 1000L;
   public static final int DEFAULT_MAX_ATTEMPTS = 3;
   public static final long DEFAULT_MAX_PERIOD_IN_SECONDS = 4L;
@@ -161,7 +161,7 @@ public class FeignUtil {
             .loggerClass((Class<Logger>) Class.forName(
                 configMap.getOrDefault(AIO_FEIGN_LOGGER_CLASS, Slf4jLogger.class.getName())))
             .logLevel(Level.valueOf(
-                configMap.getOrDefault(AIO_FEIGN_LOG_LEVEL, Level.FULL.name())))
+                configMap.getOrDefault(AIO_FEIGN_LOG_LEVEL, Level.NONE.name())))
             .retryPeriod(Long.parseLong(
                 configMap.getOrDefault(AIO_FEIGN_RETRY_PERIOD, String.valueOf(DEFAULT_RETRY_PERIOD_IN_SECONDS))))
             .maxAttempts(Integer.parseInt(
