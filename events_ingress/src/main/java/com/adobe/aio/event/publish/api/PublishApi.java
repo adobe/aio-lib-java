@@ -26,26 +26,37 @@ public interface PublishApi {
    * publish a Cloud Event Payload
    *
    * @param body your CloudEvent Input Model
+   * @param isPhiData true if the event contains PHI Data
    */
   @RequestLine("POST")
-  @Headers({"Content-Type: application/cloudevents+json"})
-  void publishCloudEvent(CloudEvent body);
+  @Headers({
+          "Content-Type: application/cloudevents+json",
+          "x-event-phidata: {isPhiData}"})
+  void publishCloudEvent(
+          @Param("isPhiData") Boolean isPhiData,
+          CloudEvent body);
 
   /**
    * publish a Raw Event Json Payload
+   * @param isPhiData true if the event contains PHI Data
    * @param eventCode the Adobe I/O EventMetadata eventCode associated with the Event
    * @param providerId  the Adobe I/O EventMetadata ProviderId associated with the Event
+   * @param eventId the eventId you want to assign to this the Event (mandatory if isPhiData is true)
    * @param rawEvent the Raw Event Json Payload to publish
    */
   @RequestLine("POST")
   @Headers({
-      "Content-Type: application/json",
-      "x-adobe-event-provider-id: {providerId}",
-      "x-adobe-event-code: {eventCode}"
+          "Content-Type: application/json",
+          "x-event-phidata: {isPhiData}",
+          "x-event-id: {eventId}",
+          "x-adobe-event-provider-id: {providerId}",
+          "x-adobe-event-code: {eventCode}"
   })
   void publishRawEvent(
-      @Param("providerId") String providerId,
-      @Param("eventCode") String eventCode,
-      JsonNode rawEvent);
+          @Param("isPhiData") Boolean isPhiData,
+          @Param("providerId") String providerId,
+          @Param("eventCode") String eventCode,
+          @Param("eventId") String eventId,
+          JsonNode rawEvent);
 
 }

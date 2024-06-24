@@ -57,8 +57,8 @@ public class FeignUtil {
   public static final String AIO_FEIGN_RETRY_MAX_PERIOD = "AIO_FEIGN_RETRY_MAX_PERIOD";
 
 
-  private static final int DEFAULT_CONNECT_TIMEOUT_IN_SECONDS = 10;
-  private static final int DEFAULT_READ_TIMEOUT_IN_SECONDS = 60;
+  public static final int DEFAULT_CONNECT_TIMEOUT_IN_SECONDS = 10;
+  public static final int DEFAULT_READ_TIMEOUT_IN_SECONDS = 60;
   public static final long DEFAULT_RETRY_PERIOD_IN_SECONDS = 1000L;
   public static final int DEFAULT_MAX_ATTEMPTS = 3;
   public static final long DEFAULT_MAX_PERIOD_IN_SECONDS = 4L;

@@ -70,7 +70,7 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
           TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE);
       registrationId = registration.getRegistrationId();
 
-      String cloudEventId = publishServiceTester.publishCloudEvent(providerId, TEST_EVENT_CODE);
+      String cloudEventId = publishServiceTester.publishCloudEvent(false, providerId, TEST_EVENT_CODE);
       boolean wasCloudEventPolled = pollJournalForEvent(
           registration.getJournalUrl().getHref(), cloudEventId, isEventIdTheCloudEventId);
 
