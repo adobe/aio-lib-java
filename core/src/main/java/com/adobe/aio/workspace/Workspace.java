@@ -307,6 +307,7 @@ public class Workspace {
       if(StringUtils.isBlank(configMap.get(OAUTH_SCOPES))) {
         jwtbuilder = JwtContext.builder();
         jwtbuilder.configMap(configMap);
+        oAuthContext = false;
       } else {
         oAuthBuilder = OAuthContext.builder();
         oAuthBuilder.configMap(configMap);
