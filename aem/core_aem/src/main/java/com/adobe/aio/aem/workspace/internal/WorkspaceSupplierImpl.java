@@ -92,6 +92,7 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
     map.put(Workspace.TECHNICAL_ACCOUNT_ID, config.aio_technical_account_id());
     map.put(Workspace.WORKSPACE_ID, config.aio_workspace_id());
     map.put(Workspace.META_SCOPES, config.aio_meta_scopes());
+    map.put(Workspace.OAUTH_SCOPES, config.aio_oauth_scopes());
     return map;
   }
 

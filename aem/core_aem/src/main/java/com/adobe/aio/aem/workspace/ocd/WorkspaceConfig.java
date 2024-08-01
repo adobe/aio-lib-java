@@ -26,6 +26,10 @@ public @interface WorkspaceConfig {
       description = "Comma separated list of metascopes associated with your API (`/s/event_receiver_api,/s/ent_adobeio_sdk` for instance) (project.workspace.details.credentials.jwt.meta_scopes)")
   String aio_meta_scopes() default "/s/ent_adobeio_sdk";
 
+  @AttributeDefinition(name = "OAuth Scopes",
+          description = "Comma separated list of oauth scopes associated with your API (project.workspace.details.credentials.oauth_server_to_server.scopes)")
+  String aio_oauth_scopes();
+
   @AttributeDefinition(name = "IMS ORG ID",
       description = "Adobe IMS Organization ID as shown in your Adobe Developer Console workspace (project.org.ims_org_id)")
   String aio_ims_org_id();

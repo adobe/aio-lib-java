@@ -18,6 +18,7 @@ import java.security.PrivateKey;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
+import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -141,7 +142,7 @@ public class WorkspaceTest {
         .credentialId(JwtContext.CREDENTIAL_ID + TEST_VALUE)
         .technicalAccountId(JwtContext.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
         .privateKey(privateKey)
-        .addMetascope(JwtContext.META_SCOPES + TEST_VALUE)
+        .addMetascope(OAuthContext.SCOPES + TEST_VALUE)
         .build();
     assertEquals(actual, expected);
     assertEquals(actual.hashCode(), expected.hashCode());

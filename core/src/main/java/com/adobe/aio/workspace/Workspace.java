@@ -17,6 +17,7 @@ import static com.adobe.aio.util.FileUtil.readPropertiesFromFile;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
+import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
 import java.security.PrivateKey;
 import java.util.Map;
@@ -53,6 +54,8 @@ public class Workspace {
   @Deprecated
   public static final String META_SCOPES = "aio_meta_scopes";
 
+  public static final String OAUTH_SCOPES = "aio_oauth_scopes";
+
   // workspace context related:
   private final String imsUrl;
   private final String imsOrgId;
@@ -61,6 +64,8 @@ public class Workspace {
   private final String projectId;
   private final String workspaceId;
   private final Context authContext;
+
+  private static boolean oAuthContext = false;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String apiKey,
                     final String consumerOrgId, final String projectId, final String workspaceId,
@@ -202,6 +207,7 @@ public class Workspace {
 
     private JwtContext.Builder jwtbuilder;
     private Context authContext;
+    private OAuthContext.Builder oAuthBuilder;
 
     private Builder() {
     }
@@ -254,6 +260,10 @@ public class Workspace {
         jwtbuilder = JwtContext.builder();
       }
       jwtbuilder.clientSecret(clientSecret);
+      if(oAuthBuilder == null){
+        oAuthBuilder = OAuthContext.builder();
+      }
+      oAuthBuilder.clientSecret(clientSecret);
       return this;
     }
 
@@ -270,6 +280,10 @@ public class Workspace {
         jwtbuilder = JwtContext.builder();
       }
       jwtbuilder.addMetascope(metascope);
+      if(oAuthBuilder == null){
+        oAuthBuilder = OAuthContext.builder();
+      }
+      oAuthBuilder.addScope(metascope);
       return this;
     }
 
@@ -289,10 +303,15 @@ public class Workspace {
           .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
           .projectId(configMap.get(PROJECT_ID))
           .workspaceId(configMap.get(WORKSPACE_ID));
-
       // For backwards compatibility - should this be kept?
-      jwtbuilder = JwtContext.builder();
-      jwtbuilder.configMap(configMap);
+      if(StringUtils.isBlank(configMap.get(OAUTH_SCOPES))) {
+        jwtbuilder = JwtContext.builder();
+        jwtbuilder.configMap(configMap);
+      } else {
+        oAuthBuilder = OAuthContext.builder();
+        oAuthBuilder.configMap(configMap);
+        oAuthContext = true;
+      }
       return this;
     }
 
@@ -314,10 +333,17 @@ public class Workspace {
       if (authContext != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
       }
+      if(oAuthBuilder == null) {
+        oAuthBuilder = OAuthContext.builder();
+      }
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
       }
-      return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
+      if(oAuthContext){
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, oAuthBuilder.build());
+      } else {
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
+      }
     }
   }
 }
