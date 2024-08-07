@@ -130,7 +130,7 @@ public class WorkspaceTest {
   }
 
   @Test
-  public void jwtBackwardsCompat() throws Exception {
+  public void jwtBackwardsCompatible() throws Exception {
     Workspace actual = Workspace.builder()
         .imsUrl(Constants.IMS_URL)
         .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
@@ -142,7 +142,7 @@ public class WorkspaceTest {
         .credentialId(JwtContext.CREDENTIAL_ID + TEST_VALUE)
         .technicalAccountId(JwtContext.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
         .privateKey(privateKey)
-        .addMetascope(OAuthContext.SCOPES + TEST_VALUE)
+        .addMetascope(JwtContext.META_SCOPES + TEST_VALUE)
         .build();
     assertEquals(actual, expected);
     assertEquals(actual.hashCode(), expected.hashCode());

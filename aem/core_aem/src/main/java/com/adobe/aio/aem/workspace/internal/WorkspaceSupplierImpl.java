@@ -14,6 +14,7 @@ package com.adobe.aio.aem.workspace.internal;
 import com.adobe.aio.aem.status.Status;
 import com.adobe.aio.aem.workspace.WorkspaceSupplier;
 import com.adobe.aio.aem.workspace.ocd.WorkspaceConfig;
+import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.workspace.Workspace;
 import java.security.PrivateKey;
@@ -92,7 +93,7 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
     map.put(Workspace.TECHNICAL_ACCOUNT_ID, config.aio_technical_account_id());
     map.put(Workspace.WORKSPACE_ID, config.aio_workspace_id());
     map.put(Workspace.META_SCOPES, config.aio_meta_scopes());
-    map.put(Workspace.OAUTH_SCOPES, config.aio_oauth_scopes());
+    map.put(OAuthContext.SCOPES, config.aio_oauth_scopes());
     return map;
   }
 

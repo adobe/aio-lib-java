@@ -54,8 +54,6 @@ public class Workspace {
   @Deprecated
   public static final String META_SCOPES = "aio_meta_scopes";
 
-  public static final String OAUTH_SCOPES = "aio_oauth_scopes";
-
   // workspace context related:
   private final String imsUrl;
   private final String imsOrgId;
@@ -64,8 +62,6 @@ public class Workspace {
   private final String projectId;
   private final String workspaceId;
   private final Context authContext;
-
-  private static boolean oAuthContext = false;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String apiKey,
                     final String consumerOrgId, final String projectId, final String workspaceId,
@@ -304,14 +300,12 @@ public class Workspace {
           .projectId(configMap.get(PROJECT_ID))
           .workspaceId(configMap.get(WORKSPACE_ID));
       // For backwards compatibility - should this be kept?
-      if(StringUtils.isBlank(configMap.get(OAUTH_SCOPES))) {
+      if(StringUtils.isBlank(configMap.get(OAuthContext.SCOPES))) {
         jwtbuilder = JwtContext.builder();
         jwtbuilder.configMap(configMap);
-        oAuthContext = false;
       } else {
         oAuthBuilder = OAuthContext.builder();
         oAuthBuilder.configMap(configMap);
-        oAuthContext = true;
       }
       return this;
     }
@@ -334,16 +328,18 @@ public class Workspace {
       if (authContext != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
       }
-      if(oAuthBuilder == null) {
+      if (oAuthBuilder == null) {
         oAuthBuilder = OAuthContext.builder();
       }
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
       }
-      if(oAuthContext){
+      if (jwtbuilder != null && jwtbuilder.build().getPrivateKey() != null) {
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
+      } else if (oAuthBuilder != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, oAuthBuilder.build());
       } else {
-        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
+        throw new IllegalStateException("Missing auth confiugration, set either jwt or oauth...");
       }
     }
   }
