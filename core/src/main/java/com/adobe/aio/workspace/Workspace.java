@@ -256,10 +256,6 @@ public class Workspace {
         jwtbuilder = JwtContext.builder();
       }
       jwtbuilder.clientSecret(clientSecret);
-      if(oAuthBuilder == null){
-        oAuthBuilder = OAuthContext.builder();
-      }
-      oAuthBuilder.clientSecret(clientSecret);
       return this;
     }
 
@@ -279,7 +275,6 @@ public class Workspace {
       if(oAuthBuilder == null){
         oAuthBuilder = OAuthContext.builder();
       }
-      oAuthBuilder.addScope(metascope);
       return this;
     }
 
@@ -328,13 +323,7 @@ public class Workspace {
       if (authContext != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
       }
-      if (oAuthBuilder == null) {
-        oAuthBuilder = OAuthContext.builder();
-      }
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      if (jwtbuilder != null && jwtbuilder.build().getPrivateKey() != null) {
+      if (jwtbuilder != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
       } else if (oAuthBuilder != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, oAuthBuilder.build());

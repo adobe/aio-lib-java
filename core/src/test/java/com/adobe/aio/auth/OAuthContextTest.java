@@ -8,7 +8,7 @@ import static com.adobe.aio.auth.OAuthContext.*;
 
 public class OAuthContextTest {
 
-  private static final String TEST_PROPERTIES = "workspace.oauth.properties";
+  private static final String TEST_PROPERTIES = "workspace.properties";
   private static final String TEST_VALUE = "_changeMe";
 
   private static OAuthContext expected;

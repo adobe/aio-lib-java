@@ -18,7 +18,6 @@ import java.security.PrivateKey;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
-import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

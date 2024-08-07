@@ -22,12 +22,12 @@ public @interface WorkspaceConfig {
       description = "Adobe IMS URL: prod: https://ims-na1.adobelogin.com | stage: https://ims-na1-stg1.adobelogin.com")
   String aio_ims_url() default "https://ims-na1.adobelogin.com";
 
-  @AttributeDefinition(name = "Meta Scopes",
-      description = "Comma separated list of metascopes associated with your API (`/s/event_receiver_api,/s/ent_adobeio_sdk` for instance) (project.workspace.details.credentials.jwt.meta_scopes)")
+  @AttributeDefinition(name = "JWT Meta Scopes",
+      description = "Comma separated list of metascopes associated with your API (`/s/event_receiver_api,/s/ent_adobeio_sdk` for instance) (project.workspace.details.credentials.jwt.meta_scopes), to be used with JWT.")
   String aio_meta_scopes() default "/s/ent_adobeio_sdk";
 
   @AttributeDefinition(name = "OAuth Scopes",
-          description = "Comma separated list of oauth scopes associated with your API (project.workspace.details.credentials.oauth_server_to_server.scopes)")
+          description = "Comma separated String. list of oauth scopes associated with your API (project.workspace.details.credentials.oauth_server_to_server.scopes)")
   String aio_oauth_scopes();
 
   @AttributeDefinition(name = "IMS ORG ID",
