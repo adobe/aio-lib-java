@@ -272,9 +272,6 @@ public class Workspace {
         jwtbuilder = JwtContext.builder();
       }
       jwtbuilder.addMetascope(metascope);
-      if(oAuthBuilder == null){
-        oAuthBuilder = OAuthContext.builder();
-      }
       return this;
     }
 
@@ -295,10 +292,11 @@ public class Workspace {
           .projectId(configMap.get(PROJECT_ID))
           .workspaceId(configMap.get(WORKSPACE_ID));
       // For backwards compatibility - should this be kept?
-      if(StringUtils.isBlank(configMap.get(OAuthContext.SCOPES))) {
+      if(StringUtils.isNotBlank(configMap.get(JwtContext.META_SCOPES))) {
         jwtbuilder = JwtContext.builder();
         jwtbuilder.configMap(configMap);
-      } else {
+      }
+      if(StringUtils.isNotBlank(configMap.get(OAuthContext.SCOPES))) {
         oAuthBuilder = OAuthContext.builder();
         oAuthBuilder.configMap(configMap);
       }
