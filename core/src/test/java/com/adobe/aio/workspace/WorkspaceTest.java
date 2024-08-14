@@ -129,7 +129,7 @@ public class WorkspaceTest {
   }
 
   @Test
-  public void jwtBackwardsCompat() throws Exception {
+  public void jwtBackwardsCompatible() throws Exception {
     Workspace actual = Workspace.builder()
         .imsUrl(Constants.IMS_URL)
         .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)

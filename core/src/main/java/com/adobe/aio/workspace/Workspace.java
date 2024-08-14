@@ -17,6 +17,7 @@ import static com.adobe.aio.util.FileUtil.readPropertiesFromFile;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
+import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
 import java.security.PrivateKey;
 import java.util.Map;
@@ -202,6 +203,7 @@ public class Workspace {
 
     private JwtContext.Builder jwtbuilder;
     private Context authContext;
+    private OAuthContext.Builder oAuthBuilder;
 
     private Builder() {
     }
@@ -289,10 +291,15 @@ public class Workspace {
           .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
           .projectId(configMap.get(PROJECT_ID))
           .workspaceId(configMap.get(WORKSPACE_ID));
-
       // For backwards compatibility - should this be kept?
-      jwtbuilder = JwtContext.builder();
-      jwtbuilder.configMap(configMap);
+      if(StringUtils.isNotBlank(configMap.get(JwtContext.META_SCOPES))) {
+        jwtbuilder = JwtContext.builder();
+        jwtbuilder.configMap(configMap);
+      }
+      if(StringUtils.isNotBlank(configMap.get(OAuthContext.SCOPES))) {
+        oAuthBuilder = OAuthContext.builder();
+        oAuthBuilder.configMap(configMap);
+      }
       return this;
     }
 
@@ -314,10 +321,13 @@ public class Workspace {
       if (authContext != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
       }
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
+      if (jwtbuilder != null) {
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
+      } else if (oAuthBuilder != null) {
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, oAuthBuilder.build());
+      } else {
+        throw new IllegalStateException("Missing auth confiugration, set either jwt or oauth...");
       }
-      return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
     }
   }
 }
