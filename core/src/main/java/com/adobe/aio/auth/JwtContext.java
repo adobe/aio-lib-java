@@ -19,8 +19,6 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -31,7 +29,6 @@ import static com.adobe.aio.util.FileUtil.*;
  */
 public class JwtContext implements Context {
   public static final String CREDENTIAL_ID = "aio_credential_id";
-  public static final String CLIENT_SECRET = "aio_client_secret";
   public static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
   public static final String META_SCOPES = "aio_meta_scopes";
 

@@ -18,6 +18,7 @@ import java.security.PrivateKey;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
+import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,8 +27,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkspaceTest {
 
-  private static Workspace expected;
-  private static final String TEST_PROPERTIES = "workspace.properties";
+  private static final String TEST_JWT_WORKSPACE_PROPERTIES = "workspace.properties";
+  private static final String TEST_OAUTH_WORKSPACE_PROPERTIES = "workspace.oauth.properties";
   private static final String TEST_VALUE = "_changeMe";
   private static PrivateKey privateKey;
 
@@ -37,7 +38,6 @@ public class WorkspaceTest {
     kpg.initialize(2048);
     KeyPair kp = kpg.generateKeyPair();
     privateKey = kp.getPrivate();
-    expected = Workspace.builder().propertiesPath(TEST_PROPERTIES).privateKey(privateKey).build();
   }
 
   @Test
@@ -129,8 +129,10 @@ public class WorkspaceTest {
   }
 
   @Test
-  public void jwtBackwardsCompatible() throws Exception {
-    Workspace actual = Workspace.builder()
+  public void testJwtAuthContextWorkspaceFromProperties()  {
+    Workspace workspaceFromProperties = Workspace.builder().propertiesPath(TEST_JWT_WORKSPACE_PROPERTIES).privateKey(privateKey).build();
+    JwtContext expectedAuthContext = JwtContext.builder().propertiesPath(TEST_JWT_WORKSPACE_PROPERTIES).privateKey(privateKey).build();
+    Workspace expected = Workspace.builder()
         .imsUrl(Constants.IMS_URL)
         .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
         .apiKey(Workspace.API_KEY + TEST_VALUE)
@@ -143,9 +145,36 @@ public class WorkspaceTest {
         .privateKey(privateKey)
         .addMetascope(JwtContext.META_SCOPES + TEST_VALUE)
         .build();
-    assertEquals(actual, expected);
-    assertEquals(actual.hashCode(), expected.hashCode());
-    assertEquals(actual.toString(), expected.toString());
-    actual.validateAll();
+
+    assertEquals(expected, workspaceFromProperties);
+    assertEquals(expected.hashCode(), workspaceFromProperties.hashCode());
+    assertEquals(expected.toString(), workspaceFromProperties.toString());
+    assertEquals(expectedAuthContext, workspaceFromProperties.getAuthContext());
+    expected.validateAll();
   }
+
+  @Test
+  public void testOAuthContextWorkspaceFromProperties()  {
+    Workspace workspaceFromProperties = Workspace.builder().propertiesPath(TEST_OAUTH_WORKSPACE_PROPERTIES).build();
+    OAuthContext expectedAuthContext = OAuthContext.builder().propertiesPath(TEST_OAUTH_WORKSPACE_PROPERTIES).build();
+    Workspace expected = Workspace.builder()
+            .imsUrl(Constants.IMS_URL)
+            .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
+            .apiKey(Workspace.API_KEY + TEST_VALUE)
+            .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
+            .projectId(Workspace.PROJECT_ID + TEST_VALUE)
+            .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
+            .clientSecret(JwtContext.CLIENT_SECRET + TEST_VALUE)
+            .credentialId(JwtContext.CREDENTIAL_ID + TEST_VALUE)
+            .technicalAccountId(JwtContext.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
+            .privateKey(privateKey)
+            .authContext(expectedAuthContext)
+            .build();
+    assertEquals(expected, workspaceFromProperties);
+    assertEquals(expected.hashCode(), workspaceFromProperties.hashCode());
+    assertEquals(expected.toString(), workspaceFromProperties.toString());
+    assertEquals(expectedAuthContext, workspaceFromProperties.getAuthContext());
+    expected.validateAll();
+  }
+
 }

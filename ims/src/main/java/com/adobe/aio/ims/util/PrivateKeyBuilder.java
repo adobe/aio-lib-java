@@ -14,18 +14,24 @@ package com.adobe.aio.ims.util;
 import static com.adobe.aio.util.FileUtil.getMapFromProperties;
 import static com.adobe.aio.util.FileUtil.readPropertiesFromClassPath;
 import static com.adobe.aio.util.FileUtil.readPropertiesFromFile;
+import static com.adobe.aio.util.WorkspaceUtil.DEFAULT_TEST_PROPERTIES;
 
-import java.io.IOException;
 import java.security.PrivateKey;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
+
+import com.adobe.aio.util.FileUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PrivateKeyBuilder {
 
+  private static final Logger logger = LoggerFactory.getLogger(PrivateKeyBuilder.class);
+
   public static final String AIO_ENCODED_PKCS_8 = "aio_encoded_pkcs8";
   private static final String AIO_PKCS_8_FILE_PATH = "aio_pkcs8_file_path";
-
   private static final String AIO_PKCS_12_FILE_PATH = "aio_pkcs12_file_path";
   private static final String AIO_PKCS_12_PASSWORD = "aio_pkcs12_password";
   private static final String AIO_PKCS_12_ALIAS = "aio_pkcs12_alias";
@@ -96,6 +102,32 @@ public class PrivateKeyBuilder {
       throw new IllegalArgumentException(
           "AIO holds an invalid (pkcs8 or pkcs12) Private Key configuration. "
               + "" + e.getMessage(), e);
+    }
+  }
+
+  public static Optional<PrivateKey> buildSystemPrivateKey() {
+    if (StringUtils.isNoneBlank(
+            System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8))) {
+      logger.debug("loading test JWT Private Key from JVM System Properties");
+      return Optional.of(new PrivateKeyBuilder().encodedPkcs8Key(
+              System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8)).build());
+    } else if (StringUtils.isNoneBlank(
+            System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8))) {
+      logger.debug("loading test JWT Private Key from System Environment Variables");
+      return Optional.of( new PrivateKeyBuilder()
+              .encodedPkcs8Key(System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8))
+              .build());
+    } else {
+      Properties prop = FileUtil.readPropertiesFromClassPath(DEFAULT_TEST_PROPERTIES);
+      if (StringUtils.isAllBlank(prop.getProperty(AIO_ENCODED_PKCS_8),
+              prop.getProperty(AIO_PKCS_8_FILE_PATH),
+              prop.getProperty(AIO_PKCS_12_FILE_PATH),
+              prop.getProperty(AIO_PKCS_12_PASSWORD),
+              prop.getProperty(AIO_PKCS_12_ALIAS))) {
+          return Optional.empty();
+      } else {
+        return Optional.of(new PrivateKeyBuilder().properties(prop).build());
+      }
     }
   }
 }

@@ -30,11 +30,6 @@ import static com.adobe.aio.util.FileUtil.*;
  */
 public class OAuthContext implements Context {
   /**
-   * Property name for looking up Authentication Client Secret in various contexts.
-   * Reference: <a href="https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#server-to-server-credential-types">AIO Developer Documentation</a>
-   */
-  public static final String CLIENT_SECRET = "aio_client_secret";
-  /**
    * Property name for looking up Authentication Scopes in various contexts.
    * Reference: <a href="https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#server-to-server-credential-types">AIO Developer Documentation</a>
    */

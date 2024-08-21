@@ -11,10 +11,9 @@
  */
 package com.adobe.aio.util;
 
+import com.adobe.aio.auth.Context;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.workspace.Workspace;
-import java.security.PrivateKey;
-import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,47 +40,35 @@ public class WorkspaceUtil {
    * @return a Workspace.Builder loaded with the provided config
    */
   public static Workspace.Builder getSystemWorkspaceBuilder() {
+    Workspace.Builder builder;
     if (StringUtils.isNoneBlank(
-        System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
         System.getProperty(Workspace.API_KEY),
         System.getProperty(Workspace.WORKSPACE_ID),
-        System.getProperty(Workspace.CLIENT_SECRET),
+        System.getProperty(Context.CLIENT_SECRET),
         System.getProperty(Workspace.CONSUMER_ORG_ID),
-        System.getProperty(Workspace.CREDENTIAL_ID),
         System.getProperty(Workspace.IMS_ORG_ID),
-        System.getProperty(Workspace.META_SCOPES),
-        System.getProperty(Workspace.PROJECT_ID),
-        System.getProperty(Workspace.TECHNICAL_ACCOUNT_ID))) {
+        System.getProperty(Workspace.PROJECT_ID))) {
       logger.debug("loading test Workspace from JVM System Properties");
-      PrivateKey privateKey = new PrivateKeyBuilder().encodedPkcs8Key(
-          System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8)).build();
-      return Workspace.builder()
-          .properties(System.getProperties())
-          .privateKey(privateKey);
+      builder = Workspace.builder().properties(System.getProperties());
     } else if (StringUtils.isNoneBlank(
         System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
         System.getenv(Workspace.API_KEY),
         System.getenv(Workspace.WORKSPACE_ID),
-        System.getenv(Workspace.CLIENT_SECRET),
+        System.getenv(Context.CLIENT_SECRET),
         System.getenv(Workspace.CONSUMER_ORG_ID),
-        System.getenv(Workspace.CREDENTIAL_ID),
         System.getenv(Workspace.IMS_ORG_ID),
-        System.getenv(Workspace.META_SCOPES),
-        System.getenv(Workspace.PROJECT_ID),
-        System.getenv(Workspace.TECHNICAL_ACCOUNT_ID))) {
-      logger.debug("loading test Workspace from JVM System Properties");
-      PrivateKey privateKey =
-          new PrivateKeyBuilder()
-              .encodedPkcs8Key(System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8))
-              .build();
-      return Workspace.builder().systemEnv().privateKey(privateKey);
+        System.getenv(Workspace.PROJECT_ID))) {
+      logger.debug("loading test Workspace from System Environment Variables");
+      builder =  Workspace.builder().systemEnv();
     } else {
       /**
        * WARNING: don't push back your workspace secrets to github
        */
       logger.debug("loading test Workspace from classpath {}", DEFAULT_TEST_PROPERTIES);
-      return getWorkspaceBuilder(DEFAULT_TEST_PROPERTIES);
+      builder =  Workspace.builder().properties(FileUtil.readPropertiesFromClassPath(DEFAULT_TEST_PROPERTIES));
     }
+    PrivateKeyBuilder.buildSystemPrivateKey().ifPresent(builder::privateKey);
+    return builder;
   }
 
   public static String getSystemProperty(String key) {
@@ -103,7 +90,7 @@ public class WorkspaceUtil {
    */
   public static String getSystemProperty(String key, String propertyClassPath) {
     if (StringUtils.isNotBlank(System.getProperty(key))) {
-      logger.debug("loading property `{}`from JVM System Properties", key);
+      logger.debug("loading property `{}` from JVM System Properties", key);
       return System.getProperty(key);
     } if (StringUtils.isNotBlank(System.getenv(key))) {
       logger.debug("loading property `{}` from Environment Variables", key);
@@ -112,14 +99,6 @@ public class WorkspaceUtil {
       logger.debug("loading property `{}` from classpath `{}`", key, propertyClassPath);
       return FileUtil.readPropertiesFromClassPath(propertyClassPath).getProperty(key);
     }
-  }
-
-  private static Workspace.Builder getWorkspaceBuilder(String propertyFileClassPath) {
-    Properties prop = FileUtil.readPropertiesFromClassPath(propertyFileClassPath);
-    PrivateKey privateKey = new PrivateKeyBuilder().properties(prop).build();
-    return Workspace.builder()
-        .properties(prop)
-        .privateKey(privateKey);
   }
 
 }

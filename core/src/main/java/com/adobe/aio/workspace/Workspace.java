@@ -40,6 +40,8 @@ public class Workspace {
   public static final String CREDENTIAL_ID = "aio_credential_id";
   /**
    * @deprecated This will be removed in v2.0 of the library.
+   * Use Auth Context CLIENT_SECRET instead
+   * @see Context#CLIENT_SECRET
    */
   @Deprecated
   public static final String CLIENT_SECRET = "aio_client_secret";
@@ -81,8 +83,11 @@ public class Workspace {
   }
 
   public void validateAll() {
-    authContext.validate();
     validateWorkspaceContext();
+    if (authContext == null) {
+      throw new IllegalStateException("Missing auth configuration, set either jwt or oauth...");
+    }
+    authContext.validate();
   }
 
   /**
@@ -267,6 +272,13 @@ public class Workspace {
       return this;
     }
 
+    /**
+     * @Deprecated This will be removed in v2.0 of the library.
+     * set AuthContext instead of using this method
+     * @param metascope the JWT metascope to set within the Workspace JWT AuthContext
+     * @return this builder that will consequently assume a JWT AuthContext is to be set.
+     * @see #authContext(Context)
+     */
     public Builder addMetascope(final String metascope) {
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
@@ -275,7 +287,17 @@ public class Workspace {
       return this;
     }
 
+    /**
+     * @Deprecated This will be removed in v2.0 of the library.
+     * set AuthContext instead of using this method
+     * @param privateKey the JWT privateKey to set within the Workspace JWT AuthContext
+     * @return this builder that will consequently assume a JWT AuthContext is to be set.
+     * @see #authContext(Context)
+     */
     public Builder privateKey(final PrivateKey privateKey) {
+      if (privateKey == null) {
+        throw new IllegalArgumentException("privateKey cannot be null");
+      }
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
       }
@@ -291,7 +313,7 @@ public class Workspace {
           .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
           .projectId(configMap.get(PROJECT_ID))
           .workspaceId(configMap.get(WORKSPACE_ID));
-      // For backwards compatibility - should this be kept?
+      // For backwards compatibility - we first test/set JWT auth context
       if(StringUtils.isNotBlank(configMap.get(JwtContext.META_SCOPES))) {
         jwtbuilder = JwtContext.builder();
         jwtbuilder.configMap(configMap);
@@ -326,7 +348,7 @@ public class Workspace {
       } else if (oAuthBuilder != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, oAuthBuilder.build());
       } else {
-        throw new IllegalStateException("Missing auth confiugration, set either jwt or oauth...");
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, null);
       }
     }
   }

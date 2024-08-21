@@ -19,6 +19,12 @@ package com.adobe.aio.auth;
 public interface Context {
 
   /**
+   * Property name for looking up Authentication Client Secret in various contexts.
+   * Reference: <a href="https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#server-to-server-credential-types">AIO Developer Documentation</a>
+   */
+  public static final String CLIENT_SECRET = "aio_client_secret";
+
+  /**
    * Property name used in maps and config files for setting the AIO IMS URL.
    */
   public static final String IMS_URL = "aio_ims_url";
