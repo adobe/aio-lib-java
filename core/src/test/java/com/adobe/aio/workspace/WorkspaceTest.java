@@ -164,10 +164,6 @@ public class WorkspaceTest {
             .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
             .projectId(Workspace.PROJECT_ID + TEST_VALUE)
             .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
-            .clientSecret(JwtContext.CLIENT_SECRET + TEST_VALUE)
-            .credentialId(JwtContext.CREDENTIAL_ID + TEST_VALUE)
-            .technicalAccountId(JwtContext.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
-            .privateKey(privateKey)
             .authContext(expectedAuthContext)
             .build();
     assertEquals(expected, workspaceFromProperties);

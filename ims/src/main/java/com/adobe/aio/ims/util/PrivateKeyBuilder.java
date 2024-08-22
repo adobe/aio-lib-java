@@ -105,7 +105,19 @@ public class PrivateKeyBuilder {
     }
   }
 
-  public static Optional<PrivateKey> buildSystemPrivateKey() {
+  /**
+   * Loads PrivateKey associated with configurations from either one and only one of the following
+   * sources, probing them first to check that all the required properties are given,
+   * in order:
+   * <ol>
+   *   <li>JVM System Properties</li>
+   *   <li>Environment Variables</li>
+   *   <li>the provided propertiesClassPath</li>
+   * </ol>
+   * @param propertiesClassPath the classpath of the properties file
+   * @return an Optional the Private Key associated with the provided config (if any found)
+   */
+  public static Optional<PrivateKey> buildSystemPrivateKey(String propertiesClassPath) {
     if (StringUtils.isNoneBlank(
             System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8))) {
       logger.debug("loading test JWT Private Key from JVM System Properties");
@@ -118,7 +130,7 @@ public class PrivateKeyBuilder {
               .encodedPkcs8Key(System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8))
               .build());
     } else {
-      Properties prop = FileUtil.readPropertiesFromClassPath(DEFAULT_TEST_PROPERTIES);
+      Properties prop = FileUtil.readPropertiesFromClassPath(propertiesClassPath);
       if (StringUtils.isAllBlank(prop.getProperty(AIO_ENCODED_PKCS_8),
               prop.getProperty(AIO_PKCS_8_FILE_PATH),
               prop.getProperty(AIO_PKCS_12_FILE_PATH),

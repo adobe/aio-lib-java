@@ -23,8 +23,12 @@ import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.api.ImsApi;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.util.feign.FeignUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FeignImsService implements ImsService {
+
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public static final String ACCESS_TOKEN = "access_token";
   private final ImsApi imsApi;
@@ -49,12 +53,18 @@ public class FeignImsService implements ImsService {
     return imsApi.getJwtAccessToken(workspace.getApiKey(), context.getClientSecret(), token);
   }
 
+  /**
+   * @Deprecated this will be removed in v2.0, this validates only JWT Token
+   *
+   * @param accessToken the token to check
+   * @return
+   */
   @Override
   public boolean validateAccessToken(String accessToken) {
     if (!(workspace.getAuthContext() instanceof JwtContext)) {
-      throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
+      logger.error("AuthContext in workspace not of type `JwtContext`... this only validates JWT Token");
+      return false;
     }
-
     return imsApi.validateJwtToken(ACCESS_TOKEN, workspace.getApiKey(), accessToken).getValid();
   }
 

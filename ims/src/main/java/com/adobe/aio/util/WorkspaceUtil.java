@@ -22,7 +22,15 @@ public class WorkspaceUtil {
 
   public static final String API_URL = "aio_api_url";
   public static final String PUBLISH_URL = "aio_publish_url";
+  /**
+   * Default JWT workspace properties file class path
+   */
   public static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
+
+  /**
+   * Default OAuth workspace properties file class path
+   */
+  public static final String DEFAULT_TEST_OAUTH_PROPERTIES = "workspace.oauth.secret.properties";
   private static final Logger logger = LoggerFactory.getLogger(WorkspaceUtil.class);
 
   private WorkspaceUtil() {
@@ -40,6 +48,22 @@ public class WorkspaceUtil {
    * @return a Workspace.Builder loaded with the provided config
    */
   public static Workspace.Builder getSystemWorkspaceBuilder() {
+    return getSystemWorkspaceBuilder(DEFAULT_TEST_PROPERTIES);
+  }
+
+  /**
+   * Loads configurations for a Workspace from either one and only one of the following
+   * sources, probing them first to check that all the required properties are given,
+   * in order:
+   * <ol>
+   *   <li>JVM System Properties</li>
+   *   <li>Environment Variables</li>
+   *   <li>the provided propertiesClassPath</li>
+   * </ol>
+   * @param propertiesClassPath the classpath of the properties file
+   * @return a Workspace.Builder loaded with the provided config
+   */
+  public static Workspace.Builder getSystemWorkspaceBuilder(String propertiesClassPath) {
     Workspace.Builder builder;
     if (StringUtils.isNoneBlank(
         System.getProperty(Workspace.API_KEY),
@@ -64,10 +88,10 @@ public class WorkspaceUtil {
       /**
        * WARNING: don't push back your workspace secrets to github
        */
-      logger.debug("loading test Workspace from classpath {}", DEFAULT_TEST_PROPERTIES);
-      builder =  Workspace.builder().properties(FileUtil.readPropertiesFromClassPath(DEFAULT_TEST_PROPERTIES));
+      logger.debug("loading test Workspace from classpath {}", propertiesClassPath);
+      builder =  Workspace.builder().properties(FileUtil.readPropertiesFromClassPath(propertiesClassPath));
     }
-    PrivateKeyBuilder.buildSystemPrivateKey().ifPresent(builder::privateKey);
+    PrivateKeyBuilder.buildSystemPrivateKey(propertiesClassPath).ifPresent(builder::privateKey);
     return builder;
   }
 
