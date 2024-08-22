@@ -22,13 +22,20 @@ public class WorkspaceUtil {
 
   public static final String API_URL = "aio_api_url";
   public static final String PUBLISH_URL = "aio_publish_url";
+
   /**
-   * Default JWT workspace properties file class path
+   * Default JWT workspace configuration file class path
+   * WARNING: don't push back this file to github as it contains many secrets.
+   * We do provide a sample/template workspace.properties file in the
+   * <code>./src/test/resources</code> folder
    */
   public static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
 
   /**
-   * Default OAuth workspace properties file class path
+   * Default OAuth workspace configuration file class path
+   * WARNING: don't push back this file to github as it contains many secrets.
+   * We do provide a sample/template workspace.properties file in the
+   * <code>./src/test/resources</code> folder
    */
   public static final String DEFAULT_TEST_OAUTH_PROPERTIES = "workspace.oauth.secret.properties";
   private static final Logger logger = LoggerFactory.getLogger(WorkspaceUtil.class);
@@ -91,7 +98,7 @@ public class WorkspaceUtil {
       logger.debug("loading test Workspace from classpath {}", propertiesClassPath);
       builder =  Workspace.builder().properties(FileUtil.readPropertiesFromClassPath(propertiesClassPath));
     }
-    PrivateKeyBuilder.buildSystemPrivateKey(propertiesClassPath).ifPresent(builder::privateKey);
+    PrivateKeyBuilder.getSystemPrivateKey(propertiesClassPath).ifPresent(builder::privateKey);
     return builder;
   }
 

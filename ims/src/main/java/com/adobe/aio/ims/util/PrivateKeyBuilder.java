@@ -14,7 +14,6 @@ package com.adobe.aio.ims.util;
 import static com.adobe.aio.util.FileUtil.getMapFromProperties;
 import static com.adobe.aio.util.FileUtil.readPropertiesFromClassPath;
 import static com.adobe.aio.util.FileUtil.readPropertiesFromFile;
-import static com.adobe.aio.util.WorkspaceUtil.DEFAULT_TEST_PROPERTIES;
 
 import java.security.PrivateKey;
 import java.util.Map;
@@ -117,7 +116,7 @@ public class PrivateKeyBuilder {
    * @param propertiesClassPath the classpath of the properties file
    * @return an Optional the Private Key associated with the provided config (if any found)
    */
-  public static Optional<PrivateKey> buildSystemPrivateKey(String propertiesClassPath) {
+  public static Optional<PrivateKey> getSystemPrivateKey(String propertiesClassPath) {
     if (StringUtils.isNoneBlank(
             System.getProperty(PrivateKeyBuilder.AIO_ENCODED_PKCS_8))) {
       logger.debug("loading test JWT Private Key from JVM System Properties");

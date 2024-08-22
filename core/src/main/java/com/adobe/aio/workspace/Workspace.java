@@ -90,9 +90,6 @@ public class Workspace {
 
   public void validateAll() {
     validateWorkspaceContext();
-    if (authContext == null) {
-      throw new IllegalStateException("Missing auth configuration, set either jwt or oauth...");
-    }
     authContext.validate();
   }
 
@@ -116,6 +113,9 @@ public class Workspace {
     }
     if (StringUtils.isEmpty(this.getWorkspaceId())) {
       throw new IllegalStateException("Your `Workspace` is missing a workspaceId");
+    }
+    if (authContext == null) {
+      throw new IllegalStateException("Missing auth configuration, set either jwt or oauth...");
     }
   }
 
@@ -159,6 +159,8 @@ public class Workspace {
 
   /**
    * @deprecated This will be removed in v2.0 of the library.
+   * use JwtContext getCredentialId() instead
+   * @see JwtContext#getCredentialId()
    */
   @Deprecated
   public String getCredentialId() {
@@ -310,6 +312,7 @@ public class Workspace {
      * @return this builder that will consequently assume a JWT AuthContext is to be set.
      * @see #authContext(Context)
      */
+    @Deprecated
     public Builder credentialId(final String credentialId) {
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
@@ -325,6 +328,7 @@ public class Workspace {
      * @return this builder that will consequently assume a JWT AuthContext is to be set.
      * @see #authContext(Context)
      */
+    @Deprecated
     public Builder clientSecret(final String clientSecret) {
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
@@ -340,6 +344,7 @@ public class Workspace {
      * @return this builder that will consequently assume a JWT AuthContext is to be set.
      * @see #authContext(Context)
      */
+    @Deprecated
     public Builder technicalAccountId(final String technicalAccountId) {
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();
@@ -370,6 +375,7 @@ public class Workspace {
      * @return this builder that will consequently assume a JWT AuthContext is to be set.
      * @see #authContext(Context)
      */
+    @Deprecated
     public Builder privateKey(final PrivateKey privateKey) {
       if (jwtbuilder == null) {
         jwtbuilder = JwtContext.builder();

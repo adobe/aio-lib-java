@@ -130,8 +130,8 @@ public class WorkspaceTest {
 
   @Test
   public void testJwtAuthContextWorkspaceFromProperties()  {
-    Workspace workspaceFromProperties = Workspace.builder().propertiesPath(TEST_JWT_WORKSPACE_PROPERTIES).privateKey(privateKey).build();
-    JwtContext expectedAuthContext = JwtContext.builder().propertiesPath(TEST_JWT_WORKSPACE_PROPERTIES).privateKey(privateKey).build();
+    Workspace workspaceFromProperties = Workspace.builder().propertiesPath(TEST_JWT_WORKSPACE_PROPERTIES).build();
+    JwtContext expectedAuthContext = JwtContext.builder().propertiesPath(TEST_JWT_WORKSPACE_PROPERTIES).build();
     Workspace expected = Workspace.builder()
         .imsUrl(Constants.IMS_URL)
         .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
@@ -139,18 +139,14 @@ public class WorkspaceTest {
         .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
         .projectId(Workspace.PROJECT_ID + TEST_VALUE)
         .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
-        .clientSecret(JwtContext.CLIENT_SECRET + TEST_VALUE)
-        .credentialId(JwtContext.CREDENTIAL_ID + TEST_VALUE)
-        .technicalAccountId(JwtContext.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
-        .privateKey(privateKey)
-        .addMetascope(JwtContext.META_SCOPES + TEST_VALUE)
+        .authContext(expectedAuthContext)
         .build();
 
     assertEquals(expected, workspaceFromProperties);
     assertEquals(expected.hashCode(), workspaceFromProperties.hashCode());
     assertEquals(expected.toString(), workspaceFromProperties.toString());
     assertEquals(expectedAuthContext, workspaceFromProperties.getAuthContext());
-    expected.validateAll();
+    workspaceFromProperties.validateWorkspaceContext();
   }
 
   @Test
@@ -170,7 +166,7 @@ public class WorkspaceTest {
     assertEquals(expected.hashCode(), workspaceFromProperties.hashCode());
     assertEquals(expected.toString(), workspaceFromProperties.toString());
     assertEquals(expectedAuthContext, workspaceFromProperties.getAuthContext());
-    expected.validateAll();
+    workspaceFromProperties.validateAll();
   }
 
 }

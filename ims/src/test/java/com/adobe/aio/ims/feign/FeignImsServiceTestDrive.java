@@ -25,8 +25,28 @@ public class FeignImsServiceTestDrive {
 
   private static final Logger logger = LoggerFactory.getLogger(FeignImsServiceTestDrive.class);
 
-  public static void runTheReadmeFile() {
+  public static void runTheReadmeFileUsingOAuth() {
+    Workspace workspace = Workspace.builder()
+            .systemEnv()
+            .build(); // [1]
+    ImsService imsService = ImsService.builder().workspace(workspace).build(); // [2]
 
+    AccessToken accessToken = imsService.getOAuthAccessToken(); // [3]
+
+    // [1] build your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace)
+    //     looking up other System Environment variables.
+    //     Note that our fluent workspace and private Key builders offers many ways to have your workspace configured,
+    //     we are showing here the most concise
+    // [2] build the Ims Service wrapper and have it use this workspace context
+    // [3] use this service to retrieve an OAuth access token
+
+    // here is one way you can build the related IMS Feign OAuth Interceptor
+    RequestInterceptor authInterceptor = OAuthInterceptor.builder()
+            .workspace(workspace)
+            .build();
+  }
+
+  public static void runTheReadmeFileUsingJWT() {
     PrivateKey privateKey = new PrivateKeyBuilder().systemEnv().build(); // [1]
     Workspace workspace = Workspace.builder()
         .systemEnv()
@@ -50,21 +70,19 @@ public class FeignImsServiceTestDrive {
         .build();
   }
 
-  /**
-   * use your own property file filePath or classpath. WARNING: don't push back to github as it
-   * contains many secrets. We do provide a sample/template workspace.properties file in the
-   * ./src/test/resources folder
-   */
-  private static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
+
 
   public static void main(String[] args) {
     try {
-      Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().build();
-      ImsService imsService = ImsService.builder().workspace(workspace).build();
+      Workspace jwtWorkspace = WorkspaceUtil.getSystemWorkspaceBuilder(WorkspaceUtil.DEFAULT_TEST_PROPERTIES).build();
 
-      AccessToken accessToken = imsService.getJwtExchangeAccessToken();
-      logger.info("accessToken: {}", accessToken);
-      logger.info("accessToken validated: {}:",imsService.validateAccessToken(accessToken.getAccessToken()));
+      AccessToken accessToken = ImsService.builder().workspace(jwtWorkspace).build().getJwtExchangeAccessToken();
+      logger.info("JWT accessToken: {}", accessToken);
+
+      Workspace oAuthWorkspace = WorkspaceUtil.getSystemWorkspaceBuilder(WorkspaceUtil.DEFAULT_TEST_OAUTH_PROPERTIES).build();
+      accessToken = ImsService.builder().workspace(oAuthWorkspace).build().getOAuthAccessToken();
+      logger.info("OAuth accessToken: {}", accessToken);
+
       System.exit(0);
     } catch (Exception e) {
       logger.error(e.getMessage(), e);

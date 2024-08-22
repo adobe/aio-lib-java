@@ -14,6 +14,8 @@ package com.adobe.aio.aem.workspace.internal;
 import com.adobe.aio.aem.status.Status;
 import com.adobe.aio.aem.workspace.WorkspaceSupplier;
 import com.adobe.aio.aem.workspace.ocd.WorkspaceConfig;
+import com.adobe.aio.auth.Context;
+import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.workspace.Workspace;
@@ -83,19 +85,24 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
   private Map<String, String> getAuthConfigMap(
       WorkspaceConfig config) {
     Map<String, String> map = new HashMap<String, String>();
-    map.put(Workspace.API_KEY, config.aio_api_key());
-    map.put(Workspace.CLIENT_SECRET, config.aio_client_secret());
-    map.put(Workspace.CONSUMER_ORG_ID, config.aio_consumer_org_id());
-    map.put(Workspace.CREDENTIAL_ID, config.aio_credential_id());
-    map.put(Workspace.IMS_ORG_ID, config.aio_ims_org_id());
-    map.put(Workspace.IMS_URL, config.aio_ims_url());
-    map.put(Workspace.PROJECT_ID, config.aio_project_id());
-    map.put(Workspace.TECHNICAL_ACCOUNT_ID, config.aio_technical_account_id());
-    map.put(Workspace.WORKSPACE_ID, config.aio_workspace_id());
-    map.put(Workspace.META_SCOPES, config.aio_meta_scopes());
-    map.put(OAuthContext.SCOPES, config.aio_oauth_scopes());
+    putIfNotBlank(map, Workspace.API_KEY, config.aio_api_key());
+    putIfNotBlank(map, Workspace.CONSUMER_ORG_ID, config.aio_consumer_org_id());
+    putIfNotBlank(map, Workspace.IMS_ORG_ID, config.aio_ims_org_id());
+    putIfNotBlank(map, Workspace.IMS_URL, config.aio_ims_url());
+    putIfNotBlank(map, Workspace.PROJECT_ID, config.aio_project_id());
+    putIfNotBlank(map, Workspace.WORKSPACE_ID, config.aio_workspace_id());
+    putIfNotBlank(map, JwtContext.CREDENTIAL_ID, config.aio_credential_id());
+    putIfNotBlank(map, JwtContext.TECHNICAL_ACCOUNT_ID, config.aio_technical_account_id());
+    putIfNotBlank(map, Context.CLIENT_SECRET, config.aio_client_secret());
+    putIfNotBlank(map, JwtContext.META_SCOPES, config.aio_meta_scopes());
+    putIfNotBlank(map, OAuthContext.SCOPES, config.aio_oauth_scopes());
     return map;
   }
 
+  private void putIfNotBlank(Map<String, String> map, String key, String value) {
+    if (StringUtils.isNotBlank(value)) {
+      map.put(key, value);
+    }
+  }
 
 }

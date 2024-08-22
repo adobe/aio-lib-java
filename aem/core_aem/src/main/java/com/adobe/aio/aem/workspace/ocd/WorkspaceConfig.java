@@ -22,8 +22,8 @@ public @interface WorkspaceConfig {
       description = "Adobe IMS URL: prod: https://ims-na1.adobelogin.com | stage: https://ims-na1-stg1.adobelogin.com")
   String aio_ims_url() default "https://ims-na1.adobelogin.com";
 
-  @AttributeDefinition(name = "JWT Meta Scopes",
-      description = "Comma separated list of metascopes associated with your API (`/s/event_receiver_api,/s/ent_adobeio_sdk` for instance) (project.workspace.details.credentials.jwt.meta_scopes), to be used with JWT.")
+  @AttributeDefinition(name = "JWT Meta Scopes  (For deprecated JWT Auth only)",
+      description = "Comma separated list of metascopes associated with your API (`/s/event_receiver_api,/s/ent_adobeio_sdk` for instance) (project.workspace.details.credentials.jwt.meta_scopes), to be used for deprecated JWT Auth only.")
   String aio_meta_scopes() default "/s/ent_adobeio_sdk";
 
   @AttributeDefinition(name = "OAuth Scopes",
@@ -47,23 +47,23 @@ public @interface WorkspaceConfig {
   String aio_workspace_id();
 
   @AttributeDefinition(name = "API Key (Client ID)",
-      description = "Adobe I/O API Key (Client ID) as shown in in your Adobe Developer Console workspace (project.workspace.details.credentials.jwt.client_id)")
+      description = "Adobe I/O API Key (Client ID) as shown in in your Adobe Developer Console workspace")
   String aio_api_key();
 
-  @AttributeDefinition(name = "Credential ID",
+  @AttributeDefinition(name = "Credential ID  (For deprecated JWT Auth only)",
       description = "Adobe I/O Credential ID as shown in your Adobe Developer Console workspace (project.workspace.details.credentials.id)")
   String aio_credential_id();
 
-  @AttributeDefinition(name = "Technical Account ID",
+  @AttributeDefinition(name = "Technical Account ID  (For deprecated JWT Auth only)",
       description = "Technical account ID as shown in your Adobe Developer Console workspace (project.workspace.details.credentials.jwt.technical_account_id)")
   String aio_technical_account_id();
 
   @AttributeDefinition(name = "Client Secret",
-      description = "Adobe I/O Client Secret as shown in your Adobe Developer Console workspace (project.workspace.details.credentials.jwt.client_secret)")
+      description = "Adobe I/O Client Secret as shown in your Adobe Developer Console workspace")
   String aio_client_secret();
 
-  @AttributeDefinition(name = "Private Key",
-      description = "Base64 encoded pkcs8 Private Key.")
+  @AttributeDefinition(name = "Private Key  (For deprecated JWT Auth only)",
+      description = "Base64 encoded pkcs8 Private Key (For deprecated JWT Auth only).")
   String aio_encoded_pkcs8();
 
 }
