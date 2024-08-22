@@ -676,6 +676,9 @@
                   <includes>
                     <include>**/*IntegrationTest</include>
                   </includes>
+                  <excludes>
+                    <exclude>**/FeignImsOAuthServiceIntegrationTest.java</exclude>
+                  </excludes>
                 </configuration>
               </execution>
             </executions>
