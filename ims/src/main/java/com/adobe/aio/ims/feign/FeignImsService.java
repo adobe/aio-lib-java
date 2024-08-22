@@ -56,16 +56,17 @@ public class FeignImsService implements ImsService {
   /**
    * @Deprecated this will be removed in v2.0, this validates only JWT Token
    *
-   * @param accessToken the token to check
+   * @param jwtAccessToken the token to check
    * @return
    */
+  @Deprecated
   @Override
-  public boolean validateAccessToken(String accessToken) {
+  public boolean validateAccessToken(String jwtAccessToken) {
     if (!(workspace.getAuthContext() instanceof JwtContext)) {
       logger.error("AuthContext in workspace not of type `JwtContext`... this only validates JWT Token");
       return false;
     }
-    return imsApi.validateJwtToken(ACCESS_TOKEN, workspace.getApiKey(), accessToken).getValid();
+    return imsApi.validateJwtToken(ACCESS_TOKEN, workspace.getApiKey(), jwtAccessToken).getValid();
   }
 
   @Override

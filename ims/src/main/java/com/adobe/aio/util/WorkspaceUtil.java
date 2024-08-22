@@ -79,7 +79,7 @@ public class WorkspaceUtil {
         System.getProperty(Workspace.CONSUMER_ORG_ID),
         System.getProperty(Workspace.IMS_ORG_ID),
         System.getProperty(Workspace.PROJECT_ID))) {
-      logger.debug("loading test Workspace from JVM System Properties");
+      logger.debug("loading Workspace from JVM System Properties");
       builder = Workspace.builder().properties(System.getProperties());
     } else if (StringUtils.isNoneBlank(
         System.getenv(PrivateKeyBuilder.AIO_ENCODED_PKCS_8),
@@ -89,13 +89,13 @@ public class WorkspaceUtil {
         System.getenv(Workspace.CONSUMER_ORG_ID),
         System.getenv(Workspace.IMS_ORG_ID),
         System.getenv(Workspace.PROJECT_ID))) {
-      logger.debug("loading test Workspace from System Environment Variables");
+      logger.debug("loading Workspace from System Environment Variables");
       builder =  Workspace.builder().systemEnv();
     } else {
       /**
        * WARNING: don't push back your workspace secrets to github
        */
-      logger.debug("loading test Workspace from classpath {}", propertiesClassPath);
+      logger.debug("loading Workspace from classpath {}", propertiesClassPath);
       builder =  Workspace.builder().properties(FileUtil.readPropertiesFromClassPath(propertiesClassPath));
     }
     PrivateKeyBuilder.getSystemPrivateKey(propertiesClassPath).ifPresent(builder::privateKey);

@@ -12,7 +12,6 @@
 package com.adobe.aio.ims.feign;
 
 import com.adobe.aio.auth.JwtContext;
-import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
@@ -23,7 +22,6 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.adobe.aio.util.WorkspaceUtil.DEFAULT_TEST_OAUTH_PROPERTIES;
 import static com.adobe.aio.util.WorkspaceUtil.DEFAULT_TEST_PROPERTIES;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -53,7 +51,7 @@ public class FeignImsJwtServiceIntegrationTest {
 
   @Test
   public void getAndValidateJwtExchangeAccessTokenWithBadSecret() {
-    JwtContext context = JwtContext.builder().propertiesPath(DEFAULT_TEST_PROPERTIES)
+    JwtContext context = JwtContext.Builder.getSystemBuilder(DEFAULT_TEST_PROPERTIES)
             .clientSecret("bad_secret")
             .privateKey(PrivateKeyBuilder.getSystemPrivateKey(DEFAULT_TEST_PROPERTIES).get())
             .build();
@@ -64,7 +62,7 @@ public class FeignImsJwtServiceIntegrationTest {
 
   @Test
   public void getAndValidateJwtExchangeAccessTokenWithBadTechAccount() {
-    JwtContext context = JwtContext.builder().propertiesPath(DEFAULT_TEST_PROPERTIES)
+    JwtContext context = JwtContext.Builder.getSystemBuilder(DEFAULT_TEST_PROPERTIES)
             .technicalAccountId("bad_tech_account_id@techacct.adobe.com")
             .privateKey(PrivateKeyBuilder.getSystemPrivateKey(DEFAULT_TEST_PROPERTIES).get())
             .build();
@@ -75,7 +73,7 @@ public class FeignImsJwtServiceIntegrationTest {
 
   @Test
   public void getAndValidateJwtExchangeAccessTokenWithMissingPrivateKey() {
-    JwtContext context = JwtContext.builder().propertiesPath(DEFAULT_TEST_PROPERTIES).build();
+    JwtContext context = JwtContext.Builder.getSystemBuilder(DEFAULT_TEST_PROPERTIES).build();
     Workspace workspace = WorkspaceUtil.getSystemWorkspaceBuilder().authContext(context).build();
     assertThrows(IllegalStateException.class, () -> ImsService.builder().workspace(workspace).build());
   }

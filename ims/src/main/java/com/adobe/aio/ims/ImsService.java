@@ -20,7 +20,7 @@ public interface ImsService {
   /**
    * Returns an {@link AccessToken} that can be used for other AIO API Calls.
    *
-   * @deprecated this will be removed in v2.0
+   * @deprecated this will be removed in v2.0 as JWT token exchange is deprecated
    * @return AccessToken a valid API authentication token
    */
   @Deprecated()
@@ -29,12 +29,12 @@ public interface ImsService {
   /**
    * Checks that the access token is still valid.
    *
-   * @deprecated this will be removed in v2.0
-   * @param accessToken the token to check
+   * @deprecated this will be removed in v2.0 as JWT token exchange is deprecated
+   * @param jwtAccessToken the jwt token to check
    * @return true if the provided access token is still valid, false otherwise
    */
   @Deprecated()
-  boolean validateAccessToken(String accessToken);
+  boolean validateAccessToken(String jwtAccessToken);
 
   AccessToken getOAuthAccessToken();
 
