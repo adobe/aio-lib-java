@@ -40,10 +40,11 @@ jobs:
 
       # Build & Test
       - name: Stage Integration Test with Maven
-        run: mvn -Daio_publish_url=$aio_publish_url -Daio_api_url=$aio_api_url -Daio_ims_url=$aio_ims_url -Daio_meta_scopes=$aio_meta_scopes -Daio_ims_org_id=$aio_ims_org_id  -Daio_consumer_org_id=$aio_consumer_org_id -Daio_project_id=$aio_project_id -Daio_workspace_id=$aio_workspace_id -Daio_credential_id=$aio_credential_id -Daio_technical_account_id=$aio_technical_account_id -Daio_api_key=$aio_api_key -Daio_client_secret=$aio_client_secret -Daio_encoded_pkcs8=$aio_encoded_pkcs8 verify -Pitest
+        run: mvn -Daio_publish_url=$aio_publish_url -Daio_api_url=$aio_api_url -Daio_ims_url=$aio_ims_url -Daio_meta_scopes=$aio_meta_scopes -Daio_oauth_scopes=$aio_oauth_scopes -Daio_ims_org_id=$aio_ims_org_id  -Daio_consumer_org_id=$aio_consumer_org_id -Daio_project_id=$aio_project_id -Daio_workspace_id=$aio_workspace_id -Daio_credential_id=$aio_credential_id -Daio_technical_account_id=$aio_technical_account_id -Daio_api_key=$aio_api_key -Daio_client_secret=$aio_client_secret -Daio_encoded_pkcs8=$aio_encoded_pkcs8 verify -Pitest
         env:
           aio_ims_url: ${{ secrets.aio_ims_url }}
           aio_meta_scopes: ${{ secrets.aio_meta_scopes }}
+          aio_oauth_scopes: ${{ secrets.aio_oauth_scopes }}
           aio_ims_org_id: ${{ secrets.aio_ims_org_id }}
           aio_consumer_org_id: ${{ secrets.aio_consumer_org_id }}
           aio_project_id: ${{ secrets.aio_project_id }}
@@ -78,10 +79,11 @@ jobs:
 
       # Build & Test
       - name: Prod Integration Test with Maven
-        run: mvn -Daio_publish_url=$aio_publish_url -Daio_api_url=$aio_api_url -Daio_ims_url=$aio_ims_url -Daio_meta_scopes=$aio_meta_scopes -Daio_ims_org_id=$aio_ims_org_id  -Daio_consumer_org_id=$aio_consumer_org_id -Daio_project_id=$aio_project_id -Daio_workspace_id=$aio_workspace_id -Daio_credential_id=$aio_credential_id -Daio_technical_account_id=$aio_technical_account_id -Daio_api_key=$aio_api_key -Daio_client_secret=$aio_client_secret -Daio_encoded_pkcs8=$aio_encoded_pkcs8 verify -Pitest
+        run: mvn -Daio_publish_url=$aio_publish_url -Daio_api_url=$aio_api_url -Daio_ims_url=$aio_ims_url -Daio_meta_scopes=$aio_meta_scopes -Daio_oauth_scopes=$aio_oauth_scopes -Daio_ims_org_id=$aio_ims_org_id  -Daio_consumer_org_id=$aio_consumer_org_id -Daio_project_id=$aio_project_id -Daio_workspace_id=$aio_workspace_id -Daio_credential_id=$aio_credential_id -Daio_technical_account_id=$aio_technical_account_id -Daio_api_key=$aio_api_key -Daio_client_secret=$aio_client_secret -Daio_encoded_pkcs8=$aio_encoded_pkcs8 verify -Pitest
         env:
           aio_ims_url: ${{ secrets.aio_ims_url }}
           aio_meta_scopes: ${{ secrets.aio_meta_scopes }}
+          aio_oauth_scopes: ${{ secrets.aio_oauth_scopes }}
           aio_ims_org_id: ${{ secrets.aio_ims_org_id }}
           aio_consumer_org_id: ${{ secrets.aio_consumer_org_id }}
           aio_project_id: ${{ secrets.aio_project_id }}
@@ -93,8 +95,3 @@ jobs:
           aio_encoded_pkcs8: ${{ secrets.aio_encoded_pkcs8 }}
           aio_api_url: ${{ secrets.aio_api_url }}
           aio_publish_url: ${{ secrets.aio_publish_url }}
-
-        
-
-
-
