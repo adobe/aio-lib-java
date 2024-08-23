@@ -21,7 +21,9 @@ public interface ImsService {
    * Returns an {@link AccessToken} that can be used for other AIO API Calls.
    *
    * @deprecated this will be removed in v2.0 as JWT token exchange is deprecated
+   * use getAccessToken() instead
    * @return AccessToken a valid API authentication token
+   * @see #getAccessToken()
    */
   @Deprecated()
   AccessToken getJwtExchangeAccessToken();
@@ -36,7 +38,21 @@ public interface ImsService {
   @Deprecated()
   boolean validateAccessToken(String jwtAccessToken);
 
+  /**
+   * Returns an {@link AccessToken} that can be used for other AIO API Calls.
+   * @deprecated use getAccessToken() instead
+   * @return AccessToken a valid API authentication token
+   * @see #getAccessToken()
+   */
+  @Deprecated()
   AccessToken getOAuthAccessToken();
+
+  /**
+   * Looking up the contextual Workspace, it will use
+   * either the OAuth or JWT authentication context to fetch a valid access token.
+   * @return AccessToken a valid API authentication token
+   */
+  AccessToken getAccessToken();
 
   static Builder builder() {
     return new Builder();
@@ -67,7 +83,10 @@ public interface ImsService {
      * @throws IllegalStateException if the Workspace authentication context is not valid.
      */
     public ImsService build() throws IllegalStateException {
-      this.workspace.getAuthContext().validate();
+      if (workspace == null) {
+        throw new IllegalStateException("Workspace is required to build ImsService");
+      }
+      workspace.validateAll();
       return new FeignImsService(this.workspace);
     }
   }

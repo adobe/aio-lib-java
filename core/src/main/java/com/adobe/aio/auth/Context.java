@@ -22,16 +22,7 @@ public interface Context {
    * Property name for looking up Authentication Client Secret in various contexts.
    * Reference: <a href="https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#server-to-server-credential-types">AIO Developer Documentation</a>
    */
-  public static final String CLIENT_SECRET = "aio_client_secret";
-
-  /**
-   * Property name used in maps and config files for setting the AIO IMS URL.
-   */
-  public static final String IMS_URL = "aio_ims_url";
-  /**
-   * Property name used in maps and config files for setting the AIO IMS Org Id.
-   */
-  public static final String IMS_ORG_ID = "aio_ims_org_id";
+  String CLIENT_SECRET = "aio_client_secret";
 
   /**
    * Validates this context is minimally populated and able to function.

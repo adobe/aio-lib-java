@@ -18,8 +18,8 @@ import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.ims.util.PrivateKeyBuilder;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
-import java.security.PrivateKey;
 import java.util.HashMap;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
@@ -51,8 +51,6 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
   public Status getStatus() {
     Map<String, Object> details = new HashMap<>();
     try {
-      details.put("workspace", Workspace.builder()
-          .configMap(getAuthConfigMap(workspaceConfig)).build());
       Workspace workspace = getWorkspace();
       details.put("workspace", workspace);
       workspace.validateAll();
@@ -70,16 +68,7 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
    */
   @Override
   public Workspace getWorkspace() {
-    if (!StringUtils.isEmpty(workspaceConfig.aio_encoded_pkcs8())) {
-      PrivateKey privateKey = new PrivateKeyBuilder()
-          .encodedPkcs8Key(workspaceConfig.aio_encoded_pkcs8()).build();
-      return Workspace.builder()
-          .configMap(getAuthConfigMap(workspaceConfig))
-          .privateKey(privateKey).build();
-    } else {
-      return Workspace.builder()
-          .configMap(getAuthConfigMap(workspaceConfig)).build();
-    }
+    return WorkspaceUtil.getWorkspaceBuilder(getAuthConfigMap(workspaceConfig)).build();
   }
 
   private Map<String, String> getAuthConfigMap(
@@ -91,10 +80,14 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
     putIfNotBlank(map, Workspace.IMS_URL, config.aio_ims_url());
     putIfNotBlank(map, Workspace.PROJECT_ID, config.aio_project_id());
     putIfNotBlank(map, Workspace.WORKSPACE_ID, config.aio_workspace_id());
+
+    putIfNotBlank(map, Context.CLIENT_SECRET, config.aio_client_secret());
+
     putIfNotBlank(map, JwtContext.CREDENTIAL_ID, config.aio_credential_id());
     putIfNotBlank(map, JwtContext.TECHNICAL_ACCOUNT_ID, config.aio_technical_account_id());
-    putIfNotBlank(map, Context.CLIENT_SECRET, config.aio_client_secret());
     putIfNotBlank(map, JwtContext.META_SCOPES, config.aio_meta_scopes());
+    putIfNotBlank(map, PrivateKeyBuilder.AIO_ENCODED_PKCS_8, config.aio_encoded_pkcs8());
+
     putIfNotBlank(map, OAuthContext.SCOPES, config.aio_oauth_scopes());
     return map;
   }

@@ -1,8 +1,5 @@
 package com.adobe.aio.ims.feign;
 
-import com.adobe.aio.auth.Context;
-import com.adobe.aio.auth.JwtContext;
-import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.workspace.Workspace;
@@ -62,25 +59,26 @@ public abstract class AuthInterceptor implements RequestInterceptor {
 
   public static class Builder {
 
-    private Context authContext;
-    private ImsService imsService;
+    private Workspace workspace;
 
     private Builder() {
     }
 
     public Builder workspace(Workspace workspace) {
-      this.authContext = workspace.getAuthContext();
-      this.imsService = ImsService.builder().workspace(workspace).build();
+      this.workspace = workspace;
       return this;
     }
 
     public AuthInterceptor build() {
-      if (authContext instanceof JwtContext) {
-        return new JWTAuthInterceptor(imsService);
-      } else if (authContext instanceof OAuthContext) {
-        return new OAuthInterceptor(imsService);
+      if (workspace.isAuthOAuth()) {
+        return new OAuthInterceptor(ImsService.builder().workspace(workspace).build());
       }
-      throw new IllegalStateException("Unable to find interceptor for AuthContext");
+      else if (workspace.isAuthJWT()) {
+        return new JWTAuthInterceptor(ImsService.builder().workspace(workspace).build());
+      }
+      else {
+        throw new IllegalStateException("Unable to build auth interceptor for workspace: neither jwt nor oAuth");
+      }
     }
   }
 

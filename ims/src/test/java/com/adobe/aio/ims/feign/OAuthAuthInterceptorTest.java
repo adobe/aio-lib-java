@@ -1,6 +1,5 @@
 package com.adobe.aio.ims.feign;
 
-import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
@@ -29,7 +28,7 @@ public class OAuthAuthInterceptorTest {
 
   @Test
   void fetchAccessToken() {
-    when(workspace.getAuthContext()).thenReturn(authContext);
+    when(workspace.isAuthOAuth()).thenReturn(true);
     when(imsService.getOAuthAccessToken()).thenReturn(new AccessToken(ACCESS_TOKEN, 0));
 
     try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,

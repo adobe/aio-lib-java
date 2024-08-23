@@ -14,10 +14,8 @@ import com.adobe.aio.workspace.Workspace;
 import feign.RequestTemplate;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedConstruction;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.adobe.aio.util.Constants.*;
@@ -43,7 +41,8 @@ public class AuthInterceptorTest {
 
   @Test
   void invalidContext() {
-    when(workspace.getAuthContext()).thenReturn(authContext);
+    when(workspace.isAuthJWT()).thenReturn(false);
+    when(workspace.isAuthOAuth()).thenReturn(false);
 
     try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
         (mock, mockContext) -> {

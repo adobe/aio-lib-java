@@ -41,10 +41,9 @@ public class FeignImsService implements ImsService {
 
   @Override
   public AccessToken getJwtExchangeAccessToken() {
-    if (!(workspace.getAuthContext() instanceof JwtContext)) {
+    if (!workspace.isAuthJWT()) {
       throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
     }
-
     JwtContext context = (JwtContext) workspace.getAuthContext();
     context.validate();
 
@@ -53,16 +52,10 @@ public class FeignImsService implements ImsService {
     return imsApi.getJwtAccessToken(workspace.getApiKey(), context.getClientSecret(), token);
   }
 
-  /**
-   * @Deprecated this will be removed in v2.0, this validates only JWT Token
-   *
-   * @param jwtAccessToken the token to check
-   * @return
-   */
-  @Deprecated
+
   @Override
   public boolean validateAccessToken(String jwtAccessToken) {
-    if (!(workspace.getAuthContext() instanceof JwtContext)) {
+    if (!workspace.isAuthJWT()) {
       logger.error("AuthContext in workspace not of type `JwtContext`... this only validates JWT Token");
       return false;
     }
@@ -71,13 +64,23 @@ public class FeignImsService implements ImsService {
 
   @Override
   public AccessToken getOAuthAccessToken() {
-    if (!(workspace.getAuthContext() instanceof OAuthContext)) {
+    if (!workspace.isAuthOAuth()) {
       throw new IllegalStateException("AuthContext in workspace not of type `OAuthContext`.");
     }
     OAuthContext context = (OAuthContext) workspace.getAuthContext();
     String scopes = context.getScopes().stream().filter(StringUtils::isNotBlank).map(String::trim).collect(Collectors.joining(","));
-
     return imsApi.getOAuthAccessToken(workspace.getApiKey(), context.getClientSecret(), scopes);
+  }
+
+  @Override
+  public AccessToken getAccessToken() {
+    if (workspace.isAuthJWT()) {
+      return getJwtExchangeAccessToken();
+    } else if (workspace.isAuthOAuth()) {
+      return getOAuthAccessToken();
+    } else {
+      throw new IllegalStateException("AuthContext in workspace not of type `OAuthContext` or `JwtContext`.");
+    }
   }
 }
 

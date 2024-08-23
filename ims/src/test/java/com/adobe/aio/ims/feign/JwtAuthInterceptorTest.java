@@ -38,7 +38,7 @@ public class JwtAuthInterceptorTest {
 
   @Test
   void isUp() {
-    when(workspace.getAuthContext()).thenReturn(authContext);
+    when(workspace.isAuthJWT()).thenReturn(true);
     when(imsService.validateAccessToken(ACCESS_TOKEN)).thenReturn(true);
 
     try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,
@@ -55,7 +55,7 @@ public class JwtAuthInterceptorTest {
 
   @Test
   void fetchAccessToken() {
-    when(workspace.getAuthContext()).thenReturn(authContext);
+    when(workspace.isAuthJWT()).thenReturn(true);
     when(imsService.getJwtExchangeAccessToken()).thenReturn(new AccessToken(ACCESS_TOKEN, 0));
 
     try (MockedConstruction<ImsService.Builder> ignored = mockConstruction(ImsService.Builder.class,

@@ -107,26 +107,6 @@ public class OAuthContext implements Context {
       return this;
     }
 
-    public Builder configMap(final Map<String, String> configMap) {
-      this.clientSecret(configMap.get(CLIENT_SECRET));
-      if (!StringUtils.isEmpty(configMap.get(SCOPES))) {
-        Arrays.stream(configMap.get(SCOPES).split(",")).forEach(this::addScope);
-      }
-      return this;
-    }
-
-    public Builder systemEvn() {
-      return configMap(System.getenv());
-    }
-
-    public Builder propertiesPath(final String propertiesPath) {
-      return properties(readPropertiesFromFile(propertiesPath).orElse(readPropertiesFromClassPath(propertiesPath)));
-    }
-
-    public Builder properties(final Properties properties) {
-      return configMap(getMapFromProperties(properties));
-    }
-
     public OAuthContext build() {
       return new OAuthContext(clientSecret, scopes);
     }

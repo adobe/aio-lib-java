@@ -38,7 +38,7 @@ public class FeignImsServiceTest {
 
   @BeforeEach
   void before() {
-    when(workspace.getImsUrl()).thenReturn(Constants.IMS_URL);
+    when(workspace.getImsUrl()).thenReturn(Constants.PROD_IMS_URL);
   }
 
   @Test
@@ -58,6 +58,7 @@ public class FeignImsServiceTest {
     when(workspace.getImsUrl()).thenReturn(imsUrl);
     when(workspace.getAuthContext()).thenReturn(context);
     when(workspace.getApiKey()).thenReturn(apiKey);
+    when(workspace.isAuthOAuth()).thenReturn(true);
     when(context.getClientSecret()).thenReturn(clientSecret);
 
     Set<String> scopes = new HashSet<>();
@@ -118,6 +119,7 @@ public class FeignImsServiceTest {
     when(workspace.getImsUrl()).thenReturn(imsUrl);
     when(workspace.getAuthContext()).thenReturn(context);
     when(workspace.getApiKey()).thenReturn(apiKey);
+    when(workspace.isAuthJWT()).thenReturn(true);
     when(context.getClientSecret()).thenReturn(clientSecret);
 
     client.when(
@@ -152,6 +154,7 @@ public class FeignImsServiceTest {
     when(workspace.getImsUrl()).thenReturn(imsUrl);
     when(workspace.getAuthContext()).thenReturn(context);
     when(workspace.getApiKey()).thenReturn(apiKey);
+    when(workspace.isAuthJWT()).thenReturn(true);
     when(context.getClientSecret()).thenReturn(clientSecret);
 
     client.when(
@@ -211,6 +214,7 @@ public class FeignImsServiceTest {
     when(workspace.getAuthContext()).thenReturn(context);
     when(workspace.getImsUrl()).thenReturn(imsUrl);
     when(workspace.getApiKey()).thenReturn(apiKey);
+    when(workspace.isAuthJWT()).thenReturn(true);
     ImsService service = new FeignImsService(workspace);
     assertTrue(service.validateAccessToken(accessToken));
   }

@@ -25,7 +25,7 @@ The `Workspace` POJO holds your Adobe Developer Console Project configurations
 * `aio_workspace_id` your Adobe Developer Console workspace Id (`project.workspace.id`)
 
 ### Workspace Authentication Context
-The `Workspace` POJO must also hold your Adobe Developer Auth configurations, pick one of the following authentication methods:
+The `Workspace` POJO must also hold your Adobe Developer Auth configurations, pick one of the following authentication methods (see [aio-lib-java-ims](../ims/README.md) docs for more details):
 
 #### OAuth2 authentication
 For [OAuth2 authentication](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#oauth-server-to-server-credential), you will need to provide the following properties:
@@ -40,15 +40,9 @@ For [JWT authentication](https://developer.adobe.com/developer-console/docs/guid
 * `aio_api_key` your Adobe Developer Console jwt credential API Key (or Client ID) (`project.workspace.details.credentials[i].jwt.client_id`)
 * `aio_meta_scopes` a comma separated list of metascopes associated with your API, see your Adobe Developer Console jwt credential metascopes (`project.workspace.details.credentials[i].jwt.meta_scopes`)
 * `aio_technical_account_id` your Adobe Developer Console jwt credential technical account id (`project.workspace.details.credentials[i].jwt.technical_account_id`)
+* `aio_encoded_pkcs8` your privateKey (associated with the public key set in your Adobe Developer Console workspace) in a base64 encoded pkcs8 format
 
 
-On top of these, the [`Workspace`](./src/main/java/com/adobe/aio/workspace/Workspace.java) POJO  can also hold your JWT private Key 
-(associated with the public key you uploaded in your Adobe Developer Console Workspace)
-this will help to power Adobe JWT authentication flow and transparently add the proper `Bearer`
-authentication token to all your request, 
-Note the easiest way is to stuff your Private Key as a `pkcs8` base64 encoded String 
-using the `aio_encoded_pkcs8` property key.
-confer  [aio-lib-java-ims](../ims/README.md#Create-and-configure-your-public-and-private-key) documentation for more details.
 
 ## Builds
 

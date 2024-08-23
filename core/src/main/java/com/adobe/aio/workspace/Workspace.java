@@ -11,18 +11,13 @@
  */
 package com.adobe.aio.workspace;
 
-import static com.adobe.aio.util.FileUtil.getMapFromProperties;
-import static com.adobe.aio.util.FileUtil.readPropertiesFromClassPath;
-import static com.adobe.aio.util.FileUtil.readPropertiesFromFile;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
-import java.security.PrivateKey;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 
 public class Workspace {
@@ -33,36 +28,7 @@ public class Workspace {
   public static final String PROJECT_ID = "aio_project_id";
   public static final String WORKSPACE_ID = "aio_workspace_id";
   public static final String API_KEY = "aio_api_key";
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   * use JWT Auth Context CREDENTIAL_ID instead
-   * @see JwtContext#CREDENTIAL_ID
-   */
-  @Deprecated
-  public static final String CREDENTIAL_ID = "aio_credential_id";
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   * Use Auth Context CLIENT_SECRET instead
-   * @see Context#CLIENT_SECRET
-   */
-  @Deprecated
-  public static final String CLIENT_SECRET = "aio_client_secret";
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   * use JWT Auth Context TECHNICAL_ACCOUNT_ID instead
-   * @see JwtContext#TECHNICAL_ACCOUNT_ID
-   */
-  @Deprecated
-  public static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   * use JWT Auth Context META_SCOPES instead
-   * @see JwtContext#META_SCOPES
-   */
-  @Deprecated
-  public static final String META_SCOPES = "aio_meta_scopes";
 
-  // workspace context related:
   private final String imsUrl;
   private final String imsOrgId;
   private final String apiKey;
@@ -74,7 +40,7 @@ public class Workspace {
   private Workspace(final String imsUrl, final String imsOrgId, final String apiKey,
                     final String consumerOrgId, final String projectId, final String workspaceId,
                     Context authContext) {
-    this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.IMS_URL : imsUrl;
+    this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.PROD_IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
 
     this.apiKey = apiKey;
@@ -90,6 +56,9 @@ public class Workspace {
 
   public void validateAll() {
     validateWorkspaceContext();
+    if (!isAuthOAuth() && !isAuthJWT()) {
+      throw new IllegalStateException("Missing auth configuration, set either jwt or oauth...");
+    }
     authContext.validate();
   }
 
@@ -115,7 +84,7 @@ public class Workspace {
       throw new IllegalStateException("Your `Workspace` is missing a workspaceId");
     }
     if (authContext == null) {
-      throw new IllegalStateException("Missing auth configuration, set either jwt or oauth...");
+      throw new IllegalStateException("Missing auth configuration ...");
     }
   }
 
@@ -155,6 +124,14 @@ public class Workspace {
 
   public Context getAuthContext() {
     return authContext;
+  }
+
+  public boolean isAuthOAuth() {
+    return authContext!=null && authContext instanceof OAuthContext;
+  }
+
+  public boolean isAuthJWT() {
+    return authContext!=null && authContext instanceof JwtContext;
   }
 
   /**
@@ -214,9 +191,7 @@ public class Workspace {
 
     private Map<String, String> workspaceProperties;
 
-    private JwtContext.Builder jwtbuilder;
     private Context authContext;
-    private OAuthContext.Builder oAuthBuilder;
 
     private Builder() {
     }
@@ -256,134 +231,9 @@ public class Workspace {
       return this;
     }
 
-
-    public Builder configMap(final Map<String, String> configMap) {
-      this
-          .imsUrl(configMap.get(IMS_URL))
-          .imsOrgId(configMap.get(IMS_ORG_ID))
-          .apiKey(configMap.get(API_KEY))
-          .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
-          .projectId(configMap.get(PROJECT_ID))
-          .workspaceId(configMap.get(WORKSPACE_ID));
-      // For backwards compatibility - we first test/set JWT auth context
-      if(StringUtils.isNotBlank(configMap.get(JwtContext.META_SCOPES))) {
-        jwtbuilder = JwtContext.builder();
-        jwtbuilder.configMap(configMap);
-      }
-      if(StringUtils.isNotBlank(configMap.get(OAuthContext.SCOPES))) {
-        oAuthBuilder = OAuthContext.builder();
-        oAuthBuilder.configMap(configMap);
-      }
-      return this;
-    }
-
-    public Builder systemEnv() {
-      return configMap(System.getenv());
-    }
-
-    public Builder propertiesPath(final String propertiesPath) {
-      return properties(
-          readPropertiesFromFile(propertiesPath)
-              .orElse(readPropertiesFromClassPath(propertiesPath)));
-    }
-
-    public Builder properties(final Properties properties) {
-      return configMap(getMapFromProperties(properties));
-    }
-
     public Workspace build() {
-      if (authContext != null) {
         return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
-      }
-      if (jwtbuilder != null) {
-        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
-      } else if (oAuthBuilder != null) {
-        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, oAuthBuilder.build());
-      } else {
-        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, null);
-      }
     }
-
-
-    /**
-     * @Deprecated This will be removed in v2.0 of the library.
-     * set AuthContext instead of using this method
-     * @param credentialId the credentialId to set within the Workspace JWT AuthContext
-     * @return this builder that will consequently assume a JWT AuthContext is to be set.
-     * @see #authContext(Context)
-     */
-    @Deprecated
-    public Builder credentialId(final String credentialId) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.credentialId(credentialId);
-      return this;
-    }
-
-    /**
-     * @Deprecated This will be removed in v2.0 of the library.
-     * set AuthContext instead of using this method
-     * @param clientSecret the clientSecret to set within the Workspace JWT AuthContext
-     * @return this builder that will consequently assume a JWT AuthContext is to be set.
-     * @see #authContext(Context)
-     */
-    @Deprecated
-    public Builder clientSecret(final String clientSecret) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.clientSecret(clientSecret);
-      return this;
-    }
-
-    /**
-     * @Deprecated This will be removed in v2.0 of the library.
-     * set AuthContext instead of using this method
-     * @param technicalAccountId the technicalAccountId to set within the Workspace JWT AuthContext
-     * @return this builder that will consequently assume a JWT AuthContext is to be set.
-     * @see #authContext(Context)
-     */
-    @Deprecated
-    public Builder technicalAccountId(final String technicalAccountId) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.technicalAccountId(technicalAccountId);
-      return this;
-    }
-
-    /**
-     * @Deprecated This will be removed in v2.0 of the library.
-     * set AuthContext instead of using this method
-     * @param metascope the JWT metascope to set within the Workspace JWT AuthContext
-     * @return this builder that will consequently assume a JWT AuthContext is to be set.
-     * @see #authContext(Context)
-     */
-    public Builder addMetascope(final String metascope) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.addMetascope(metascope);
-      return this;
-    }
-
-    /**
-     * @Deprecated This will be removed in v2.0 of the library.
-     * set AuthContext instead of using this method
-     * @param privateKey the JWT privateKey to set within the Workspace JWT AuthContext
-     * @return this builder that will consequently assume a JWT AuthContext is to be set.
-     * @see #authContext(Context)
-     */
-    @Deprecated
-    public Builder privateKey(final PrivateKey privateKey) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.privateKey(privateKey);
-      return this;
-    }
-
 
   }
 }

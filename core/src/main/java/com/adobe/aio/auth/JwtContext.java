@@ -13,19 +13,15 @@ package com.adobe.aio.auth;
 
 import java.security.PrivateKey;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.Set;
 
-import com.adobe.aio.util.FileUtil;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.adobe.aio.util.FileUtil.*;
 
 /**
  * JWT Authentication context.
@@ -168,70 +164,6 @@ public class JwtContext implements Context {
     public Builder privateKey(final PrivateKey privateKey) {
       this.privateKey = privateKey;
       return this;
-    }
-
-    public Builder configMap(final Map<String, String> configMap) {
-      this
-          .credentialId(configMap.get(CREDENTIAL_ID))
-          .clientSecret(configMap.get(CLIENT_SECRET))
-          .technicalAccountId(configMap.get(TECHNICAL_ACCOUNT_ID));
-      if (!StringUtils.isEmpty(configMap.get(META_SCOPES))) {
-        String[] metascopeArray = configMap.get(META_SCOPES).split(",");
-        for (String metascope : metascopeArray) {
-          this.addMetascope(metascope);
-        }
-      }
-      return this;
-    }
-
-    /**
-     * Loads configurations for a JWTContext from either one and only one of the following
-     * sources, probing them first to check that all the required properties are given,
-     * in order:
-     * <ol>
-     *   <li>JVM System Properties</li>
-     *   <li>Environment Variables</li>
-     *   <li>the provided propertiesClassPath</li>
-     * </ol>
-     * @param propertiesClassPath the classpath of the properties file
-     * @return a Workspace.Builder loaded with the provided config
-     */
-    public static Builder getSystemBuilder(String propertiesClassPath) {
-      if (StringUtils.isNoneBlank(
-              System.getProperty(CREDENTIAL_ID),
-              System.getProperty(CLIENT_SECRET),
-              System.getProperty(TECHNICAL_ACCOUNT_ID),
-              System.getProperty(META_SCOPES))) {
-        logger.debug("loading JwtContext from JVM System Properties");
-        return new Builder().properties(System.getProperties());
-      } else if (StringUtils.isNoneBlank(
-              System.getenv(CREDENTIAL_ID),
-              System.getenv(CLIENT_SECRET),
-              System.getenv(TECHNICAL_ACCOUNT_ID),
-              System.getenv(META_SCOPES))) {
-        logger.debug("loading JwtContext from System Environment Variables");
-        return new Builder().systemEnv();
-      } else {
-        /**
-         * WARNING: don't push back your workspace secrets to github
-         */
-        logger.debug("loading test Workspace from classpath {}", propertiesClassPath);
-        return new Builder().properties(FileUtil.readPropertiesFromClassPath(propertiesClassPath));
-      }
-    }
-
-    public Builder systemEnv() {
-      return configMap(System.getenv());
-    }
-
-    public Builder propertiesPath(final String propertiesPath) {
-      return properties(
-          readPropertiesFromFile(propertiesPath)
-              .orElse(readPropertiesFromClassPath(propertiesPath)));
-    }
-
-    public Builder properties(final Properties properties) {
-      return configMap(getMapFromProperties(properties));
     }
 
     public JwtContext build() {
