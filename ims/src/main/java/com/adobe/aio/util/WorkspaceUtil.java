@@ -40,7 +40,7 @@ public class WorkspaceUtil {
      * We do provide a sample properties files in the
      * <code>./src/test/resources</code> folder
      */
-    public static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
+    public static final String DEFAULT_TEST_PROPERTIES = "workspace.jwt.secret.properties";
 
     private static final Logger logger = LoggerFactory.getLogger(WorkspaceUtil.class);
 
