@@ -37,7 +37,7 @@ public class WorkspaceUtil {
     /**
      * Default workspace configuration file class path
      * WARNING: don't push back this file to github as it contains many secrets.
-     * We do provide a sample/template workspace.properties file in the
+     * We do provide a sample properties files in the
      * <code>./src/test/resources</code> folder
      */
     public static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";

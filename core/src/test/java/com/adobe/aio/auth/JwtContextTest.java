@@ -11,10 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class JwtContextTest {
-  private static final String TEST_PROPERTIES = "workspace.properties";
   private static final String TEST_VALUE = "_changeMe";
-
-  private static JwtContext expected;
 
   private static PrivateKey privateKey;
 

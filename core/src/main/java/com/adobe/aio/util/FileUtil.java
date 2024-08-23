@@ -11,7 +11,6 @@
  */
 package com.adobe.aio.util;
 
-import com.adobe.aio.exception.AIOException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,13 +39,13 @@ public class FileUtil {
     try (InputStream in = FileUtil.class.getClassLoader().getResourceAsStream(propertiesClassPath)) {
       return read(in);
     } catch (Exception e) {
-      throw new AIOException("Unable to load your Properties from class path " + propertiesClassPath, e);
+      throw new IllegalArgumentException("Unable to load your Properties from class path " + propertiesClassPath, e);
     }
   }
 
   private static Properties read(InputStream in) throws IOException {
     if (in == null) {
-      throw new AIOException("InputStream cannot be null");
+      throw new IllegalArgumentException("InputStream cannot be null");
     }
     Properties prop = new Properties();
     prop.load(in);

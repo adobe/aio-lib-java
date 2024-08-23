@@ -35,7 +35,7 @@ public class FileUtilTest {
   public void testGetMapFromMissingPropertiesClassPath() {
     Map<String, String> map = new HashMap<>();
     map.put(KEY, VALUE);
-    assertThrows(AIOException.class, () -> FileUtil.getMap("missing.properties"));
+    assertThrows(IllegalArgumentException.class, () -> FileUtil.getMap("missing.properties"));
   }
 
   @Test

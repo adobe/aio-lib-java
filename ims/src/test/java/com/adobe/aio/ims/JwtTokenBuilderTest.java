@@ -42,7 +42,7 @@ public class JwtTokenBuilderTest {
     PrivateKey privateKey = kp.getPrivate();
     PublicKey publicKey = kp.getPublic();
 
-    Map<String,String> testConfigs = FileUtil.getMap("workspace.properties");
+    Map<String,String> testConfigs = FileUtil.getMap("workspace.jwt.properties");
     JwtContext authContext = WorkspaceUtil.getJwtContextBuilder(testConfigs).privateKey(privateKey).build();
     Workspace.Builder builder = WorkspaceUtil.getWorkspaceBuilder(testConfigs);
     Workspace workspace =  builder.authContext(authContext).build();

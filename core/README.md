@@ -10,7 +10,9 @@ This library holds a [`Workspace`](./src/main/java/com/adobe/aio/workspace/Works
 your [Adobe Developer Console Project Workspace](https://www.adobe.io/apis/experienceplatform/console/docs.html#!AdobeDocs/adobeio-console/master/projects.md),
 
 To get you started quickly use a `.properties` file,
-* see our [sample config file](./src/test/resources/workspace.properties) in our jUnit Test.
+* see our sample config files:
+   * [workspace.jwt.properties](./src/test/resources/workspace.jwt.properties) 
+   * [workspace.oauth.properties](./src/test/resources/workspace.oauth.properties)
 * download your `project` configurations file from your Adobe Developer Console Project overview page
 * map your `project` configurations with this properties
 

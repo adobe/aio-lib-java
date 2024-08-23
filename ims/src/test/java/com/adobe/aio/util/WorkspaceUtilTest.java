@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class WorkspaceUtilTest {
 
-    private static final String TEST_JWT_WORKSPACE_PROPERTIES = "workspace.properties";
+    private static final String TEST_JWT_WORKSPACE_PROPERTIES = "workspace.jwt.properties";
     private static final String TEST_OAUTH_WORKSPACE_PROPERTIES = "workspace.oauth.properties";
     private static final String TEST_VALUE = "_changeMe";
 

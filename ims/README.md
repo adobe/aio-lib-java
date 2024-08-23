@@ -46,7 +46,7 @@ The OAuth Server-to-Server credential relies on the OAuth 2.0 `client_credential
 To generate an access token, your application can make a single HTTP request with your `client_id` and `client_secret` and `scopes`.
 
 Browse our [OAuth authentication documentation](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#oauth-server-to-server-credential) for more details, 
-and to get you started quickly, have a look at our [sample oauth config file](./src/test/resources/workspace.oauth.properties)
+and to get you started quickly, have a look at our [sample oauth config file: `workspace.oauth.properties`](./src/test/resources/workspace.oauth.properties)
 
 
 ### Service Account (JWT) credential (deprecated)
@@ -60,7 +60,7 @@ The JWT encodes all of the identity and security information required to obtain 
 token and must be signed with the private key that is associated with a public key certificate specified on your integration.
 
 Browse our [JWT authentication documentation](https://developer.adobe.com/developer-console/docs/guides/authentication/JWT/) for more details,
-and to get you started quickly, look at our [sample jwt config file](./src/test/resources/workspace.properties)
+and to get you started quickly, look at our [sample jwt config file: `workspace.jwt.properties`](./src/test/resources/workspace.jwt.properties)
 
 #### Create and configure your public and private key
 As introduced above the authentication flow signs the JWT request and therefore requires private-public keys configurations
