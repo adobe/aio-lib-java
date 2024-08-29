@@ -17,6 +17,7 @@ import static com.adobe.aio.event.management.RegistrationServiceIntegrationTest.
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import com.adobe.aio.event.journal.model.JournalEntry;
 import com.adobe.aio.event.management.ProviderServiceIntegrationTest;
 import com.adobe.aio.event.management.ProviderServiceTester;
 import com.adobe.aio.event.management.RegistrationServiceTester;
@@ -37,6 +38,7 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
     providerServiceTester = new ProviderServiceTester();
     registrationServiceTester = new RegistrationServiceTester();
     publishServiceTester = new PublishServiceTester();
+
   }
 
   @Test
@@ -70,12 +72,15 @@ public class JournalServiceIntegrationTest extends JournalServiceTester {
           TEST_REGISTRATION_NAME, providerId, TEST_EVENT_CODE);
       registrationId = registration.getRegistrationId();
 
+      JournalEntry fromEntry = getLatestEntry(registration.getJournalUrl().getHref());
+      logger.info("polled latest Journal Entry before publishing a new test event...");
+
       String cloudEventId = publishServiceTester.publishCloudEvent(false, providerId, TEST_EVENT_CODE);
       boolean wasCloudEventPolled = pollJournalForEvent(
-          registration.getJournalUrl().getHref(), cloudEventId, isEventIdTheCloudEventId);
+          registration.getJournalUrl().getHref(), fromEntry, cloudEventId, isEventIdTheCloudEventId);
 
       String rawEventId = publishServiceTester.publishRawEvent(providerId, TEST_EVENT_CODE);
-      boolean wasRawEventPolled = pollJournalForEvent(registration.getJournalUrl().getHref(), rawEventId,
+      boolean wasRawEventPolled = pollJournalForEvent(registration.getJournalUrl().getHref(), fromEntry, rawEventId,
           isEventIdInTheCloudEventData);
 
       assertTrue(wasCloudEventPolled, "The published CloudEvent was not retrieved in the Journal");
