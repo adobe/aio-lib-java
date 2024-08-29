@@ -32,7 +32,6 @@ public class WorkspaceUtilTest {
     public void getWorkspaceBuilderFromJwtProperties() {
         Workspace workspaceFromProperties = WorkspaceUtil.getWorkspaceBuilder(FileUtil.getMap(TEST_JWT_WORKSPACE_PROPERTIES)).build();
         JwtContext expectedAuthContext = JwtContext.builder()
-                .credentialId(CREDENTIAL_ID + TEST_VALUE)
                 .clientSecret(CLIENT_SECRET + TEST_VALUE)
                 .technicalAccountId(TECHNICAL_ACCOUNT_ID + TEST_VALUE)
                 .addMetascope(META_SCOPES + TEST_VALUE)
@@ -44,6 +43,7 @@ public class WorkspaceUtilTest {
                 .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
                 .projectId(Workspace.PROJECT_ID + TEST_VALUE)
                 .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
+                .credentialId(Workspace.CREDENTIAL_ID + TEST_VALUE)
                 .authContext(expectedAuthContext)
                 .build();
 

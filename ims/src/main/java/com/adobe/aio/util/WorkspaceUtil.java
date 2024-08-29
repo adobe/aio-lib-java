@@ -40,7 +40,7 @@ public class WorkspaceUtil {
      * We do provide a sample properties files in the
      * <code>./src/test/resources</code> folder
      */
-    public static final String DEFAULT_TEST_PROPERTIES = "workspace.oauth.secret.properties";
+    public static final String DEFAULT_TEST_PROPERTIES = "workspace.secret.properties";
 
     private static final Logger logger = LoggerFactory.getLogger(WorkspaceUtil.class);
 
@@ -70,7 +70,8 @@ public class WorkspaceUtil {
                         .apiKey(configMap.get(API_KEY))
                         .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
                         .projectId(configMap.get(PROJECT_ID))
-                        .workspaceId(configMap.get(WORKSPACE_ID));
+                        .workspaceId(configMap.get(WORKSPACE_ID))
+                        .credentialId(configMap.get(CREDENTIAL_ID));
         builder.authContext(getAuthContext(configMap));
         return builder;
     }
@@ -99,7 +100,6 @@ public class WorkspaceUtil {
 
     public static JwtContext.Builder getJwtContextBuilder(Map<String, String> configMap) {
         JwtContext.Builder builder = new JwtContext.Builder()
-                .credentialId(configMap.get(CREDENTIAL_ID))
                 .clientSecret(configMap.get(CLIENT_SECRET))
                 .technicalAccountId(configMap.get(TECHNICAL_ACCOUNT_ID));
         if (!StringUtils.isEmpty(configMap.get(META_SCOPES))) {

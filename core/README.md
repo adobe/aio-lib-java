@@ -25,6 +25,8 @@ The `Workspace` POJO holds your Adobe Developer Console Project configurations
 * `aio_consumer_org_id`  your Adobe Developer Console consumer orgnaization id (`project.org.id`)
 * `aio_ims_org_id` your Adobe Developer Console IMS Organization ID (`project.org.ims_org_id`)
 * `aio_workspace_id` your Adobe Developer Console workspace Id (`project.workspace.id`)
+* `aio_credential_id` your Adobe Developer Console credential id (`project.workspace.details.credentials[i].id`)
+  * this is optional, but it might be handy to have it in your `Workspace` POJO, to avoid confusion when you have multiple credentials, and to eventually in some Adobe API calls
 
 ### Workspace Authentication Context
 The `Workspace` POJO must also hold your Adobe Developer Auth configurations, pick one of the following authentication methods (see [aio-lib-java-ims](../ims/README.md) docs for more details):
@@ -37,7 +39,6 @@ For [OAuth2 authentication](https://developer.adobe.com/developer-console/docs/g
 
 #### JWT authentication
 For [JWT authentication](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#service-account-jwt-credential-deprecated), you will need to provide the following properties:
-* `aio_credential_id` your Adobe Developer Console jwt credential id (`project.workspace.details.credentials[i].id`)
 * `aio_client_secret` your Adobe Developer Console jwt credential client secret (`project.workspace.details.credentials[i].jwt.client_secret`)
 * `aio_api_key` your Adobe Developer Console jwt credential API Key (or Client ID) (`project.workspace.details.credentials[i].jwt.client_id`)
 * `aio_meta_scopes` a comma separated list of metascopes associated with your API, see your Adobe Developer Console jwt credential metascopes (`project.workspace.details.credentials[i].jwt.meta_scopes`)

@@ -50,7 +50,7 @@ public @interface WorkspaceConfig {
       description = "Adobe I/O API Key (Client ID) as shown in in your Adobe Developer Console workspace")
   String aio_api_key();
 
-  @AttributeDefinition(name = "Credential ID  (For deprecated JWT Auth only)",
+  @AttributeDefinition(name = "Credential ID",
       description = "Adobe I/O Credential ID as shown in your Adobe Developer Console workspace (project.workspace.details.credentials.id)")
   String aio_credential_id();
 

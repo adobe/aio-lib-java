@@ -19,29 +19,22 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * JWT Authentication context.
  */
 public class JwtContext implements Context {
 
-  private static final Logger logger = LoggerFactory.getLogger(JwtContext.class);
-  public static final String CREDENTIAL_ID = "aio_credential_id";
   public static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
   public static final String META_SCOPES = "aio_meta_scopes";
 
-  private final String credentialId;
   private final String technicalAccountId;
   private final Set<String> metascopes;
   private final String clientSecret;
   private final PrivateKey privateKey;
 
-  public JwtContext(final String credentialId, final String clientSecret, final String technicalAccountId,
+  public JwtContext(final String clientSecret, final String technicalAccountId,
                     final Set<String> metascopes, final PrivateKey privateKey) {
-    this.credentialId = credentialId;
     this.clientSecret = clientSecret;
     this.technicalAccountId = technicalAccountId;
     this.metascopes = metascopes;
@@ -65,10 +58,6 @@ public class JwtContext implements Context {
     if (privateKey == null) {
       throw new IllegalStateException("Your `JwtContext` is missing a privateKey");
     }
-  }
-
-  public String getCredentialId() {
-    return credentialId;
   }
 
   public String getTechnicalAccountId() {
@@ -106,7 +95,6 @@ public class JwtContext implements Context {
 
     JwtContext that = (JwtContext) o;
 
-    if (!Objects.equals(credentialId, that.credentialId)) return false;
     if (!Objects.equals(technicalAccountId, that.technicalAccountId))
       return false;
     if (!Objects.equals(metascopes, that.metascopes)) return false;
@@ -116,8 +104,7 @@ public class JwtContext implements Context {
 
   @Override
   public int hashCode() {
-    int result = credentialId != null ? credentialId.hashCode() : 0;
-    result = 31 * result + (technicalAccountId != null ? technicalAccountId.hashCode() : 0);
+    int result = technicalAccountId != null ? technicalAccountId.hashCode() : 0;
     result = 31 * result + (metascopes != null ? metascopes.hashCode() : 0);
     result = 31 * result + (clientSecret != null ? clientSecret.hashCode() : 0);
     result = 31 * result + (privateKey != null ? privateKey.hashCode() : 0);
@@ -127,24 +114,17 @@ public class JwtContext implements Context {
   @Override
   public String toString() {
     return "JwtContext{" +
-        "credentialId='" + credentialId + '\'' +
-        ", technicalAccountId='" + technicalAccountId + '\'' +
+        "technicalAccountId='" + technicalAccountId + '\'' +
         ", metascopes=" + metascopes +
         '}';
   }
 
   public static class Builder {
 
-    private String credentialId;
     private String clientSecret;
     private String technicalAccountId;
     private PrivateKey privateKey;
     private final Set<String> metascopes = new HashSet<>();
-
-    public Builder credentialId(final String credentialId) {
-      this.credentialId = credentialId;
-      return this;
-    }
 
     public Builder clientSecret(final String clientSecret) {
       this.clientSecret = clientSecret;
@@ -167,7 +147,7 @@ public class JwtContext implements Context {
     }
 
     public JwtContext build() {
-      return new JwtContext(credentialId, clientSecret, technicalAccountId, metascopes, privateKey);
+      return new JwtContext(clientSecret, technicalAccountId, metascopes, privateKey);
     }
   }
 }

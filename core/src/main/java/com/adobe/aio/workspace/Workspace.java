@@ -28,6 +28,7 @@ public class Workspace {
   public static final String PROJECT_ID = "aio_project_id";
   public static final String WORKSPACE_ID = "aio_workspace_id";
   public static final String API_KEY = "aio_api_key";
+  public static final String CREDENTIAL_ID = "aio_credential_id";
 
   private final String imsUrl;
   private final String imsOrgId;
@@ -35,18 +36,19 @@ public class Workspace {
   private final String consumerOrgId;
   private final String projectId;
   private final String workspaceId;
+  private final String credentialId;
   private final Context authContext;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String apiKey,
                     final String consumerOrgId, final String projectId, final String workspaceId,
-                    Context authContext) {
+                    final String credentialId, Context authContext) {
     this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.PROD_IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
-
     this.apiKey = apiKey;
     this.consumerOrgId = consumerOrgId;
     this.projectId = projectId;
     this.workspaceId = workspaceId;
+    this.credentialId = credentialId;
     this.authContext = authContext;
   }
 
@@ -83,6 +85,11 @@ public class Workspace {
     if (StringUtils.isEmpty(this.getWorkspaceId())) {
       throw new IllegalStateException("Your `Workspace` is missing a workspaceId");
     }
+    // note that the credentialId is optional
+    // but it might be handy to have it in your `Workspace` POJO,
+    // to avoid confusion when you have multiple credentials,
+    // and to eventually in some Adobe API calls
+
     if (authContext == null) {
       throw new IllegalStateException("Missing auth configuration ...");
     }
@@ -121,6 +128,8 @@ public class Workspace {
   public String getWorkspaceId() {
     return workspaceId;
   }
+
+  public String getCredentialId() { return credentialId;}
 
   public Context getAuthContext() {
     return authContext;
@@ -175,6 +184,7 @@ public class Workspace {
     private String consumerOrgId;
     private String projectId;
     private String workspaceId;
+    private String credentialId;
 
     private Map<String, String> workspaceProperties;
 
@@ -213,13 +223,18 @@ public class Workspace {
       return this;
     }
 
+    public Builder credentialId(final String credentialId) {
+      this.credentialId = credentialId;
+      return this;
+    }
+
     public Builder authContext(final Context authContext) {
       this.authContext = authContext;
       return this;
     }
 
     public Workspace build() {
-        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, credentialId, authContext);
     }
 
   }

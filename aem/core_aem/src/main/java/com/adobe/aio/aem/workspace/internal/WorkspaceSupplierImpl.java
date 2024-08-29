@@ -80,10 +80,11 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
     putIfNotBlank(map, Workspace.IMS_URL, config.aio_ims_url());
     putIfNotBlank(map, Workspace.PROJECT_ID, config.aio_project_id());
     putIfNotBlank(map, Workspace.WORKSPACE_ID, config.aio_workspace_id());
+    putIfNotBlank(map, Workspace.CREDENTIAL_ID, config.aio_credential_id());
 
     putIfNotBlank(map, Context.CLIENT_SECRET, config.aio_client_secret());
 
-    putIfNotBlank(map, JwtContext.CREDENTIAL_ID, config.aio_credential_id());
+
     putIfNotBlank(map, JwtContext.TECHNICAL_ACCOUNT_ID, config.aio_technical_account_id());
     putIfNotBlank(map, JwtContext.META_SCOPES, config.aio_meta_scopes());
     putIfNotBlank(map, PrivateKeyBuilder.AIO_ENCODED_PKCS_8, config.aio_encoded_pkcs8());
