@@ -42,11 +42,11 @@ public class FeignImsServiceTest {
   }
 
   @Test
-  void getOauthInvalidAuthContext() {
+  void getInvalidAuthContext() {
     when(workspace.getAuthContext()).thenReturn(mock(Context.class));
     ImsService service = new FeignImsService(workspace);
-    Exception ex = assertThrows(IllegalStateException.class, service::getOAuthAccessToken);
-    assertEquals("AuthContext in workspace not of type `OAuthContext`.", ex.getMessage());
+    Exception ex = assertThrows(IllegalStateException.class, service::getAccessToken);
+    assertEquals("AuthContext in workspace not of type `OAuthContext` or `JwtContext`.", ex.getMessage());
   }
 
   @Test
@@ -87,18 +87,10 @@ public class FeignImsServiceTest {
             .withBody("{ \"access_token\": \"ACCESS_TOKEN\", \"token_type\": \"bearer\", \"expires_in\": \"1000\" }")
     );
     ImsService service = new FeignImsService(workspace);
-    AccessToken token = service.getOAuthAccessToken();
+    AccessToken token = service.getAccessToken();
     assertNotNull(token);
     assertEquals("ACCESS_TOKEN", token.getAccessToken());
 
-  }
-
-  @Test
-  void getJwtInvalidAuthContext() {
-    when(workspace.getAuthContext()).thenReturn(mock(Context.class));
-    ImsService service = new FeignImsService(workspace);
-    Exception ex = assertThrows(IllegalStateException.class, service::getJwtExchangeAccessToken);
-    assertEquals("AuthContext in workspace not of type `JwtContext`.", ex.getMessage());
   }
 
   @Test
@@ -106,7 +98,7 @@ public class FeignImsServiceTest {
     Context context = JwtContext.builder().build();
     when(workspace.getAuthContext()).thenReturn(context);
     ImsService service = new FeignImsService(workspace);
-    assertThrows(IllegalStateException.class, service::getJwtExchangeAccessToken);
+    assertThrows(IllegalStateException.class, service::getAccessToken);
   }
 
   @Test
@@ -139,7 +131,7 @@ public class FeignImsServiceTest {
         }
     )) {
       ImsService service = new FeignImsService(workspace);
-      assertThrows(FeignException.class, service::getJwtExchangeAccessToken);
+      assertThrows(FeignException.class, service::getAccessToken);
     }
     verify(context).validate();
   }
@@ -177,24 +169,15 @@ public class FeignImsServiceTest {
         }
     )) {
       ImsService service = new FeignImsService(workspace);
-      AccessToken token = service.getJwtExchangeAccessToken();
+      AccessToken token = service.getAccessToken();
       assertNotNull(token);
       assertEquals("ACCESS_TOKEN", token.getAccessToken());
     }
     verify(context).validate();
   }
 
-
-
   @Test
-  void validateInvalidJwtAuthContext() {
-    when(workspace.getAuthContext()).thenReturn(mock(Context.class));
-    ImsService service = new FeignImsService(workspace);
-    assertThrows(IllegalStateException.class, service::getJwtExchangeAccessToken);
-  }
-
-  @Test
-  void validateAccessToken(MockServerClient client) {
+  void validateJwtAccessToken(MockServerClient client) {
     final String imsUrl = "http://localhost:" + client.getPort();
     final String apiKey = "API_KEY";
     final String accessToken = "ACCESS_TOKEN";
@@ -216,6 +199,6 @@ public class FeignImsServiceTest {
     when(workspace.getApiKey()).thenReturn(apiKey);
     when(workspace.isAuthJWT()).thenReturn(true);
     ImsService service = new FeignImsService(workspace);
-    assertTrue(service.validateAccessToken(accessToken));
+    assertTrue(service.validateJwtAccessToken(accessToken));
   }
 }

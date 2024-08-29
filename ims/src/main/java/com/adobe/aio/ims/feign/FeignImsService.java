@@ -40,7 +40,26 @@ public class FeignImsService implements ImsService {
   }
 
   @Override
-  public AccessToken getJwtExchangeAccessToken() {
+  public AccessToken getAccessToken() {
+    if (workspace.isAuthJWT()) {
+      return getJwtExchangeAccessToken();
+    } else if (workspace.isAuthOAuth()) {
+      return getOAuthAccessToken();
+    } else {
+      throw new IllegalStateException("AuthContext in workspace not of type `OAuthContext` or `JwtContext`.");
+    }
+  }
+
+  @Override
+  public boolean validateJwtAccessToken(String jwtAccessToken) {
+    if (!workspace.isAuthJWT()) {
+      logger.error("AuthContext in workspace not of type `JwtContext`... this only validates JWT Token");
+      return false;
+    }
+    return imsApi.validateJwtToken(ACCESS_TOKEN, workspace.getApiKey(), jwtAccessToken).getValid();
+  }
+
+  private AccessToken getJwtExchangeAccessToken() {
     if (!workspace.isAuthJWT()) {
       throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
     }
@@ -52,18 +71,7 @@ public class FeignImsService implements ImsService {
     return imsApi.getJwtAccessToken(workspace.getApiKey(), context.getClientSecret(), token);
   }
 
-
-  @Override
-  public boolean validateAccessToken(String jwtAccessToken) {
-    if (!workspace.isAuthJWT()) {
-      logger.error("AuthContext in workspace not of type `JwtContext`... this only validates JWT Token");
-      return false;
-    }
-    return imsApi.validateJwtToken(ACCESS_TOKEN, workspace.getApiKey(), jwtAccessToken).getValid();
-  }
-
-  @Override
-  public AccessToken getOAuthAccessToken() {
+  private AccessToken getOAuthAccessToken() {
     if (!workspace.isAuthOAuth()) {
       throw new IllegalStateException("AuthContext in workspace not of type `OAuthContext`.");
     }
@@ -72,15 +80,5 @@ public class FeignImsService implements ImsService {
     return imsApi.getOAuthAccessToken(workspace.getApiKey(), context.getClientSecret(), scopes);
   }
 
-  @Override
-  public AccessToken getAccessToken() {
-    if (workspace.isAuthJWT()) {
-      return getJwtExchangeAccessToken();
-    } else if (workspace.isAuthOAuth()) {
-      return getOAuthAccessToken();
-    } else {
-      throw new IllegalStateException("AuthContext in workspace not of type `OAuthContext` or `JwtContext`.");
-    }
-  }
 }
 

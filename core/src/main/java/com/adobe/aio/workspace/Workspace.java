@@ -134,19 +134,6 @@ public class Workspace {
     return authContext!=null && authContext instanceof JwtContext;
   }
 
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   * use JwtContext getCredentialId() instead
-   * @see JwtContext#getCredentialId()
-   */
-  @Deprecated
-  public String getCredentialId() {
-    if (authContext instanceof JwtContext) {
-      return ((JwtContext) authContext).getCredentialId();
-    } else {
-      return null;
-    }
-  }
 
   @Override
   public boolean equals(Object o) {

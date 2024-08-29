@@ -12,7 +12,6 @@
 package com.adobe.aio.ims;
 
 import com.adobe.aio.ims.feign.AuthInterceptor;
-import com.adobe.aio.ims.feign.OAuthInterceptor;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import feign.RequestInterceptor;

@@ -18,7 +18,7 @@ service looks up the following OSGI configuration keys:
 * `aio.consumer.org.id`  your Adobe Developer Console consumer orgnaization id (`project.org.id`)
 * `aio.ims.org.id` your Adobe Developer Console IMS Organization ID (`project.org.ims_org_id`)
 * `aio.workspace.id` your Adobe Developer Console workspace Id (`project.workspace.id`)
-* `aio.api.key` your Adobe Developer Console jwt credential API Key (or Client ID) 
+* `aio.api.key` your Adobe Developer Console credential API Key (or Client ID) 
 
 When using JWT credentials also set
 * `aio.credential.id` your Adobe Developer Console jwt credential id
@@ -28,7 +28,7 @@ When using JWT credentials also set
 * `aio.encoded.pkcs8` your private key (in a base64 encoded pkcs8 format) 
 
 When using OAuth credentials also set
-* `aio.client.secret` your Adobe Developer Console jwt credential client secret
+* `aio.client.secret` your Adobe Developer Console oAuth credential client secret
 * `aio_oauth_scopes` a comma separated list of OAuth scopes associated with your API, see your Adobe Developer Console OAuth scopes (project.workspace.details.credentials[i].oauth_server_to_server.scopes)
 
 For more details on the above please refer to

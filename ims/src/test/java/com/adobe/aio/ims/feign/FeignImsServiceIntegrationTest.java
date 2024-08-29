@@ -41,7 +41,7 @@ public class FeignImsServiceIntegrationTest {
     assertTrue(accessToken.getExpiresIn() > 0);
     logger.info("retrieved an access Token");
     if (workspace.isAuthJWT()) {
-      assertTrue(imsService.validateAccessToken(accessToken.getAccessToken()));
+      assertTrue(imsService.validateJwtAccessToken(accessToken.getAccessToken()));
       logger.info("JWT Exchange access token validated");
     }
   }

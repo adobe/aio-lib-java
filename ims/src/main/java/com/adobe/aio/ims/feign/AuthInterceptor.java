@@ -8,14 +8,14 @@ import feign.RequestTemplate;
 
 import static com.adobe.aio.util.Constants.*;
 
-public abstract class AuthInterceptor implements RequestInterceptor {
+public class AuthInterceptor implements RequestInterceptor {
 
   private volatile Long expirationTimeMillis;
   private volatile AccessToken accessToken;
   private final ImsService imsService;
 
-  protected AuthInterceptor(final ImsService imsService) {
-    this.imsService = imsService;
+  protected AuthInterceptor (final Workspace workspace) {
+    this.imsService = ImsService.builder().workspace(workspace).build();
   }
 
   @Override
@@ -27,7 +27,9 @@ public abstract class AuthInterceptor implements RequestInterceptor {
     return this.imsService;
   }
 
-  abstract AccessToken fetchAccessToken();
+  AccessToken fetchAccessToken() {
+    return getImsService().getAccessToken();
+  }
 
   synchronized String getAccessToken() {
     if (expirationTimeMillis == null || System.currentTimeMillis() >= expirationTimeMillis) {
@@ -70,15 +72,7 @@ public abstract class AuthInterceptor implements RequestInterceptor {
     }
 
     public AuthInterceptor build() {
-      if (workspace.isAuthOAuth()) {
-        return new OAuthInterceptor(ImsService.builder().workspace(workspace).build());
-      }
-      else if (workspace.isAuthJWT()) {
-        return new JWTAuthInterceptor(ImsService.builder().workspace(workspace).build());
-      }
-      else {
-        throw new IllegalStateException("Unable to build auth interceptor for workspace: neither jwt nor oAuth");
-      }
+        return new AuthInterceptor(workspace);
     }
   }
 
