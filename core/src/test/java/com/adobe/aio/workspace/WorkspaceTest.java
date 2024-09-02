@@ -17,7 +17,6 @@ import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 
 import com.adobe.aio.auth.Context;
-import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.util.Constants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -26,8 +25,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkspaceTest {
 
-  private static Workspace expected;
-  private static final String TEST_PROPERTIES = "workspace.properties";
   private static final String TEST_VALUE = "_changeMe";
   private static PrivateKey privateKey;
 
@@ -37,11 +34,10 @@ public class WorkspaceTest {
     kpg.initialize(2048);
     KeyPair kp = kpg.generateKeyPair();
     privateKey = kp.getPrivate();
-    expected = Workspace.builder().propertiesPath(TEST_PROPERTIES).privateKey(privateKey).build();
   }
 
   @Test
-  public void properties() throws IOException {
+  public void successFullBuilder() throws IOException {
 
     class MockContext implements Context {
       @Override
@@ -51,7 +47,7 @@ public class WorkspaceTest {
     }
 
     Workspace actual = Workspace.builder()
-        .imsUrl(Constants.IMS_URL)
+        .imsUrl(Constants.PROD_IMS_URL)
         .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
         .apiKey(Workspace.API_KEY + TEST_VALUE)
         .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
@@ -65,8 +61,8 @@ public class WorkspaceTest {
     assertEquals(Workspace.CONSUMER_ORG_ID + TEST_VALUE, actual.getConsumerOrgId());
     assertEquals(Workspace.PROJECT_ID + TEST_VALUE, actual.getProjectId());
     assertEquals(Workspace.WORKSPACE_ID + TEST_VALUE, actual.getWorkspaceId());
-    assertEquals(Constants.IMS_URL, actual.getImsUrl());
-    actual.validateAll();
+    assertEquals(Constants.PROD_IMS_URL, actual.getImsUrl());
+    actual.validateWorkspaceContext();
   }
 
   @Test
@@ -128,24 +124,4 @@ public class WorkspaceTest {
     assertEquals("https://developer.adobe.com/console/projects/aio_consumer_org_id_changeMe/aio_project_id_changeMe/overview", actual.getProjectUrl());
   }
 
-  @Test
-  public void jwtBackwardsCompat() throws Exception {
-    Workspace actual = Workspace.builder()
-        .imsUrl(Constants.IMS_URL)
-        .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
-        .apiKey(Workspace.API_KEY + TEST_VALUE)
-        .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
-        .projectId(Workspace.PROJECT_ID + TEST_VALUE)
-        .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
-        .clientSecret(JwtContext.CLIENT_SECRET + TEST_VALUE)
-        .credentialId(JwtContext.CREDENTIAL_ID + TEST_VALUE)
-        .technicalAccountId(JwtContext.TECHNICAL_ACCOUNT_ID + TEST_VALUE)
-        .privateKey(privateKey)
-        .addMetascope(JwtContext.META_SCOPES + TEST_VALUE)
-        .build();
-    assertEquals(actual, expected);
-    assertEquals(actual.hashCode(), expected.hashCode());
-    assertEquals(actual.toString(), expected.toString());
-    actual.validateAll();
-  }
 }

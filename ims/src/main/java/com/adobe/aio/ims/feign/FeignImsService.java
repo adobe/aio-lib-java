@@ -23,8 +23,12 @@ import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.ims.api.ImsApi;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.util.feign.FeignUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FeignImsService implements ImsService {
+
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
 
   public static final String ACCESS_TOKEN = "access_token";
   private final ImsApi imsApi;
@@ -36,11 +40,29 @@ public class FeignImsService implements ImsService {
   }
 
   @Override
-  public AccessToken getJwtExchangeAccessToken() {
-    if (!(workspace.getAuthContext() instanceof JwtContext)) {
+  public AccessToken getAccessToken() {
+    if (workspace.isAuthJWT()) {
+      return getJwtExchangeAccessToken();
+    } else if (workspace.isAuthOAuth()) {
+      return getOAuthAccessToken();
+    } else {
+      throw new IllegalStateException("AuthContext in workspace not of type `OAuthContext` or `JwtContext`.");
+    }
+  }
+
+  @Override
+  public boolean validateJwtAccessToken(String jwtAccessToken) {
+    if (!workspace.isAuthJWT()) {
+      logger.error("AuthContext in workspace not of type `JwtContext`... this only validates JWT Token");
+      return false;
+    }
+    return imsApi.validateJwtToken(ACCESS_TOKEN, workspace.getApiKey(), jwtAccessToken).getValid();
+  }
+
+  private AccessToken getJwtExchangeAccessToken() {
+    if (!workspace.isAuthJWT()) {
       throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
     }
-
     JwtContext context = (JwtContext) workspace.getAuthContext();
     context.validate();
 
@@ -49,24 +71,14 @@ public class FeignImsService implements ImsService {
     return imsApi.getJwtAccessToken(workspace.getApiKey(), context.getClientSecret(), token);
   }
 
-  @Override
-  public boolean validateAccessToken(String accessToken) {
-    if (!(workspace.getAuthContext() instanceof JwtContext)) {
-      throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
-    }
-
-    return imsApi.validateJwtToken(ACCESS_TOKEN, workspace.getApiKey(), accessToken).getValid();
-  }
-
-  @Override
-  public AccessToken getOAuthAccessToken() {
-    if (!(workspace.getAuthContext() instanceof OAuthContext)) {
+  private AccessToken getOAuthAccessToken() {
+    if (!workspace.isAuthOAuth()) {
       throw new IllegalStateException("AuthContext in workspace not of type `OAuthContext`.");
     }
     OAuthContext context = (OAuthContext) workspace.getAuthContext();
     String scopes = context.getScopes().stream().filter(StringUtils::isNotBlank).map(String::trim).collect(Collectors.joining(","));
-
     return imsApi.getOAuthAccessToken(workspace.getApiKey(), context.getClientSecret(), scopes);
   }
+
 }
 

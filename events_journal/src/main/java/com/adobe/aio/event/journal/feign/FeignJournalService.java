@@ -36,7 +36,7 @@ public class FeignJournalService implements JournalService {
   public FeignJournalService(final Workspace workspace, final String journalUrl) {
     if (StringUtils.isEmpty(journalUrl)) {
       throw new IllegalArgumentException(
-          "JournalService is missing aj ournalUrl");
+          "JournalService is missing a journalUrl");
     }
     if (workspace == null) {
       throw new IllegalArgumentException("RegistrationService is missing a workspace context");

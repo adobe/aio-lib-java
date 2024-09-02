@@ -30,11 +30,6 @@ import static com.adobe.aio.util.FileUtil.*;
  */
 public class OAuthContext implements Context {
   /**
-   * Property name for looking up Authentication Client Secret in various contexts.
-   * Reference: <a href="https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#server-to-server-credential-types">AIO Developer Documentation</a>
-   */
-  public static final String CLIENT_SECRET = "aio_client_secret";
-  /**
    * Property name for looking up Authentication Scopes in various contexts.
    * Reference: <a href="https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#server-to-server-credential-types">AIO Developer Documentation</a>
    */
@@ -110,26 +105,6 @@ public class OAuthContext implements Context {
       }
       this.scopes.add(scope.trim());
       return this;
-    }
-
-    public Builder configMap(final Map<String, String> configMap) {
-      this.clientSecret(configMap.get(CLIENT_SECRET));
-      if (!StringUtils.isEmpty(configMap.get(SCOPES))) {
-        Arrays.stream(configMap.get(SCOPES).split(",")).forEach(this::addScope);
-      }
-      return this;
-    }
-
-    public Builder systemEvn() {
-      return configMap(System.getenv());
-    }
-
-    public Builder propertiesPath(final String propertiesPath) {
-      return properties(readPropertiesFromFile(propertiesPath).orElse(readPropertiesFromClassPath(propertiesPath)));
-    }
-
-    public Builder properties(final Properties properties) {
-      return configMap(getMapFromProperties(properties));
     }
 
     public OAuthContext build() {

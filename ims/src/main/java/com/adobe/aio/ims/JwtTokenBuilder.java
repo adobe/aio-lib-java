@@ -53,7 +53,7 @@ public class JwtTokenBuilder {
   private static final String AUD_SUFFIX = "/c/";
 
   public JwtTokenBuilder(final Workspace workspace) {
-    if (!(workspace.getAuthContext() instanceof JwtContext)) {
+    if (!workspace.isAuthJWT()) {
       throw new IllegalStateException("AuthContext in workspace not of type `JwtContext`.");
     }
 

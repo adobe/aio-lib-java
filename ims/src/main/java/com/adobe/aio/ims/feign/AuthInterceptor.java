@@ -1,8 +1,5 @@
 package com.adobe.aio.ims.feign;
 
-import com.adobe.aio.auth.Context;
-import com.adobe.aio.auth.JwtContext;
-import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.workspace.Workspace;
@@ -11,14 +8,14 @@ import feign.RequestTemplate;
 
 import static com.adobe.aio.util.Constants.*;
 
-public abstract class AuthInterceptor implements RequestInterceptor {
+public class AuthInterceptor implements RequestInterceptor {
 
   private volatile Long expirationTimeMillis;
   private volatile AccessToken accessToken;
   private final ImsService imsService;
 
-  protected AuthInterceptor(final ImsService imsService) {
-    this.imsService = imsService;
+  protected AuthInterceptor (final Workspace workspace) {
+    this.imsService = ImsService.builder().workspace(workspace).build();
   }
 
   @Override
@@ -30,7 +27,9 @@ public abstract class AuthInterceptor implements RequestInterceptor {
     return this.imsService;
   }
 
-  abstract AccessToken fetchAccessToken();
+  AccessToken fetchAccessToken() {
+    return getImsService().getAccessToken();
+  }
 
   synchronized String getAccessToken() {
     if (expirationTimeMillis == null || System.currentTimeMillis() >= expirationTimeMillis) {
@@ -62,25 +61,18 @@ public abstract class AuthInterceptor implements RequestInterceptor {
 
   public static class Builder {
 
-    private Context authContext;
-    private ImsService imsService;
+    private Workspace workspace;
 
     private Builder() {
     }
 
     public Builder workspace(Workspace workspace) {
-      this.authContext = workspace.getAuthContext();
-      this.imsService = ImsService.builder().workspace(workspace).build();
+      this.workspace = workspace;
       return this;
     }
 
     public AuthInterceptor build() {
-      if (authContext instanceof JwtContext) {
-        return new JWTAuthInterceptor(imsService);
-      } else if (authContext instanceof OAuthContext) {
-        return new OAuthInterceptor(imsService);
-      }
-      throw new IllegalStateException("Unable to find interceptor for AuthContext");
+        return new AuthInterceptor(workspace);
     }
   }
 

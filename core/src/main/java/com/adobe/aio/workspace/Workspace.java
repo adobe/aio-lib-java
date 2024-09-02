@@ -11,17 +11,13 @@
  */
 package com.adobe.aio.workspace;
 
-import static com.adobe.aio.util.FileUtil.getMapFromProperties;
-import static com.adobe.aio.util.FileUtil.readPropertiesFromClassPath;
-import static com.adobe.aio.util.FileUtil.readPropertiesFromFile;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
+import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
-import java.security.PrivateKey;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 import org.apache.commons.lang3.StringUtils;
 
 public class Workspace {
@@ -32,46 +28,27 @@ public class Workspace {
   public static final String PROJECT_ID = "aio_project_id";
   public static final String WORKSPACE_ID = "aio_workspace_id";
   public static final String API_KEY = "aio_api_key";
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   */
-  @Deprecated
   public static final String CREDENTIAL_ID = "aio_credential_id";
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   */
-  @Deprecated
-  public static final String CLIENT_SECRET = "aio_client_secret";
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   */
-  @Deprecated
-  public static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   */
-  @Deprecated
-  public static final String META_SCOPES = "aio_meta_scopes";
 
-  // workspace context related:
   private final String imsUrl;
   private final String imsOrgId;
   private final String apiKey;
   private final String consumerOrgId;
   private final String projectId;
   private final String workspaceId;
+  private final String credentialId;
   private final Context authContext;
 
   private Workspace(final String imsUrl, final String imsOrgId, final String apiKey,
                     final String consumerOrgId, final String projectId, final String workspaceId,
-                    Context authContext) {
-    this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.IMS_URL : imsUrl;
+                    final String credentialId, Context authContext) {
+    this.imsUrl = StringUtils.isEmpty(imsUrl) ? Constants.PROD_IMS_URL : imsUrl;
     this.imsOrgId = imsOrgId;
-
     this.apiKey = apiKey;
     this.consumerOrgId = consumerOrgId;
     this.projectId = projectId;
     this.workspaceId = workspaceId;
+    this.credentialId = credentialId;
     this.authContext = authContext;
   }
 
@@ -80,8 +57,11 @@ public class Workspace {
   }
 
   public void validateAll() {
-    authContext.validate();
     validateWorkspaceContext();
+    if (!isAuthOAuth() && !isAuthJWT()) {
+      throw new IllegalStateException("Missing auth configuration, set either jwt or oauth...");
+    }
+    authContext.validate();
   }
 
   /**
@@ -104,6 +84,14 @@ public class Workspace {
     }
     if (StringUtils.isEmpty(this.getWorkspaceId())) {
       throw new IllegalStateException("Your `Workspace` is missing a workspaceId");
+    }
+    // note that the credentialId is optional
+    // but it might be handy to have it in your `Workspace` POJO,
+    // to avoid confusion when you have multiple credentials,
+    // and to eventually in some Adobe API calls
+
+    if (authContext == null) {
+      throw new IllegalStateException("Missing auth configuration ...");
     }
   }
 
@@ -141,21 +129,20 @@ public class Workspace {
     return workspaceId;
   }
 
+  public String getCredentialId() { return credentialId;}
+
   public Context getAuthContext() {
     return authContext;
   }
 
-  /**
-   * @deprecated This will be removed in v2.0 of the library.
-   */
-  @Deprecated
-  public String getCredentialId() {
-    if (authContext instanceof JwtContext) {
-      return ((JwtContext) authContext).getCredentialId();
-    } else {
-      return null;
-    }
+  public boolean isAuthOAuth() {
+    return authContext!=null && authContext instanceof OAuthContext;
   }
+
+  public boolean isAuthJWT() {
+    return authContext!=null && authContext instanceof JwtContext;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -197,10 +184,10 @@ public class Workspace {
     private String consumerOrgId;
     private String projectId;
     private String workspaceId;
+    private String credentialId;
 
     private Map<String, String> workspaceProperties;
 
-    private JwtContext.Builder jwtbuilder;
     private Context authContext;
 
     private Builder() {
@@ -236,88 +223,19 @@ public class Workspace {
       return this;
     }
 
+    public Builder credentialId(final String credentialId) {
+      this.credentialId = credentialId;
+      return this;
+    }
+
     public Builder authContext(final Context authContext) {
       this.authContext = authContext;
       return this;
     }
 
-    public Builder credentialId(final String credentialId) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.credentialId(credentialId);
-      return this;
-    }
-
-    public Builder clientSecret(final String clientSecret) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.clientSecret(clientSecret);
-      return this;
-    }
-
-    public Builder technicalAccountId(final String technicalAccountId) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.technicalAccountId(technicalAccountId);
-      return this;
-    }
-
-    public Builder addMetascope(final String metascope) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.addMetascope(metascope);
-      return this;
-    }
-
-    public Builder privateKey(final PrivateKey privateKey) {
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      jwtbuilder.privateKey(privateKey);
-      return this;
-    }
-
-    public Builder configMap(final Map<String, String> configMap) {
-      this
-          .imsUrl(configMap.get(IMS_URL))
-          .imsOrgId(configMap.get(IMS_ORG_ID))
-          .apiKey(configMap.get(API_KEY))
-          .consumerOrgId(configMap.get(CONSUMER_ORG_ID))
-          .projectId(configMap.get(PROJECT_ID))
-          .workspaceId(configMap.get(WORKSPACE_ID));
-
-      // For backwards compatibility - should this be kept?
-      jwtbuilder = JwtContext.builder();
-      jwtbuilder.configMap(configMap);
-      return this;
-    }
-
-    public Builder systemEnv() {
-      return configMap(System.getenv());
-    }
-
-    public Builder propertiesPath(final String propertiesPath) {
-      return properties(
-          readPropertiesFromFile(propertiesPath)
-              .orElse(readPropertiesFromClassPath(propertiesPath)));
-    }
-
-    public Builder properties(final Properties properties) {
-      return configMap(getMapFromProperties(properties));
-    }
-
     public Workspace build() {
-      if (authContext != null) {
-        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, authContext);
-      }
-      if (jwtbuilder == null) {
-        jwtbuilder = JwtContext.builder();
-      }
-      return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, jwtbuilder.build());
+        return new Workspace(imsUrl, imsOrgId, apiKey, consumerOrgId, projectId, workspaceId, credentialId, authContext);
     }
+
   }
 }

@@ -8,27 +8,7 @@ import static com.adobe.aio.auth.OAuthContext.*;
 
 public class OAuthContextTest {
 
-  private static final String TEST_PROPERTIES = "workspace.properties";
   private static final String TEST_VALUE = "_changeMe";
-
-  private static OAuthContext expected;
-
-  @BeforeAll
-  public static void beforeClass() throws Exception {
-    expected = OAuthContext.builder().propertiesPath(TEST_PROPERTIES).build();
-  }
-
-  @Test
-  void properties() {
-    OAuthContext actual = OAuthContext.builder()
-        .clientSecret(CLIENT_SECRET + TEST_VALUE)
-        .addScope(SCOPES + TEST_VALUE)
-        .build();
-    assertEquals(actual, expected);
-    assertEquals(actual.hashCode(), expected.hashCode());
-    assertEquals(actual.toString(), expected.toString());
-    actual.validate();
-  }
 
   @Test
   void missingClientSecret() {

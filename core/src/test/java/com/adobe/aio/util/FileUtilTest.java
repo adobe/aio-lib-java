@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import com.adobe.aio.exception.AIOException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,30 +24,37 @@ public class FileUtilTest {
 
   private static final String KEY = "key";
   private static final String VALUE = "value";
-  private static final String TEST_PROPERTIES_FILE = "test.properties";
+  private static final String TEST_PROPERTIES_CLASS_PATH = "test.properties";
 
   private Properties getTestProperties() {
     Properties properties = new Properties();
     properties.put(KEY, VALUE);
     return properties;
   }
+  @Test
+  public void testGetMapFromMissingPropertiesClassPath() {
+    Map<String, String> map = new HashMap<>();
+    map.put(KEY, VALUE);
+    assertThrows(IllegalArgumentException.class, () -> FileUtil.getMap("missing.properties"));
+  }
+
+  @Test
+  public void testGetMapFromPropertiesClassPath() {
+    Map<String, String> map = new HashMap<>();
+    map.put(KEY, VALUE);
+    assertEquals(map, FileUtil.getMap(TEST_PROPERTIES_CLASS_PATH));
+  }
 
   @Test
   public void testGetMapFromProperties() {
     Map<String, String> map = new HashMap<>();
     map.put(KEY, VALUE);
-    assertEquals(map, FileUtil.getMapFromProperties(getTestProperties()));
-  }
-
-  @Test
-  public void testReadPropertiesFromFile() {
-    assertFalse(FileUtil.readPropertiesFromFile("").isPresent());
-    assertFalse(FileUtil.readPropertiesFromFile(null).isPresent());
+    assertEquals(map, FileUtil.getMap(getTestProperties()));
   }
 
   @Test
   public void testReadPropertiesFromClassPath() {
-    assertEquals(getTestProperties(), FileUtil.readPropertiesFromClassPath(TEST_PROPERTIES_FILE));
+    assertEquals(getTestProperties(), FileUtil.getProperties(TEST_PROPERTIES_CLASS_PATH));
   }
 
 }

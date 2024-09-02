@@ -17,9 +17,8 @@ import com.adobe.aio.event.journal.model.Event;
 import com.adobe.aio.event.journal.model.JournalEntry;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+
+import java.util.*;
 import java.util.function.BiPredicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,16 +48,63 @@ public class JournalServiceTester {
     workspace = WorkspaceUtil.getSystemWorkspaceBuilder().build();
   }
 
+  /**
+   *
+   * @param journalUrl
+   * @return the latest journal entry, we do retry the journaling API, up to pollingTimeOutInMs,
+   * if it fails (due to temporary failure, or cache propagation latencies).
+   */
+  public JournalEntry getLatestEntry(String journalUrl) {
+    long pollingDuration = 0;
+    long sleeptime = 2000L;
+    JournalEntry entry = null;
+    while (pollingDuration < JOURNAL_POLLING_TIME_OUT_IN_MILLISECONDS && entry == null)
+    {
+      JournalService journalService =
+              JournalService.builder().workspace(workspace).url(journalUrl).build();
+      entry = journalService.getLatest();
+      if (entry == null) {
+        logger.warn("Latest Journal entry is null... retrying in 2 seconds... ");
+        pollingDuration += sleeptime;
+        try {
+          Thread.sleep(sleeptime);
+        } catch (InterruptedException e) {
+          logger.error("Interrupted while sleeping", e);
+        }
+      } else {
+        entry = journalService.get(entry.getNextLink());
+      }
+    }
+
+    if (entry == null) {
+      logger.error("We polled the journal for " + JOURNAL_POLLING_TIME_OUT_IN_MILLISECONDS + " milliseconds and could NOT GET the latest Journal Entry.");
+      throw new RuntimeException("We polled the journal for " + JOURNAL_POLLING_TIME_OUT_IN_MILLISECONDS + " milliseconds and could NOT GET the latest Journal Entry.");
+    } else {
+      logger.info("Successfully polled the latest Journal Entry before publishing a new test event...");
+    }
+    return entry;
+  }
+
   public boolean pollJournalForEvent(String journalUrl, String eventId,
+                                     BiPredicate<Event, String> isEventIdInEvent)
+          throws InterruptedException {
+    JournalService journalService = JournalService.builder()
+            .workspace(workspace)
+            .url(journalUrl)
+            .build();
+    JournalEntry entry = journalService.getOldest();
+    return pollJournalForEvent(journalUrl, entry, eventId, isEventIdInEvent);
+  }
+
+
+  public boolean pollJournalForEvent(String journalUrl, JournalEntry fromEntry, String eventId,
       BiPredicate<Event, String> isEventIdInEvent)
       throws InterruptedException {
-    JournalService journalService = JournalService.builder()
-        .workspace(workspace)
-        .url(journalUrl)
-        .build();
 
+    JournalService journalService =
+            JournalService.builder().workspace(workspace).url(journalUrl).build();
     long pollingDuration = 0;
-    JournalEntry entry = journalService.getOldest();
+    JournalEntry entry = fromEntry;
     while (!isEventIdInJournalEntry(entry, eventId, isEventIdInEvent)) {
       if (entry.isEmpty()) {
         logger.info("Empty journal entry, we will retry-after {} seconds.",

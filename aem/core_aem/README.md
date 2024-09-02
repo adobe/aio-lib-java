@@ -5,7 +5,7 @@ wrapping [`aio-lib-java-core`](../../core) and [`aio-lib-java-ims`](../../ims)
 
 It hosts the services to 
 * get the Adobe Developer Console Workspace
-* get Access token (from JWT exchange token flow) from Adobe Identity Management System (IMS)
+* get Access token (using either JWT or OAuth token flow) from Adobe Identity Management System (IMS)
 
 
 ## `Workspace` Configuration
@@ -18,28 +18,22 @@ service looks up the following OSGI configuration keys:
 * `aio.consumer.org.id`  your Adobe Developer Console consumer orgnaization id (`project.org.id`)
 * `aio.ims.org.id` your Adobe Developer Console IMS Organization ID (`project.org.ims_org_id`)
 * `aio.workspace.id` your Adobe Developer Console workspace Id (`project.workspace.id`)
-* `aio.credential.id` your Adobe Developer Console jwt credential id (`project.workspace.details.credentials[i].id`)
-* `aio.api.key` your Adobe Developer Console jwt credential API Key (or Client ID) (`project.workspace.details.credentials[i].jwt.client_id`)
-* `aio.client.secret` your Adobe Developer Console jwt credential client secret (`project.workspace.details.credentials[i].jwt.client_secret`)
-* `aio.meta.scopes` a comma separated list of metascopes associated with your API, see your Adobe Developer Console jwt credential metascopes (`project.workspace.details.credentials[i].jwt.meta_scopes`)
-* `aio.technical.account.id` your Adobe Developer Console jwt credential technical account id (`project.workspace.details.credentials[i].jwt.technical_account_id`)
-* `aio.encoded.pkcs8` your private key (in a base64 encoded pkcs8 format) see below
+* `aio.api.key` your Adobe Developer Console credential API Key (or Client ID) 
 
+When using JWT credentials also set
+* `aio.credential.id` your Adobe Developer Console jwt credential id
+* `aio.client.secret` your Adobe Developer Console jwt credential client secret 
+* `aio.meta.scopes` a comma separated list of metascopes associated with your API, see your Adobe Developer Console jwt credential metascopes 
+* `aio.technical.account.id` your Adobe Developer Console jwt credential technical account id 
+* `aio.encoded.pkcs8` your private key (in a base64 encoded pkcs8 format) 
 
-### `aio.encoded.pkcs8` 
+When using OAuth credentials also set
+* `aio.client.secret` your Adobe Developer Console oAuth credential client secret
+* `aio_oauth_scopes` a comma separated list of OAuth scopes associated with your API, see your Adobe Developer Console OAuth scopes (project.workspace.details.credentials[i].oauth_server_to_server.scopes)
 
-`aio.encoded.pkcs8` configuration value is associated with your Adobe Developer Console private key.
-It is a string: your private key in a pkcs8 format, base64 encoded, here is how to generate it:
-
-First, convert your private key to a PKCS8 format, use the following command:
-
-    openssl pkcs8 -topk8 -inform PEM -outform DER -in private.key -nocrypt > private.pkcs8.key
-
-Then, base 64 encode it, use the following command:
-
-    base64 private.pkcs8.key 
-
-For more details check our [`aio-lib-java-ims` documentation](../../ims/README.md)
+For more details on the above please refer to
+* [`aio-lib-java-core` docs](../../core/README.md) for more details
+* [`aio-lib-java-ims` docs](../../ims/README.md) for more details
 
 ### `on premise` AEM configuration:
 When running AEM on premise:
@@ -66,19 +60,7 @@ The response json payload should like this:
             "workspace": {
                 "imsUrl": "https://ims-na1.adobelogin.com",
                 "imsOrgId": "...@AdobeOrg",
-                "apiKey": "...",
-                "credentialId": "...",
-                "technicalAccountId": "...@techacct.adobe.com",
-                "metascopes": [
-                "...",
-                "/s/ent_adobeio_sdk"
-                ],
-                "consumerOrgId": "...",
-                "projectId": "...",
-                "workspaceId": "...",
-                "projectUrl": "https://developer.adobe.com/console/projects/.../.../overview",
-                "clientSecretDefined": true,
-                "privateKeyDefined": true
+                "apiKey": "..."
                 }
         },
         "error": null

@@ -11,23 +11,23 @@
  */
 package com.adobe.aio.util;
 
-import com.adobe.aio.exception.AIOException;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
-import org.apache.commons.lang3.StringUtils;
 
 public class FileUtil {
 
   private FileUtil() {
   }
 
-  public static Map<String, String> getMapFromProperties(final Properties properties) {
+  public static Map<String, String> getMap(final String propertiesClassPath) {
+    return getMap(getProperties(propertiesClassPath));
+  }
+
+  public static Map<String, String> getMap(final Properties properties) {
     Map<String, String> map = new HashMap<>();
     for (final String name : properties.stringPropertyNames()) {
       map.put(name, properties.getProperty(name));
@@ -35,29 +35,18 @@ public class FileUtil {
     return map;
   }
 
-  public static Optional<Properties> readPropertiesFromFile(final String configFilePath) {
-    if (StringUtils.isEmpty(configFilePath)) {
-      return Optional.empty();
-    } else {
-      try (InputStream in = new FileInputStream(configFilePath)) {
-        return Optional.of(read(in));
-      } catch (FileNotFoundException e) {
-        return Optional.empty();
-      } catch (IOException e) {
-        throw new AIOException("Unable to load your Properties from File " + configFilePath, e);
-      }
-    }
-  }
-
-  public static Properties readPropertiesFromClassPath(final String configClassPath) {
-    try (InputStream in = FileUtil.class.getClassLoader().getResourceAsStream(configClassPath)) {
+  public static Properties getProperties(final String propertiesClassPath) {
+    try (InputStream in = FileUtil.class.getClassLoader().getResourceAsStream(propertiesClassPath)) {
       return read(in);
-    } catch (IOException e) {
-      throw new AIOException("Unable to load your Properties from class path " + configClassPath, e);
+    } catch (Exception e) {
+      throw new IllegalArgumentException("Unable to load your Properties from class path " + propertiesClassPath, e);
     }
   }
 
   private static Properties read(InputStream in) throws IOException {
+    if (in == null) {
+      throw new IllegalArgumentException("InputStream cannot be null");
+    }
     Properties prop = new Properties();
     prop.load(in);
     in.close();

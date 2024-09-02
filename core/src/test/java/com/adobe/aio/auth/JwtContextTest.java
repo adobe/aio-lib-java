@@ -11,10 +11,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class JwtContextTest {
-  private static final String TEST_PROPERTIES = "workspace.properties";
   private static final String TEST_VALUE = "_changeMe";
-
-  private static JwtContext expected;
 
   private static PrivateKey privateKey;
 
@@ -24,23 +21,6 @@ public class JwtContextTest {
     kpg.initialize(2048);
     KeyPair kp = kpg.generateKeyPair();
     privateKey = kp.getPrivate();
-    expected = JwtContext.builder().propertiesPath(TEST_PROPERTIES).privateKey(privateKey).build();
-  }
-
-  @Test
-  void properties() {
-    JwtContext actual = JwtContext.builder()
-        .credentialId(CREDENTIAL_ID + TEST_VALUE)
-        .technicalAccountId(TECHNICAL_ACCOUNT_ID + TEST_VALUE)
-        .addMetascope(META_SCOPES + TEST_VALUE)
-        .clientSecret(CLIENT_SECRET + TEST_VALUE)
-        .privateKey(privateKey)
-        .build();
-
-    assertEquals(actual, expected);
-    assertEquals(actual.hashCode(), expected.hashCode());
-    assertEquals(actual.toString(), expected.toString());
-    actual.validate();
   }
 
   @Test

@@ -10,7 +10,9 @@ This library holds a [`Workspace`](./src/main/java/com/adobe/aio/workspace/Works
 your [Adobe Developer Console Project Workspace](https://www.adobe.io/apis/experienceplatform/console/docs.html#!AdobeDocs/adobeio-console/master/projects.md),
 
 To get you started quickly use a `.properties` file,
-* see our [sample config file](./src/test/resources/workspace.properties) in our jUnit Test.
+* see our sample config files:
+   * [workspace.jwt.properties](./src/test/resources/workspace.jwt.properties) 
+   * [workspace.oauth.properties](./src/test/resources/workspace.oauth.properties)
 * download your `project` configurations file from your Adobe Developer Console Project overview page
 * map your `project` configurations with this properties
 
@@ -23,9 +25,11 @@ The `Workspace` POJO holds your Adobe Developer Console Project configurations
 * `aio_consumer_org_id`  your Adobe Developer Console consumer orgnaization id (`project.org.id`)
 * `aio_ims_org_id` your Adobe Developer Console IMS Organization ID (`project.org.ims_org_id`)
 * `aio_workspace_id` your Adobe Developer Console workspace Id (`project.workspace.id`)
+* `aio_credential_id` your Adobe Developer Console credential id (`project.workspace.details.credentials[i].id`)
+  * this is optional, but it might be handy to have it in your `Workspace` POJO, to avoid confusion when you have multiple credentials, and to eventually in some Adobe API calls
 
 ### Workspace Authentication Context
-The `Workspace` POJO must also hold your Adobe Developer Auth configurations, pick one of the following authentication methods:
+The `Workspace` POJO must also hold your Adobe Developer Auth configurations, pick one of the following authentication methods (see [aio-lib-java-ims](../ims/README.md) docs for more details):
 
 #### OAuth2 authentication
 For [OAuth2 authentication](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#oauth-server-to-server-credential), you will need to provide the following properties:
@@ -35,20 +39,13 @@ For [OAuth2 authentication](https://developer.adobe.com/developer-console/docs/g
 
 #### JWT authentication
 For [JWT authentication](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#service-account-jwt-credential-deprecated), you will need to provide the following properties:
-* `aio_credential_id` your Adobe Developer Console jwt credential id (`project.workspace.details.credentials[i].id`)
 * `aio_client_secret` your Adobe Developer Console jwt credential client secret (`project.workspace.details.credentials[i].jwt.client_secret`)
 * `aio_api_key` your Adobe Developer Console jwt credential API Key (or Client ID) (`project.workspace.details.credentials[i].jwt.client_id`)
 * `aio_meta_scopes` a comma separated list of metascopes associated with your API, see your Adobe Developer Console jwt credential metascopes (`project.workspace.details.credentials[i].jwt.meta_scopes`)
 * `aio_technical_account_id` your Adobe Developer Console jwt credential technical account id (`project.workspace.details.credentials[i].jwt.technical_account_id`)
+* `aio_encoded_pkcs8` your privateKey (associated with the public key set in your Adobe Developer Console workspace) in a base64 encoded pkcs8 format
 
 
-On top of these, the [`Workspace`](./src/main/java/com/adobe/aio/workspace/Workspace.java) POJO  can also hold your JWT private Key 
-(associated with the public key you uploaded in your Adobe Developer Console Workspace)
-this will help to power Adobe JWT authentication flow and transparently add the proper `Bearer`
-authentication token to all your request, 
-Note the easiest way is to stuff your Private Key as a `pkcs8` base64 encoded String 
-using the `aio_encoded_pkcs8` property key.
-confer  [aio-lib-java-ims](../ims/README.md#Create-and-configure-your-public-and-private-key) documentation for more details.
 
 ## Builds
 

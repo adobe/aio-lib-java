@@ -13,37 +13,28 @@ package com.adobe.aio.auth;
 
 import java.security.PrivateKey;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import static com.adobe.aio.util.FileUtil.*;
 
 /**
  * JWT Authentication context.
  */
 public class JwtContext implements Context {
-  public static final String CREDENTIAL_ID = "aio_credential_id";
-  public static final String CLIENT_SECRET = "aio_client_secret";
+
   public static final String TECHNICAL_ACCOUNT_ID = "aio_technical_account_id";
   public static final String META_SCOPES = "aio_meta_scopes";
 
-  private final String credentialId;
   private final String technicalAccountId;
   private final Set<String> metascopes;
   private final String clientSecret;
   private final PrivateKey privateKey;
 
-  public JwtContext(final String credentialId, final String clientSecret, final String technicalAccountId,
+  public JwtContext(final String clientSecret, final String technicalAccountId,
                     final Set<String> metascopes, final PrivateKey privateKey) {
-    this.credentialId = credentialId;
     this.clientSecret = clientSecret;
     this.technicalAccountId = technicalAccountId;
     this.metascopes = metascopes;
@@ -67,10 +58,6 @@ public class JwtContext implements Context {
     if (privateKey == null) {
       throw new IllegalStateException("Your `JwtContext` is missing a privateKey");
     }
-  }
-
-  public String getCredentialId() {
-    return credentialId;
   }
 
   public String getTechnicalAccountId() {
@@ -108,7 +95,6 @@ public class JwtContext implements Context {
 
     JwtContext that = (JwtContext) o;
 
-    if (!Objects.equals(credentialId, that.credentialId)) return false;
     if (!Objects.equals(technicalAccountId, that.technicalAccountId))
       return false;
     if (!Objects.equals(metascopes, that.metascopes)) return false;
@@ -118,8 +104,7 @@ public class JwtContext implements Context {
 
   @Override
   public int hashCode() {
-    int result = credentialId != null ? credentialId.hashCode() : 0;
-    result = 31 * result + (technicalAccountId != null ? technicalAccountId.hashCode() : 0);
+    int result = technicalAccountId != null ? technicalAccountId.hashCode() : 0;
     result = 31 * result + (metascopes != null ? metascopes.hashCode() : 0);
     result = 31 * result + (clientSecret != null ? clientSecret.hashCode() : 0);
     result = 31 * result + (privateKey != null ? privateKey.hashCode() : 0);
@@ -129,24 +114,17 @@ public class JwtContext implements Context {
   @Override
   public String toString() {
     return "JwtContext{" +
-        "credentialId='" + credentialId + '\'' +
-        ", technicalAccountId='" + technicalAccountId + '\'' +
+        "technicalAccountId='" + technicalAccountId + '\'' +
         ", metascopes=" + metascopes +
         '}';
   }
 
   public static class Builder {
 
-    private String credentialId;
     private String clientSecret;
     private String technicalAccountId;
     private PrivateKey privateKey;
     private final Set<String> metascopes = new HashSet<>();
-
-    public Builder credentialId(final String credentialId) {
-      this.credentialId = credentialId;
-      return this;
-    }
 
     public Builder clientSecret(final String clientSecret) {
       this.clientSecret = clientSecret;
@@ -168,36 +146,8 @@ public class JwtContext implements Context {
       return this;
     }
 
-    public Builder configMap(final Map<String, String> configMap) {
-      this
-          .credentialId(configMap.get(CREDENTIAL_ID))
-          .clientSecret(configMap.get(CLIENT_SECRET))
-          .technicalAccountId(configMap.get(TECHNICAL_ACCOUNT_ID));
-      if (!StringUtils.isEmpty(configMap.get(META_SCOPES))) {
-        String[] metascopeArray = configMap.get(META_SCOPES).split(",");
-        for (String metascope : metascopeArray) {
-          this.addMetascope(metascope);
-        }
-      }
-      return this;
-    }
-
-    public Builder systemEnv() {
-      return configMap(System.getenv());
-    }
-
-    public Builder propertiesPath(final String propertiesPath) {
-      return properties(
-          readPropertiesFromFile(propertiesPath)
-              .orElse(readPropertiesFromClassPath(propertiesPath)));
-    }
-
-    public Builder properties(final Properties properties) {
-      return configMap(getMapFromProperties(properties));
-    }
-
     public JwtContext build() {
-      return new JwtContext(credentialId, clientSecret, technicalAccountId, metascopes, privateKey);
+      return new JwtContext(clientSecret, technicalAccountId, metascopes, privateKey);
     }
   }
 }

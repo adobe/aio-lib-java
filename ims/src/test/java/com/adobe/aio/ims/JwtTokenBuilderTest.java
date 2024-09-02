@@ -4,12 +4,14 @@ import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Map;
 
 import com.adobe.aio.auth.Context;
 import com.adobe.aio.auth.JwtContext;
+import com.adobe.aio.util.FileUtil;
+import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwt;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
@@ -40,8 +42,11 @@ public class JwtTokenBuilderTest {
     PrivateKey privateKey = kp.getPrivate();
     PublicKey publicKey = kp.getPublic();
 
-    Workspace.Builder builder = Workspace.builder();
-    Workspace workspace =  builder.propertiesPath("workspace.properties").privateKey(privateKey).build();
+    Map<String,String> testConfigs = FileUtil.getMap("workspace.jwt.properties");
+    JwtContext authContext = WorkspaceUtil.getJwtContextBuilder(testConfigs).privateKey(privateKey).build();
+    Workspace.Builder builder = WorkspaceUtil.getWorkspaceBuilder(testConfigs);
+    Workspace workspace =  builder.authContext(authContext).build();
+
     String actual = new JwtTokenBuilder(workspace).build();
 
     Jwt<?, Claims> jwt = Jwts.parserBuilder().setSigningKey(publicKey).build().parseClaimsJws(actual);
