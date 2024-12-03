@@ -29,7 +29,7 @@ When using JWT credentials also set
 
 When using OAuth credentials also set
 * `aio.client.secret` your Adobe Developer Console oAuth credential client secret
-* `aio_oauth_scopes` a comma separated list of OAuth scopes associated with your API, see your Adobe Developer Console OAuth scopes (project.workspace.details.credentials[i].oauth_server_to_server.scopes)
+* `aio.oauth.scopes` a comma separated list of OAuth scopes associated with your API, see your Adobe Developer Console OAuth scopes (project.workspace.details.credentials[i].oauth_server_to_server.scopes)
 
 For more details on the above please refer to
 * [`aio-lib-java-core` docs](../../core/README.md) for more details
