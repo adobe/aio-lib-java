@@ -96,15 +96,15 @@
 
     <jacoco.version>0.8.10</jacoco.version>
 
-    <commons-text.version>1.10.0</commons-text.version>
+    <commons-text.version>1.13.0</commons-text.version>
     <commons-lang3.version>3.13.0</commons-lang3.version>
     <junit.version>5.10.0</junit.version>
-    <mockito.version>5.4.0</mockito.version>
-    <slf4j.version>1.7.6</slf4j.version>
-    <jackson.version>2.13.4</jackson.version>
+    <mockito.version>5.11.0</mockito.version>
+    <slf4j.version>2.0.12</slf4j.version>
+    <jackson.version>2.17.2</jackson.version>
     <jjwt.version>0.11.5</jjwt.version>
 
-    <cloudevents.version>1.2.0</cloudevents.version>
+    <cloudevents.version>4.0.1</cloudevents.version>
     <!--  we'll stick to this CloudEvents v1 version for now -->
 
     <!-- https://github.com/openapi-tools/jackson-dataformat-hal/blob/v1.0.9/pom.xml -->
@@ -259,8 +259,8 @@
                   <version>[3.3.9,)</version>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <message>Maven must be executed with a Java 8 JRE or higher.</message>
-                  <version>1.8.0</version>
+                  <message>Maven must be executed with a Java 17 JRE or higher.</message>
+                  <version>1.17.0</version>
                 </requireJavaVersion>
               </rules>
             </configuration>
