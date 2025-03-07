@@ -29,7 +29,7 @@ public class ZonedDateTimeDeserializer extends JsonDeserializer<ZonedDateTime> {
     try {
       return ZonedDateTime.parse(jsonParser.getText(), DateTimeFormatter.ISO_OFFSET_DATE_TIME);
     } catch (DateTimeException e) {
-      throw new IllegalArgumentException("could not parse");
+      throw new IllegalArgumentException("could not parse", e);
     }
   }
 }
