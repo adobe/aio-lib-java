@@ -11,6 +11,8 @@
  */
 package com.adobe.aio.util;
 
+import com.adobe.aio.cloudevents.ZonedDateTimeDeserializer;
+import com.adobe.aio.cloudevents.ZonedDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -20,8 +22,6 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.cloudevents.json.ZonedDateTimeDeserializer;
-import io.cloudevents.json.ZonedDateTimeSerializer;
 import io.openapitools.jackson.dataformat.hal.JacksonHALModule;
 import java.time.ZonedDateTime;
 import org.apache.commons.lang3.StringUtils;

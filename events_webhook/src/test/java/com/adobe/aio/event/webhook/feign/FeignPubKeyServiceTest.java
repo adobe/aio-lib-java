@@ -1,22 +1,19 @@
 package com.adobe.aio.event.webhook.feign;
 
-import java.io.File;
-import java.security.KeyFactory;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockserver.model.HttpRequest.request;
+import static org.mockserver.model.HttpResponse.response;
+
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PublicKey;
-
-import javax.crypto.KeyGenerator;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockserver.client.MockServerClient;
 import org.mockserver.junit.jupiter.MockServerExtension;
 import shaded_package.org.apache.commons.codec.binary.Base64;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockserver.model.HttpRequest.*;
-import static org.mockserver.model.HttpResponse.*;
 
 @ExtendWith(MockServerExtension.class)
 public class FeignPubKeyServiceTest {
