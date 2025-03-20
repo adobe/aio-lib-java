@@ -104,9 +104,6 @@
     <jackson.version>2.13.4</jackson.version>
     <jjwt.version>0.11.5</jjwt.version>
 
-    <cloudevents.version>1.2.0</cloudevents.version>
-    <!--  we'll stick to this CloudEvents v1 version for now -->
-
     <!-- https://github.com/openapi-tools/jackson-dataformat-hal/blob/v1.0.9/pom.xml -->
     <jackson-dataformat-hal.version>1.0.9</jackson-dataformat-hal.version>
 
@@ -122,12 +119,6 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-text</artifactId>
         <version>${commons-text.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.cloudevents</groupId>
-        <artifactId>cloudevents-api</artifactId>
-        <version>${cloudevents.version}</version>
       </dependency>
 
       <dependency>

@@ -20,8 +20,6 @@ import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import io.cloudevents.json.ZonedDateTimeDeserializer;
-import io.cloudevents.json.ZonedDateTimeSerializer;
 import io.openapitools.jackson.dataformat.hal.JacksonHALModule;
 import java.time.ZonedDateTime;
 import org.apache.commons.lang3.StringUtils;
@@ -35,10 +33,6 @@ public class JacksonUtil {
       JsonMapper.builder()
           .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
           .serializationInclusion(Include.NON_NULL)
-          .addModule(new SimpleModule()
-              .addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer())
-              .addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer()))
-           // let's stick to CloudEvents v1 ISO_OFFSET_DATE_TIME date format
           .addModule(new JacksonHALModule())
           .addModule(new Jdk8Module())
           .build();
