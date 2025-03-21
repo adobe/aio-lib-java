@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.0...HEAD)
+
+### 📁 Other pull requests
+
+- GH-230 removing unwanted/unneeded/unused cloudevent serializer and deserializer and hence dependency [\#231](https://github.com/adobe/aio-lib-java/pull/231) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-2.0.0](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.0) (2024-09-05)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-1.1.28...aio-lib-java-2.0.0)
