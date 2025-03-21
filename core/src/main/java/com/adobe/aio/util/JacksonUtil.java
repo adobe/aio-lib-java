@@ -17,11 +17,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.node.TextNode;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import io.openapitools.jackson.dataformat.hal.JacksonHALModule;
-import java.time.ZonedDateTime;
 import org.apache.commons.lang3.StringUtils;
 
 public class JacksonUtil {
