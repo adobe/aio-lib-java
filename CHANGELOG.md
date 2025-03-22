@@ -1,8 +1,8 @@
 # 📑 Changelog
 
-## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+## [aio-lib-java-2.0.2](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.2) (2025-03-22)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.0...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.0...aio-lib-java-2.0.2)
 
 ### 📁 Other pull requests
 
