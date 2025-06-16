@@ -17,20 +17,9 @@ import com.adobe.aio.ims.model.AccessToken;
 
 public interface ImsService {
 
-
-  /**
-   * Checks that the jwt access token is still valid.
-   *
-   * @deprecated this will be removed as JWT token exchange is deprecated
-   * @param jwtAccessToken the jwt token to check
-   * @return true if the provided access token is still valid, false otherwise
-   */
-  @Deprecated()
-  boolean validateJwtAccessToken(String jwtAccessToken);
-
   /**
    * Looking up the contextual Workspace, it will use
-   * either the OAuth or JWT authentication context to fetch a valid access token.
+   * the OAuth authentication context to fetch a valid access token.
    * @return AccessToken a valid API authentication token
    */
   AccessToken getAccessToken();
