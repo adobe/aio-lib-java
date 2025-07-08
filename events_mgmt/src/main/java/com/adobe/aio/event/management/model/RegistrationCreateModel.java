@@ -30,8 +30,8 @@ public class RegistrationCreateModel extends RegistrationUpdateModel {
     private RegistrationCreateModel(final String clientId, final String name, final String description,
                     final String deliveryType, final String runtimeAction,
                     final Set<EventsOfInterestInputModel> eventsOfInterestInputModels,
-                    final String webhookUrl, final boolean enabled) {
-        super(name, description, webhookUrl, eventsOfInterestInputModels, deliveryType, runtimeAction, enabled);
+                    final String webhookUrl, final boolean enabled, final Set<CreateSubscriberFilterModel> subscriberFilters) {
+        super(name, description, webhookUrl, eventsOfInterestInputModels, deliveryType, runtimeAction, enabled, subscriberFilters);
         if (StringUtils.isBlank(clientId)) {
             throw new IllegalArgumentException(
                             "Registration is missing a clientId");
@@ -59,7 +59,7 @@ public class RegistrationCreateModel extends RegistrationUpdateModel {
 
     @Override
     public int hashCode() {
-        return Objects.hash(clientId, name, description, deliveryType, runtimeAction, eventsOfInterestInputModels, webhookUrl, enabled);
+        return Objects.hash(clientId, name, description, deliveryType, runtimeAction, eventsOfInterestInputModels, webhookUrl, enabled, subscriberFilters);
     }
 
     @Override
@@ -73,6 +73,7 @@ public class RegistrationCreateModel extends RegistrationUpdateModel {
                         ", eventsOfInterestInputModels=" + eventsOfInterestInputModels +
                         ", webhookUrl='" + webhookUrl + '\'' +
                         ", enabled='" + enabled + '\'' +
+                        ", subscriberFilters=" + subscriberFilters +
                         '}';
     }
 
@@ -93,7 +94,7 @@ public class RegistrationCreateModel extends RegistrationUpdateModel {
         @Override
         public RegistrationCreateModel build() {
             return new RegistrationCreateModel(clientId, name, description, deliveryType, runtimeAction,
-                eventsOfInterestInputModels, webhookUrl, enabled);
+                eventsOfInterestInputModels, webhookUrl, enabled, subscriberFilters);
         }
     }
 }

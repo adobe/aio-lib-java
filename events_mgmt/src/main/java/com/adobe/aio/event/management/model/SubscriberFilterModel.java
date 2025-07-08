@@ -11,6 +11,7 @@
  */
 package com.adobe.aio.event.management.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,7 +29,12 @@ public class SubscriberFilterModel extends CreateSubscriberFilterModel {
   @JsonProperty("id")
   private final UUID id;
 
-  public SubscriberFilterModel(UUID id, String name, String description, String subscriberFilter) {
+  @JsonCreator
+  public SubscriberFilterModel(
+      @JsonProperty("id") UUID id,
+      @JsonProperty("name") String name,
+      @JsonProperty("description") String description,
+      @JsonProperty("subscriber_filter") String subscriberFilter) {
     super(name, description, subscriberFilter);
     this.id = id;
   }
