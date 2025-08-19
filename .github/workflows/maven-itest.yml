@@ -55,7 +55,7 @@ jobs:
 
   prod_oauth_itest:
     runs-on: ubuntu-latest
-    environment: aio_prod
+    environment: prod_oauth_itest
     strategy:
       fail-fast: true
 
