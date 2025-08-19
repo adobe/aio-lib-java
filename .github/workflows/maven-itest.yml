@@ -18,44 +18,6 @@ on:
       - main
 
 jobs:
-  stage_itest:
-    runs-on: ubuntu-latest
-    environment: aio_stage
-    strategy:
-      fail-fast: true
-
-    steps:
-
-      # Check out Git repository
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      # Set up environment with Java and Maven
-      - name: Setup JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: 'temurin'
-          java-version: 11
-          cache: maven    
-
-      # Build & Test
-      - name: Stage Integration Test with Maven
-        run: mvn -Daio_publish_url=$aio_publish_url -Daio_api_url=$aio_api_url -Daio_ims_url=$aio_ims_url -Daio_meta_scopes=$aio_meta_scopes -Daio_ims_org_id=$aio_ims_org_id  -Daio_consumer_org_id=$aio_consumer_org_id -Daio_project_id=$aio_project_id -Daio_workspace_id=$aio_workspace_id -Daio_credential_id=$aio_credential_id -Daio_technical_account_id=$aio_technical_account_id -Daio_api_key=$aio_api_key -Daio_client_secret=$aio_client_secret -Daio_encoded_pkcs8=$aio_encoded_pkcs8 verify -Pitest
-        env:
-          aio_ims_url: ${{ secrets.aio_ims_url }}
-          aio_meta_scopes: ${{ secrets.aio_meta_scopes }}
-          aio_ims_org_id: ${{ secrets.aio_ims_org_id }}
-          aio_consumer_org_id: ${{ secrets.aio_consumer_org_id }}
-          aio_project_id: ${{ secrets.aio_project_id }}
-          aio_workspace_id: ${{ secrets.aio_workspace_id }}
-          aio_credential_id: ${{ secrets.aio_credential_id }}
-          aio_technical_account_id: ${{ secrets.aio_technical_account_id }}
-          aio_api_key: ${{ secrets.aio_api_key }}
-          aio_client_secret: ${{ secrets.aio_client_secret }}
-          aio_encoded_pkcs8: ${{ secrets.aio_encoded_pkcs8 }}
-          aio_api_url: ${{ secrets.aio_api_url }}
-          aio_publish_url: ${{ secrets.aio_publish_url }}
-
   stage_oauth_itest:
     runs-on: ubuntu-latest
     environment: aio_stage_oauth
@@ -91,9 +53,9 @@ jobs:
           aio_api_url: ${{ secrets.aio_api_url }}
           aio_publish_url: ${{ secrets.aio_publish_url }}
 
-  prod_itest:
+  prod_oauth_itest:
     runs-on: ubuntu-latest
-    environment: aio_prod
+    environment: prod_oauth_itest
     strategy:
       fail-fast: true
 
@@ -113,18 +75,15 @@ jobs:
 
       # Build & Test
       - name: Prod Integration Test with Maven
-        run: mvn -Daio_publish_url=$aio_publish_url -Daio_api_url=$aio_api_url -Daio_ims_url=$aio_ims_url -Daio_meta_scopes=$aio_meta_scopes -Daio_ims_org_id=$aio_ims_org_id  -Daio_consumer_org_id=$aio_consumer_org_id -Daio_project_id=$aio_project_id -Daio_workspace_id=$aio_workspace_id -Daio_credential_id=$aio_credential_id -Daio_technical_account_id=$aio_technical_account_id -Daio_api_key=$aio_api_key -Daio_client_secret=$aio_client_secret -Daio_encoded_pkcs8=$aio_encoded_pkcs8 verify -Pitest
+        run: mvn -Daio_publish_url=$aio_publish_url -Daio_api_url=$aio_api_url -Daio_ims_url=$aio_ims_url -Daio_oauth_scopes=$aio_oauth_scopes -Daio_ims_org_id=$aio_ims_org_id  -Daio_consumer_org_id=$aio_consumer_org_id -Daio_project_id=$aio_project_id -Daio_workspace_id=$aio_workspace_id -Daio_api_key=$aio_api_key -Daio_client_secret=$aio_client_secret verify -Pitest
         env:
           aio_ims_url: ${{ secrets.aio_ims_url }}
-          aio_meta_scopes: ${{ secrets.aio_meta_scopes }}
+          aio_client_secret: ${{ secrets.aio_client_secret }}
+          aio_oauth_scopes: ${{ secrets.aio_oauth_scopes }}
           aio_ims_org_id: ${{ secrets.aio_ims_org_id }}
           aio_consumer_org_id: ${{ secrets.aio_consumer_org_id }}
           aio_project_id: ${{ secrets.aio_project_id }}
           aio_workspace_id: ${{ secrets.aio_workspace_id }}
-          aio_credential_id: ${{ secrets.aio_credential_id }}
-          aio_technical_account_id: ${{ secrets.aio_technical_account_id }}
           aio_api_key: ${{ secrets.aio_api_key }}
-          aio_client_secret: ${{ secrets.aio_client_secret }}
-          aio_encoded_pkcs8: ${{ secrets.aio_encoded_pkcs8 }}
           aio_api_url: ${{ secrets.aio_api_url }}
           aio_publish_url: ${{ secrets.aio_publish_url }}

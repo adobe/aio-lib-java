@@ -12,13 +12,19 @@
 package com.adobe.aio.event.management;
 
 import com.adobe.aio.event.management.feign.FeignRegistrationService;
+import com.adobe.aio.event.management.model.CreateSubscriberFilterModel;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.event.management.model.RegistrationPaginatedModel;
 import com.adobe.aio.event.management.model.RegistrationUpdateModel;
+import com.adobe.aio.event.management.model.SubscriberFilterModel;
+import com.adobe.aio.event.management.model.SubscriberFilterValidationInputModel;
+import com.adobe.aio.event.management.model.SubscriberFilterValidationOutputModel;
 import com.adobe.aio.workspace.Workspace;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 
 public interface RegistrationService {
 
@@ -39,6 +45,59 @@ public interface RegistrationService {
   }
 
   Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg(long page, long size);
+
+  /**
+   * Validates a subscriber filter for a registration
+   *
+   * @param registrationId The registration ID
+   * @param validationInput The validation input containing the filter and optional custom sample events
+   * @return SubscriberFilterValidationOutputModel
+   */
+  Optional<SubscriberFilterValidationOutputModel> validateSubscriberFilter(String registrationId, SubscriberFilterValidationInputModel validationInput);
+
+  /**
+   * Creates a new subscriber filter for a registration
+   *
+   * @param registrationId The registration ID
+   * @param createSubscriberFilterModel The subscriber filter to create
+   * @return SubscriberFilterModel
+   */
+  Optional<SubscriberFilterModel> createSubscriberFilter(String registrationId, CreateSubscriberFilterModel createSubscriberFilterModel);
+
+  /**
+   * Gets all subscriber filters for a registration
+   *
+   * @param registrationId The registration ID
+   * @return Set of SubscriberFilterModel
+   */
+  Optional<Set<SubscriberFilterModel>> getAllSubscriberFilters(String registrationId);
+
+  /**
+   * Gets a specific subscriber filter by ID
+   *
+   * @param registrationId The registration ID
+   * @param subscriberFilterId The subscriber filter ID
+   * @return SubscriberFilterModel
+   */
+  Optional<SubscriberFilterModel> getSubscriberFilterById(String registrationId, UUID subscriberFilterId);
+
+  /**
+   * Updates a subscriber filter
+   *
+   * @param registrationId The registration ID
+   * @param subscriberFilterId The subscriber filter ID
+   * @param updateSubscriberFilterModel The updated subscriber filter
+   * @return SubscriberFilterModel
+   */
+  Optional<SubscriberFilterModel> updateSubscriberFilter(String registrationId, UUID subscriberFilterId, CreateSubscriberFilterModel updateSubscriberFilterModel);
+
+  /**
+   * Deletes a subscriber filter
+   *
+   * @param registrationId The registration ID
+   * @param subscriberFilterId The subscriber filter ID
+   */
+  void deleteSubscriberFilter(String registrationId, UUID subscriberFilterId);
 
   static Builder builder() {
     return new Builder();

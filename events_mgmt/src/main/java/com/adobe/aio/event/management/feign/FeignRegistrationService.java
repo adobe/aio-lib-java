@@ -15,11 +15,15 @@ import static com.adobe.aio.util.Constants.API_MANAGEMENT_URL;
 
 import com.adobe.aio.event.management.RegistrationService;
 import com.adobe.aio.event.management.api.RegistrationApi;
+import com.adobe.aio.event.management.model.CreateSubscriberFilterModel;
 import com.adobe.aio.event.management.model.Registration;
 import com.adobe.aio.event.management.model.RegistrationCollection;
 import com.adobe.aio.event.management.model.RegistrationCreateModel;
 import com.adobe.aio.event.management.model.RegistrationPaginatedModel;
 import com.adobe.aio.event.management.model.RegistrationUpdateModel;
+import com.adobe.aio.event.management.model.SubscriberFilterModel;
+import com.adobe.aio.event.management.model.SubscriberFilterValidationInputModel;
+import com.adobe.aio.event.management.model.SubscriberFilterValidationOutputModel;
 import com.adobe.aio.feign.AIOHeaderInterceptor;
 import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.adobe.aio.util.feign.FeignUtil;
@@ -28,6 +32,8 @@ import feign.RequestInterceptor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,5 +118,79 @@ public class FeignRegistrationService implements RegistrationService {
   @Override
   public Optional<RegistrationPaginatedModel> getAllRegistrationsForOrg(final long page, final long size) {
     return registrationApi.getAllForOrg(workspace.getConsumerOrgId(), page, size);
+  }
+
+  // Subscriber Filter implementations
+
+  @Override
+  public Optional<SubscriberFilterValidationOutputModel> validateSubscriberFilter(String registrationId, SubscriberFilterValidationInputModel validationInput) {
+    if (StringUtils.isEmpty(registrationId)) {
+      throw new IllegalArgumentException("registrationId cannot be null or empty");
+    }
+    if (validationInput == null) {
+      throw new IllegalArgumentException("validationInput cannot be null");
+    }
+    return registrationApi.validateFilters(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), registrationId, validationInput);
+  }
+
+  @Override
+  public Optional<SubscriberFilterModel> createSubscriberFilter(String registrationId, CreateSubscriberFilterModel createSubscriberFilterModel) {
+    if (StringUtils.isEmpty(registrationId)) {
+      throw new IllegalArgumentException("registrationId cannot be null or empty");
+    }
+    if (createSubscriberFilterModel == null) {
+      throw new IllegalArgumentException("createSubscriberFilterModel cannot be null");
+    }
+    return registrationApi.createSubscriberFilter(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), registrationId, createSubscriberFilterModel);
+  }
+
+  @Override
+  public Optional<Set<SubscriberFilterModel>> getAllSubscriberFilters(String registrationId) {
+    if (StringUtils.isEmpty(registrationId)) {
+      throw new IllegalArgumentException("registrationId cannot be null or empty");
+    }
+    return registrationApi.getAllSubscriberFilters(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), registrationId);
+  }
+
+  @Override
+  public Optional<SubscriberFilterModel> getSubscriberFilterById(String registrationId, UUID subscriberFilterId) {
+    if (StringUtils.isEmpty(registrationId)) {
+      throw new IllegalArgumentException("registrationId cannot be null or empty");
+    }
+    if (subscriberFilterId == null) {
+      throw new IllegalArgumentException("subscriberFilterId cannot be null");
+    }
+    return registrationApi.getSubscriberFilterById(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), registrationId, subscriberFilterId);
+  }
+
+  @Override
+  public Optional<SubscriberFilterModel> updateSubscriberFilter(String registrationId, UUID subscriberFilterId, CreateSubscriberFilterModel updateSubscriberFilterModel) {
+    if (StringUtils.isEmpty(registrationId)) {
+      throw new IllegalArgumentException("registrationId cannot be null or empty");
+    }
+    if (subscriberFilterId == null) {
+      throw new IllegalArgumentException("subscriberFilterId cannot be null");
+    }
+    if (updateSubscriberFilterModel == null) {
+      throw new IllegalArgumentException("updateSubscriberFilterModel cannot be null");
+    }
+    return registrationApi.updateSubscriberFilter(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), registrationId, subscriberFilterId, updateSubscriberFilterModel);
+  }
+
+  @Override
+  public void deleteSubscriberFilter(String registrationId, UUID subscriberFilterId) {
+    if (StringUtils.isEmpty(registrationId)) {
+      throw new IllegalArgumentException("registrationId cannot be null or empty");
+    }
+    if (subscriberFilterId == null) {
+      throw new IllegalArgumentException("subscriberFilterId cannot be null");
+    }
+    registrationApi.deleteSubscriberFilter(workspace.getConsumerOrgId(), workspace.getProjectId(),
+        workspace.getWorkspaceId(), registrationId, subscriberFilterId);
   }
 }

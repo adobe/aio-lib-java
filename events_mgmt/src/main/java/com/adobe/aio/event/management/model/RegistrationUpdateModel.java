@@ -44,9 +44,13 @@ public class RegistrationUpdateModel {
   @JsonProperty("enabled")
   protected Boolean enabled;
 
+  @JsonProperty("subscriber_filters")
+  protected Set<CreateSubscriberFilterModel> subscriberFilters;
+
   RegistrationUpdateModel(final String name, final String description, final String webhookUrl,
                   final Set<EventsOfInterestInputModel> eventsOfInterestInputModels, final String deliveryType,
-                  final String runtimeAction, final Boolean enabled) {
+                  final String runtimeAction, final Boolean enabled,  
+                  final Set<CreateSubscriberFilterModel> subscriberFilters) {
 
     if (StringUtils.isBlank(name)){
       throw new IllegalArgumentException("Registration is missing a name");
@@ -71,6 +75,7 @@ public class RegistrationUpdateModel {
     this.deliveryType = deliveryType;
     this.runtimeAction = runtimeAction;
     this.enabled = enabled == null || enabled;
+    this.subscriberFilters = subscriberFilters;
   }
 
   public String getName() {
@@ -101,6 +106,11 @@ public class RegistrationUpdateModel {
     return runtimeAction;
   }
 
+
+  public Set<CreateSubscriberFilterModel> getSubscriberFilters() {
+    return subscriberFilters;
+  }
+
   @Override public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -115,12 +125,13 @@ public class RegistrationUpdateModel {
                     Objects.equals(eventsOfInterestInputModels, that.eventsOfInterestInputModels) &&
                     Objects.equals(deliveryType, that.deliveryType) &&
                     Objects.equals(runtimeAction, that.runtimeAction) &&
-                    Objects.equals(enabled, that.enabled);
+                    Objects.equals(enabled, that.enabled) &&
+                    Objects.equals(subscriberFilters, that.subscriberFilters);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(name, description, webhookUrl, eventsOfInterestInputModels, deliveryType, runtimeAction, enabled);
+    return Objects.hash(name, description, webhookUrl, eventsOfInterestInputModels, deliveryType, runtimeAction, enabled, subscriberFilters);
   }
 
   @Override
@@ -133,6 +144,7 @@ public class RegistrationUpdateModel {
                     ", deliveryType=" + deliveryType +
                     ", runtimeAction=" + runtimeAction +
                     ", enabled='" + enabled + '\'' +
+                    ", subscriberFilters=" + subscriberFilters +
                     '}';
   }
 
@@ -150,6 +162,7 @@ public class RegistrationUpdateModel {
     protected Set<EventsOfInterestInputModel> eventsOfInterestInputModels = new HashSet<>();
     protected String webhookUrl;
     protected Boolean enabled = Boolean.TRUE;
+    protected Set<CreateSubscriberFilterModel> subscriberFilters = new HashSet<>();
 
     public Builder() {
     }
@@ -196,10 +209,25 @@ public class RegistrationUpdateModel {
       return (T) this;
     }
 
+    public T addSubscriberFilter(CreateSubscriberFilterModel subscriberFilter) {
+      this.subscriberFilters.add(subscriberFilter);
+      return (T) this;
+    }
+
+    public T addSubscriberFilters(Set<CreateSubscriberFilterModel> subscriberFilters) {
+      this.subscriberFilters.addAll(subscriberFilters);
+      return (T) this;
+    }
+
+    public T subscriberFilters(Set<CreateSubscriberFilterModel> subscriberFilters) {
+      this.subscriberFilters = subscriberFilters != null ? subscriberFilters : new HashSet<>();
+      return (T) this;
+    }
+
     public RegistrationUpdateModel build() {
       return new RegistrationUpdateModel(name, description, webhookUrl,
                       eventsOfInterestInputModels, deliveryType, runtimeAction,
-                      enabled);
+                      enabled, subscriberFilters);
     }
   }
 }

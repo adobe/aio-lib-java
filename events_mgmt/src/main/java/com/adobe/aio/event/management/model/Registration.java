@@ -81,6 +81,9 @@ public class Registration {
   @JsonProperty("events_of_interest")
   private final Set<EventsOfInterest> eventsOfInterests;
 
+  @JsonProperty("subscriber_filters")
+  private final Set<SubscriberFilterModel> subscriberFilters;
+
   @JsonCreator
   public Registration(
                   @JsonProperty("id") Long id,
@@ -98,7 +101,8 @@ public class Registration {
                   @JsonProperty("webhook_url") String webhookUrl,
                   @JsonProperty("runtime_action") String runtimeAction,
                   @JsonProperty("enabled") boolean enabled,
-                  @JsonProperty("events_of_interest") Set<EventsOfInterest> eventsOfInterests) {
+                  @JsonProperty("events_of_interest") Set<EventsOfInterest> eventsOfInterests,
+                  @JsonProperty("subscriber_filters") Set<SubscriberFilterModel> subscriberFilters) {
     this.id = id;
     this.name = name;
     this.description = description;
@@ -115,6 +119,7 @@ public class Registration {
     this.runtimeAction = runtimeAction;
     this.enabled = enabled;
     this.eventsOfInterests = eventsOfInterests;
+    this.subscriberFilters = subscriberFilters;
     this.self = self;
     this.traceUrl = traceUrl;
     this.journalUrl = journalUrl;
@@ -198,6 +203,10 @@ public class Registration {
     return eventsOfInterests;
   }
 
+  public Set<SubscriberFilterModel> getSubscriberFilters() {
+    return subscriberFilters;
+  }
+
   @Override public boolean equals(Object o) {
     if (this == o) {
       return true;
@@ -224,12 +233,13 @@ public class Registration {
       Objects.equals(workspaceId, that.workspaceId) &&
       Objects.equals(webhookUrl, that.webhookUrl) &&
       Objects.equals(runtimeAction, that.runtimeAction) &&
-      Objects.equals(eventsOfInterests, that.eventsOfInterests);
+      Objects.equals(eventsOfInterests, that.eventsOfInterests) &&
+      Objects.equals(subscriberFilters, that.subscriberFilters);
   }
 
   @Override public int hashCode() {
     return Objects.hash(self, journalUrl, traceUrl, id, name, description, clientId, registrationId, deliveryType, webhookStatus,
-      createdDate, updatedDate, consumerId, projectId, workspaceId, webhookUrl, runtimeAction, enabled, eventsOfInterests);
+      createdDate, updatedDate, consumerId, projectId, workspaceId, webhookUrl, runtimeAction, enabled, eventsOfInterests, subscriberFilters);
   }
 
   @Override public String toString() {
