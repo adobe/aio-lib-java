@@ -1,5 +1,14 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.2...HEAD)
+
+### 📁 Other pull requests
+
+- CH-233: add support for the new subscriber filter API \(which is yet not released publicly\) [\#235](https://github.com/adobe/aio-lib-java/pull/235) ([nicdard](https://github.com/nicdard))
+- GH-233: add new Subscriber Filter API support [\#234](https://github.com/adobe/aio-lib-java/pull/234) ([nicdard](https://github.com/nicdard))
+
 ## [aio-lib-java-2.0.2](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.2) (2025-03-22)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.0...aio-lib-java-2.0.2)
