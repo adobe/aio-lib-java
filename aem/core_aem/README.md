@@ -5,7 +5,7 @@ wrapping [`aio-lib-java-core`](../../core) and [`aio-lib-java-ims`](../../ims)
 
 It hosts the services to 
 * get the Adobe Developer Console Workspace
-* get Access token (using either JWT or OAuth token flow) from Adobe Identity Management System (IMS)
+* get Access token (using the OAuth token flow) from Adobe Identity Management System (IMS)
 
 
 ## `Workspace` Configuration
@@ -18,14 +18,7 @@ service looks up the following OSGI configuration keys:
 * `aio.consumer.org.id`  your Adobe Developer Console consumer orgnaization id (`project.org.id`)
 * `aio.ims.org.id` your Adobe Developer Console IMS Organization ID (`project.org.ims_org_id`)
 * `aio.workspace.id` your Adobe Developer Console workspace Id (`project.workspace.id`)
-* `aio.api.key` your Adobe Developer Console credential API Key (or Client ID) 
-
-When using JWT credentials also set
-* `aio.credential.id` your Adobe Developer Console jwt credential id
-* `aio.client.secret` your Adobe Developer Console jwt credential client secret 
-* `aio.meta.scopes` a comma separated list of metascopes associated with your API, see your Adobe Developer Console jwt credential metascopes 
-* `aio.technical.account.id` your Adobe Developer Console jwt credential technical account id 
-* `aio.encoded.pkcs8` your private key (in a base64 encoded pkcs8 format) 
+* `aio.api.key` your Adobe Developer Console credential API Key (or Client ID)
 
 When using OAuth credentials also set
 * `aio.client.secret` your Adobe Developer Console oAuth credential client secret

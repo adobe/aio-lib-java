@@ -13,7 +13,6 @@ package com.adobe.aio.workspace;
 
 
 import com.adobe.aio.auth.Context;
-import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
 import java.util.Map;
@@ -58,8 +57,8 @@ public class Workspace {
 
   public void validateAll() {
     validateWorkspaceContext();
-    if (!isAuthOAuth() && !isAuthJWT()) {
-      throw new IllegalStateException("Missing auth configuration, set either jwt or oauth...");
+    if (!isAuthOAuth()) {
+      throw new IllegalStateException("Missing auth configuration, set oauth properties...");
     }
     authContext.validate();
   }
@@ -137,10 +136,6 @@ public class Workspace {
 
   public boolean isAuthOAuth() {
     return authContext!=null && authContext instanceof OAuthContext;
-  }
-
-  public boolean isAuthJWT() {
-    return authContext!=null && authContext instanceof JwtContext;
   }
 
 

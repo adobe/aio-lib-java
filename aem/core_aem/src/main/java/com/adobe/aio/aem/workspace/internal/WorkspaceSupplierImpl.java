@@ -15,9 +15,7 @@ import com.adobe.aio.aem.status.Status;
 import com.adobe.aio.aem.workspace.WorkspaceSupplier;
 import com.adobe.aio.aem.workspace.ocd.WorkspaceConfig;
 import com.adobe.aio.auth.Context;
-import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.auth.OAuthContext;
-import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.util.WorkspaceUtil;
 import com.adobe.aio.workspace.Workspace;
 import java.util.HashMap;
@@ -83,11 +81,6 @@ public class WorkspaceSupplierImpl implements WorkspaceSupplier {
     putIfNotBlank(map, Workspace.CREDENTIAL_ID, config.aio_credential_id());
 
     putIfNotBlank(map, Context.CLIENT_SECRET, config.aio_client_secret());
-
-
-    putIfNotBlank(map, JwtContext.TECHNICAL_ACCOUNT_ID, config.aio_technical_account_id());
-    putIfNotBlank(map, JwtContext.META_SCOPES, config.aio_meta_scopes());
-    putIfNotBlank(map, PrivateKeyBuilder.AIO_ENCODED_PKCS_8, config.aio_encoded_pkcs8());
 
     putIfNotBlank(map, OAuthContext.SCOPES, config.aio_oauth_scopes());
     return map;

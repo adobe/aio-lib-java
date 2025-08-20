@@ -35,11 +35,8 @@ Have a look at our [ImsService `main()` Test Drive](./src/test/java/com/adobe/ai
 Note that this library is built on top of `aio-lib-java-core` which holds a fluent workspace builder API that offers many ways to build your `Workspace` (a Java POJO representation of your `Adobe Developer Console` Workspace).
 See more details on the [Workspace](../aio-lib-java-core/README.md#Workspace) configurations in the `aio-lib-java-core` [README](../core/README.md#Workspace)
 
-It allows you to integrate with the two server to server authentication credentials that Adobe supports.
+It allows you to integrate with the server to server authentication credentials that Adobe supports.
 * OAuth Server-to-Server credentials
-* Service Account (JWT) credentials (deprecated)
-
-These credentials only differ in the way your application generates the access token, the rest of their functioning is similar.
 
 ### OAuth Server-to-Server credentials Configurations
 The OAuth Server-to-Server credential relies on the OAuth 2.0 `client_credentials` grant type to generate access tokens. 
@@ -48,33 +45,6 @@ To generate an access token, your application can make a single HTTP request wit
 Browse our [OAuth authentication documentation](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#oauth-server-to-server-credential) for more details, 
 and to get you started quickly, have a look at our [sample oauth config file: `workspace.oauth.properties`](./src/test/resources/workspace.oauth.properties)
 
-
-### Service Account (JWT) credential (deprecated)
-A Service Account connection allows your application to call Adobe services on behalf of 
-the application itself or on behalf of an enterprise organization.
-
-For this type of connection, you will create a JSON Web Token (JWT) that encapsulates 
-your credentials and begin each API session by exchanging the JWT for an access token.
-
-The JWT encodes all of the identity and security information required to obtain an access 
-token and must be signed with the private key that is associated with a public key certificate specified on your integration.
-
-Browse our [JWT authentication documentation](https://developer.adobe.com/developer-console/docs/guides/authentication/JWT/) for more details,
-and to get you started quickly, look at our [sample jwt config file: `workspace.jwt.properties`](./src/test/resources/workspace.jwt.properties)
-
-#### Create and configure your public and private key
-As introduced above the authentication flow signs the JWT request and therefore requires private-public keys configurations
-, therefore you will need to
-
-* create this  RSA private/public certificate pair, using openssl:
-     `openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout private.key -out certificate_pub.crt`
-* upload the public key in your Adobe Developer Workspace, see our [JWT authentication documentation](https://developer.adobe.com/developer-console/docs/guides/authentication/JWT/)
-* configure this library (and its [`PrivateKeyBuilder`](./src/main/java/com/adobe/util/PrivateKeyBuilder.java)) with your privateKey using a base 64 encoded pcks8 key
-  * convert your private key to a PKCS8 format, use the following command:
-    `openssl pkcs8 -topk8 -inform PEM -outform DER -in private.key -nocrypt > private.pkcs8.key`
-  * base 64 encode it (and stuff it in a `private.pkcs8.key.base64` file), use the following command:
-     `base64 -i private.pkcs8.key -o private.pkcs8.key.base64`
-* set your workspace `aio_encoded_pkcs8` properties value using the string you generated with the above command
 
 
 ## Builds

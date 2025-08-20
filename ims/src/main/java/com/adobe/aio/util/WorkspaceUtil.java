@@ -12,19 +12,15 @@
 package com.adobe.aio.util;
 
 import com.adobe.aio.auth.Context;
-import com.adobe.aio.auth.JwtContext;
 import com.adobe.aio.auth.OAuthContext;
-import com.adobe.aio.ims.util.PrivateKeyBuilder;
 import com.adobe.aio.workspace.Workspace;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.security.PrivateKey;
 import java.util.*;
 
 import static com.adobe.aio.auth.Context.CLIENT_SECRET;
-import static com.adobe.aio.auth.JwtContext.*;
 import static com.adobe.aio.auth.OAuthContext.SCOPES;
 import static com.adobe.aio.util.FileUtil.getMap;
 import static com.adobe.aio.workspace.Workspace.*;
@@ -76,16 +72,8 @@ public class WorkspaceUtil {
         return builder;
     }
 
-    public static boolean isOAuthConfig(Map<String, String> configMap) {
-        return configMap.containsKey(SCOPES);
-    }
-
     public static Context getAuthContext(Map<String, String> configMap) {
-        if (isOAuthConfig(configMap)) {
-            return getOAuthContextBuilder(configMap).build();
-        } else {
-            return getJwtContextBuilder(configMap).build();
-        }
+        return getOAuthContextBuilder(configMap).build();
     }
 
     public static OAuthContext.Builder getOAuthContextBuilder(Map<String, String> configMap) {
@@ -95,36 +83,6 @@ public class WorkspaceUtil {
             Arrays.stream(configMap.get(SCOPES).split(",")).forEach(builder::addScope);
         }
         return builder;
-    }
-
-
-    public static JwtContext.Builder getJwtContextBuilder(Map<String, String> configMap) {
-        JwtContext.Builder builder = new JwtContext.Builder()
-                .clientSecret(configMap.get(CLIENT_SECRET))
-                .technicalAccountId(configMap.get(TECHNICAL_ACCOUNT_ID));
-        if (!StringUtils.isEmpty(configMap.get(META_SCOPES))) {
-            String[] metascopeArray = configMap.get(META_SCOPES).split(",");
-            for (String metascope : metascopeArray) {
-                builder.addMetascope(metascope);
-            }
-        }
-        getPrivateKey(configMap).ifPresent(builder::privateKey);
-        return builder;
-    }
-
-    public static Optional<PrivateKey> getPrivateKey(Map<String, String> configMap) {
-        String encodedPkcs8Key = configMap.get(PrivateKeyBuilder.AIO_ENCODED_PKCS_8);
-        if (encodedPkcs8Key != null) {
-            logger.debug("loading test JWT Private Key from JVM System Properties");
-            try {
-                return Optional.of(new PrivateKeyBuilder().encodedPkcs8Key(encodedPkcs8Key).build());
-            } catch (Exception e) {
-                logger.error("Error {} loading test Private Key from configMap", e.getMessage());
-                return Optional.empty();
-            }
-        } else {
-            return Optional.empty();
-        }
     }
 
     public static String getSystemProperty(String key) {

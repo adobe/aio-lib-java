@@ -20,20 +20,6 @@ import feign.RequestLine;
 
 public interface ImsApi {
 
-  @RequestLine("POST /ims/exchange/jwt")
-  @Headers("Content-Type: application/x-www-form-urlencoded")
-  AccessToken getJwtAccessToken(
-      @Param("client_id") String clientId,
-      @Param("client_secret") String clientSecret,
-      @Param("jwt_token") String jwtToken);
-
-  @RequestLine("POST /ims/validate_token/v1")
-  @Headers("Content-Type: application/x-www-form-urlencoded")
-  TokenValidation validateJwtToken(
-      @Param("type") String type,
-      @Param("client_id") String clientId,
-      @Param("token") String accessToken);
-
   @RequestLine("POST /ims/token/v3?client_id={client_id}")
   @Headers("Content-Type: application/x-www-form-urlencoded")
   @Body("client_secret={client_secret}&grant_type=client_credentials&scope={scopes}")
