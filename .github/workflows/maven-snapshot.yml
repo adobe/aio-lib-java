@@ -28,28 +28,27 @@ jobs:
           distribution: 'temurin'
           java-version: 11
           cache: maven
-          server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: AEM6.5 Build
-        run: mvn clean deploy -DskipRemoteStaging=true -Dmaven.test.skip -Paem65deps,aem65,release
+        run: mvn clean deploy -DskipTests -Paem65deps,aem65,release
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: AEMaaCS Build
-        run: mvn clean deploy -DskipRemoteStaging=true -PaemaacsDeps,aemaacs,release,attach-javadoc,attach-source
+        run: mvn clean deploy -PaemaacsDeps,aemaacs,release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           
-      - name: Deploy to Central
-        run: mvn nexus-staging:deploy-staged -DautoReleaseAfterClose=true
+      - name: Main Build
+        run: mvn clean deploy -DskipTests
         env:
           MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
