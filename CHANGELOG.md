@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-236 migrating to `central.sonatype.com` [\#237](https://github.com/adobe/aio-lib-java/pull/237) ([francoisledroff](https://github.com/francoisledroff))
 - CH-233: add support for the new subscriber filter API \(which is yet not released publicly\) [\#235](https://github.com/adobe/aio-lib-java/pull/235) ([nicdard](https://github.com/nicdard))
 - GH-233: add new Subscriber Filter API support [\#234](https://github.com/adobe/aio-lib-java/pull/234) ([nicdard](https://github.com/nicdard))
 - Documentation: Fix invalid OSGi configuration property id aio\_oauth\_scopes [\#226](https://github.com/adobe/aio-lib-java/pull/226) ([stefanseifert](https://github.com/stefanseifert))
