@@ -274,7 +274,7 @@ public class EventVerifierTest {
         + "aWMxNONoH9kH2mhguidf8MCWwIuYyqO+J+IzsshXVWGyMyn3q7fVZCra9ISEZqWE\n"
         + "iwIDAQAB";
 
-    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    publicK = publicK.replaceAll("\n", "");
     return stringToKey(publicK);
   }
 
@@ -286,7 +286,7 @@ public class EventVerifierTest {
         + "jku8atEfdo341WcHSHW2hf/Gx2mazhGg1of6wZVforXo3R1HVqIVMlOk6GMcz4HH\n"
         + "iLOuEOURFucux3jm4gF2DF1B627vCqaGDoduvyIjitXQS6KqSx3dzB2dGOBDPpsr\n"
         + "8wIDAQAB";
-    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    publicK = publicK.replaceAll("\n", "");
     return stringToKey(publicK);
   }
 
@@ -299,7 +299,7 @@ public class EventVerifierTest {
         + "AMJqNqyVENaVON0sVA8u10aIPi9xIi9vR9rGpridIP+zMiwsv+H1zWoU5CX4eN5RN/\n"
         + "QIDAQAB";
 
-    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    publicK = publicK.replaceAll("\n", "");
     return stringToKey(publicK);
   }
 
@@ -311,7 +311,7 @@ public class EventVerifierTest {
         + "rLA1kZ6X2rKxrnz6bTG8ad+rkL3DbY/WvAah9ZJz8Xq87TS3/NDsveloVQ3+Wm+nF3\n"
         + "tyzdyTRDldwviRFX+EDhzAbTtk2hEZEIU3+9zxhSAscBUfV/2+P12vnowVoYNN7mqr\n"
         + "QIDAQAB";
-    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    publicK = publicK.replaceAll("\n", "");
     return stringToKey(publicK);
   }
 
@@ -323,7 +323,7 @@ public class EventVerifierTest {
         + "mZ5+3/uF4Ms21BqRSGCUEwNKpSxXT2bFNlUw0/DbM6gJuE1CJdk5z/sbLA0S3b1z\n"
         + "PR1LpgOeG84lFG7c0gcIaeZX+c3dLdmNBfkOQwacFP3m0urlJkSxI8MomaeEOS2y\n"
         + "hQIDAQAB";
-    publicK = publicK.replaceAll(System.lineSeparator(), "");
+    publicK = publicK.replaceAll("\n", "");
     return stringToKey(publicK);
   }
 }

@@ -22,10 +22,11 @@ import com.adobe.xdm.extensions.ims.ImsOrg;
 import com.adobe.xdm.extensions.ims.ImsUser;
 import com.adobe.xdm.external.repo.Directory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Hashtable;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -272,10 +273,16 @@ public class SerializationTest {
   }
 
   private static String readFile(String fileName) throws IOException {
-    byte[] encoded = Files.readAllBytes(Paths.get(
-        Thread.currentThread().getContextClassLoader()
-            .getResource(fileName).getPath()));
-    return new String(encoded, StandardCharsets.UTF_8);
-  }
+    try (InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream(fileName);
+         ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
+      byte[] buffer = new byte[8192];
+      int bytesRead;
+      while ((bytesRead = in.read(buffer, 0, buffer.length)) != -1) {
+        out.write(buffer, 0, bytesRead);
+      }
+
+      return new String(out.toByteArray(), StandardCharsets.UTF_8);
+    }
+  }
 }

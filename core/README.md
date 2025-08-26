@@ -11,7 +11,6 @@ your [Adobe Developer Console Project Workspace](https://www.adobe.io/apis/exper
 
 To get you started quickly use a `.properties` file,
 * see our sample config files:
-   * [workspace.jwt.properties](./src/test/resources/workspace.jwt.properties) 
    * [workspace.oauth.properties](./src/test/resources/workspace.oauth.properties)
 * download your `project` configurations file from your Adobe Developer Console Project overview page
 * map your `project` configurations with this properties
@@ -36,15 +35,6 @@ For [OAuth2 authentication](https://developer.adobe.com/developer-console/docs/g
 * `aio_api_key` your Adobe Developer Console OAuth Client ID (`project.workspace.details.credentials[i].oauth_server_to_server.client_id`)
 * `aio_client_secret` one your Adobe Developer Console OAuth Client Secrets (`project.workspace.details.credentials[i].oauth_server_to_server.client_secret`)
 * `aio_oauth_scopes` a comma separated list of OAuth scopes associated with your API, see your Adobe Developer Console OAuth scopes (`project.workspace.details.credentials[i].oauth_server_to_server.scopes`)
-
-#### JWT authentication
-For [JWT authentication](https://developer.adobe.com/developer-console/docs/guides/authentication/ServerToServerAuthentication/#service-account-jwt-credential-deprecated), you will need to provide the following properties:
-* `aio_client_secret` your Adobe Developer Console jwt credential client secret (`project.workspace.details.credentials[i].jwt.client_secret`)
-* `aio_api_key` your Adobe Developer Console jwt credential API Key (or Client ID) (`project.workspace.details.credentials[i].jwt.client_id`)
-* `aio_meta_scopes` a comma separated list of metascopes associated with your API, see your Adobe Developer Console jwt credential metascopes (`project.workspace.details.credentials[i].jwt.meta_scopes`)
-* `aio_technical_account_id` your Adobe Developer Console jwt credential technical account id (`project.workspace.details.credentials[i].jwt.technical_account_id`)
-* `aio_encoded_pkcs8` your privateKey (associated with the public key set in your Adobe Developer Console workspace) in a base64 encoded pkcs8 format
-
 
 
 ## Builds
