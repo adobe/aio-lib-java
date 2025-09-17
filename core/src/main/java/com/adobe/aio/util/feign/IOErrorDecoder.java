@@ -12,6 +12,7 @@
 package com.adobe.aio.util.feign;
 
 import com.adobe.aio.exception.feign.IOUpstreamError;
+import com.adobe.aio.exception.feign.RetryAfterError;
 import feign.FeignException;
 import feign.Response;
 import feign.codec.ErrorDecoder;
@@ -23,24 +24,41 @@ import org.slf4j.LoggerFactory;
 public class IOErrorDecoder implements ErrorDecoder {
 
   public static final String REQUEST_ID = "x-request-id";
+  public static final String RETRY_AFTER_HEADER = "retry-after";
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Override
   public Exception decode(String methodKey, Response response) {
     FeignException exception = FeignException.errorStatus(methodKey, response);
-    logger.warn("Upstream response error ({},{})", response.status(), exception.contentUTF8());
-    return (response.status() >= 500) ?
-        new IOUpstreamError(response, exception, getRequestId(response.headers())) : exception;
+    String content = exception.contentUTF8();
+    logger.warn("Upstream response error ({},{})", response.status(), content);
+
+    // Handle rate limiting (429) responses specially
+    if (response.status() == 429) {
+      return new RetryAfterError(response, exception, getRequestId(response.headers()),
+          getRetryAfterHeaderValue(response.headers()));
+    }
+
+    return (response.status() >= 500) ? new IOUpstreamError(response, exception,
+        getRequestId(response.headers())) : exception;
   }
 
   private String getRequestId(Map<String, Collection<String>> headers) {
     try {
       return headers.get(REQUEST_ID).iterator().next();
     } catch (Exception e) {
-      logger.warn("The upstream Error response does not hold any {} header", REQUEST_ID,
-          e.getMessage());
+      logger.warn("The upstream Error response does not hold any {} header", REQUEST_ID, e);
       return "NA";
+    }
+  }
+
+  private String getRetryAfterHeaderValue(Map<String, Collection<String>> headers) {
+    try {
+      return headers.get(RETRY_AFTER_HEADER).iterator().next();
+    } catch (Exception e) {
+      logger.warn("The upstream Error response does not hold any {} header", RETRY_AFTER_HEADER, e);
+      return null;
     }
   }
 }
