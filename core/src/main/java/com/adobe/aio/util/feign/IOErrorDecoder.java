@@ -20,18 +20,22 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IOErrorDecoder implements ErrorDecoder {
+public class IOErrorDecoder extends ErrorDecoder.Default implements ErrorDecoder  {
 
   public static final String REQUEST_ID = "x-request-id";
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
+  public IOErrorDecoder() {
+    super();
+  }
 
   @Override
   public Exception decode(String methodKey, Response response) {
     FeignException exception = FeignException.errorStatus(methodKey, response);
     logger.warn("Upstream response error ({},{})", response.status(), exception.contentUTF8());
     return (response.status() >= 500) ?
-        new IOUpstreamError(response, exception, getRequestId(response.headers())) : exception;
+        new IOUpstreamError(response, exception, getRequestId(response.headers())) : super.decode(methodKey, response);
   }
 
   private String getRequestId(Map<String, Collection<String>> headers) {
