@@ -83,7 +83,7 @@
     <!--suppress UnresolvedMavenProperty -->
     <license.header.path>${maven.multiModuleProjectDirectory}/copyright_header.txt</license.header.path>
 
-    <jacoco.version>0.8.10</jacoco.version>
+    <jacoco.version>0.8.14</jacoco.version>
 
     <commons-text.version>1.10.0</commons-text.version>
     <commons-lang3.version>3.13.0</commons-lang3.version>
