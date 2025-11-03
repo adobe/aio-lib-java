@@ -88,7 +88,7 @@
     <commons-text.version>1.10.0</commons-text.version>
     <commons-lang3.version>3.13.0</commons-lang3.version>
     <junit.version>5.10.0</junit.version>
-    <mockito.version>5.4.0</mockito.version>
+    <mockito.version>5.19.0</mockito.version>
     <slf4j.version>1.7.6</slf4j.version>
     <jackson.version>2.13.4</jackson.version>
     <jjwt.version>0.11.5</jjwt.version>
