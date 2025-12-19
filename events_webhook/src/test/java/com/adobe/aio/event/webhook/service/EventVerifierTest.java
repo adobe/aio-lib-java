@@ -35,16 +35,16 @@ public class EventVerifierTest {
 
   private static final String API_KEY = "client_id1";
   private static final String ANOTHER_API_KEY = "another_api_key";
-  private static final String VALID_SIGNATURE_1 = "IaHo9/8DYt2630pAtjIJeGtsHjB61zOSiAb3S4X1VdPooxikfk79H/t3rgaSbmQMOnjVPRpYVNsHn1fE+l80gjEqmljgNEHt+BtfEH8EsEigwbjQS9opTx/GFnexw3h/sWOt4MGWt3TFK484Dsijijcs1gLwcxTyVUeU2G2XXECpH4dvvEXWQP+1HDFu9nrN+MU/aOR17cNF5em/D/jKjgTcaPx7jK+W5M57F3qqsmdcPxM1ltQxx1/iAXWaOffOC/nXSda5fLFZL75RKBIoveDjL9zthVkBVY9qKXYyK6S/usc2bW3PpXuRTd5Xv2bFB2Mlzr0Gi6St/iiNYLEl3g==";
-  private static final String VALID_SIGNATURE_2 = "Xx8uVpZlKIOqAdVBr/6aNrASk6u7i/Bb9kWZttIFOu0Y2JGozZGG7WF9Z6056RdeeBUXLJsV4r8a3ZeEUrOZi3hvhV+Hw7vmK1NIQJVIqdigF9mJ/2gSMGe7K4OPedh+fPNZmbOyNIc6FRmUtTdemNLJeCzM7Zf+niC7Tfsytsz4lW4ebv34TWHxzAA9pZRcJE4a1YYqEYAqn3cHTvCzB/AQ6VdIcP8MsuTGatCk9Vc6dTPOVEcyYkVXTMGgsmzW8RB6mq0m1aqTz3KvnhEYlkspqtxi+jBkTjcYVf1dPa4ofbosmD5rohIef/UwPX5n5ZHM7du86Gf+6S72ee8tbw==";
-  private static final String VALID_SIGNATURE_1_FOR_BATCH_PAYLOAD = "FHdNfD32TWCLbTUbnQykLWfyNfD+XpNroo0sqmVMhmdMGUqVQMkg7SVfIr8vt12EhGPzapqIbgFe2b6lU7isflzzJWQfpN+BB7brMzfrxQVDkAZZP7hvm9FLqPVAV24/jLojyfNJbLNufEN8rg0+u90bGxZjzAOAWdHdkA3xbJudJc+mzpW0GSxKN7QszrIC0P0A2bTmpvfVtyCbR3uM9JVwBPwR0yqq0EuFV2GeFhnJzDqH4qq8Q4kScOmgMK/9p/Ii2Km0KquYnBFC7GsPE2OVrZulmOZZpy1F2YNY2NEPehbtqtgVvbKCafzwi85LnOC/ZXbfOnN4HMoWwS6MSQ==";
-  private static final String VALID_SIGNATURE_2_FOR_BATCH_PAYLOAD = "v6Id3pI0rVt8b3QTMaceL874PwHztTZAHrydaAap/5uHoMcJhXcXHX0lZtTIEzqar0za2NM93HRz1AJZvuCDlWMPNWd+W2bvodjsh0OAHYJ2woNfeIm6QrnWOYHSC0x0dFuC0gncKGvcNt977Ef7XThEoIbTemIbQt/7dlgTOu9X0hTA9pZHb+iX8AL71zvjP31gWUaAQE9Di1LiACKI1kadfGb0ZNOWXpov3byOl8EXNN7GwoGYtTdP0AlyswhOjRZDEFeCfOoPq+XH2ufqOa0t8inoOp80AczxO9WEqPosyyqhaNjMhSSiN/h41TqMXNsDA7FIRgO6GRg2cRDtog==";
+  private static final String VALID_SIGNATURE_1 = "i7qHaTn6x7vLxEHE74hJaFfnsV8yaz/IPucUliqF2JO/60SI1d2YeEb+hU1KJIBI3Cfyz/Ou9UvVfhQLC+Pa6wV8efKAV+yl7Qca7SqyoP9FrA7esZnzCCJKaf+M4IS2QMndU9xbqPL8tSk/W0hau6YZsw8Ubkqtt5lwbQ58Z+zUetpb+XcoIhBc6NsDmgUP32dsoJ6R/Tu5Ukqi8BBQ7kucDl6bmH00sDeOz8dXCVZvSsuvd7ACbgOIMRhZkQF878ffJ+O+PF0WJXO20xOHztnW86GA/l1ZtVDQhwSYGmBQg45LnuRy9GcfT+sMwlYQEyH/e26bZL76Amxw46nYdQ==";
+  private static final String VALID_SIGNATURE_2 = "fqwUxrESvWBzt/i7BcGWfovS7tAQB8AikemXOJZYNyTaZKbU/7eL2TfEKbOTdjy+m2wuVhLB0YU+FNyfo8+CFwkG6dJ+uUDM5pWrIBgxeDX9ns/cXPGvzNFLJT5g8t9S2GMV+t9DebbFcbkCSMCp5KomMyKGa/w6/LY4kZmpcMd4mDvdWf4sol4rzetjO0wlrrJqshnEsNiP+8qtKg9umii794smNE2F9e8GZvOwxqvIzHaJ03aI3NwhgW4Of+f9s2dHeJJP2AlgH1kH+FbYM9u+/t6aFAS1BttRGW5zWwQsV349L3Efx5oWWqZ0wMs781AZuSHXAjK7TiJACoiIDg==";
+  private static final String VALID_SIGNATURE_1_FOR_BATCH_PAYLOAD = "tchPD9CPmn7BLCx+xOa2QVKLMGN4ZOyhO1EcnkZYRrXkiowspXIkUoGlQjY4u7PXv4nDz/nKMH4mGZW7wlHfHAXfSEmapB31ZZtGlnZWjRrQ7JYb6mzTbPVoL0ExcGJV7qhAhINSZ7oxQFa0cljqVlHnmUs/TgANQNlWfu17vevdIFZ0P2XM7tXo9hoKuq2aFs04QqZZNDPrfIXAizVZU3npz250UtkioNsK9oMJ6WlvjZmDj+t5oZ3eofl+4ebGMaq+q/G4rtQVLdCnLHAVR5PED2nLEPDpSsU7dEyvkCL8571liR+0ShTdDZrVlXwvK5JschC4bHAA78mFfFbhxw==";
+  private static final String VALID_SIGNATURE_2_FOR_BATCH_PAYLOAD = "OaKFMWlfXh7u95MYyptGouMMCprJRNcGCFi9SIN2RZBNcm24iQEJQQBEnApxIAh7XMnOHKfl2SxQdkWX75VPpW2DbDMeVZIlNjtGlINZrwByOWCL9SEw/8yRuVCP4JOTg/r0CIi1j3JE7SFN6pbJapKYQ6fB55jSttHpa6+hzVd1PxSjmxl0bUNF6hLWksd2HatIUV1Ozr3YgPldfBimbsnBtK03RF16G4Jlm+wMjhg5yCKb86nWnLas8FU0pvQ7QcJE2AeMs1vp6lf5zJbrPqD1RYVOopwVGBp2TNRjzaIJ5GLwm921W2sRD/kDJwRH++8u6Msq4Kv1Pg2k8rwiZw==";
   private static final String INVALID_SIGNATURE = "abc22OGm8/6H6bJXSi+/4VztsPN+fPZtHgHrrASuTw7LTUZVpbAZNaXVTzQsFd47PvaI8aQxbl874GFmH0QfAVQaRT93x5O/kQdM1ymG03303QaFY/mjm/Iot3VEwq5xOtM8f5a2mKUce9bgEv28iN7z9H/MbBOSmukPSJh/vMLkFAmMZQwdP4SRK3ckxQg6wWTbeMRxjw8/FLckznCGPZri4c0O7WPr8wnrWcvArlhBpIPJPeifJOyDj/woFQzoeemdrVoBFOieE/j3RoMWzcQeLENaSrqk00MPL2svNQcTLMkmWuICOjYSbnlv/EPFCQS8bQsnVHxGFD1yDeFa7Q==";
   private static final String PUB_KEY1_PATH = "/junit/pub-key-1.pem";
   private static final String PUB_KEY2_PATH = "/junit/pub-key-2.pem";
   private static final String ANOTHER_PUB_KEY_PATH = "/junit/another-pub-key.pem";
-  private static final String VALID_PAYLOAD = "{\"event_id\":\"eventId1\",\"event\":{\"hello\":\"world\"},\"" + RECIPIENT_CLIENT_ID + "\":\"" + API_KEY + "\"}";
-  private static final String VALID_BATCH_PAYLOAD = "[{\"event_id\":\"eventId1\",\"event\":{\"hello\":\"world\"},\"" + RECIPIENT_CLIENT_ID + "\":\"" + API_KEY + "\"}]";
+  private static final String VALID_PAYLOAD = "{\"eventid\":\"eventId1\",\"event\":{\"hello\":\"world\"},\"recipientclientid\":\"client_id1\"}";
+  private static final String VALID_BATCH_PAYLOAD = "[{\"eventid\":\"eventId1\",\"event\":{\"hello\":\"world\"},\"" + RECIPIENT_CLIENT_ID + "\":\"" + API_KEY + "\"}]";
   private static final PublicKey PUBLIC_KEY1;
   private static final PublicKey PUBLIC_KEY1_FOR_BATCH_PAYLOAD;
   private static final PublicKey PUBLIC_KEY2_FOR_BATCH_PAYLOAD;
@@ -266,51 +266,51 @@ public class EventVerifierTest {
 
   private static PublicKey getPubKey1() throws Exception {
 
-    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzxbiCd7hyiKbksssNEup\n"
-        + "SBhnNRHaPFHUVbi44k82GlFrLBF2MbviEWPxxJxRfqRkysHwMaE+3w74sR9oEunF\n"
-        + "Uz3J2vGcXHT4UWfEuKxO/C8dSt7Hex5EoK2R4eld/P7j/p55jp8ODvTW/Yd9ej8q\n"
-        + "Dk9dia8ZbkOOuVht2NJlZW4+4p8OCp4MLnSjprvPLAIHU5pD8sIcS+LFYYA3kAz2\n"
-        + "pAo/La7W4PFd6f3fuOQrhlBKsL99W6ALyXUOsHHBk0YrcgoxVeDYWO0N3NZLYIZd\n"
-        + "aWMxNONoH9kH2mhguidf8MCWwIuYyqO+J+IzsshXVWGyMyn3q7fVZCra9ISEZqWE\n"
-        + "iwIDAQAB";
+    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwwFivc/m/4JRjhSvzap/\n"
+        + "Q99qm9aqefy5kW7X61XCfzfYHxOWyLx+9IQqs+Z5ygUaKIIDcwgwBCmL2vOWTv2d\n"
+        + "NRAIaPWlN+kB3daf8hQTVrt3tAS9Rd6m9pIhFziQad+OnFnSq9+YjtnBP4JXsy0C\n"
+        + "FwVXf2667N4j8IG9HBpJDR8olXl6EApu3P6LFKBiwbU7aep6JkafL0Tc8IeBKTPk\n"
+        + "u7BxBJWbNxlBcwetvh+sNiqlsfcHF0o6N5xDecbajH0RXWHEO3NpyU4H2YlNb8IV\n"
+        + "uOosiEQ+DT8eALEOTWcADH5UXCPlTXR6+cgoWp4Gbgt29c5cvWZd9q/0rRtAr27S\n"
+        + "ewIDAQAB";
 
     publicK = publicK.replaceAll(System.lineSeparator(), "");
     return stringToKey(publicK);
   }
 
   private static PublicKey getPubKey2() throws Exception {
-    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAuyszY9i34MeIfmmaFSUz\n"
-        + "R0Y4ORhTkwiUafGbRntE0u0wTAKhe9Mewnmrxclh5OrX9jEjWY6lBkxxLYHAa+w2\n"
-        + "B4jDExTwiz/o1GKHYf0CGlVw0JqGQVfLlvEGFg5lQsVfOBdSdnxXBSH0FOw7ZQUb\n"
-        + "60MD7YKSbk40PRHKzHEcxlHLiHreoqPAIDn3JZ9A7b6QjKOB4LTR6jb3rUtfxnzl\n"
-        + "jku8atEfdo341WcHSHW2hf/Gx2mazhGg1of6wZVforXo3R1HVqIVMlOk6GMcz4HH\n"
-        + "iLOuEOURFucux3jm4gF2DF1B627vCqaGDoduvyIjitXQS6KqSx3dzB2dGOBDPpsr\n"
-        + "8wIDAQAB";
+    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAshVvy/d7VXOQc04MBY+l\n"
+        + "hc8ihYCprpuCMUv4cnCrOouBDR1FBP0gajAN0eFlmVOgMYeE6j6l59oGqTbAE2Ls\n"
+        + "hG9iKEqKh1qGhrOqh7VQc2z1fT2BhlL1nH/1uV4Io3EEc3cSwK/pSwl6Rdag3Twm\n"
+        + "g22/R2e57Y8bFhZoOOBnn9EIUH+MChZZR5tVXnsyphg35sL0WSneh0UEopuluvck\n"
+        + "jZ1OV4YxIh6Ce1NMHzF2ewiiDmMC6hT+Xf64naexWpnrq9vRqJy0yzJrLeGekdV+\n"
+        + "3N8H52SB5+eumY3EKanaEPOkRqfaa4XhwqNC6x6qt0YpC9pgtQmvddqGMhHgyWhr\n"
+        + "hwIDAQAB";
     publicK = publicK.replaceAll(System.lineSeparator(), "");
     return stringToKey(publicK);
   }
 
   private static PublicKey getPublicKey1ForBatchPayload() throws Exception {
-    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA32C7cnLjR0a\n"
-        + "7nAkPff9u2EaWMeSHepagN65lP5KT0g8crCGX2ZKnU3Q87GR/dJXXa8TO8Q/khVf64\n"
-        + "faO+mLdhFrpXu1fCPIaWmvKMVhwUdE8gh/jQKKiM7VP6o4K4SuhHrSJut7GFEfWemz\n"
-        + "l9MKP5ykhqKbx11Hse4GwpN26F/oUp5tAfycrPOkQjyUo/WOhLNZ/zJpsl9FQRpYGf\n"
-        + "HPWhIRXHuPvb32O1A1F9kNNYISphxPq6+htotnFGuXS3j2G928g0pX7SU2CYGkVBMV\n"
-        + "AMJqNqyVENaVON0sVA8u10aIPi9xIi9vR9rGpridIP+zMiwsv+H1zWoU5CX4eN5RN/\n"
-        + "QIDAQAB";
+    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwwFivc/m/4JRjhSvzap/\n"
+        + "Q99qm9aqefy5kW7X61XCfzfYHxOWyLx+9IQqs+Z5ygUaKIIDcwgwBCmL2vOWTv2d\n"
+        + "NRAIaPWlN+kB3daf8hQTVrt3tAS9Rd6m9pIhFziQad+OnFnSq9+YjtnBP4JXsy0C\n"
+        + "FwVXf2667N4j8IG9HBpJDR8olXl6EApu3P6LFKBiwbU7aep6JkafL0Tc8IeBKTPk\n"
+        + "u7BxBJWbNxlBcwetvh+sNiqlsfcHF0o6N5xDecbajH0RXWHEO3NpyU4H2YlNb8IV\n"
+        + "uOosiEQ+DT8eALEOTWcADH5UXCPlTXR6+cgoWp4Gbgt29c5cvWZd9q/0rRtAr27S\n"
+        + "ewIDAQAB";
 
     publicK = publicK.replaceAll(System.lineSeparator(), "");
     return stringToKey(publicK);
   }
 
   private static PublicKey getPublicKey2ForBatchPayload() throws Exception {
-    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxw9Gi8RdJuD\n"
-        + "ZhMVMexLYCPISnFTuaJ14q9TL2wVnc9pc79GO24mAOFvjx9x4GffOsCKwWPp62wrgj\n"
-        + "w4MS4Xyvo4uv9Qyhp0pJGfMgT3BRtzbL/AgJEJAGvluRxZdDOXkZsViB/pQIu1AQJx\n"
-        + "+2c0DIRAVxI5AcQc/8BvBsB7AltjH+Bf5hFMuNuARiVouyI83KOh3S6hN+zZu10Dkm\n"
-        + "rLA1kZ6X2rKxrnz6bTG8ad+rkL3DbY/WvAah9ZJz8Xq87TS3/NDsveloVQ3+Wm+nF3\n"
-        + "tyzdyTRDldwviRFX+EDhzAbTtk2hEZEIU3+9zxhSAscBUfV/2+P12vnowVoYNN7mqr\n"
-        + "QIDAQAB";
+    String publicK = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAshVvy/d7VXOQc04MBY+l\n"
+        + "hc8ihYCprpuCMUv4cnCrOouBDR1FBP0gajAN0eFlmVOgMYeE6j6l59oGqTbAE2Ls\n"
+        + "hG9iKEqKh1qGhrOqh7VQc2z1fT2BhlL1nH/1uV4Io3EEc3cSwK/pSwl6Rdag3Twm\n"
+        + "g22/R2e57Y8bFhZoOOBnn9EIUH+MChZZR5tVXnsyphg35sL0WSneh0UEopuluvck\n"
+        + "jZ1OV4YxIh6Ce1NMHzF2ewiiDmMC6hT+Xf64naexWpnrq9vRqJy0yzJrLeGekdV+\n"
+        + "3N8H52SB5+eumY3EKanaEPOkRqfaa4XhwqNC6x6qt0YpC9pgtQmvddqGMhHgyWhr\n"
+        + "hwIDAQAB";
     publicK = publicK.replaceAll(System.lineSeparator(), "");
     return stringToKey(publicK);
   }

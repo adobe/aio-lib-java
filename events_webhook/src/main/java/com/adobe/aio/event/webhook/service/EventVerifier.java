@@ -30,7 +30,11 @@ public class EventVerifier {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  public static final String RECIPIENT_CLIENT_ID = "recipient_client_id";
+  /* This is used as a custom attribute defined by Adobe I/O Events for delivered payloads.
+  *  So its naming format should comply to Cloud Events Custom Attributes specification
+  *  cf.https://github.com/cloudevents/spec/blob/main/cloudevents/spec.md#naming-conventions
+  * */
+  public static final String RECIPIENT_CLIENT_ID = "recipientclientid";
 
   public static final String ADOBE_IOEVENTS_SECURITY_DOMAIN = "https://static.adobeioevents.com";
   public static final String ADOBE_IOEVENTS_DIGI_SIGN_1 = "x-adobe-digital-signature-1";
