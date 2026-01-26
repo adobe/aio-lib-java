@@ -1,5 +1,9 @@
 # 📑 Changelog
 
+## [aio-lib-java-2.0.6](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.6) (2026-01-26)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.4...aio-lib-java-2.0.6)
+
 ## [aio-lib-java-2.0.4](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.4) (2025-12-15)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.2...aio-lib-java-2.0.4)
