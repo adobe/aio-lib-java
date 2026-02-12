@@ -96,7 +96,7 @@
     <!-- https://github.com/openapi-tools/jackson-dataformat-hal/blob/v1.0.9/pom.xml -->
     <jackson-dataformat-hal.version>1.0.9</jackson-dataformat-hal.version>
 
-    <feign.version>12.4</feign.version>
+    <feign.version>13.6</feign.version>
     <feign-form.version>3.8.0</feign-form.version>
 
   </properties>
