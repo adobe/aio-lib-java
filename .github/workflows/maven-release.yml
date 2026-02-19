@@ -209,7 +209,7 @@ jobs:
           echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
 
       - name: AEM6.5 Build
-        run: mvn clean deploy -DskipTests -Paem65deps,aem65,release
+        run: mvn clean deploy -DskipTests -Paem65deps,aem65,release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
@@ -223,7 +223,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Main Build
-        run: mvn clean deploy -DskipTests -Prelease
+        run: mvn clean deploy -DskipTests -Prelease,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
