@@ -30,7 +30,7 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          MAVEN_GPG_KEY: ${{ secrets.GPG_SECRET_KEYS }}
 
       - name: AEMaaCS Build
         run: mvn clean deploy -PaemaacsDeps,aemaacs,release,attach-javadoc,attach-source -Dgpg.signer=bc
@@ -38,7 +38,7 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          MAVEN_GPG_KEY: ${{ secrets.GPG_SECRET_KEYS }}
           
       - name: Main Build
         run: mvn clean deploy -DskipTests -Prelease -Dgpg.signer=bc
@@ -46,5 +46,5 @@ jobs:
           MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          MAVEN_GPG_KEY: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          MAVEN_GPG_KEY: ${{ secrets.GPG_SECRET_KEYS }}
 
