@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-257 attempting a few upgrades and configuration to get the signing to work  [\#260](https://github.com/adobe/aio-lib-java/pull/260) ([francoisledroff](https://github.com/francoisledroff))
 - Revert "GH-236 Temporary disabling the `release` maven profile to skip signing" [\#259](https://github.com/adobe/aio-lib-java/pull/259) ([francoisledroff](https://github.com/francoisledroff))
 
 ## [aio-lib-java-2.0.8](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.8) (2026-02-19)
