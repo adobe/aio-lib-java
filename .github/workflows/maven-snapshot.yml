@@ -36,21 +36,21 @@ jobs:
       - name: AEM6.5 Build
         run: mvn clean deploy -DskipTests -Paem65deps,aem65,release
         env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: AEMaaCS Build
         run: mvn clean deploy -PaemaacsDeps,aemaacs,release,attach-javadoc,attach-source
         env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           
       - name: Main Build
         run: mvn clean deploy -DskipTests
         env:
-          MAVEN_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
-          MAVEN_CENTRAL_TOKEN: ${{ secrets.SONATYPE_PASSWORD }}
+          MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
