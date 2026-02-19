@@ -184,12 +184,12 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           ref: aio-lib-java-${{ needs.tag.outputs.version }}
 
       - name: Setup JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: 11
@@ -222,7 +222,7 @@ jobs:
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
 
       - name: Main Build
-        run: mvn clean deploy -DskipTests
+        run: mvn clean deploy -DskipTests -Prelease
         env:
           MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
