@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.8...HEAD)
+
+### 📁 Other pull requests
+
+- Revert "GH-236 Temporary disabling the `release` maven profile to skip signing" [\#259](https://github.com/adobe/aio-lib-java/pull/259) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-2.0.8](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.8) (2026-02-19)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.6...aio-lib-java-2.0.8)
