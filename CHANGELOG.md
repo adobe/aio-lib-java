@@ -1,11 +1,13 @@
 # 📑 Changelog
 
-## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+## [aio-lib-java-2.0.8](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.8) (2026-02-19)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.6...HEAD)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.6...aio-lib-java-2.0.8)
 
 ### 📁 Other pull requests
 
+- GH-236 Temporary disabling the `release` maven profile to skip signing [\#256](https://github.com/adobe/aio-lib-java/pull/256) ([francoisledroff](https://github.com/francoisledroff))
+- GH-236 using now our own aio-lib-java maven central token [\#255](https://github.com/adobe/aio-lib-java/pull/255) ([francoisledroff](https://github.com/francoisledroff))
 - GH-236 upgrading `central-publishing-maven-plugin` [\#254](https://github.com/adobe/aio-lib-java/pull/254) ([francoisledroff](https://github.com/francoisledroff))
 
 ## [aio-lib-java-2.0.6](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.6) (2026-01-26)
