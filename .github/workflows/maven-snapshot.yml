@@ -14,6 +14,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Import GPG key
+        env:
+          GPG_SECRET_KEYS: ${{ secrets.GPG_SECRET_KEYS }}
+          GPG_OWNERTRUST: ${{ secrets.GPG_OWNERTRUST }}
+        run: |
+          echo $GPG_SECRET_KEYS | base64 --decode | gpg --import --no-tty --batch --yes
+          echo $GPG_OWNERTRUST | base64 --decode | gpg --import-ownertrust --no-tty --batch --yes
+
       - name: Setup JDK
         uses: actions/setup-java@v5
         with:
@@ -23,28 +31,27 @@ jobs:
           server-id: central
           server-username: MAVEN_USERNAME
           server-password: MAVEN_CENTRAL_TOKEN
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
 
       - name: AEM6.5 Build
-        run: mvn clean deploy -DskipTests -Paem65deps,aem65,release -Dgpg.signer=bc
+        run: mvn clean deploy -DskipTests -Paem65deps,aem65,release
         env:
           MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          MAVEN_GPG_KEY: ${{ secrets.GPG_SECRET_KEYS }}
 
       - name: AEMaaCS Build
-        run: mvn clean deploy -PaemaacsDeps,aemaacs,release,attach-javadoc,attach-source -Dgpg.signer=bc
+        run: mvn clean deploy -PaemaacsDeps,aemaacs,release,attach-javadoc,attach-source
         env:
           MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          MAVEN_GPG_KEY: ${{ secrets.GPG_SECRET_KEYS }}
           
       - name: Main Build
-        run: mvn clean deploy -DskipTests -Prelease -Dgpg.signer=bc
+        run: mvn clean deploy -DskipTests -Prelease
         env:
           MAVEN_USERNAME: ${{ secrets.AIO_MAVEN_USER_NAME }}
           MAVEN_CENTRAL_TOKEN: ${{ secrets.AIO_MAVEN_TOKEN }}
           MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
-          MAVEN_GPG_KEY: ${{ secrets.GPG_SECRET_KEYS }}
 
