@@ -2,37 +2,17 @@
 
 ## [aio-lib-java-2.0.12](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.12) (2026-02-19)
 
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.10...aio-lib-java-2.0.12)
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.2...aio-lib-java-2.0.12)
 
-## [aio-lib-java-2.0.10](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.10) (2026-02-19)
-
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.8...aio-lib-java-2.0.10)
-
-### 📁 Other pull requests
+### 📁 pull requests
 
 - GH-257 updating to adhere to the latest recommended configuration for GPG signing [\#261](https://github.com/adobe/aio-lib-java/pull/261) ([francoisledroff](https://github.com/francoisledroff))
 - GH-257 attempting a few upgrades and configuration to get the signing to work  [\#260](https://github.com/adobe/aio-lib-java/pull/260) ([francoisledroff](https://github.com/francoisledroff))
 - Revert "GH-236 Temporary disabling the `release` maven profile to skip signing" [\#259](https://github.com/adobe/aio-lib-java/pull/259) ([francoisledroff](https://github.com/francoisledroff))
 
-## [aio-lib-java-2.0.8](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.8) (2026-02-19)
-
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.6...aio-lib-java-2.0.8)
-
-### 📁 Other pull requests
-
 - GH-236 Temporary disabling the `release` maven profile to skip signing [\#256](https://github.com/adobe/aio-lib-java/pull/256) ([francoisledroff](https://github.com/francoisledroff))
 - GH-236 using now our own aio-lib-java maven central token [\#255](https://github.com/adobe/aio-lib-java/pull/255) ([francoisledroff](https://github.com/francoisledroff))
 - GH-236 upgrading `central-publishing-maven-plugin` [\#254](https://github.com/adobe/aio-lib-java/pull/254) ([francoisledroff](https://github.com/francoisledroff))
-
-## [aio-lib-java-2.0.6](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.6) (2026-01-26)
-
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.4...aio-lib-java-2.0.6)
-
-## [aio-lib-java-2.0.4](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.4) (2025-12-15)
-
-[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.2...aio-lib-java-2.0.4)
-
-### 📁 Other pull requests
 
 - GH-249  leveraging the `retry-after` header support of Feign in our `IOErrorDecoder` [\#251](https://github.com/adobe/aio-lib-java/pull/251) ([francoisledroff](https://github.com/francoisledroff))
 - GH-236 aligning the GH action to the use of `central-publishing-maven-plugin` plugin [\#238](https://github.com/adobe/aio-lib-java/pull/238) ([francoisledroff](https://github.com/francoisledroff))
