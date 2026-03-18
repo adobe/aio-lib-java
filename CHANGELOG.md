@@ -1,5 +1,13 @@
 # 📑 Changelog
 
+## [Unreleased](https://github.com/adobe/aio-lib-java/tree/HEAD)
+
+[Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.12...HEAD)
+
+### 📁 Other pull requests
+
+- GH-262 wirig the `dataResidencyRegion` I/O Events  provider input field [\#263](https://github.com/adobe/aio-lib-java/pull/263) ([francoisledroff](https://github.com/francoisledroff))
+
 ## [aio-lib-java-2.0.12](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.12) (2026-02-19)
 
 [Full Changelog](https://github.com/adobe/aio-lib-java/compare/aio-lib-java-2.0.10...aio-lib-java-2.0.12)
