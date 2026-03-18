@@ -50,6 +50,9 @@ public class Provider {
   @JsonProperty("event_delivery_format")
   protected String eventDeliveryFormat;
 
+  @JsonProperty("data_residency_region")
+  private String dataResidencyRegion;
+
   /**
    * the associated EventMetadata can be eager loaded by the provider http API
    */
@@ -144,6 +147,10 @@ public class Provider {
     return eventDeliveryFormat;
   }
 
+  public String getDataResidencyRegion() {
+    return dataResidencyRegion;
+  }
+
   public EventMetadataCollection.EventMetadataList getEmbeddedEventMetadata() {
     return embeddedEventMetadata;
   }
@@ -169,14 +176,15 @@ public class Provider {
         source, provider.source) && Objects.equals(docsUrl, provider.docsUrl)
         && Objects.equals(publisher, provider.publisher) && Objects.equals(
         providerMetadata, provider.providerMetadata) && Objects.equals(eventDeliveryFormat,
-        provider.eventDeliveryFormat) && Objects.equals(embeddedEventMetadata,
+        provider.eventDeliveryFormat) && Objects.equals(dataResidencyRegion,
+        provider.dataResidencyRegion) && Objects.equals(embeddedEventMetadata,
         provider.embeddedEventMetadata);
   }
 
   @Override
   public int hashCode() {
     return Objects.hash(id, label, description, instanceId, source, docsUrl, publisher,
-        providerMetadata, eventDeliveryFormat, embeddedEventMetadata);
+        providerMetadata, eventDeliveryFormat, dataResidencyRegion, embeddedEventMetadata);
   }
 
   @Override
@@ -191,6 +199,7 @@ public class Provider {
         ", publisher='" + publisher + '\'' +
         ", providerMetadata='" + providerMetadata + '\'' +
         ", eventDeliveryFormat='" + eventDeliveryFormat + '\'' +
+        ", dataResidencyRegion='" + dataResidencyRegion + '\'' +
         ", embeddedEventMetadata=" + embeddedEventMetadata +
         '}';
   }

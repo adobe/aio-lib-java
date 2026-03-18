@@ -67,6 +67,13 @@ public class ProviderInputModel {
   private final String eventDeliveryFormat;
 
   /**
+   * Optional data residency region (following Adobe Hosting location naming standards).
+   * If omitted, the default region defined on the provider metadata is used.
+   */
+  @JsonProperty("data_residency_region")
+  private final String dataResidencyRegion;
+
+  /**
    * The label of this Events Provider, as shown on the Adobe I/O console
    */
   private final String label;
@@ -78,7 +85,7 @@ public class ProviderInputModel {
   private final String docsUrl;
 
   private ProviderInputModel(final String label, final String description, final String docsUrl, final String instanceId,
-      final String providerMetadataId, final String eventDeliveryFormat) {
+      final String providerMetadataId, final String eventDeliveryFormat, final String dataResidencyRegion) {
     if (StringUtils.isEmpty(label)) {
       throw new IllegalArgumentException(
           "ProviderUpdateModel is missing a label");
@@ -90,6 +97,7 @@ public class ProviderInputModel {
     this.docsUrl = docsUrl;
     this.instanceId = instanceId;
     this.eventDeliveryFormat = eventDeliveryFormat;
+    this.dataResidencyRegion = dataResidencyRegion;
   }
 
   public String getLabel() {
@@ -110,6 +118,8 @@ public class ProviderInputModel {
 
   public String getEventDeliveryFormat() { return this.eventDeliveryFormat; }
 
+  public String getDataResidencyRegion() { return this.dataResidencyRegion; }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -122,12 +132,13 @@ public class ProviderInputModel {
     return Objects.equals(instanceId, that.instanceId) && Objects.equals(providerMetadataId,
         that.providerMetadataId) && Objects.equals(eventDeliveryFormat,
         that.eventDeliveryFormat) && Objects.equals(label, that.label) && Objects.equals(
-        description, that.description) && Objects.equals(docsUrl, that.docsUrl);
+        description, that.description) && Objects.equals(docsUrl, that.docsUrl)
+        && Objects.equals(dataResidencyRegion, that.dataResidencyRegion);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(instanceId, providerMetadataId, label, description, docsUrl, eventDeliveryFormat);
+    return Objects.hash(instanceId, providerMetadataId, label, description, docsUrl, eventDeliveryFormat, dataResidencyRegion);
   }
 
   @Override
@@ -139,6 +150,7 @@ public class ProviderInputModel {
         ", providerMetadataId='" + providerMetadataId + '\'' +
         ", instanceId='" + instanceId + '\'' +
         ", eventDeliveryFormat='" + eventDeliveryFormat + '\'' +
+        ", dataResidencyRegion='" + dataResidencyRegion + '\'' +
         '}';
   }
 
@@ -155,6 +167,7 @@ public class ProviderInputModel {
     private String instanceId;
     private String providerMetadataId;
     private String eventDeliveryFormat;
+    private String dataResidencyRegion;
 
     public Builder() {
     }
@@ -189,8 +202,13 @@ public class ProviderInputModel {
       return this;
     }
 
+    public Builder dataResidencyRegion(final String dataResidencyRegion) {
+      this.dataResidencyRegion = dataResidencyRegion;
+      return this;
+    }
+
     public ProviderInputModel build() {
-      return new ProviderInputModel(label, description, docsUrl, instanceId, providerMetadataId, eventDeliveryFormat);
+      return new ProviderInputModel(label, description, docsUrl, instanceId, providerMetadataId, eventDeliveryFormat, dataResidencyRegion);
     }
   }
 }
