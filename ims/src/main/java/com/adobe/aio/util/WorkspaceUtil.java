@@ -72,7 +72,7 @@ public class WorkspaceUtil {
                         .projectId(configMap.get(PROJECT_ID))
                         .workspaceId(configMap.get(WORKSPACE_ID))
                         .credentialId(configMap.get(CREDENTIAL_ID));
-        builder.authContext(getAuthContext(configMap));
+        getAuthContext(configMap).ifPresent(builder::authContext);
         return builder;
     }
 
@@ -80,11 +80,17 @@ public class WorkspaceUtil {
         return configMap.containsKey(SCOPES);
     }
 
-    public static Context getAuthContext(Map<String, String> configMap) {
+    public static boolean isJwtConfig(Map<String, String> configMap) {
+        return configMap.containsKey(META_SCOPES);
+    }
+
+    public static Optional<Context> getAuthContext(Map<String, String> configMap) {
         if (isOAuthConfig(configMap)) {
-            return getOAuthContextBuilder(configMap).build();
-        } else {
-            return getJwtContextBuilder(configMap).build();
+            return Optional.of(getOAuthContextBuilder(configMap).build());
+        } else if (isJwtConfig(configMap)) {
+            return Optional.of(getJwtContextBuilder(configMap).build());
+        } else  {
+            return Optional.empty();
         }
     }
 

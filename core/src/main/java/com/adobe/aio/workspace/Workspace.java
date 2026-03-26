@@ -58,6 +58,9 @@ public class Workspace {
 
   public void validateAll() {
     validateWorkspaceContext();
+    if (StringUtils.isEmpty(apiKey)) {
+      throw new IllegalStateException("Your `Workspace` is missing an apiKey");
+    }
     if (!isAuthOAuth() && !isAuthJWT()) {
       throw new IllegalStateException("Missing auth configuration, set either jwt or oauth...");
     }
@@ -76,22 +79,11 @@ public class Workspace {
     if (StringUtils.isEmpty(this.getConsumerOrgId())) {
       throw new IllegalStateException("Your `Workspace` is missing a consumerOrgId");
     }
-    if (StringUtils.isEmpty(apiKey)) {
-      throw new IllegalStateException("Your `Workspace` is missing an apiKey");
-    }
     if (StringUtils.isEmpty(this.getProjectId())) {
       throw new IllegalStateException("Your `Workspace` is missing a projectId");
     }
     if (StringUtils.isEmpty(this.getWorkspaceId())) {
       throw new IllegalStateException("Your `Workspace` is missing a workspaceId");
-    }
-    // note that the credentialId is optional
-    // but it might be handy to have it in your `Workspace` POJO,
-    // to avoid confusion when you have multiple credentials,
-    // and to eventually in some Adobe API calls
-
-    if (authContext == null) {
-      throw new IllegalStateException("Missing auth configuration ...");
     }
   }
 
