@@ -1,5 +1,6 @@
 package com.adobe.aio.ims.feign;
 
+import com.adobe.aio.ims.AccessTokenProvider;
 import com.adobe.aio.ims.ImsService;
 import com.adobe.aio.ims.model.AccessToken;
 import com.adobe.aio.workspace.Workspace;
@@ -12,10 +13,14 @@ public class AuthInterceptor implements RequestInterceptor {
 
   private volatile Long expirationTimeMillis;
   private volatile AccessToken accessToken;
-  private final ImsService imsService;
+  private final AccessTokenProvider accessTokenProvider;
 
-  protected AuthInterceptor (final Workspace workspace) {
-    this.imsService = ImsService.builder().workspace(workspace).build();
+  protected AuthInterceptor(final Workspace workspace) {
+    this(ImsService.builder().workspace(workspace).build()::getAccessToken);
+  }
+
+  public AuthInterceptor(final AccessTokenProvider accessTokenProvider) {
+    this.accessTokenProvider = accessTokenProvider;
   }
 
   @Override
@@ -23,12 +28,8 @@ public class AuthInterceptor implements RequestInterceptor {
     applyAuthorization(requestTemplate);
   }
 
-  ImsService getImsService() {
-    return this.imsService;
-  }
-
   AccessToken fetchAccessToken() {
-    return getImsService().getAccessToken();
+    return accessTokenProvider.getAccessToken();
   }
 
   synchronized String getAccessToken() {

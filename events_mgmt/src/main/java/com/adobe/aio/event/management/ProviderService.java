@@ -13,6 +13,8 @@ package com.adobe.aio.event.management;
 
 import com.adobe.aio.event.management.feign.FeignProviderService;
 import com.adobe.aio.event.management.model.SampleEvent;
+import com.adobe.aio.feign.AIOHeaderInterceptor;
+import com.adobe.aio.ims.feign.AuthInterceptor;
 import com.adobe.aio.workspace.Workspace;
 import com.adobe.aio.event.management.model.EventMetadata;
 import com.adobe.aio.event.management.model.Provider;
@@ -92,6 +94,8 @@ public interface ProviderService {
   class Builder {
 
     private Workspace workspace;
+    private AuthInterceptor authInterceptor;
+    private AIOHeaderInterceptor aioHeaderInterceptor;
     private String url;
 
     public Builder() {
@@ -102,13 +106,29 @@ public interface ProviderService {
       return this;
     }
 
+    public Builder authInterceptor(AuthInterceptor authInterceptor) {
+      this.authInterceptor = authInterceptor;
+      return this;
+    }
+
+    public Builder aioHeaderInterceptor(AIOHeaderInterceptor aioHeaderInterceptor) {
+        this.aioHeaderInterceptor = aioHeaderInterceptor;
+        return this;
+    }
+
     public Builder url(String url) {
       this.url = url;
       return this;
     }
 
     public ProviderService build() {
-      return new FeignProviderService(workspace, url);
+      if (authInterceptor == null) {
+        authInterceptor = AuthInterceptor.builder().workspace(workspace).build();
+      }
+      if (aioHeaderInterceptor == null) {
+        aioHeaderInterceptor = AIOHeaderInterceptor.builder().workspace(workspace).build();
+      }
+      return new FeignProviderService(authInterceptor, aioHeaderInterceptor, workspace, url);
     }
   }
 }

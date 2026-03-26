@@ -48,15 +48,12 @@ public class FeignProviderService implements ProviderService {
   private final SampleEventApi sampleEventApi;
   private final Workspace workspace;
 
-  public FeignProviderService(final Workspace workspace, final String url) {
+  public FeignProviderService(final AuthInterceptor authInterceptor, final AIOHeaderInterceptor aioHeaderInterceptor,  Workspace workspace, final String url) {
     String apiUrl = StringUtils.isEmpty(url) ? API_MANAGEMENT_URL : url;
-    
     if (workspace == null) {
       throw new IllegalArgumentException("ProviderService is missing a workspace context");
     }
     workspace.validateWorkspaceContext();
-    RequestInterceptor authInterceptor = AuthInterceptor.builder().workspace(workspace).build();
-    RequestInterceptor aioHeaderInterceptor = AIOHeaderInterceptor.builder().workspace(workspace).build();
 
     this.providerApi = FeignUtil.getDefaultBuilder()
         .requestInterceptor(authInterceptor)
