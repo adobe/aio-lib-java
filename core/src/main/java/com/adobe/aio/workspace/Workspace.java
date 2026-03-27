@@ -57,8 +57,9 @@ public class Workspace {
   }
 
   /**
-   * Validates that this workspace context is populated, including auth related properties.
-   * @see #validateWorkspaceContext() where basic validation that does not include auth related properties.
+   * Validates that this workspace is properly defined, including its `auth` (credential and api-key) related properties.
+   * @throws IllegalStateException if any workspace `context` or `auth` properties is missing.
+   * @see #validateWorkspaceContext() where validation that does not include `auth` related properties.
    */
   public void validateAll() {
     validateWorkspaceContext();
@@ -72,11 +73,11 @@ public class Workspace {
   }
 
   /**
-   * Validates that this workspace context is populated.
+   * Validates that this workspace is properly defined.
    *
-   * @throws IllegalStateException if context/basic workspace properties are not specified.
-   * Note `auth` related properties will not be validated here.
-   * @see #validateAll() for a more comprehensive validation that includes auth related properties.
+   * @throws IllegalStateException if a context/basic properties is missing.
+   * Note that `auth` related properties will not be validated here.
+   * @see #validateAll() for a more comprehensive validation that includes `auth` (credential and api-key) related properties.
     *
    */
   public void validateWorkspaceContext() throws IllegalStateException {
