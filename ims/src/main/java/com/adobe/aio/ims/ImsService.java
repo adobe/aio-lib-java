@@ -63,7 +63,7 @@ public interface ImsService {
      * @return a configured IMS Service
      * @throws IllegalArgumentException if the Workspace authentication context is not valid.
      */
-    public ImsService build() throws IllegalStateException {
+    public ImsService build() throws IllegalArgumentException {
       if (workspace == null) {
         throw new IllegalArgumentException("Workspace is required to build ImsService");
       }

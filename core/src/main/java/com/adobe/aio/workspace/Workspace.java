@@ -56,6 +56,10 @@ public class Workspace {
     return new Builder();
   }
 
+  /**
+   * Validates that this workspace context is populated, including auth related properties.
+   * @see #validateWorkspaceContext() where basic validation that does not include auth related properties.
+   */
   public void validateAll() {
     validateWorkspaceContext();
     if (StringUtils.isEmpty(apiKey)) {
@@ -70,7 +74,10 @@ public class Workspace {
   /**
    * Validates that this workspace context is populated.
    *
-   * @throws IllegalStateException if any properties are not specified.
+   * @throws IllegalStateException if context/basic workspace properties are not specified.
+   * Note `auth` related properties will not be validated here.
+   * @see #validateAll() for a more comprehensive validation that includes auth related properties.
+    *
    */
   public void validateWorkspaceContext() throws IllegalStateException {
     if (StringUtils.isEmpty(imsOrgId)) {
