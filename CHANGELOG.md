@@ -6,6 +6,7 @@
 
 ### 📁 Other pull requests
 
+- GH-264 allowing the `ProviderService` to be built with custom \(auth and headers\) request interceptors [\#265](https://github.com/adobe/aio-lib-java/pull/265) ([francoisledroff](https://github.com/francoisledroff))
 - GH-262 wirig the `dataResidencyRegion` I/O Events  provider input field [\#263](https://github.com/adobe/aio-lib-java/pull/263) ([francoisledroff](https://github.com/francoisledroff))
 
 ## [aio-lib-java-2.0.12](https://github.com/adobe/aio-lib-java/tree/aio-lib-java-2.0.12) (2026-02-19)
