@@ -20,10 +20,12 @@ import static com.adobe.aio.util.Constants.*;
 
 public class AIOHeaderInterceptor  implements RequestInterceptor {
 
-  private final Workspace workspace;
+  private final String apiKey;
+  private final String imsOrgId;
 
-  private AIOHeaderInterceptor(final Workspace workspace) {
-    this.workspace = workspace;
+  private AIOHeaderInterceptor(final String apiKey, final String imsOrgId) {
+    this.apiKey = apiKey;
+    this.imsOrgId = imsOrgId;
   }
   
   @Override
@@ -34,14 +36,14 @@ public class AIOHeaderInterceptor  implements RequestInterceptor {
 
 
   private void applyApiKey(RequestTemplate requestTemplate) {
-    if (!requestTemplate.headers().containsKey(API_KEY_HEADER) && !StringUtils.isEmpty(workspace.getApiKey())) {
-      requestTemplate.header(API_KEY_HEADER, workspace.getApiKey());
+    if (!requestTemplate.headers().containsKey(API_KEY_HEADER) && !StringUtils.isEmpty(apiKey)) {
+      requestTemplate.header(API_KEY_HEADER, apiKey);
     }
   }
 
   private void applyImsOrg(RequestTemplate requestTemplate) {
-    if (!requestTemplate.headers().containsKey(IMS_ORG_HEADER) && !StringUtils.isEmpty(workspace.getImsOrgId())) {
-      requestTemplate.header(IMS_ORG_HEADER, workspace.getImsOrgId());
+    if (!requestTemplate.headers().containsKey(IMS_ORG_HEADER) && !StringUtils.isEmpty(imsOrgId)) {
+      requestTemplate.header(IMS_ORG_HEADER, imsOrgId);
     }
   }
   
@@ -51,18 +53,30 @@ public class AIOHeaderInterceptor  implements RequestInterceptor {
 
   public static class Builder {
 
-    private Workspace workspace;;
+    private String apiKey;
+    private String imsOrgId;
 
     private Builder() {
     }
 
     public Builder workspace(Workspace workspace) {
-      this.workspace = workspace;
+      this.apiKey = workspace.getApiKey();
+      this.imsOrgId = workspace.getImsOrgId();
       return this;
     }
 
+    public Builder apiKey(String apiKey) {
+        this.apiKey = apiKey;
+        return this;
+    }
+
+    public Builder imsOrgId(String imsOrgId) {
+        this.imsOrgId = imsOrgId;
+        return this;
+    }
+
     public AIOHeaderInterceptor build() {
-      return new AIOHeaderInterceptor(workspace);
+      return new AIOHeaderInterceptor(apiKey, imsOrgId);
     }
   }
 

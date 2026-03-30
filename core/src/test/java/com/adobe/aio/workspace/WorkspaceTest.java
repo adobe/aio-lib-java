@@ -15,8 +15,11 @@ import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.PrivateKey;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.adobe.aio.auth.Context;
+import com.adobe.aio.auth.OAuthContext;
 import com.adobe.aio.util.Constants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -38,14 +41,8 @@ public class WorkspaceTest {
 
   @Test
   public void successFullBuilder() throws IOException {
-
-    class MockContext implements Context {
-      @Override
-      public void validate() {
-
-      }
-    }
-
+    Set<String> scopes = new HashSet<>();
+    scopes.add("scope1");
     Workspace actual = Workspace.builder()
         .imsUrl(Constants.PROD_IMS_URL)
         .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
@@ -53,7 +50,7 @@ public class WorkspaceTest {
         .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
         .projectId(Workspace.PROJECT_ID + TEST_VALUE)
         .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
-        .authContext(new MockContext())
+        .authContext(new OAuthContext("someClientSecret", scopes))
         .build();
 
     assertEquals(Workspace.IMS_ORG_ID + TEST_VALUE, actual.getImsOrgId());
@@ -63,6 +60,21 @@ public class WorkspaceTest {
     assertEquals(Workspace.WORKSPACE_ID + TEST_VALUE, actual.getWorkspaceId());
     assertEquals(Constants.PROD_IMS_URL, actual.getImsUrl());
     actual.validateWorkspaceContext();
+    actual.validateAll();
+  }
+
+  @Test
+  public void missingApiKey() {
+    Workspace actual = Workspace.builder()
+            .imsUrl(Constants.PROD_IMS_URL)
+            .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
+            .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
+            .projectId(Workspace.PROJECT_ID + TEST_VALUE)
+            .workspaceId(Workspace.WORKSPACE_ID + TEST_VALUE)
+            .build();
+    actual.validateWorkspaceContext();
+    Exception ex = assertThrows(IllegalStateException.class, actual::validateAll);
+    assertEquals("Your `Workspace` is missing an apiKey", ex.getMessage());
   }
 
   @Test
@@ -79,16 +91,6 @@ public class WorkspaceTest {
         .build();
     Exception ex = assertThrows(IllegalStateException.class, actual::validateWorkspaceContext);
     assertEquals("Your `Workspace` is missing a consumerOrgId", ex.getMessage());
-  }
-
-  @Test
-  public void missingApiKey() {
-    Workspace actual = Workspace.builder()
-        .imsOrgId(Workspace.IMS_ORG_ID + TEST_VALUE)
-        .consumerOrgId(Workspace.CONSUMER_ORG_ID + TEST_VALUE)
-        .build();
-    Exception ex = assertThrows(IllegalStateException.class, actual::validateWorkspaceContext);
-    assertEquals("Your `Workspace` is missing an apiKey", ex.getMessage());
   }
 
   @Test
